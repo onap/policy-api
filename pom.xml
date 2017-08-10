@@ -39,6 +39,10 @@
 	<description>Code that define our external API.</description>
 
 	<properties>
+                <sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
+		<releases.path>content/repositories/releases/</releases.path>
+		<snapshots.path>content/repositories/snapshots/</snapshots.path>
+		<staging.path>content/repositories/staging/</staging.path>                
 	</properties>
 
 	<modules>
