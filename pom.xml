@@ -35,7 +35,7 @@
 
 	<packaging>pom</packaging>
 
-	<name>Policy - API</name>
+	<name>policy-api</name>
 	<description>Code that define our external API.</description>
 
 	<properties>
