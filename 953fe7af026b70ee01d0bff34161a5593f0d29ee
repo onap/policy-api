@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_9bb2e192",
+        "filename": "main/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-09-02T21:31:47Z",
+      "side": 1,
+      "message": "please change to api :)",
+      "range": {
+        "startLine": 68,
+        "startChar": 43,
+        "endLine": 68,
+        "endChar": 55
+      },
+      "revId": "953fe7af026b70ee01d0bff34161a5593f0d29ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_5ba8c91f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-09-02T21:31:47Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 29,
+        "startChar": 43,
+        "endLine": 29,
+        "endChar": 55
+      },
+      "revId": "953fe7af026b70ee01d0bff34161a5593f0d29ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
