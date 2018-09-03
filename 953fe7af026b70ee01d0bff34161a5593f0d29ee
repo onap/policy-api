@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_3ed85b7a",
+        "filename": "main/pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-09-03T13:12:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_9bb2e192",
+      "range": {
+        "startLine": 68,
+        "startChar": 43,
+        "endLine": 68,
+        "endChar": 55
+      },
+      "revId": "953fe7af026b70ee01d0bff34161a5593f0d29ee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_5ba8c91f",
         "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
         "patchSetId": 8
