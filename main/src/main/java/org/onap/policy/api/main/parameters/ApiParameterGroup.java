@@ -60,7 +60,7 @@ public class ApiParameterGroup implements ParameterGroup {
      */
     @Override
     public void setName(String name) {
-        this.name=name;
+        this.name = name;
     }
 
     /**

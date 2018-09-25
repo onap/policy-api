@@ -22,13 +22,12 @@ package org.onap.policy.api.main.parameters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.FileReader;
+import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.parameters.GroupValidationResult;
-import org.onap.policy.api.main.PolicyApiException;
-import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
-
-import java.io.FileReader;
 
 /**
  * This class handles reading, parsing and validating of policy api parameters from JSON files.

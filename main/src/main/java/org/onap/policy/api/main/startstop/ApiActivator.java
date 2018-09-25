@@ -20,12 +20,12 @@
 
 package org.onap.policy.api.main.startstop;
 
+import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.rest.ApiRestServer;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.parameters.ParameterService;
-import org.onap.policy.api.main.PolicyApiException;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
 
 /**
  * This class wraps a distributor so that it can be activated as a complete service together with all its api
@@ -56,7 +56,6 @@ public class ApiActivator {
      *
      * @throws PolicyApiException on errors in initializing the service
      */
-    @SuppressWarnings("unchecked")
     public void initialize() throws PolicyApiException {
         LOGGER.debug("Policy api starting as a service . . .");
         startApiRestServer();

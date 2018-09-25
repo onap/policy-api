@@ -23,7 +23,6 @@ package org.onap.policy.api.main.parameters;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.onap.policy.common.parameters.GroupValidationResult;

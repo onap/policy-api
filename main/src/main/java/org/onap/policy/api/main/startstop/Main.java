@@ -20,13 +20,12 @@
 
 package org.onap.policy.api.main.startstop;
 
+import java.util.Arrays;
 import org.onap.policy.api.main.PolicyApiException;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
-
-import java.util.Arrays;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 /**
  * This class initiates ONAP Policy Framework policy api.
