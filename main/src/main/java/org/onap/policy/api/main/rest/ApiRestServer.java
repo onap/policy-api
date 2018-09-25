@@ -20,15 +20,14 @@
 
 package org.onap.policy.api.main.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import org.onap.policy.api.main.parameters.RestServerParameters;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.api.main.parameters.RestServerParameters;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Class to manage life cycle of api rest server.
@@ -54,7 +53,7 @@ public class ApiRestServer implements Startable {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
     public boolean start() {
@@ -94,7 +93,7 @@ public class ApiRestServer implements Startable {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
     public boolean stop() {
@@ -109,7 +108,7 @@ public class ApiRestServer implements Startable {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
     public void shutdown() {
@@ -117,7 +116,7 @@ public class ApiRestServer implements Startable {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
     public boolean isAlive() {
@@ -125,7 +124,7 @@ public class ApiRestServer implements Startable {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     @Override
     public String toString() {

@@ -20,8 +20,8 @@
 
 package org.onap.policy.api.main.rest;
 
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.api.main.startstop.ApiActivator;
+import org.onap.policy.common.endpoints.report.HealthCheckReport;
 
 /**
  * Class to fetch health check of api service.

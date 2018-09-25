@@ -20,21 +20,21 @@
 
 package org.onap.policy.api.main.startstop;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.api.main.PolicyApiException;
 import org.onap.policy.api.main.PolicyApiRuntimeException;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Arrays;
 
 /**
  * This class reads and handles command line parameters for the policy api main program.
