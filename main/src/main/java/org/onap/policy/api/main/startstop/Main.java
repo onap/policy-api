@@ -1,6 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP Policy API 
+ * ================================================================================ 
+ * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +24,19 @@
 package org.onap.policy.api.main.startstop;
 
 import java.util.Arrays;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class initiates ONAP Policy Framework policy api.
  *
  */
 public class Main {
-    private static final Logger LOGGER = FlexLogger.getLogger(Main.class);
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     // The policy api Activator that activates the policy api service
     private ApiActivator activator;
@@ -47,7 +51,7 @@ public class Main {
      */
     public Main(final String[] args) {
         final String argumentString = Arrays.toString(args);
-        LOGGER.info("Starting policy api service with arguments - " + argumentString);
+        LOGGER.info("Starting policy api service with arguments - {}", argumentString);
 
         // Check the arguments
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
@@ -81,8 +85,7 @@ public class Main {
         try {
             activator.initialize();
         } catch (final PolicyApiException e) {
-            LOGGER.error("start of policy api service failed, used parameters are " + Arrays.toString(args),
-                    e);
+            LOGGER.error("start of policy api service failed, used parameters are {} ", argumentString, e);
             return;
         }
 
