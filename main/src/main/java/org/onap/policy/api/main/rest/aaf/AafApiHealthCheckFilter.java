@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,30 +20,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main;
+package org.onap.policy.api.main.rest.aaf;
+
+import org.onap.policy.common.endpoints.http.server.aaf.AafGranularAuthFilter;
 
 /**
- * This exception will be called if an error occurs in policy api external service.
+ * Api healthcheck AAF authorization filter.
  */
-public class PolicyApiException extends Exception {
-    private static final long serialVersionUID = -8507246953751956974L;
-
-    /**
-     * Instantiates a new policy api exception with a message.
-     *
-     * @param message the message
-     */
-    public PolicyApiException(final String message) {
-        super(message);
-    }
-
-    /**
-     * Instantiates a new policy api exception with a message and a caused by exception.
-     *
-     * @param message the message
-     * @param exp the exception that caused this exception to be thrown
-     */
-    public PolicyApiException(final String message, final Exception exp) {
-        super(message, exp);
+public class AafApiHealthCheckFilter extends AafGranularAuthFilter {
+   
+    public static final String AAF_NODETYPE = "api";
+    public static final String AAF_ROOT_PERMISSION = DEFAULT_NAMESPACE + "." + AAF_NODETYPE;
+    
+    @Override
+    public String getPermissionTypeRoot() {
+        return AAF_ROOT_PERMISSION;
     }
 }

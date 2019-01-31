@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +25,23 @@ package org.onap.policy.api.main.parameters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.parameters.GroupValidationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class handles reading, parsing and validating of policy api parameters from JSON files.
  */
 public class ApiParameterHandler {
-    private static final Logger LOGGER = FlexLogger.getLogger(ApiParameterHandler.class);
 
+    /**
+     * Logger.
+     */
+    private static Logger logger = LoggerFactory.getLogger(ApiParameterHandler.class);
+    
     /**
      * Read the parameters from the parameter file.
      *
@@ -55,14 +62,14 @@ public class ApiParameterHandler {
         } catch (final Exception e) {
             final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()
                     + "\"\n" + "(" + e.getClass().getSimpleName() + "):" + e.getMessage();
-            LOGGER.error(errorMessage, e);
+            logger.error(errorMessage, e);
             throw new PolicyApiException(errorMessage, e);
         }
 
         // The JSON processing returns null if there is an empty file
         if (apiParameterGroup == null) {
             final String errorMessage = "no parameters found in \"" + arguments.getConfigurationFilePath() + "\"";
-            LOGGER.error(errorMessage);
+            logger.error(errorMessage);
             throw new PolicyApiException(errorMessage);
         }
 
@@ -73,7 +80,7 @@ public class ApiParameterHandler {
                     "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";
             returnMessage += validationResult.getResult();
 
-            LOGGER.error(returnMessage);
+            logger.error(returnMessage);
             throw new PolicyApiException(returnMessage);
         }
 

@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,16 +35,15 @@ import javax.ws.rs.core.Response;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 
 /**
- * Class to provide api REST services.
- *
+ * Class to provide REST API services.
  */
 @Path("/")
 @Api
 @Produces(MediaType.APPLICATION_JSON)
 @SwaggerDefinition(
-        info = @Info(description = "Policy Api Service", version = "v1.0", title = "Policy Api"),
+        info = @Info(description = "Policy Api Service", version = "v2.0", title = "Policy Api"),
         consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON },
-        schemes = { SwaggerDefinition.Scheme.HTTP },
+        schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS },
         tags = { @Tag(name = "policy-api", description = "Policy Api Service Operations") })
 public class ApiRestController {
 
@@ -53,5 +54,15 @@ public class ApiRestController {
             notes = "Provides healthy status of the Policy Api component", response = HealthCheckReport.class)
     public Response healthcheck() {
         return Response.status(Response.Status.OK).entity(new HealthCheckProvider().performHealthCheck()).build();
+    }
+    
+    @GET
+    @Path("statistics")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Fetch current statistics",
+            notes = "Provides current statistics of the Policy API component",
+            response = StatisticsReport.class)
+    public Response statistics() {
+        return Response.status(Response.Status.OK).entity(new StatisticsProvider().fetchCurrentStatistics()).build();
     }
 }

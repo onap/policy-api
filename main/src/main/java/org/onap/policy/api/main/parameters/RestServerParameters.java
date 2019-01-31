@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +37,9 @@ public class RestServerParameters implements ParameterGroup {
     private int port;
     private String userName;
     private String password;
-
+    private boolean https; 
+    private boolean aaf;
+    
     /**
      * Constructor for instantiating RestServerParameters.
      *
@@ -50,6 +54,29 @@ public class RestServerParameters implements ParameterGroup {
         this.port = port;
         this.userName = userName;
         this.password = password;
+        this.https = false;
+        this.aaf = false;
+    }
+    
+    /**
+     * Constructor for instantiating RestServerParameters.
+     *
+     * @param host the host name
+     * @param port the port
+     * @param userName the user name
+     * @param password the password
+     * @param https the https
+     * @param aaf the aaf
+     */
+    public RestServerParameters(final String host, final int port, final String userName, final String password, 
+                                final boolean https, final boolean aaf) {
+        super();
+        this.host = host;
+        this.port = port;
+        this.userName = userName;
+        this.password = password;
+        this.https = https;
+        this.aaf = aaf;
     }
 
     /**
@@ -97,6 +124,22 @@ public class RestServerParameters implements ParameterGroup {
     public String getPassword() {
         return password;
     }
+    
+    /**
+     * Return the https of this RestServerParameters instance.
+     * @return the https
+     */
+    public boolean isHttps() {
+        return https;
+    }
+    
+    /**
+     * Return the aaf of this RestServerParameters instance.
+     * @return the aaf
+     */
+    public boolean isAaf() {
+        return aaf;
+    } 
 
     /**
      * Set the name of this RestServerParameters instance.

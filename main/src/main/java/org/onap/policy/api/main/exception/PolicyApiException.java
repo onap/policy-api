@@ -18,30 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main;
+package org.onap.policy.api.main.exception;
 
 /**
- * This runtime exception will be called if a runtime error occurs when using policy api.
+ * This exception will be called if an error occurs in policy api external service.
  */
-public class PolicyApiRuntimeException extends RuntimeException {
+public class PolicyApiException extends Exception {
     private static final long serialVersionUID = -8507246953751956974L;
 
     /**
-     * Instantiates a new policy api runtime exception with a message.
+     * Instantiates a new policy api exception with a message.
      *
      * @param message the message
      */
-    public PolicyApiRuntimeException(final String message) {
+    public PolicyApiException(final String message) {
         super(message);
     }
 
     /**
-     * Instantiates a new policy api runtime exception with a message and a caused by exception.
+     * Instantiates a new policy api exception with a message and a caused by exception.
      *
      * @param message the message
      * @param exp the exception that caused this exception to be thrown
      */
-    public PolicyApiRuntimeException(final String message, final Exception exp) {
+    public PolicyApiException(final String message, final Exception exp) {
         super(message, exp);
     }
 }

@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +22,24 @@
 
 package org.onap.policy.api.main.startstop;
 
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.rest.ApiRestServer;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.parameters.ParameterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class wraps a distributor so that it can be activated as a complete service together with all its api
  * and forwarding handlers.
  */
 public class ApiActivator {
-    // The logger for this class
-    private static final Logger LOGGER = FlexLogger.getLogger(ApiActivator.class);
+    
+    /**
+     * Logger.
+     */
+    private static Logger logger = LoggerFactory.getLogger(ApiActivator.class);
 
-    // The parameters of this policy api activator
     private final ApiParameterGroup apiParameterGroup;
 
     private static boolean alive = false;
@@ -57,11 +61,11 @@ public class ApiActivator {
      * @throws PolicyApiException on errors in initializing the service
      */
     public void initialize() throws PolicyApiException {
-        LOGGER.debug("Policy api starting as a service . . .");
+        logger.debug("Policy api starting as a service . . .");
         startApiRestServer();
         registerToParameterService(apiParameterGroup);
         ApiActivator.setAlive(true);
-        LOGGER.debug("Policy api started as a service");
+        logger.debug("Policy api started as a service");
     }
 
     /**
@@ -91,7 +95,7 @@ public class ApiActivator {
             // Stop the api rest server
             restServer.stop();
         } catch (final Exception exp) {
-            LOGGER.error("Policy api service termination failed", exp);
+            logger.error("Policy api service termination failed", exp);
             throw new PolicyApiException(exp.getMessage(), exp);
         }
     }

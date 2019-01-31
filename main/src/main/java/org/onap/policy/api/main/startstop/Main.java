@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP
+ * ================================================================================
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +23,22 @@
 package org.onap.policy.api.main.startstop;
 
 import java.util.Arrays;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class initiates ONAP Policy Framework policy api.
  *
  */
 public class Main {
-    private static final Logger LOGGER = FlexLogger.getLogger(Main.class);
+    
+    /**
+     * Logger.
+     */
+    private static Logger logger = LoggerFactory.getLogger(Main.class);
 
     // The policy api Activator that activates the policy api service
     private ApiActivator activator;
@@ -47,7 +53,7 @@ public class Main {
      */
     public Main(final String[] args) {
         final String argumentString = Arrays.toString(args);
-        LOGGER.info("Starting policy api service with arguments - " + argumentString);
+        logger.info("Starting policy api service with arguments - " + argumentString);
 
         // Check the arguments
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
@@ -55,14 +61,14 @@ public class Main {
             // The arguments return a string if there is a message to print and we should exit
             final String argumentMessage = arguments.parse(args);
             if (argumentMessage != null) {
-                LOGGER.info(argumentMessage);
+                logger.info(argumentMessage);
                 return;
             }
 
             // Validate that the arguments are sane
             arguments.validate();
         } catch (final PolicyApiException e) {
-            LOGGER.error("start of policy api service failed", e);
+            logger.error("start of policy api service failed", e);
             return;
         }
 
@@ -70,7 +76,7 @@ public class Main {
         try {
             parameterGroup = new ApiParameterHandler().getParameters(arguments);
         } catch (final Exception e) {
-            LOGGER.error("start of policy api service failed", e);
+            logger.error("start of policy api service failed", e);
             return;
         }
 
@@ -81,14 +87,14 @@ public class Main {
         try {
             activator.initialize();
         } catch (final PolicyApiException e) {
-            LOGGER.error("start of policy api service failed, used parameters are " + Arrays.toString(args),
+            logger.error("start of policy api service failed, used parameters are " + Arrays.toString(args),
                     e);
             return;
         }
 
         // Add a shutdown hook to shut everything down in an orderly manner
         Runtime.getRuntime().addShutdownHook(new PolicyApiShutdownHookClass());
-        LOGGER.info("Started policy api service");
+        logger.info("Started policy api service");
     }
 
     /**
@@ -131,7 +137,7 @@ public class Main {
                 // Shutdown the policy api service and wait for everything to stop
                 activator.terminate();
             } catch (final PolicyApiException e) {
-                LOGGER.warn("error occured during shut down of the policy api service", e);
+                logger.warn("error occured during shut down of the policy api service", e);
             }
         }
     }
