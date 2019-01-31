@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
 import org.onap.policy.api.main.parameters.CommonTestData;
@@ -38,14 +39,9 @@ public class TestApiActivator {
 
     @Test
     public void testApiActivator() throws PolicyApiException {
-        final String[] apiConfigParameters =
-        { "-c", "parameters/ApiConfigParameters.json" };
-
-        final ApiCommandLineArguments arguments =
-                new ApiCommandLineArguments(apiConfigParameters);
-
+        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters.json" };
+        final ApiCommandLineArguments arguments = new ApiCommandLineArguments(apiConfigParameters);
         final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);
-
         final ApiActivator activator = new ApiActivator(parGroup);
         activator.initialize();
         assertTrue(activator.getParameterGroup().isValid());

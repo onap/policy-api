@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API 
  * ================================================================================ 
- * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,34 +20,20 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest;
+package org.onap.policy.api.main.rest.aaf;
 
-import org.onap.policy.api.main.startstop.ApiActivator;
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.endpoints.http.server.aaf.AafGranularAuthFilter;
 
 /**
- * Class to fetch health check of api service.
- *
+ * Api AAF authorization filter.
  */
-public class HealthCheckProvider {
-
-    private static final String NOT_ALIVE = "not alive";
-    private static final String ALIVE = "alive";
-    private static final String URL = "self";
-    private static final String NAME = "Policy API";
-
-    /**
-     * Performs the health check of api service.
-     *
-     * @return Report containing health check status
-     */
-    public HealthCheckReport performHealthCheck() {
-        final HealthCheckReport report = new HealthCheckReport();
-        report.setName(NAME);
-        report.setUrl(URL);
-        report.setHealthy(ApiActivator.isAlive());
-        report.setCode(ApiActivator.isAlive() ? 200 : 500);
-        report.setMessage(ApiActivator.isAlive() ? ALIVE : NOT_ALIVE);
-        return report;
+public class AafApiFilter extends AafGranularAuthFilter {
+   
+    public static final String AAF_NODETYPE = "policy-api";
+    public static final String AAF_ROOT_PERMISSION = DEFAULT_NAMESPACE + "." + AAF_NODETYPE;
+    
+    @Override
+    public String getPermissionTypeRoot() {
+        return AAF_ROOT_PERMISSION;
     }
 }
