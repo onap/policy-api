@@ -2,7 +2,6 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API 
  * ================================================================================ 
- * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,32 +22,26 @@
 
 package org.onap.policy.api.main.rest;
 
-import org.onap.policy.api.main.startstop.ApiActivator;
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import com.openpojo.reflection.filters.FilterClassName;
+import com.openpojo.validation.Validator;
+import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.rule.impl.SetterMustExistRule;
+import com.openpojo.validation.test.impl.GetterTester;
+import com.openpojo.validation.test.impl.SetterTester;
+
+import org.junit.Test;
+import org.onap.policy.common.utils.validation.ToStringTester;
 
 /**
- * Class to fetch health check of api service.
- *
+ * Class to perform unit testing of {@link StatisticsReport}.
  */
-public class HealthCheckProvider {
+public class TestStatisticsReport {
 
-    private static final String NOT_ALIVE = "not alive";
-    private static final String ALIVE = "alive";
-    private static final String URL = "self";
-    private static final String NAME = "Policy API";
-
-    /**
-     * Performs the health check of api service.
-     *
-     * @return Report containing health check status
-     */
-    public HealthCheckReport performHealthCheck() {
-        final HealthCheckReport report = new HealthCheckReport();
-        report.setName(NAME);
-        report.setUrl(URL);
-        report.setHealthy(ApiActivator.isAlive());
-        report.setCode(ApiActivator.isAlive() ? 200 : 500);
-        report.setMessage(ApiActivator.isAlive() ? ALIVE : NOT_ALIVE);
-        return report;
+    @Test
+    public void testStatisticsReport() {
+        final Validator validator = ValidatorBuilder.create().with(new ToStringTester()).with(new SetterMustExistRule())
+                .with(new SetterTester()).with(new GetterTester()).build();
+        validator.validate(StatisticsReport.class.getPackage().getName(),
+                new FilterClassName(StatisticsReport.class.getName()));
     }
 }

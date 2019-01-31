@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.CommonTestData;
 
 /**
@@ -35,8 +35,7 @@ public class TestMain {
 
     @Test
     public void testMain() throws PolicyApiException {
-        final String[] apiConfigParameters =
-        { "-c", "parameters/ApiConfigParameters.json" };
+        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters.json" };
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters().isValid());
         assertEquals(CommonTestData.API_GROUP_NAME, main.getParameters().getName());
@@ -45,31 +44,27 @@ public class TestMain {
 
     @Test
     public void testMain_NoArguments() {
-        final String[] apiConfigParameters =
-        {};
+        final String[] apiConfigParameters = {};
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters() == null);
     }
 
     @Test
     public void testMain_InvalidArguments() {
-        final String[] apiConfigParameters =
-        { "parameters/ApiConfigParameters.json" };
+        final String[] apiConfigParameters = { "parameters/ApiConfigParameters.json" };
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters() == null);
     }
 
     @Test
     public void testMain_Help() {
-        final String[] apiConfigParameters =
-        { "-h" };
+        final String[] apiConfigParameters = { "-h" };
         Main.main(apiConfigParameters);
     }
 
     @Test
     public void testMain_InvalidParameters() {
-        final String[] apiConfigParameters =
-        { "-c", "parameters/ApiConfigParameters_InvalidName.json" };
+        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters_InvalidName.json" };
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters() == null);
     }

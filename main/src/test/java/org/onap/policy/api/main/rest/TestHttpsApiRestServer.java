@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP Policy API 
+ * ================================================================================ 
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +23,15 @@
 package org.onap.policy.api.main.rest;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.Properties;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -32,12 +39,9 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
-import org.onap.policy.api.main.parameters.CommonTestData;
-import org.onap.policy.api.main.parameters.RestServerParameters;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -45,19 +49,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to perform unit test of HealthCheckMonitor.
- *
+ * Class to perform unit test of https set on API REST server.
  */
-public class TestApiRestServer {
+public class TestHttpsApiRestServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestApiRestServer.class);
-    private static final String NOT_ALIVE = "not alive";
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestHttpsApiRestServer.class);
     private static final String ALIVE = "alive";
     private static final String SELF = "self";
     private static final String NAME = "Policy API";
+    private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
 
     @Test
-    public void testHealthCheckSuccess() throws PolicyApiException, InterruptedException {
+    public void testHttpsHealthCheckSuccess() {
         final String reportString = "Report [name=Policy API, url=self, healthy=true, code=200, message=alive]";
         try {
             final Main main = startApiService();
@@ -65,32 +68,18 @@ public class TestApiRestServer {
             validateReport(NAME, SELF, true, 200, ALIVE, reportString, report);
             stopApiService(main);
         } catch (final Exception exp) {
-            LOGGER.error("testHealthCheckSuccess failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testHealthCheckFailure() throws InterruptedException {
-        final String reportString = "Report [name=Policy API, url=self, healthy=false, code=500, message=not alive]";
-        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
-        restServerParams.setName(CommonTestData.API_GROUP_NAME);
-        final ApiRestServer restServer = new ApiRestServer(restServerParams);
-        try {
-            restServer.start();
-            final HealthCheckReport report = performHealthCheck();
-            validateReport(NAME, SELF, false, 500, NOT_ALIVE, reportString, report);
-            assertTrue(restServer.isAlive());
-            assertTrue(restServer.toString().startsWith("ApiRestServer [servers="));
-            restServer.shutdown();
-        } catch (final Exception exp) {
-            LOGGER.error("testHealthCheckFailure failed", exp);
+            LOGGER.error("testHttpsHealthCheckSuccess failed", exp);
             fail("Test should not throw an exception");
         }
     }
 
     private Main startApiService() {
-        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters.json" };
+        final Properties systemProps = System.getProperties();
+        systemProps.put("javax.net.ssl.keyStore", KEYSTORE);
+        systemProps.put("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
+        System.setProperties(systemProps);
+
+        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters_Https.json" };
         return new Main(apiConfigParameters);
     }
 
@@ -98,14 +87,33 @@ public class TestApiRestServer {
         main.shutdown();
     }
 
-    private HealthCheckReport performHealthCheck() throws InterruptedException, IOException {
-        final ClientConfig clientConfig = new ClientConfig();
+    private HealthCheckReport performHealthCheck() throws Exception {
 
+        final TrustManager[] noopTrustManager = new TrustManager[] { new X509TrustManager() {
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
+
+            @Override
+            public void checkClientTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {
+            }
+        } };
+
+        final SSLContext sc = SSLContext.getInstance("TLSv1.2");
+        sc.init(null, noopTrustManager, new SecureRandom());
+        final ClientBuilder clientBuilder = 
+                ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
+        final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
-        clientConfig.register(feature);
+        client.register(feature);
 
-        final Client client = ClientBuilder.newClient(clientConfig);
-        final WebTarget webTarget = client.target("http://localhost:6969/healthcheck");
+        final WebTarget webTarget = client.target("https://localhost:6969/healthcheck");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         

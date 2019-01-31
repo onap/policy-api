@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main;
+package org.onap.policy.api.main.exception;
 
 /**
  * This runtime exception will be called if a runtime error occurs when using policy api.

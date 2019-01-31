@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main;
+package org.onap.policy.api.main.exception;
 
 /**
  * This exception will be called if an error occurs in policy api external service.
