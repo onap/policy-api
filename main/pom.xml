@@ -2,6 +2,7 @@
   ============LICENSE_START=======================================================
    Copyright (C) 2018 Ericsson. All rights reserved.
    Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+   Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,69 +19,60 @@
   SPDX-License-Identifier: Apache-2.0
   ============LICENSE_END=========================================================
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.onap.policy.api</groupId>
-        <artifactId>policy-api</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.onap.policy.api</groupId>
+		<artifactId>policy-api</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>main</artifactId>
+	<artifactId>main</artifactId>
 
-    <name>${project.artifactId}</name>
-    <description>The main module of Policy Api that handles startup, lifecycle management, and parameters.</description>
+	<name>${project.artifactId}</name>
+	<description>The main module of Policy Api that handles startup, lifecycle management, and parameters.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>capabilities</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>policy-endpoints</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-cli</groupId>
-            <artifactId>commons-cli</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>common-parameters</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>ONAP-Logging</artifactId>
-            <version>${policy.common.version}</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.onap.policy.common</groupId>
+			<artifactId>capabilities</artifactId>
+			<version>${policy.common.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.onap.policy.common</groupId>
+			<artifactId>common-parameters</artifactId>
+			<version>${policy.common.version}</version>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <resources>
-            <!-- Output the version of the api service -->
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/version.txt</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/version.txt</exclude>
-                </excludes>
-            </resource>
-        </resources>
-    </build>
+	<build>
+		<resources>
+			<!-- Output the version of the api service -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/version.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/version.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	</build>
 
 </project>
