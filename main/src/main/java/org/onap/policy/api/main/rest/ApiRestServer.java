@@ -1,6 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP Policy API 
+ * ================================================================================ 
+ * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import org.onap.policy.api.main.parameters.RestServerParameters;
+import org.onap.policy.api.main.rest.aaf.AafApiHealthCheckFilter;
+import org.onap.policy.api.main.rest.aaf.AafApiStatisticsFilter;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to manage life cycle of api rest server.
@@ -37,7 +42,8 @@ public class ApiRestServer implements Startable {
 
     private static final String SEPARATOR = ".";
     private static final String HTTP_SERVER_SERVICES = "http.server.services";
-    private static final Logger LOGGER = FlexLogger.getLogger(ApiRestServer.class);
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestServer.class);
 
     private List<HttpServletServer> servers = new ArrayList<>();
 
@@ -59,7 +65,11 @@ public class ApiRestServer implements Startable {
     public boolean start() {
         try {
             servers = HttpServletServer.factory.build(getServerProperties());
-            for (final HttpServletServer server : servers) {
+            for (HttpServletServer server : servers) {
+                if (server.isAaf()) {
+                    server.addFilterClass(null, AafApiHealthCheckFilter.class.getCanonicalName());
+                    server.addFilterClass(null, AafApiStatisticsFilter.class.getCanonicalName());
+                }
                 server.start();
             }
         } catch (final Exception exp) {
@@ -68,7 +78,7 @@ public class ApiRestServer implements Startable {
         }
         return true;
     }
-
+    
     /**
      * Creates the server properties object using restServerParameters.
      *
@@ -89,6 +99,10 @@ public class ApiRestServer implements Startable {
                 restServerParameters.getUserName());
         props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".password",
                 restServerParameters.getPassword());
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".https",
+                String.valueOf(restServerParameters.isHttps()));
+        props.setProperty(HTTP_SERVER_SERVICES + SEPARATOR + restServerParameters.getName() + ".aaf",
+                String.valueOf(restServerParameters.isAaf()));
         return props;
     }
 

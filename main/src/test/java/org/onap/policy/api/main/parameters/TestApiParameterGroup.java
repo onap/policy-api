@@ -1,6 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP Policy API 
+ * ================================================================================ 
+ * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +50,8 @@ public class TestApiParameterGroup {
                 apiParameters.getRestServerParameters().getUserName());
         assertEquals(restServerParameters.getPassword(),
                 apiParameters.getRestServerParameters().getPassword());
+        assertEquals(restServerParameters.isHttps(), apiParameters.getRestServerParameters().isHttps());
+        assertEquals(restServerParameters.isAaf(), apiParameters.getRestServerParameters().isAaf());
         assertEquals(CommonTestData.API_GROUP_NAME, apiParameters.getName());
     }
 
