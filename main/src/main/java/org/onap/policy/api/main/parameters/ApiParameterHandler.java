@@ -1,6 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * ONAP Policy API 
+ * ================================================================================ 
+ * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +26,19 @@ package org.onap.policy.api.main.parameters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
-import org.onap.policy.api.main.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.parameters.GroupValidationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class handles reading, parsing and validating of policy api parameters from JSON files.
  */
 public class ApiParameterHandler {
-    private static final Logger LOGGER = FlexLogger.getLogger(ApiParameterHandler.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiParameterHandler.class);
+    
     /**
      * Read the parameters from the parameter file.
      *
@@ -55,7 +59,6 @@ public class ApiParameterHandler {
         } catch (final Exception e) {
             final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()
                     + "\"\n" + "(" + e.getClass().getSimpleName() + "):" + e.getMessage();
-            LOGGER.error(errorMessage, e);
             throw new PolicyApiException(errorMessage, e);
         }
 

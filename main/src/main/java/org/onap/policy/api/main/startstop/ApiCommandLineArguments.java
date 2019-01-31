@@ -31,10 +31,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.onap.policy.api.main.PolicyApiException;
-import org.onap.policy.api.main.PolicyApiRuntimeException;
+import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-
 
 /**
  * This class reads and handles command line parameters for the policy api main program.
