@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6f95a135_a9ba1830",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-01T12:30:52Z",
+      "side": 0,
+      "message": "That is correct, we do not remove. We only ensure the current year is in there.",
+      "parentUuid": "68ecd9ae_f896310b",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 73
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b43fbccd_599c5713",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 1

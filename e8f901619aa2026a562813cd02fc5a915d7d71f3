@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "25861816_b2b1d8bb",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-01T12:30:52Z",
+      "side": 1,
+      "message": "Yes let\u0027s make sure we comment the code accurately, this is a boolean.",
+      "parentUuid": "a5332a96_25a23d5d",
+      "range": {
+        "startLine": 129,
+        "startChar": 18,
+        "endLine": 129,
+        "endChar": 23
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d908b93_0913cfc3",
         "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
         "patchSetId": 1
