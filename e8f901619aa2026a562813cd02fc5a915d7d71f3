@@ -1,0 +1,395 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89f37b5a_5a184259",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "tabs are not allowed as per ONAP Code Style.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 9
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "253e42d3_f4b50cd1",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment. I think its better to have it in main pom of the component.",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 39
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abbe1612_93746ac7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Do we really need this?",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 7
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea43ea07_f02022a7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "This will violate the sonar rule \"Loggers should be \"private static final\" and should share a naming convention\nsquid : S1312\"",
+      "range": {
+        "startLine": 43,
+        "startChar": 26,
+        "endLine": 43,
+        "endChar": 32
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5332a96_25a23d5d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "It will be better to say it as \"https flag\" or \"https status\".",
+      "range": {
+        "startLine": 129,
+        "startChar": 18,
+        "endLine": 129,
+        "endChar": 23
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d908b93_0913cfc3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 137,
+        "startChar": 18,
+        "endLine": 137,
+        "endChar": 21
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29c23a98_699d7f2e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 32
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82aeb37f_398fde2c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/aaf/AafApiHealthCheckFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "I feel its better to say \"policy-api\" as AAF NodeType so that it doesn\u0027t conflict with any other projects in ONAP having name as \"api\".",
+      "range": {
+        "startLine": 32,
+        "startChar": 47,
+        "endLine": 32,
+        "endChar": 50
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d20ddc6b_6679b1dc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/aaf/AafApiStatisticsFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "same.",
+      "range": {
+        "startLine": 32,
+        "startChar": 47,
+        "endLine": 32,
+        "endChar": 50
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6f127c3_4ecdbb9f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 32
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c5bed7a_30f31956",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 32
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a36b93f0_0717367d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "This will lead to sonar issue - \"Preconditions\" and logging arguments should not require evaluation (squid:S2629)",
+      "range": {
+        "startLine": 90,
+        "startChar": 12,
+        "endLine": 90,
+        "endChar": 107
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "155d1e3b_19e2a37d",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 33
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51372760_3e5a8923",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiStatistics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 31
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a298d4e3_65363b68",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 32
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d066ac99_e66cb541",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "pls remove tabs",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 3
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e51941d4_d0096a2a",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 1,
+      "message": "pls remove unwanted spaces from all the files.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 1
+      },
+      "revId": "e8f901619aa2026a562813cd02fc5a915d7d71f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

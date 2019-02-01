@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68ecd9ae_f896310b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "As per me, we should not remove the license header of any company. Instead add our own header to it.\nI think Pam is better person to guide us here.",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 73
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b43fbccd_599c5713",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "Same comment",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 51
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca289123_752436da",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "Same comment",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 52
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b647611_5b420907",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "Same comment",
+      "range": {
+        "startLine": 3,
+        "startChar": 23,
+        "endLine": 3,
+        "endChar": 51
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab0645b6_f70baced",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "Same comment",
+      "range": {
+        "startLine": 3,
+        "startChar": 23,
+        "endLine": 3,
+        "endChar": 51
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b422aeb4_b57bda4b",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "Same comment",
+      "range": {
+        "startLine": 6,
+        "startChar": 29,
+        "endLine": 6,
+        "endChar": 59
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea41354_15ec2716",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-01T12:13:05Z",
+      "side": 0,
+      "message": "I think its better to have Junit \u0026 Logging dependencies in this pom.xml. So that they are inherited to all the child modules.",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 19
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
