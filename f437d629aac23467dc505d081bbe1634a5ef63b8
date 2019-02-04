@@ -277,6 +277,30 @@
       "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91f23b5c_7c7827bb",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-04T14:28:41Z",
+      "side": 0,
+      "message": "I consulted with Jorge for this. The required logging dependency is only logback-classic that includes every other logging dependency needed. It is already included in policy-endpoints. That\u0027s why I just put policy-endpoints here. Is it ok to keep endpoints here?",
+      "parentUuid": "26ed87e0_b36683b3",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
