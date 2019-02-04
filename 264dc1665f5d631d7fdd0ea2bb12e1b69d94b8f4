@@ -162,6 +162,52 @@
       "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffead77d_47c59b53",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T18:07:36Z",
+      "side": 1,
+      "message": "I think this will not work. The logging filter class belongs to drools-pdp and we are trying to refer it in policy/api.\n@Jorge - What do you say?",
+      "range": {
+        "startLine": 120,
+        "startChar": 19,
+        "endLine": 120,
+        "endChar": 99
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "570af69c_e4c143b0",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T18:07:36Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 143,
+        "startChar": 19,
+        "endLine": 143,
+        "endChar": 104
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
