@@ -210,6 +210,30 @@
     },
     {
       "key": {
+        "uuid": "e4d94bad_794d4814",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-04T16:57:45Z",
+      "side": 0,
+      "message": "Sorry, I miss this license. I\u0027ll add it back in new patch",
+      "parentUuid": "f235fafb_7e35304a",
+      "range": {
+        "startLine": 6,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 59
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67b69049_5c953220",
         "filename": "pom.xml",
         "patchSetId": 3
@@ -316,6 +340,30 @@
       "side": 0,
       "message": "Ok fine. I will do the same in PAP as well to maintain similarity.\n\nBasically slf4j-ext gives extended logging features like XLogger, EventLogging etc - https://www.slf4j.org/extensions.html",
       "parentUuid": "91f23b5c_7c7827bb",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b5f93bb_a1ea7768",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-04T16:57:45Z",
+      "side": 0,
+      "message": "Maybe I can add slf4j-ext here just in case we need extended feature.",
+      "parentUuid": "1304803d_546bd1e9",
       "range": {
         "startLine": 71,
         "startChar": 8,
