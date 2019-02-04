@@ -212,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "ca0e4914_9a7d196b",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-04T21:09:18Z",
+      "side": 1,
+      "message": "Right, remove this filter section for now.   We can define the strategy to do transaction logging in this component at a later point.",
+      "parentUuid": "01aea83b_039bb6e1",
+      "range": {
+        "startLine": 120,
+        "startChar": 19,
+        "endLine": 120,
+        "endChar": 99
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "570af69c_e4c143b0",
         "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
         "patchSetId": 3
@@ -223,6 +247,30 @@
       "writtenOn": "2019-02-04T18:07:36Z",
       "side": 1,
       "message": "Same comment",
+      "range": {
+        "startLine": 143,
+        "startChar": 19,
+        "endLine": 143,
+        "endChar": 104
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32c511e0_b4bbb1c4",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-04T21:09:18Z",
+      "side": 1,
+      "message": "Right, remove this filter section for now.   We can define the strategy to do transaction logging in this component at a later point.",
+      "parentUuid": "570af69c_e4c143b0",
       "range": {
         "startLine": 143,
         "startChar": 19,
