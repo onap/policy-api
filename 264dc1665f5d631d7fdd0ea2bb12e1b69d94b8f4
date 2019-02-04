@@ -22,6 +22,98 @@
       "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bd86327_1911b048",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T16:23:29Z",
+      "side": 1,
+      "message": "As this review is not merged yet, I will suggest to use some way to time bound this loop. Otherwise, it may run infinitely if the rest server startup fails and block the Jenkins build server permanently. Actually the same happened to us last week and the distribution build kept running whole weekend blocking any other builds to trigger. I am using the below code in PAP to prevent this. May be you can reuse it.\n\nfinal long startTime \u003d System.currentTimeMillis();\n        while (response \u003d\u003d null \u0026\u0026 (System.currentTimeMillis() - startTime) \u003c 120000) {\n            try {\n                response \u003d invocationBuilder.get(HealthCheckReport.class);\n            } catch (final Exception exp) {\n                LOGGER.info(\"the server is not started yet. We will retry again\");\n            }\n        }",
+      "range": {
+        "startLine": 98,
+        "startChar": 7,
+        "endLine": 104,
+        "endChar": 9
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "742dea63_22e12aa3",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiStatistics.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T16:23:29Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 9
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c39f0f1_ea3d40a2",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T16:23:29Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 118,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 9
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4179b28a_294d6834",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsStatisticApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T16:23:29Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 9
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
