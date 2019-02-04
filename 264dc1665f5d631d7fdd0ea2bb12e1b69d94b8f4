@@ -188,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "01aea83b_039bb6e1",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-04T18:35:40Z",
+      "side": 1,
+      "message": "Ram, maybe you are right. It might not work. Do you have working example for logging? Can I just follow what you did in distribution? I am not a logging expert.",
+      "parentUuid": "ffead77d_47c59b53",
+      "range": {
+        "startLine": 120,
+        "startChar": 19,
+        "endLine": 120,
+        "endChar": 99
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "570af69c_e4c143b0",
         "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
         "patchSetId": 3
