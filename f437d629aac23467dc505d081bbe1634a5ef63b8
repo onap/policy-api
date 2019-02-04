@@ -301,6 +301,30 @@
       "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1304803d_546bd1e9",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T15:09:40Z",
+      "side": 0,
+      "message": "Ok fine. I will do the same in PAP as well to maintain similarity.\n\nBasically slf4j-ext gives extended logging features like XLogger, EventLogging etc - https://www.slf4j.org/extensions.html",
+      "parentUuid": "91f23b5c_7c7827bb",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
