@@ -184,6 +184,52 @@
       "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67b69049_5c953220",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T14:15:28Z",
+      "side": 0,
+      "message": "I think we need this. The version gets managed by policy/parent.",
+      "range": {
+        "startLine": 67,
+        "startChar": 7,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26ed87e0_b36683b3",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T14:15:28Z",
+      "side": 0,
+      "message": "I am not a logging expert, but feel that we need these if we want logback logging. Also, the slf4j-ext library.\n@Liam/Pam/Jorge - May be you can help.",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 78,
+        "endChar": 21
+      },
+      "revId": "f437d629aac23467dc505d081bbe1634a5ef63b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

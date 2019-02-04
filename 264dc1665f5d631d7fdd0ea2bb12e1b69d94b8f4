@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6fd0fa0_8a5aab0b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-04T14:15:28Z",
+      "side": 1,
+      "message": "I think this will result in exception object getting printed in the log. If you simply pass the exception to LOGGER.error then it will print the relevant details of it in log. SO it should be\nLOGGER.error(\"start of policy api service failed, used parameters are {} \", argumentString, e);",
+      "range": {
+        "startLine": 88,
+        "startChar": 86,
+        "endLine": 88,
+        "endChar": 88
+      },
+      "revId": "264dc1665f5d631d7fdd0ea2bb12e1b69d94b8f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
