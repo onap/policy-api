@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5aaed318_be2d0435",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "I\u0027ll still keep it as general API service as more JAX-RS paths will be added in here. So it is not just for statistics",
+      "parentUuid": "fcff6109_139b95ab",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "826bf594_f8fce463",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestServer.java",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-02-05T01:15:56Z",
       "side": 1,
       "message": "I think just need one filter .. see comment later on .. AafApiFilter.class",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b795e6fb_d715ff42",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "changed in new patch",
+      "parentUuid": "826bf594_f8fce463",
       "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -104,6 +140,24 @@
     },
     {
       "key": {
+        "uuid": "1e4ddcda_b1cba7a8",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsApiRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "changed in new patch",
+      "parentUuid": "d8c52b3d_3b6f188b",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ccc07b4d_3c826fa9",
         "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
         "patchSetId": 4
@@ -115,6 +169,24 @@
       "writtenOn": "2019-02-05T01:15:56Z",
       "side": 1,
       "message": "remove this filter",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "403d8cd5_3ab99ece",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "ccc07b4d_3c826fa9",
       "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -138,6 +210,24 @@
     },
     {
       "key": {
+        "uuid": "09cb99cd_25fc6d30",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "8fbcdd50_afa35771",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b1e7609_8816f2fd",
         "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
         "patchSetId": 4
@@ -149,6 +239,24 @@
       "writtenOn": "2019-02-05T01:15:56Z",
       "side": 1,
       "message": "start with aaf set to false .. need to first coordinate with AAF team and Jonathan G. to get default permissions configured.   This is a global comment.",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09f3d7b2_fb2e408b",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-05T17:54:12Z",
+      "side": 1,
+      "message": "changed in new patch",
+      "parentUuid": "4b1e7609_8816f2fd",
       "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
