@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcff6109_139b95ab",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "REST Statistics API Service",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "826bf594_f8fce463",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "I think just need one filter .. see comment later on .. AafApiFilter.class",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81db9d7c_96396ab7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/aaf/AafApiHealthCheckFilter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "I think only need one filter, see other related comments ..",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd69831c_f4f755ea",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/aaf/AafApiStatisticsFilter.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "I think only needs one AAF filter .. ie. AafApiFilter (consolidate AafApiHealthcheckFilter and AafApiStatisticsFilter into one single class AafApiFilter since both are identical).",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e249fda4_36843e86",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "Why do you need the retries in the while loop, is it because a race condition with initialization ?\n\nYou coud use org.onap.policy.common.utils.network.NetworkUtil\n\nfrom policy-common in the setup method for junits:\n\n        if (!NetworkUtil.isTcpPortOpen(\"localhost\", 6969, 6, 12000L)) {\n            throw new IllegalStateException(\"cannot connect to port 6969\");\n        }\n\nand then simply do \n\nresponse \u003d invocationBuilder.get(HealthCheckReport.class);\n\nwith no while loop",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8c52b3d_3b6f188b",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsApiRestServer.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "see my other comment about using NetworkUtil",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ccc07b4d_3c826fa9",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "remove this filter",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbcdd50_afa35771",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "remove this filter",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b1e7609_8816f2fd",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-05T01:15:56Z",
+      "side": 1,
+      "message": "start with aaf set to false .. need to first coordinate with AAF team and Jonathan G. to get default permissions configured.   This is a global comment.",
+      "revId": "5d2179b725aa258fcb9abd4801d5bb16430bbdb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
