@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "20d51518_53d35953",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-06T14:08:35Z",
+      "side": 1,
+      "message": "I assume these two fields are not mandatory. If they are not explicitly indicated, they will set to false by default, according to httpServletServerFactory.build(). Is it ok to keep them optional? Jorge?",
+      "parentUuid": "e06574df_9a7effec",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "21950e1c48697e918626770ff1c642019341afc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b68799cc_0701f9b2",
         "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
         "patchSetId": 6
