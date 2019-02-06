@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8f9202b3_b73087ae",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-06T15:57:03Z",
+      "side": 1,
+      "message": "They are not mandatory from the common library, so if not present they are both defaulted to false.   The same for username and password if not present it is defaulted to not basic auth.  I guess it\u0027s up to you if you want to make them mandatory here.",
+      "parentUuid": "20d51518_53d35953",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "21950e1c48697e918626770ff1c642019341afc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b68799cc_0701f9b2",
         "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
         "patchSetId": 6
