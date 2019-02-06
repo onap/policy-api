@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e06574df_9a7effec",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-06T12:23:19Z",
+      "side": 1,
+      "message": "These parameters should be mandatory or not?\nIf yes, then its better to validate the same using the validate method in the class.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "21950e1c48697e918626770ff1c642019341afc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b68799cc_0701f9b2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/RestServerParameters.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-06T12:23:19Z",
+      "side": 1,
+      "message": "Again, if the new parameters are mandatory then we should just update the previous constructor with the new fields. What do you say?",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "21950e1c48697e918626770ff1c642019341afc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
