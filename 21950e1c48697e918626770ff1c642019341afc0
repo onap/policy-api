@@ -93,6 +93,29 @@
       "revId": "21950e1c48697e918626770ff1c642019341afc0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "663eaf61_0ab1d929",
+        "filename": "packages/policy-api-tarball/src/main/package/tarball/assembly.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-07T11:47:57Z",
+      "side": 1,
+      "message": "This will result in copying all the content from /etc \u0026 /ssl folders under /src/main/resources to /bin/config in created package. Hence duplicating the files which actually belongs to /etc \u0026 /etc/ssl folders as per the below fileSets.\nPlease have a look at my review in policy/distribution to fix this.",
+      "range": {
+        "startLine": 39,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 18
+      },
+      "revId": "21950e1c48697e918626770ff1c642019341afc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
