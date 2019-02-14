@@ -52,6 +52,7 @@
     <modules>
         <module>main</module>
         <module>packages</module>
+        <module>testsuites</module>
     </modules>
 
     <dependencies>
@@ -60,7 +61,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>    
+        <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>policy-endpoints</artifactId>
             <version>${policy.common.version}</version>
