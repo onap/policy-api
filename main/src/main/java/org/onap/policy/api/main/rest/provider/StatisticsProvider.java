@@ -1,8 +1,8 @@
 /*-
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +21,22 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest;
+package org.onap.policy.api.main.rest.provider;
 
+import org.onap.policy.api.main.rest.ApiStatisticsManager;
+import org.onap.policy.api.main.rest.StatisticsReport;
 import org.onap.policy.api.main.startstop.ApiActivator;
 
 /**
  * Class to fetch API statistics.
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
  */
 public class StatisticsProvider {
-    
+
     /**
      * Return the current API statistics.
-     * 
+     *
      * @return Report containing API statistics
      */
     public StatisticsReport fetchCurrentStatistics() {
@@ -43,16 +47,16 @@ public class StatisticsProvider {
         report.setApiCallFailureCount(ApiStatisticsManager.getApiCallFailureCount());
         report.setTotalPolicyGetCount(ApiStatisticsManager.getTotalPolicyGetCount());
         report.setTotalPolicyPostCount(ApiStatisticsManager.getTotalPolicyPostCount());
-        report.setTotalTemplateGetCount(ApiStatisticsManager.getTotalTemplateGetCount());
-        report.setTotalTemplatePostCount(ApiStatisticsManager.getTotalTemplatePostCount());
+        report.setTotalPolicyTypeGetCount(ApiStatisticsManager.getTotalPolicyTypeGetCount());
+        report.setTotalPolicyTypePostCount(ApiStatisticsManager.getTotalPolicyTypePostCount());
         report.setPolicyGetSuccessCount(ApiStatisticsManager.getPolicyGetSuccessCount());
         report.setPolicyGetFailureCount(ApiStatisticsManager.getPolicyGetFailureCount());
         report.setPolicyPostSuccessCount(ApiStatisticsManager.getPolicyPostSuccessCount());
         report.setPolicyPostFailureCount(ApiStatisticsManager.getPolicyPostFailureCount());
-        report.setTemplateGetSuccessCount(ApiStatisticsManager.getTemplateGetSuccessCount());
-        report.setTemplateGetFailureCount(ApiStatisticsManager.getTemplateGetFailureCount());
-        report.setTemplatePostSuccessCount(ApiStatisticsManager.getTemplatePostSuccessCount());
-        report.setTemplatePostFailureCount(ApiStatisticsManager.getTemplatePostFailureCount());
+        report.setPolicyTypeGetSuccessCount(ApiStatisticsManager.getPolicyTypeGetSuccessCount());
+        report.setPolicyTypeGetFailureCount(ApiStatisticsManager.getPolicyTypeGetFailureCount());
+        report.setPolicyTypePostSuccessCount(ApiStatisticsManager.getPolicyTypePostSuccessCount());
+        report.setPolicyTypePostFailureCount(ApiStatisticsManager.getPolicyTypePostFailureCount());
         return report;
     }
 }

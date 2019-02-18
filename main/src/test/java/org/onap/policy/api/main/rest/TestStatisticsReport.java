@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,10 +30,13 @@ import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 
 import org.junit.Test;
+import org.onap.policy.api.main.rest.StatisticsReport;
 import org.onap.policy.common.utils.validation.ToStringTester;
 
 /**
  * Class to perform unit testing of {@link StatisticsReport}.
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
  */
 public class TestStatisticsReport {
 
