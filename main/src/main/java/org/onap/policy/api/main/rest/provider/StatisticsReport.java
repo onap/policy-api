@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest;
+package org.onap.policy.api.main.rest.provider;
 
 /**
  * Class to represent API statistics report.

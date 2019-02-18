@@ -53,6 +53,11 @@
             <artifactId>common-parameters</artifactId>
             <version>${policy.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>platform</artifactId>
+            <version>${policy.models.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

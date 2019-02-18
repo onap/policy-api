@@ -1,8 +1,8 @@
 /*-
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest;
+package org.onap.policy.api.main.rest.provider;
 
 import org.onap.policy.api.main.startstop.ApiActivator;
 
@@ -29,10 +29,10 @@ import org.onap.policy.api.main.startstop.ApiActivator;
  * Class to fetch API statistics.
  */
 public class StatisticsProvider {
-    
+
     /**
      * Return the current API statistics.
-     * 
+     *
      * @return Report containing API statistics
      */
     public StatisticsReport fetchCurrentStatistics() {

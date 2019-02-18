@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,17 +28,14 @@ import static org.junit.Assert.fail;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
@@ -107,16 +104,16 @@ public class TestHttpsApiRestServer {
 
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
         sc.init(null, noopTrustManager, new SecureRandom());
-        final ClientBuilder clientBuilder = 
+        final ClientBuilder clientBuilder =
                 ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
         final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
         client.register(feature);
 
-        final WebTarget webTarget = client.target("https://localhost:6969/healthcheck");
+        final WebTarget webTarget = client.target("https://localhost:6969/policy/api/v1/healthcheck");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        
+
         if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
             throw new IllegalStateException("cannot connect to port 6969");
         }
