@@ -39,6 +39,8 @@ import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.CommonTestData;
 import org.onap.policy.api.main.parameters.RestServerParameters;
+import org.onap.policy.api.main.rest.model.StatisticsReport;
+import org.onap.policy.api.main.rest.provider.ApiStatisticsManager;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.slf4j.Logger;

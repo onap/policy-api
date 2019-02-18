@@ -44,6 +44,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.rest.model.StatisticsReport;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.slf4j.Logger;
