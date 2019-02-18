@@ -24,15 +24,12 @@ package org.onap.policy.api.main.rest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.IOException;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
@@ -106,10 +103,10 @@ public class TestApiRestServer {
         clientConfig.register(feature);
 
         final Client client = ClientBuilder.newClient(clientConfig);
-        final WebTarget webTarget = client.target("http://localhost:6969/healthcheck");
+        final WebTarget webTarget = client.target("http://localhost:6969/policy/api/v1/healthcheck");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        
+
         if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
             throw new IllegalStateException("cannot connect to port 6969");
         }

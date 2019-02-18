@@ -30,6 +30,7 @@ import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 
 import org.junit.Test;
+import org.onap.policy.api.main.rest.model.StatisticsReport;
 import org.onap.policy.common.utils.validation.ToStringTester;
 
 /**

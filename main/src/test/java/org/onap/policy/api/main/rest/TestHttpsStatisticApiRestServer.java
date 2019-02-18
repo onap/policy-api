@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,26 +24,23 @@ package org.onap.policy.api.main.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.rest.model.StatisticsReport;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.slf4j.Logger;
@@ -61,11 +58,11 @@ public class TestHttpsStatisticApiRestServer {
     public void testHttpsApiStatistic()
         throws PolicyApiException, InterruptedException, KeyManagementException, NoSuchAlgorithmException {
         final String reportString = "StatisticsReport [code=200, totalApiCallCount=0, apiCallSuccessCount=0, "
-            + "apiCallFailureCount=0, " + "totalPolicyGetCount=0, totalPolicyPostCount=0, " 
-            + "totalTemplateGetCount=0, totalTemplatePostCount=0, " 
-            + "policyGetSuccessCount=0, policyGetFailureCount=0, " 
-            + "policyPostSuccessCount=0, policyPostFailureCount=0, " 
-            + "templateGetSuccessCount=0, templateGetFailureCount=0, " 
+            + "apiCallFailureCount=0, " + "totalPolicyGetCount=0, totalPolicyPostCount=0, "
+            + "totalTemplateGetCount=0, totalTemplatePostCount=0, "
+            + "policyGetSuccessCount=0, policyGetFailureCount=0, "
+            + "policyPostSuccessCount=0, policyPostFailureCount=0, "
+            + "templateGetSuccessCount=0, templateGetFailureCount=0, "
             + "templatePostSuccessCount=0, templatePostFailureCount=0]";
         try {
             final Main main = startApiService();
@@ -112,23 +109,23 @@ public class TestHttpsStatisticApiRestServer {
 
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
         sc.init(null, noopTrustManager, new SecureRandom());
-        final ClientBuilder clientBuilder = 
+        final ClientBuilder clientBuilder =
                 ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
         final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
         client.register(feature);
 
-        final WebTarget webTarget = client.target("https://localhost:6969/statistics");
+        final WebTarget webTarget = client.target("https://localhost:6969/policy/api/v1/statistics");
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        
+
         if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
             throw new IllegalStateException("cannot connect to port 6969");
         }
         return invocationBuilder.get(StatisticsReport.class);
     }
 
-    private void validateReport(final int code, final int count, 
+    private void validateReport(final int code, final int count,
             final String reportString, final StatisticsReport report) {
         assertEquals(code, report.getCode());
         assertEquals(count, report.getTotalApiCallCount());

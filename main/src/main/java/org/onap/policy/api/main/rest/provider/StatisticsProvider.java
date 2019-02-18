@@ -21,8 +21,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest;
+package org.onap.policy.api.main.rest.provider;
 
+import org.onap.policy.api.main.rest.model.StatisticsReport;
 import org.onap.policy.api.main.startstop.ApiActivator;
 
 /**
