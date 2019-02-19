@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54dc3bd8_0d0e38c9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-19T19:51:01Z",
+      "side": 1,
+      "message": "I think its better to take this to class level as all the API\u0027s will be producing json response.",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94d29a29_0a4656e0",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-19T19:51:01Z",
+      "side": 1,
+      "message": "This is not needed. The success response format is already specified in the ApiOperation annotation. And swagger automatically generates the response 200 success case.",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 71,
+        "endChar": 97
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad50cd29_f4b64383",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-19T19:51:01Z",
+      "side": 1,
+      "message": "This is not needed. As by default there will be no response json in case of failure. Just the error code and message.\nIf you have any specific failure response class that you want to fill and send as part of response then the same has to be mentioned.",
+      "range": {
+        "startLine": 72,
+        "startChar": 63,
+        "endLine": 72,
+        "endChar": 84
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
