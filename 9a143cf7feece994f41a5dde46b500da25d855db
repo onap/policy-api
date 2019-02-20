@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "7c1fcef5_4f5f410d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-20T18:42:33Z",
+      "side": 1,
+      "message": "Not needed here.\nInstead we need to define securityDefinition as part of SwaggerDefination annotation.\n\nsecurityDefinition \u003d @SecurityDefinition(basicAuthDefinitions \u003d { @BasicAuthDefinition(key \u003d \"basicAuth\") })",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 90
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed5f8b43_6df43292",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-20T18:42:33Z",
+      "side": 1,
+      "message": "I think it should be v1.0 to keep swagger in sync with code (/policy/api/v1)",
+      "range": {
+        "startLine": 58,
+        "startChar": 67,
+        "endLine": 58,
+        "endChar": 73
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54dc3bd8_0d0e38c9",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 1
@@ -18,6 +64,29 @@
         "startChar": 4,
         "endLine": 66,
         "endChar": 41
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05de6e66_f077fd43",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-20T18:42:33Z",
+      "side": 1,
+      "message": "All the authenticated API\u0027s should also contain authorizations \u003d @Authorization(value \u003d \"basicAuth\") \nas part of ApiOperation annotation. So that the securityDefination applies to it.",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 17
       },
       "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
