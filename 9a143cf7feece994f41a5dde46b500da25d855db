@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "b2def74f_d8f49cf0",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T16:13:35Z",
+      "side": 1,
+      "message": "I think this v2.0 means the version of swagger spec, right? We are using annotation 1.5.X to generate swagger 2.0 spec. Latest one is using annotation 2.X to generate swagger/openAPI 3.0 spec. But here we are doing things for swagger 2.0 spec. Do I understand correctly? maybe we should keep this v2.0?",
+      "parentUuid": "ed5f8b43_6df43292",
+      "range": {
+        "startLine": 58,
+        "startChar": 67,
+        "endLine": 58,
+        "endChar": 73
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54dc3bd8_0d0e38c9",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 1
@@ -163,6 +187,30 @@
     },
     {
       "key": {
+        "uuid": "4c298b06_db3b4140",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/PolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T16:13:35Z",
+      "side": 1,
+      "message": "Yes. I\u0027ll do it in /models",
+      "parentUuid": "6d2724d0_f3cdf934",
+      "range": {
+        "startLine": 5,
+        "startChar": 7,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2872549a_0ed0e6a7",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/PolicyTypeLite.java",
         "patchSetId": 1
@@ -174,6 +222,30 @@
       "writtenOn": "2019-02-21T12:24:45Z",
       "side": 1,
       "message": "Just wondering what this is?",
+      "range": {
+        "startLine": 4,
+        "startChar": 37,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e42505c_9b9142f5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/PolicyTypeLite.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T16:13:35Z",
+      "side": 1,
+      "message": "Forget about it. I was using lite to indicate the abbreviated version of policy type.",
+      "parentUuid": "2872549a_0ed0e6a7",
       "range": {
         "startLine": 4,
         "startChar": 37,
@@ -221,6 +293,30 @@
       "side": 1,
       "message": "I think the accumulated report of stats from all PDPs will be shared by PAP.\nThis is statistics of only policy/api component.",
       "parentUuid": "05190b01_5fd68cc5",
+      "range": {
+        "startLine": 28,
+        "startChar": 13,
+        "endLine": 28,
+        "endChar": 29
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcb372e6_8a123ae0",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/StatisticsReport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-02-21T16:13:35Z",
+      "side": 1,
+      "message": "I think this is different thing. This statistics is just for counting the number of policy design api calls, the number of apis being used.",
+      "parentUuid": "76a60f86_a525618e",
       "range": {
         "startLine": 28,
         "startChar": 13,
