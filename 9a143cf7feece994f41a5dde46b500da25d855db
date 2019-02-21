@@ -206,6 +206,30 @@
       "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76a60f86_a525618e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/StatisticsReport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-21T13:13:20Z",
+      "side": 1,
+      "message": "I think the accumulated report of stats from all PDPs will be shared by PAP.\nThis is statistics of only policy/api component.",
+      "parentUuid": "05190b01_5fd68cc5",
+      "range": {
+        "startLine": 28,
+        "startChar": 13,
+        "endLine": 28,
+        "endChar": 29
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
