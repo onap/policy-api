@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "dd13d31f_bb57d8f9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-21T16:22:25Z",
+      "side": 1,
+      "message": "It is the version of application API and not swagger spec.\nSee this - https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#infoObject",
+      "parentUuid": "b2def74f_d8f49cf0",
+      "range": {
+        "startLine": 58,
+        "startChar": 67,
+        "endLine": 58,
+        "endChar": 73
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54dc3bd8_0d0e38c9",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 1
