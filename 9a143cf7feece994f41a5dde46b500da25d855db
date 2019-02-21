@@ -137,6 +137,75 @@
       "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d2724d0_f3cdf934",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/PolicyType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-21T12:24:45Z",
+      "side": 1,
+      "message": "This is the TOSCA Policy type object.",
+      "range": {
+        "startLine": 5,
+        "startChar": 7,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2872549a_0ed0e6a7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/PolicyTypeLite.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-21T12:24:45Z",
+      "side": 1,
+      "message": "Just wondering what this is?",
+      "range": {
+        "startLine": 4,
+        "startChar": 37,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05190b01_5fd68cc5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/model/StatisticsReport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-21T12:24:45Z",
+      "side": 1,
+      "message": "OK, this will be an accumulated report of the stats from all the PDPs.",
+      "range": {
+        "startLine": 28,
+        "startChar": 13,
+        "endLine": 28,
+        "endChar": 29
+      },
+      "revId": "9a143cf7feece994f41a5dde46b500da25d855db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
