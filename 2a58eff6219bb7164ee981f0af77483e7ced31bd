@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7d3be20_0ec444f3",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-21T14:34:50Z",
+      "side": 1,
+      "message": "This is already done by Chenfei in this review - https://gerrit.onap.org/r/#/c/78341/",
+      "range": {
+        "startLine": 1,
+        "startChar": 12,
+        "endLine": 1,
+        "endChar": 17
+      },
+      "revId": "2a58eff6219bb7164ee981f0af77483e7ced31bd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
