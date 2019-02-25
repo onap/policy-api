@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03113d8d_0cc41d74",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T19:40:21Z",
+      "side": 1,
+      "message": "TOSCA info, ie. policy-type, etc .. will go in json format, not yaml format.   Just looking for confirmation that this intention?",
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9786ffdf_a4d6db69",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T19:40:21Z",
+      "side": 1,
+      "message": "Just a suggestion, up to you, you could move the /policytypes to a different JAXRS file (separate from healthcheck and statistics) if you want to keep it a little more organized the APIs by category.   If you use the same package, the HTTP server will make both available.",
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
