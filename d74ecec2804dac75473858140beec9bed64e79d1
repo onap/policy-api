@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "99e0a04f_52e01605",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T20:34:55Z",
+      "side": 1,
+      "message": "Not sure, because it has \"@Consumes(MediaType.APPLICATION_JSON)\" globally and is not overriden, it will send out json I believe.   I am guessing third party clients would prefer json, how they work right now.   In any case, my comment is not blocking for the review, but you should have into account if feature work to support yaml is needed.",
+      "parentUuid": "dcf048bb_ed55d12f",
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9786ffdf_a4d6db69",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 3
