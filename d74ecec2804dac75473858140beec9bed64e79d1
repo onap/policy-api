@@ -87,6 +87,24 @@
       "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "047b5ef0_de4406e1",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-02-25T20:38:53Z",
+      "side": 1,
+      "message": "Not a problem, my comment was just a \"consider\", sounds good.",
+      "parentUuid": "03be2445_de74f66d",
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
