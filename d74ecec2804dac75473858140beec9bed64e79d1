@@ -131,6 +131,29 @@
     },
     {
       "key": {
+        "uuid": "1d54945d_af92c569",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-26T15:28:17Z",
+      "side": 1,
+      "message": "I\u0027m not sure about this one/all calls to the provider is a good idea. Would it not be better to have a single call to the provider and pass a filter to it?",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 189,
+        "endChar": 46
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e19a79c2_98f4a2f5",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 3
@@ -170,6 +193,29 @@
         "startChar": 20,
         "endLine": 270,
         "endChar": 48
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c4fd093_57f6ed32",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-02-26T15:28:17Z",
+      "side": 1,
+      "message": "Same comment, the reason is that if we put in many different filters then we have to put a method in the provider for each one.",
+      "range": {
+        "startLine": 219,
+        "startChar": 3,
+        "endLine": 270,
+        "endChar": 49
       },
       "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
