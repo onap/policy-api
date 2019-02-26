@@ -105,6 +105,374 @@
       "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de5adf53_f346d597",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"getSpecificVersionOfPolicyType\" would be better. What do you say?",
+      "range": {
+        "startLine": 189,
+        "startChar": 20,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e19a79c2_98f4a2f5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 193,
+        "startChar": 45,
+        "endLine": 193,
+        "endChar": 72
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1248cebc_eec28ca0",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"deleteSpecificVersionOfPolicyType\" would be better. What do you say?",
+      "range": {
+        "startLine": 270,
+        "startChar": 20,
+        "endLine": 270,
+        "endChar": 48
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6156d166_5d43dbbd",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 274,
+        "startChar": 45,
+        "endLine": 274,
+        "endChar": 73
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b305b6a3_7dded255",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"getAllPolicies\" would be better. What do you say?",
+      "range": {
+        "startLine": 298,
+        "startChar": 20,
+        "endLine": 298,
+        "endChar": 42
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33ebc03a_899e28e7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 302,
+        "startChar": 41,
+        "endLine": 302,
+        "endChar": 65
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f721c2c_d847d7aa",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"getAllVersionsOfPolicy\" would be better. What do you say?",
+      "range": {
+        "startLine": 327,
+        "startChar": 20,
+        "endLine": 327,
+        "endChar": 48
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "703c9dc7_0ef9b7b7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 332,
+        "startChar": 41,
+        "endLine": 332,
+        "endChar": 71
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c9df82f_c64cb4d8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"getSpecificVersionOfPolicy\" would be better. What do you say?",
+      "range": {
+        "startLine": 359,
+        "startChar": 20,
+        "endLine": 359,
+        "endChar": 41
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a24d667_8a44126f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 365,
+        "startChar": 41,
+        "endLine": 365,
+        "endChar": 64
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f66286d6_94780069",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Should this be query parameter instead of path parameter?\nAs we are trying to filter the response based on a key and query parameter is generally used for this purpose.",
+      "range": {
+        "startLine": 379,
+        "startChar": 99,
+        "endLine": 379,
+        "endChar": 105
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ecd5916c_6906b603",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 410,
+        "startChar": 90,
+        "endLine": 410,
+        "endChar": 98
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "941abe70_b0eaace5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "I feel \"deleteSpecificVersionOfPolicy\" would be better. What do you say?",
+      "range": {
+        "startLine": 515,
+        "startChar": 20,
+        "endLine": 515,
+        "endChar": 44
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5bb7a0d_80961d43",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiStatistics.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Better to club this class with TestApiRestServer and have single class for healthcheck \u0026 statistics testing over http and https. Have a look at the way I have done it in PAP.",
+      "range": {
+        "startLine": 50,
+        "startChar": 13,
+        "endLine": 50,
+        "endChar": 30
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7efe695b_9ed8d59b",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Better to club this class with TestApiRestServer and have single class for healthcheck \u0026 statistics testing over http and https. Have a look at the way I have done it in PAP.",
+      "range": {
+        "startLine": 51,
+        "startChar": 13,
+        "endLine": 51,
+        "endChar": 35
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d26af464_bbf8fd9f",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestHttpsStatisticApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:01:20Z",
+      "side": 1,
+      "message": "Better to club this class with TestApiRestServer and have single class for healthcheck \u0026 statistics testing over http and https. Have a look at the way I have done it in PAP.",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 44
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
