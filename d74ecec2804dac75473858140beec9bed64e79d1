@@ -361,6 +361,30 @@
     },
     {
       "key": {
+        "uuid": "81fbd874_b940f826",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:43:17Z",
+      "side": 1,
+      "message": "Example\n/policytypes/{policyTypeId}/versions/{policyTypeVersionId}/policies/{policyId}/versions?type\u003dlatest",
+      "parentUuid": "f66286d6_94780069",
+      "range": {
+        "startLine": 379,
+        "startChar": 99,
+        "endLine": 379,
+        "endChar": 105
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecd5916c_6906b603",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 3
@@ -372,6 +396,30 @@
       "writtenOn": "2019-02-26T14:01:20Z",
       "side": 1,
       "message": "Same as above",
+      "range": {
+        "startLine": 410,
+        "startChar": 90,
+        "endLine": 410,
+        "endChar": 98
+      },
+      "revId": "d74ecec2804dac75473858140beec9bed64e79d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bfaad30_72a5c24a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-02-26T14:43:17Z",
+      "side": 1,
+      "message": "Example\n/policytypes/{policyTypeId}/versions/{policyTypeVersionId}/policies/{policyId}/versions?type\u003ddeployed",
+      "parentUuid": "ecd5916c_6906b603",
       "range": {
         "startLine": 410,
         "startChar": 90,
