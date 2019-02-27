@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c235b435_3b2a4353",
+        "filename": "main/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-02-27T12:13:47Z",
+      "side": 1,
+      "message": "Was this put in policy/parent as a dependencyManagement yet? If not, I can do that.",
+      "range": {
+        "startLine": 62,
+        "startChar": 1,
+        "endLine": 66,
+        "endChar": 1
+      },
+      "revId": "0c117e6f8608ed902893364ee00123b0eb9f4a59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
