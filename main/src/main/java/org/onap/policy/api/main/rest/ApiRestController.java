@@ -30,13 +30,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import io.swagger.annotations.BasicAuthDefinition;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
+import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -44,15 +48,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.model.tosca.ToscaPolicy;
-import org.onap.policy.model.tosca.ToscaPolicyList;
-import org.onap.policy.model.tosca.ToscaPolicyType;
-import org.onap.policy.model.tosca.ToscaPolicyTypeList;
+import org.onap.policy.models.tosca.ToscaPolicy;
+import org.onap.policy.models.tosca.ToscaPolicyList;
+import org.onap.policy.models.tosca.ToscaPolicyType;
+import org.onap.policy.models.tosca.ToscaPolicyTypeList;
 
 /**
  * Class to provide REST API services.
@@ -63,13 +68,19 @@ import org.onap.policy.model.tosca.ToscaPolicyTypeList;
 @Consumes(MediaType.APPLICATION_JSON)
 @SwaggerDefinition(info = @Info(
         description = "Policy Design API is publicly exposed for clients to Create/Read/Update/Delete"
-                    + "policy types, policy type implementation and policies which can be recognized"
-                    + "and executable by incorporated policy engines XACML, Drools and APEX. It is a"
-                    + "standalone component running rest service that takes all policy design API calls"
-                    + "from clients and then assign them to different API working functions. Besides"
-                    + "that, API is also exposed for clients to retrieve healthcheck status of this API"
-                    + "rest service and the statistics report including the counters of API invocation.",
-        version = "v1.0", title = "Policy Design"),
+                    + " policy types, policy type implementation and policies which can be recognized"
+                    + " and executable by incorporated policy engines. It is an"
+                    + " independent component running rest service that takes all policy design API calls"
+                    + " from clients and then assign them to different API working functions. Besides"
+                    + " that, API is also exposed for clients to retrieve healthcheck status of this API"
+                    + " rest service and the statistics report including the counters of API invocation.",
+        version = "v1.0.0", title = "Policy Design",
+        extensions = {
+                @Extension(properties = {
+                        @ExtensionProperty(name = "planned-retirement-date", value = "tbd"),
+                        @ExtensionProperty(name = "component", value = "Policy Framework")
+                })
+        }),
         consumes = { MediaType.APPLICATION_JSON }, produces = { MediaType.APPLICATION_JSON },
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS },
         tags = { @Tag(name = "policy-api", description = "Policy API Service Operations") },
@@ -87,14 +98,22 @@ public class ApiRestController {
             notes = "Returns healthy status of the Policy API component",
             response = HealthCheckReport.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "HealthCheck", })
+            tags = { "HealthCheck", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response getHealthCheck() {
-        return Response.status(Response.Status.OK).entity(new HealthCheckProvider().performHealthCheck()).build();
+    public Response getHealthCheck(@HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+            .entity(new HealthCheckProvider().performHealthCheck()).build();
     }
 
     /**
@@ -108,14 +127,22 @@ public class ApiRestController {
             notes = "Returns current statistics including the counters of API invocation",
             response = StatisticsReport.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Statistics", })
+            tags = { "Statistics", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response getStatistics() {
-        return Response.status(Response.Status.OK).entity(new StatisticsProvider().fetchCurrentStatistics()).build();
+    public Response getStatistics(@HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+            .entity(new StatisticsProvider().fetchCurrentStatistics()).build();
     }
 
     /**
@@ -129,14 +156,21 @@ public class ApiRestController {
             notes = "Returns a list of existing policy types stored in Policy Framework",
             response = ToscaPolicyTypeList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response getAllPolicyTypes() {
-        return Response.status(Response.Status.OK)
+    public Response getAllPolicyTypes(@HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyTypeProvider().fetchPolicyTypes(null, null)).build();
     }
 
@@ -153,7 +187,14 @@ public class ApiRestController {
             notes = "Returns a list of all available versions for the specified policy type",
             response = ToscaPolicyTypeList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -161,8 +202,9 @@ public class ApiRestController {
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
     public Response getAllVersionsOfPolicyType(
-            @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, null)).build();
     }
 
@@ -180,7 +222,14 @@ public class ApiRestController {
             notes = "Returns a particular version for the specified policy type",
             response = ToscaPolicyTypeList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -189,8 +238,9 @@ public class ApiRestController {
         })
     public Response getSpecificVersionOfPolicyType(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("versionId") @ApiParam("ID of version") String versionId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("versionId") @ApiParam("Version of policy type") String versionId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, versionId)).build();
     }
 
@@ -206,15 +256,23 @@ public class ApiRestController {
     @ApiOperation(value = "Create a new policy type",
             notes = "Client should provide TOSCA body of the new policy type",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            consumes = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid Body"),
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response createPolicyType(ToscaPolicyType body) {
-        return Response.status(Response.Status.OK).entity(new PolicyTypeProvider().createPolicyType(body)).build();
+    public Response createPolicyType(ToscaPolicyType body, @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+            .entity(new PolicyTypeProvider().createPolicyType(body)).build();
     }
 
     /**
@@ -231,7 +289,14 @@ public class ApiRestController {
                   + "Rule 2: policy types that are in use (parameterized by a TOSCA policy) cannot be deleted."
                   + "The parameterizing TOSCA policies must be deleted first;",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            produces = MediaType.TEXT_PLAIN,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -240,8 +305,9 @@ public class ApiRestController {
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
     public Response deleteAllVersionsOfPolicyType(
-            @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, null)).build();
     }
 
@@ -260,7 +326,14 @@ public class ApiRestController {
                   + "Rule 2: policy types that are in use (parameterized by a TOSCA policy) cannot be deleted."
                   + "The parameterizing TOSCA policies must be deleted first;",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "PolicyType", })
+            tags = { "PolicyType", },
+            produces = MediaType.TEXT_PLAIN,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -270,8 +343,9 @@ public class ApiRestController {
         })
     public Response deleteSpecificVersionOfPolicyType(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("versionId") @ApiParam("ID of version") String versionId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("versionId") @ApiParam("Version of policy type") String versionId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, versionId)).build();
     }
 
@@ -289,7 +363,14 @@ public class ApiRestController {
             notes = "Returns a list of all versions of specified policy created for the specified policy type version",
             response = ToscaPolicyList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -298,8 +379,9 @@ public class ApiRestController {
         })
     public Response getAllPolicies(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, null, null)).build();
     }
 
@@ -318,7 +400,14 @@ public class ApiRestController {
             notes = "Returns a list of all version details of the specified policy",
             response = ToscaPolicyList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -327,9 +416,10 @@ public class ApiRestController {
         })
     public Response getAllVersionsOfPolicy(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
-            @PathParam("policyId") @ApiParam("ID of policy") String policyId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
+            @PathParam("policyId") @ApiParam("ID of policy") String policyId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
     }
 
@@ -349,7 +439,14 @@ public class ApiRestController {
             notes = "Returns a particular version of specified policy created for the specified policy type version",
             response = ToscaPolicyList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -358,10 +455,11 @@ public class ApiRestController {
         })
     public Response getSpecificVersionOfPolicy(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
             @PathParam("policyId") @ApiParam("ID of policy") String policyId,
-            @PathParam("policyVersion") @ApiParam("ID of policy version") String policyVersion) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyVersion") @ApiParam("Version of policy") String policyVersion,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion,
                                                        policyId, policyVersion)).build();
     }
@@ -381,7 +479,14 @@ public class ApiRestController {
             notes = "Returns either latest or deployed version of specified policy depending on query param",
             response = ToscaPolicyList.class,
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -390,10 +495,11 @@ public class ApiRestController {
         })
     public Response getEitherLatestOrDeployedVersionOfPolicy(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
             @PathParam("policyId") @ApiParam("ID of policy") String policyId,
-            @QueryParam("type") @ApiParam("Type of version that can only be 'latest' or 'deployed'") String type) {
-        return Response.status(Response.Status.OK)
+            @QueryParam("type") @ApiParam("Type of version that can only be 'latest' or 'deployed'") String type,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, type)).build();
     }
 
@@ -411,7 +517,14 @@ public class ApiRestController {
     @ApiOperation(value = "Create a new policy for a policy type version",
             notes = "Client should provide TOSCA body of the new policy",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            consumes = MediaType.APPLICATION_JSON,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid Body"),
             @ApiResponse(code = 401, message = "Authentication Error"),
@@ -421,9 +534,10 @@ public class ApiRestController {
         })
     public Response createPolicy(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId,
             ToscaPolicy body) {
-        return Response.status(Response.Status.OK)
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().createPolicy(policyTypeId, policyTypeVersion, body)).build();
     }
 
@@ -441,7 +555,14 @@ public class ApiRestController {
     @ApiOperation(value = "Delete all versions of a policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.TEXT_PLAIN,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -451,9 +572,10 @@ public class ApiRestController {
         })
     public Response deleteAllVersionsOfPolicy(
             @PathParam("policyTypeId") @ApiParam("ID of policy type") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
-            @PathParam("policyId") @ApiParam("ID of policy") String policyId) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
+            @PathParam("policyId") @ApiParam("ID of policy") String policyId,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
     }
 
@@ -472,7 +594,14 @@ public class ApiRestController {
     @ApiOperation(value = "Delete a particular version of a policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
-            tags = { "Policy", })
+            tags = { "Policy", },
+            produces = MediaType.TEXT_PLAIN,
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -482,11 +611,24 @@ public class ApiRestController {
         })
     public Response deleteSpecificVersionOfPolicy(
             @PathParam("policyTypeId") @ApiParam("PolicyType ID") String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam("ID of policy type version") String policyTypeVersion,
+            @PathParam("policyTypeVersion") @ApiParam("Version of policy type") String policyTypeVersion,
             @PathParam("policyId") @ApiParam("ID of policy") String policyId,
-            @PathParam("policyVersion") @ApiParam("ID of policy version") String policyVersion) {
-        return Response.status(Response.Status.OK)
+            @PathParam("policyVersion") @ApiParam("Version of policy") String policyVersion,
+            @HeaderParam("X-ONAP-RequestID") UUID requestId) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
             .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion,
                                                         policyId, policyVersion)).build();
+    }
+
+    private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
+        return rb.header("X-MinorVersion", "0").header("X-PatchVersion", "0").header("X-LatestVersion", "1.0.0");
+    }
+
+    private ResponseBuilder addLoggingHeaders(ResponseBuilder rb, UUID requestId) {
+        if (requestId == null) {
+            // Generate a random uuid if client does not embed requestId in rest request
+            return rb.header("X-ONAP-RequestID", UUID.randomUUID());
+        }
+        return rb.header("X-ONAP-RequestID", requestId);
     }
 }
