@@ -22,8 +22,8 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import org.onap.policy.model.tosca.ToscaPolicy;
-import org.onap.policy.model.tosca.ToscaPolicyList;
+import org.onap.policy.models.tosca.ToscaPolicy;
+import org.onap.policy.models.tosca.ToscaPolicyList;
 
 /**
  * Class to provide all kinds of policy operations.
