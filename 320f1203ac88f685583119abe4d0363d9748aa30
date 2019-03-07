@@ -16,6 +16,24 @@
       "revId": "320f1203ac88f685583119abe4d0363d9748aa30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "947d0986_0db60cc7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-07T14:35:14Z",
+      "side": 1,
+      "message": "Good catch. Fixing in new patch",
+      "parentUuid": "dab3f1a2_792740be",
+      "revId": "320f1203ac88f685583119abe4d0363d9748aa30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
