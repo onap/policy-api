@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab3f1a2_792740be",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-03-07T14:16:36Z",
+      "side": 1,
+      "message": "need @ApiParam on the body?\n\nshould \"body\" be marked \"required\"?  same comment applies to parameters of other methods",
+      "revId": "320f1203ac88f685583119abe4d0363d9748aa30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
