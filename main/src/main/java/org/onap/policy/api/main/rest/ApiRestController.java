@@ -718,6 +718,9 @@ public class ApiRestController {
      */
     @POST
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
+    @Consumes({"application/json", "application/yaml",
+        "application/json; vnd.onap.guard", "application/yaml; vnd.onap.operational"})
+    @Produces({"application/json", "application/yaml"})
     @ApiOperation(value = "Create a new policy for a policy type version",
             notes = "Client should provide TOSCA body of the new policy",
             authorizations = @Authorization(value = "basicAuth"),
