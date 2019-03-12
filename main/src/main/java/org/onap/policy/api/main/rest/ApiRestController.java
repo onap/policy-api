@@ -54,10 +54,10 @@ import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.models.tosca.ToscaPolicy;
-import org.onap.policy.models.tosca.ToscaPolicyList;
-import org.onap.policy.models.tosca.ToscaPolicyType;
-import org.onap.policy.models.tosca.ToscaPolicyTypeList;
+import org.onap.policy.models.tosca.concepts.ToscaPolicies;
+import org.onap.policy.models.tosca.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.concepts.ToscaPolicyTypes;
 
 /**
  * Class to provide REST API services.
@@ -187,7 +187,7 @@ public class ApiRestController {
     @Path("/policytypes")
     @ApiOperation(value = "Retrieve existing policy types",
             notes = "Returns a list of existing policy types stored in Policy Framework",
-            response = ToscaPolicyTypeList.class,
+            response = ToscaPolicyTypes.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -235,7 +235,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}")
     @ApiOperation(value = "Retrieve all available versions of a policy type",
             notes = "Returns a list of all available versions for the specified policy type",
-            response = ToscaPolicyTypeList.class,
+            response = ToscaPolicyTypes.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -286,7 +286,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{versionId}")
     @ApiOperation(value = "Retrieve one particular version of a policy type",
             notes = "Returns a particular version for the specified policy type",
-            response = ToscaPolicyTypeList.class,
+            response = ToscaPolicyTypes.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -496,7 +496,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(value = "Retrieve all versions of a policy created for a particular policy type version",
             notes = "Returns a list of all versions of specified policy created for the specified policy type version",
-            response = ToscaPolicyList.class,
+            response = ToscaPolicies.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -550,7 +550,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}")
     @ApiOperation(value = "Retrieve all version details of a policy created for a particular policy type version",
             notes = "Returns a list of all version details of the specified policy",
-            response = ToscaPolicyList.class,
+            response = ToscaPolicies.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -606,7 +606,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a policy created for a particular policy type version",
             notes = "Returns a particular version of specified policy created for the specified policy type version",
-            response = ToscaPolicyList.class,
+            response = ToscaPolicies.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -663,7 +663,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions")
     @ApiOperation(value = "Retrieve either latest or deployed version of a particular policy depending on query param",
             notes = "Returns either latest or deployed version of specified policy depending on query param",
-            response = ToscaPolicyList.class,
+            response = ToscaPolicies.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -718,6 +718,9 @@ public class ApiRestController {
      */
     @POST
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
+    @Consumes({"application/json", "application/yaml",
+        "application/json; vnd.onap.guard", "application/yaml; vnd.onap.operational"})
+    @Produces({"application/json", "application/yaml"})
     @ApiOperation(value = "Create a new policy for a policy type version",
             notes = "Client should provide TOSCA body of the new policy",
             authorizations = @Authorization(value = "basicAuth"),
