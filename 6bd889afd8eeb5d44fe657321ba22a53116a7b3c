@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e095d9d6_2643cf0e",
+        "filename": "main/src/test/resources/policies/vCPE.policy.monitoring.input.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-13T18:40:08Z",
+      "side": 1,
+      "message": "The rest of the definition looks fine so I\u0027ll start with this one.",
+      "parentUuid": "dba66530_261d18a3",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 9
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f14c1e4c_f3b2fe6d",
         "filename": "main/src/test/resources/policies/vCPE.policy.operational.input.yaml",
         "patchSetId": 5
