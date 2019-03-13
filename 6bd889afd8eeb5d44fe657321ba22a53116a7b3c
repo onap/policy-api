@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f14c1e4c_f3b2fe6d",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.input.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-13T18:18:10Z",
+      "side": 1,
+      "message": "I am hoping we can make a slight change, and not make an assumption on the policy-id:\n\n{\n    \"policy-id\": \"vcpe.operational\",\n    \"content\": \"controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20controlLoopName%3A%20ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e%0A%20%20trigger_policy%3A%20unique-policy-id-1-restart%0A%20%20timeout%3A%203600%0A%20%20abatement%3A%20true%0A%20%0Apolicies%3A%0A%20%20-%20id%3A%20unique-policy-id-1-restart%0A%20%20%20%20name%3A%20Restart%20the%20VM%0A%20%20%20%20description%3A%0A%20%20%20%20actor%3A%20APPC%0A%20%20%20%20recipe%3A%20Restart%0A%20%20%20%20target%3A%0A%20%20%20%20%20%20type%3A%20VM%0A%20%20%20%20retry%3A%203%0A%20%20%20%20timeout%3A%201200%0A%20%20%20%20success%3A%20final_success%0A%20%20%20%20failure%3A%20final_failure%0A%20%20%20%20failure_timeout%3A%20final_failure_timeout%0A%20%20%20%20failure_retries%3A%20final_failure_retries%0A%20%20%20%20failure_exception%3A%20final_failure_exception%0A%20%20%20%20failure_guard%3A%20final_failure_guard\"\n}",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cfb87a32_ccb350ad",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.output.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-13T18:18:10Z",
+      "side": 1,
+      "message": "should I add the contents? URL Encoded yaml policy? I hate the URL encode but I don\u0027t think we have a choice.",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 1
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
