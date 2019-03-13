@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "dba66530_261d18a3",
+        "filename": "main/src/test/resources/policies/vCPE.policy.monitoring.input.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-13T18:39:27Z",
+      "side": 1,
+      "message": "I know we have to cope with whatever we get but for well formed TOSCA, this should be:\n\nFor well formed TOSCA, policies should be in the topology template:\ntosca_definitions_version: tosca_simple_yaml_1_0_0\ntopology_template:\n  policies:\n \n\u003cblah blah\u003e",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 9
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f14c1e4c_f3b2fe6d",
         "filename": "main/src/test/resources/policies/vCPE.policy.operational.input.yaml",
         "patchSetId": 5
