@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "434b6e9e_42b82e7c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-14T15:16:34Z",
+      "side": 1,
+      "message": "I think we can\u0027t indicate @Consumes({\"application/json\", \"application/yaml\", \"application/json; vnd.onap.guard\", \"application/yaml; vnd.onap.operational\"}) all together for one endpoint as otherwise what would be the class I should put here. This class will be rendered in swagger ui for payload example. Our client would use different non-tosca payload for guard and ops policy. So can I separate different content-types into different endpoints, each support one content-type? I mean for guard and ops custom content-type.",
+      "range": {
+        "startLine": 763,
+        "startChar": 72,
+        "endLine": 763,
+        "endChar": 88
+      },
+      "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
