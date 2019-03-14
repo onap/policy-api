@@ -120,6 +120,64 @@
     },
     {
       "key": {
+        "uuid": "df2ae5be_bd5de96f",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.input.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-14T12:34:23Z",
+      "side": 1,
+      "message": "The policy-id should be an unique identifier.  Per wiki API spec this is the base URL for Operational Policies:\n\nhttps:{url}:{port}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/{versions}/policies\n\nWe may have 2 types of URLs to create an Operational Policy (or may be just support one) which would be a POST and a PUT one:\n\nPOST\nhttps:{url}:{port}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/{versions}/policies\n\nIn this case Policy will generate the Policy ID which I think we are saying it will be the controlLoopName in the example structure.\n\nThe other option is to do a PUT and in this case CLAMP will generate the policy-id and give it to us.   Ideally the controlLoopName would be chosen provided it would give it an unique identity within CLAMP and policy.  The URL in this case:\n\nPUT\nhttps:{url}:{port}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/{versions}/policies/ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e\n\nA couple notes:\n\n1. For Operational policies, we said that CLAMP is agnostic to policy-types, so the \"onap.policies.controlloop.Operational\" is fixed in the URL for these types of policies.\n\n2. Ideally the policy-id and the version would be kept within the policy itself for debugging and for human consumption.   If we choose the controlLoopName identifier as the policy-id is already there.   For version, I don\u0027t think the one insider the controlLoop was created for this purpose.",
+      "parentUuid": "f14c1e4c_f3b2fe6d",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 38
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19071bf4_5986ad41",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.input.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-14T12:34:23Z",
+      "side": 1,
+      "message": "With regard to the above message in json, I don\u0027t think it needs to be jsonized with the URL encoding which is a bit of a kludge.   I think the Operational Policy can be placed as is in the body with the Content-Type plain/text or yaml and we should be able to read it in.   In some internals APIs for testing I just used the text Content-Type which goes in a String in jax-rs and feed it to the snakeyaml parser to get the object, really simple.   Anything to move away of the URL encoding is a step forward.",
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50260581_20b8a66b",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.output.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-14T12:34:23Z",
+      "side": 1,
+      "message": "shouldn\u0027t it be onap.policies.controlloop.Operational?",
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cfb87a32_ccb350ad",
         "filename": "main/src/test/resources/policies/vCPE.policy.operational.output.json",
         "patchSetId": 5
@@ -131,6 +189,30 @@
       "writtenOn": "2019-03-13T18:18:10Z",
       "side": 1,
       "message": "should I add the contents? URL Encoded yaml policy? I hate the URL encode but I don\u0027t think we have a choice.",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 1
+      },
+      "revId": "6bd889afd8eeb5d44fe657321ba22a53116a7b3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0879b917_879bfd63",
+        "filename": "main/src/test/resources/policies/vCPE.policy.operational.output.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-03-14T12:34:23Z",
+      "side": 1,
+      "message": "I don\u0027t see any value on echoing back the policy CLAMP sent.   I don\u0027t think it should be sent back.",
+      "parentUuid": "cfb87a32_ccb350ad",
       "range": {
         "startLine": 1,
         "startChar": 1,
