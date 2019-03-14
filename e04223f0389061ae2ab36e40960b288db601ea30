@@ -22,6 +22,30 @@
       "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63a41611_de481836",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-03-14T15:52:42Z",
+      "side": 1,
+      "message": "No this API should have those headers. You need a different class than ToscaPolicy then. I thought Liam made a suggestion for that.",
+      "parentUuid": "434b6e9e_42b82e7c",
+      "range": {
+        "startLine": 763,
+        "startChar": 72,
+        "endLine": 763,
+        "endChar": 88
+      },
+      "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
