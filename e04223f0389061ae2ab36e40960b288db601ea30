@@ -46,6 +46,30 @@
       "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c4b001f_dc76cbbb",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-14T17:44:59Z",
+      "side": 1,
+      "message": "This is the only part I don\u0027t know how to do yet - supporting different request/response models based on headers like content-type in a single API endpoint\nSimilar issue was posted https://github.com/OAI/OpenAPI-Specification/issues/146\n\nOne solution is to use path/method overloading (multiple identical paths) to achieve association of a content-type with a request/response model. If we can\u0027t do this, don\u0027t know how to do it.",
+      "parentUuid": "63a41611_de481836",
+      "range": {
+        "startLine": 763,
+        "startChar": 72,
+        "endLine": 763,
+        "endChar": 88
+      },
+      "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
