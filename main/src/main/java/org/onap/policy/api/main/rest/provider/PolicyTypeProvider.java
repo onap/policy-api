@@ -22,8 +22,7 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import org.onap.policy.models.tosca.ToscaPolicyType;
-import org.onap.policy.models.tosca.ToscaPolicyTypeList;
+import org.onap.policy.models.tosca.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of policy type operations.
@@ -41,9 +40,10 @@ public class PolicyTypeProvider {
      *
      * @return the ToscaPolicyTypeList object containing a list of policy types matching specified fields
      */
-    public ToscaPolicyTypeList fetchPolicyTypes(String policyTypeId, String policyTypeVersion) {
+    public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion) {
         // placeholder
-        return new ToscaPolicyTypeList();
+        // something like return new PolicyModelProvider().getPolicyTypes(<blah>);
+        return new ToscaServiceTemplate();
     }
 
     /**
@@ -53,8 +53,9 @@ public class PolicyTypeProvider {
      *
      * @return a string message indicating the operation results
      */
-    public String createPolicyType(ToscaPolicyType body) {
+    public String createPolicyType(ToscaServiceTemplate body) {
         // placeholder
+        // something like return new PolicyModelProvider().createPolicyTypes(<blah>);
         return POST_OK;
     }
 
@@ -68,6 +69,7 @@ public class PolicyTypeProvider {
      */
     public String deletePolicyTypes(String policyTypeId, String policyTypeVersion) {
         // placeholder
+        // something like return new PolicyModelProvider().deletePolicyTypes(<blah>);
         return DELETE_OK;
     }
 }
