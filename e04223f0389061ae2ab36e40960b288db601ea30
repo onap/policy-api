@@ -94,6 +94,30 @@
       "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5406f60c_7249691c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-16T15:42:52Z",
+      "side": 1,
+      "message": "I have changed it to ToscaServiceTemplate in hotfix review that has been merged.",
+      "parentUuid": "4b5d3093_2ebaa279",
+      "range": {
+        "startLine": 763,
+        "startChar": 72,
+        "endLine": 763,
+        "endChar": 88
+      },
+      "revId": "e04223f0389061ae2ab36e40960b288db601ea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
