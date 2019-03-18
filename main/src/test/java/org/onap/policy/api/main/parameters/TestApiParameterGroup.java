@@ -4,6 +4,7 @@
  * ================================================================================ 
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 IBM.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,5 +93,24 @@ public class TestApiParameterGroup {
         assertTrue(validationResult.getResult()
                         .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
+    }
+    
+    @Test
+    public void testName()
+    {
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+
+        final ApiParameterGroup apiParameters = new ApiParameterGroup("", restServerParameters);
+        apiParameters.setName("name");
+        assertEquals("name", apiParameters.getName());
+    }
+    
+    @Test
+    public void testVaildateForNullRestServiceParameters()
+    {
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                CommonTestData.API_GROUP_NAME, null);
+        final GroupValidationResult validationResult = apiParameters.validate();
+        assertTrue(validationResult.getResult().contains("parameter group has status INVALID"));
     }
 }
