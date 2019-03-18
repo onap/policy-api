@@ -22,14 +22,15 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import org.onap.policy.models.tosca.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of policy type operations.
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
  */
 public class PolicyTypeProvider {
 
-    private static final String POST_OK = "Successfully created";
     private static final String DELETE_OK = "Successfully deleted";
 
     /**
@@ -38,11 +39,10 @@ public class PolicyTypeProvider {
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
      *
-     * @return the ToscaPolicyTypeList object containing a list of policy types matching specified fields
+     * @return the ToscaServiceTemplate object
      */
     public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion) {
         // placeholder
-        // something like return new PolicyModelProvider().getPolicyTypes(<blah>);
         return new ToscaServiceTemplate();
     }
 
@@ -51,12 +51,11 @@ public class PolicyTypeProvider {
      *
      * @param body the entity body of policy type
      *
-     * @return a string message indicating the operation results
+     * @return the ToscaServiceTemplate objects
      */
-    public String createPolicyType(ToscaServiceTemplate body) {
+    public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) {
         // placeholder
-        // something like return new PolicyModelProvider().createPolicyTypes(<blah>);
-        return POST_OK;
+        return new ToscaServiceTemplate();
     }
 
     /**
@@ -69,7 +68,6 @@ public class PolicyTypeProvider {
      */
     public String deletePolicyTypes(String policyTypeId, String policyTypeVersion) {
         // placeholder
-        // something like return new PolicyModelProvider().deletePolicyTypes(<blah>);
         return DELETE_OK;
     }
 }
