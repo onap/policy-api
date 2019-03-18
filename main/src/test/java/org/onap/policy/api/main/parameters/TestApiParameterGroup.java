@@ -4,12 +4,13 @@
  * ================================================================================ 
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 IBM.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0 
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,16 +41,14 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
-        final ApiParameterGroup apiParameters = new ApiParameterGroup(
-                CommonTestData.API_GROUP_NAME, restServerParameters);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
+                restServerParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), apiParameters.getRestServerParameters().getHost());
         assertEquals(restServerParameters.getPort(), apiParameters.getRestServerParameters().getPort());
-        assertEquals(restServerParameters.getUserName(),
-                apiParameters.getRestServerParameters().getUserName());
-        assertEquals(restServerParameters.getPassword(),
-                apiParameters.getRestServerParameters().getPassword());
+        assertEquals(restServerParameters.getUserName(), apiParameters.getRestServerParameters().getUserName());
+        assertEquals(restServerParameters.getPassword(), apiParameters.getRestServerParameters().getPassword());
         assertEquals(restServerParameters.isHttps(), apiParameters.getRestServerParameters().isHttps());
         assertEquals(restServerParameters.isAaf(), apiParameters.getRestServerParameters().isAaf());
         assertEquals(CommonTestData.API_GROUP_NAME, apiParameters.getName());
@@ -58,39 +57,52 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup_NullName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
-        final ApiParameterGroup apiParameters = new ApiParameterGroup(null,
-                        restServerParameters);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(null, restServerParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, apiParameters.getName());
-        assertTrue(validationResult.getResult()
-                        .contains("field \"name\" type \"java.lang.String\" value \"null\" INVALID, "
-                                        + "must be a non-blank string"));
+        assertTrue(validationResult.getResult().contains(
+                "field \"name\" type \"java.lang.String\" value \"null\" INVALID, " + "must be a non-blank string"));
     }
 
     @Test
     public void testApiParameterGroup_EmptyName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
 
-        final ApiParameterGroup apiParameters = new ApiParameterGroup("",
-                        restServerParameters);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup("", restServerParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", apiParameters.getName());
-        assertTrue(validationResult.getResult().contains("field \"name\" type \"java.lang.String\" value \"\" INVALID, "
-                        + "must be a non-blank string"));
+        assertTrue(validationResult.getResult().contains(
+                "field \"name\" type \"java.lang.String\" value \"\" INVALID, " + "must be a non-blank string"));
     }
 
     @Test
     public void testApiParameterGroup_EmptyRestServerParameters() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true);
 
-        final ApiParameterGroup apiParameters = new ApiParameterGroup(
-                        CommonTestData.API_GROUP_NAME, restServerParameters);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
+                restServerParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
-                        .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
-                                        + "parameter group has status INVALID"));
+                .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
+                        + "parameter group has status INVALID"));
+    }
+
+    @Test
+    public void testName() {
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+
+        final ApiParameterGroup apiParameters = new ApiParameterGroup("", restServerParameters);
+        apiParameters.setName("name");
+        assertEquals("name", apiParameters.getName());
+    }
+
+    @Test
+    public void testVaildateForNullRestServiceParameters() {
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME, null);
+        final GroupValidationResult validationResult = apiParameters.validate();
+        assertTrue(validationResult.getResult().contains("parameter group has status INVALID"));
     }
 }
