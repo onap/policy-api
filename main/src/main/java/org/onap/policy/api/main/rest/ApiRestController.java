@@ -46,7 +46,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
@@ -54,15 +53,17 @@ import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.models.tosca.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide REST API services.
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
  */
 @Path("/policy/api/v1")
 @Api(value = "Policy Design API")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Produces({"application/json", "application/yaml"})
+@Consumes({"application/json", "application/yaml"})
 @SwaggerDefinition(info = @Info(
         description = "Policy Design API is publicly exposed for clients to Create/Read/Update/Delete"
                     + " policy types, policy type implementation and policies which can be recognized"
@@ -336,14 +337,7 @@ public class ApiRestController {
             notes = "Client should provide TOSCA body of the new policy type",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "PolicyType", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Resource successfully created",
+            response = ToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -360,7 +354,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid Body"),
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
@@ -715,20 +716,11 @@ public class ApiRestController {
      */
     @POST
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
-    @Consumes("application/json")
-    @Produces("application/json")
     @ApiOperation(value = "Create a new policy for a policy type version",
             notes = "Client should provide TOSCA body of the new policy",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Resource successfully created",
+            response = ToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -745,7 +737,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid Body"),
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),

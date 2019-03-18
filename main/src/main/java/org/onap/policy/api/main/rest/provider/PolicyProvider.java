@@ -22,14 +22,15 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import org.onap.policy.models.tosca.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of policy operations.
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
  */
 public class PolicyProvider {
 
-    private static final String POST_OK = "Successfully created";
     private static final String DELETE_OK = "Successfully deleted";
 
     /**
@@ -40,12 +41,11 @@ public class PolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaPolicyList object containing a list of policies matching specified fields
+     * @return the ToscaServiceTemplate object
      */
     public ToscaServiceTemplate fetchPolicies(String policyTypeId, String policyTypeVersion,
                                          String policyId, String policyVersion) {
         // placeholder
-        // something like return new PolicyModelProvider().getPolicies(<blah>);
         return new ToscaServiceTemplate();
     }
 
@@ -56,12 +56,12 @@ public class PolicyProvider {
      * @param policyTypeVersion the version of policy type
      * @param body the entity body of policy
      *
-     * @return a string message indicating the operation results
+     * @return the ToscaServiceTemplate object
      */
-    public String createPolicy(String policyTypeId, String policyTypeVersion, ToscaServiceTemplate body) {
+    public ToscaServiceTemplate createPolicy(String policyTypeId, String policyTypeVersion,
+                                             ToscaServiceTemplate body) {
         // placeholder
-        // something like return new PolicyModelProvider().createPolicies(<blah>);
-        return POST_OK;
+        return new ToscaServiceTemplate();
     }
 
     /**
@@ -77,7 +77,6 @@ public class PolicyProvider {
     public String deletePolicies(String policyTypeId, String policyTypeVersion,
                                  String policyId, String policyVersion) {
         // placeholder
-        // something like return new PolicyModelProvider().deletePolicies(<blah>);
         return DELETE_OK;
     }
 }

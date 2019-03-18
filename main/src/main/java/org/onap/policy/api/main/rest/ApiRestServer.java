@@ -31,7 +31,7 @@ import org.onap.policy.api.main.rest.aaf.AafApiFilter;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
-import org.onap.policy.models.tosca.serialization.simple.ToscaServiceTemplateMessageBodyHandler;
+import org.onap.policy.models.tosca.simple.serialization.ToscaServiceTemplateMessageBodyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +92,8 @@ public class ApiRestServer implements Startable {
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
                         Integer.toString(restServerParameters.getPort()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
-                        ApiRestController.class.getCanonicalName());
+                        String.join(",", LegacyApiRestController.class.getCanonicalName(),
+                                         ApiRestController.class.getCanonicalName()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_MANAGED_SUFFIX, "false");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SWAGGER_SUFFIX, "true");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_AUTH_USERNAME_SUFFIX,
