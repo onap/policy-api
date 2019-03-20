@@ -22,6 +22,17 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.provider.impl.DummyPolicyModelsProviderImpl;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.mapping.PlainToscaServiceTemplateMapper;
+import org.onap.policy.models.tosca.simple.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
@@ -31,7 +42,25 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class PolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private static final String POLICY_VERSION = "policy-version";
+
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public PolicyProvider() throws PfModelException {
+
+        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
+        // Use dummy provider tentatively to test dummy things
+        // Will change to use real database version
+        parameters.setImplementation(DummyPolicyModelsProviderImpl.class.getCanonicalName());
+        parameters.setDatabaseUrl("jdbc:dummy");
+        parameters.setPersistenceUnit("dummy");
+
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of policies matching specified ID and version of both policy type and policy.
@@ -41,12 +70,15 @@ public class PolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate fetchPolicies(String policyTypeId, String policyTypeVersion,
-                                         String policyId, String policyVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public PlainToscaServiceTemplate fetchPolicies(String policyTypeId, String policyTypeVersion,
+                                         String policyId, String policyVersion) throws PfModelException {
+
+        ToscaServiceTemplate serviceTemplate = modelsProvider.getPolicies(
+                new PfConceptKey("dummyName", "dummyVersion"));
+        return new PlainToscaServiceTemplateMapper().fromToscaServiceTemplate(serviceTemplate);
     }
 
     /**
@@ -56,12 +88,29 @@ public class PolicyProvider {
      * @param policyTypeVersion the version of policy type
      * @param body the entity body of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate createPolicy(String policyTypeId, String policyTypeVersion,
-                                             ToscaServiceTemplate body) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public PlainToscaServiceTemplate createPolicy(String policyTypeId, String policyTypeVersion,
+                                             PlainToscaServiceTemplate body) throws PfModelException {
+
+        PlainToscaServiceTemplateMapper mapper = new PlainToscaServiceTemplateMapper();
+        ToscaServiceTemplate mappedBody = mapper.toToscaServiceTemplate(body);
+
+        // Manually add policy-version: 1 into metadata
+        // TODO: need more elegant way to do this later
+        for (ToscaPolicy policy : mappedBody.getTopologyTemplate().getPolicies().getConceptMap().values()) {
+            if (policy.getMetadata() == null) {
+                Map<String, String> newMetadata = new HashMap<>();
+                newMetadata.put(POLICY_VERSION, "1");
+                policy.setMetadata(newMetadata);
+            } else {
+                policy.getMetadata().put(POLICY_VERSION, "1");
+            }
+        }
+
+        ToscaServiceTemplate serviceTemplate = modelsProvider.createPolicies(mappedBody);
+        return mapper.fromToscaServiceTemplate(serviceTemplate);
     }
 
     /**
@@ -72,11 +121,12 @@ public class PolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public String deletePolicies(String policyTypeId, String policyTypeVersion,
-                                 String policyId, String policyVersion) {
+    public PlainToscaServiceTemplate deletePolicies(String policyTypeId, String policyTypeVersion,
+                                 String policyId, String policyVersion) throws PfModelException {
         // placeholder
-        return DELETE_OK;
+        return new PlainToscaServiceTemplate();
     }
 }

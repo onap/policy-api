@@ -44,9 +44,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.api.main.rest.provider.LegacyGuardPolicyProvider;
 import org.onap.policy.api.main.rest.provider.LegacyOperationalPolicyProvider;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicy;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide legacy REST API services.
@@ -69,7 +71,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve all versions of guard policies",
             notes = "Returns a list of all versions of guard policies",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -102,8 +104,20 @@ public class LegacyApiRestController {
         })
     public Response getAllGuardPolicies(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().fetchGuardPolicies(null, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider().fetchGuardPolicies(null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -118,7 +132,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve all versions of a particular guard policy",
             notes = "Returns a list of all versions of the specified guard policy",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -153,8 +167,21 @@ public class LegacyApiRestController {
     public Response getAllVersionsOfGuardPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().fetchGuardPolicies(policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider()
+                    .fetchGuardPolicies(policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -170,7 +197,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve one version of a particular guard policy",
             notes = "Returns a particular version of a specified guard policy",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -206,8 +233,21 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().fetchGuardPolicies(policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider()
+                    .fetchGuardPolicies(policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -225,7 +265,7 @@ public class LegacyApiRestController {
             notes = "Client should provide entity body of the new guard policy",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Guard Policy", },
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -258,8 +298,20 @@ public class LegacyApiRestController {
     public Response createGuardPolicy(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyGuardPolicy body) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().createGuardPolicy(body)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider().createGuardPolicy(body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -275,14 +327,7 @@ public class LegacyApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Guard Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resources successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -299,7 +344,14 @@ public class LegacyApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -309,8 +361,21 @@ public class LegacyApiRestController {
     public Response deleteAllVersionsOfGuardPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().deleteGuardPolicies(policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider()
+                    .deleteGuardPolicies(policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -327,14 +392,7 @@ public class LegacyApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Guard Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resource successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -351,7 +409,14 @@ public class LegacyApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -362,8 +427,21 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyGuardPolicyProvider().deleteGuardPolicies(policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyGuardPolicyProvider()
+                    .deleteGuardPolicies(policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -376,7 +454,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve all versions of operational policies",
             notes = "Returns a list of all versions of operational policies",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -409,8 +487,21 @@ public class LegacyApiRestController {
         })
     public Response getAllOperationalPolicies(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().fetchOperationalPolicies(null, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .fetchOperationalPolicies(null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -425,7 +516,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve all versions of a particular operational policy",
             notes = "Returns a list of all versions of the specified operational policy",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -460,8 +551,21 @@ public class LegacyApiRestController {
     public Response getAllVersionsOfOperationalPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().fetchOperationalPolicies(policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .fetchOperationalPolicies(policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -478,7 +582,7 @@ public class LegacyApiRestController {
     @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve one version of a particular operational policy",
             notes = "Returns a particular version of a specified operational policy",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -514,8 +618,21 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().fetchOperationalPolicies(policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .fetchOperationalPolicies(policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -533,7 +650,7 @@ public class LegacyApiRestController {
             notes = "Client should provide entity body of the new operational policy",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Operational Policy", },
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -566,8 +683,21 @@ public class LegacyApiRestController {
     public Response createOperationalPolicy(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyOperationalPolicy body) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().createOperationalPolicy(body)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .createOperationalPolicy(body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -583,14 +713,7 @@ public class LegacyApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Operational Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resources successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -607,7 +730,14 @@ public class LegacyApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -617,8 +747,21 @@ public class LegacyApiRestController {
     public Response deleteAllVersionsOfOperationalPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().deleteOperationalPolicies(policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .deleteOperationalPolicies(policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -636,14 +779,7 @@ public class LegacyApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Legacy Operational Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resource successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -660,7 +796,14 @@ public class LegacyApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -671,8 +814,21 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new LegacyOperationalPolicyProvider().deleteOperationalPolicies(policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new LegacyOperationalPolicyProvider()
+                    .deleteOperationalPolicies(policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {

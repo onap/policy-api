@@ -36,6 +36,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
+
 import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -48,12 +49,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
 
 /**
  * Class to provide REST API services.
@@ -185,7 +189,7 @@ public class ApiRestController {
     @Path("/policytypes")
     @ApiOperation(value = "Retrieve existing policy types",
             notes = "Returns a list of existing policy types stored in Policy Framework",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -218,8 +222,20 @@ public class ApiRestController {
         })
     public Response getAllPolicyTypes(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(null, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().fetchPolicyTypes(null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -233,7 +249,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}")
     @ApiOperation(value = "Retrieve all available versions of a policy type",
             notes = "Returns a list of all available versions for the specified policy type",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -268,8 +284,21 @@ public class ApiRestController {
     public Response getAllVersionsOfPolicyType(
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
+                    .fetchPolicyTypes(policyTypeId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -284,7 +313,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{versionId}")
     @ApiOperation(value = "Retrieve one particular version of a policy type",
             notes = "Returns a particular version for the specified policy type",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -320,8 +349,21 @@ public class ApiRestController {
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, versionId)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
+                    .fetchPolicyTypes(policyTypeId, versionId);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -337,7 +379,7 @@ public class ApiRestController {
             notes = "Client should provide TOSCA body of the new policy type",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "PolicyType", },
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -368,10 +410,22 @@ public class ApiRestController {
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
     public Response createPolicyType(
-            @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
+            @ApiParam(value = "Entity body of policy type", required = true) PlainToscaServiceTemplate body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().createPolicyType(body)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().createPolicyType(body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -389,14 +443,7 @@ public class ApiRestController {
                   + "The parameterizing TOSCA policies must be deleted first;",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "PolicyType", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resources successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -413,7 +460,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -423,8 +477,20 @@ public class ApiRestController {
     public Response deleteAllVersionsOfPolicyType(
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().deletePolicyTypes(policyTypeId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -443,14 +509,7 @@ public class ApiRestController {
                   + "The parameterizing TOSCA policies must be deleted first;",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "PolicyType", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resource successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -467,7 +526,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -478,8 +544,21 @@ public class ApiRestController {
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, versionId)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
+                    .deletePolicyTypes(policyTypeId, versionId);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -494,7 +573,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(value = "Retrieve all versions of a policy created for a particular policy type version",
             notes = "Returns a list of all versions of specified policy created for the specified policy type version",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -531,8 +610,21 @@ public class ApiRestController {
             @PathParam("policyTypeVersion")
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, null, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -548,7 +640,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}")
     @ApiOperation(value = "Retrieve all version details of a policy created for a particular policy type version",
             notes = "Returns a list of all version details of the specified policy",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -586,8 +678,21 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -604,7 +709,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a policy created for a particular policy type version",
             notes = "Returns a particular version of specified policy created for the specified policy type version",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -643,9 +748,21 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion,
-                                                       policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -661,7 +778,7 @@ public class ApiRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions")
     @ApiOperation(value = "Retrieve either latest or deployed version of a particular policy depending on query param",
             notes = "Returns either latest or deployed version of specified policy depending on query param",
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -701,8 +818,21 @@ public class ApiRestController {
             @QueryParam("type")
                 @ApiParam(value = "Version that can only be 'latest' or 'deployed'", required = true) String type,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, type)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, type);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -720,7 +850,7 @@ public class ApiRestController {
             notes = "Client should provide TOSCA body of the new policy",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Policy", },
-            response = ToscaServiceTemplate.class,
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -756,9 +886,22 @@ public class ApiRestController {
             @PathParam("policyTypeVersion")
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
-            @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().createPolicy(policyTypeId, policyTypeVersion, body)).build();
+            @ApiParam(value = "Entity body of policy", required = true) PlainToscaServiceTemplate body) {
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .createPolicy(policyTypeId, policyTypeVersion, body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -776,14 +919,7 @@ public class ApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resources successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -800,7 +936,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -813,8 +956,21 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .deletePolicies(policyTypeId, policyTypeVersion, policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     /**
@@ -833,14 +989,7 @@ public class ApiRestController {
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
             tags = { "Policy", },
-            extensions = {
-                    @Extension(name = "interface info", properties = {
-                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
-                    })
-            })
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Resource successfully deleted, no content returned",
+            response = PlainToscaServiceTemplate.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
                                     description = "Used to request or communicate a MINOR version back from the client"
@@ -857,7 +1006,14 @@ public class ApiRestController {
                     @ResponseHeader(name = "X-ONAP-RequestID",
                                     description = "Used to track REST transactions for logging purpose",
                                     response = UUID.class)
-            }),
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
             @ApiResponse(code = 401, message = "Authentication Error"),
             @ApiResponse(code = 403, message = "Authorization Error"),
             @ApiResponse(code = 404, message = "Resource Not Found"),
@@ -871,9 +1027,21 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion,
-                                                        policyId, policyVersion)).build();
+
+        try {
+            PlainToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .deletePolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException pfme) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        } catch (PfModelRuntimeException pfmre) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfmre.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfmre.getErrorResponse()).build();
+        }
     }
 
     private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
