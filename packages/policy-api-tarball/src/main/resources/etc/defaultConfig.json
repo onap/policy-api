@@ -7,5 +7,13 @@
         "password": "zb!XztG34",
         "https": true,
         "aaf": false 
+    },
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseUrl": "jdbc:mariadb://localhost:3306/policy",
+        "databaseUser": "policy",
+        "databasePassword": "UDAxaWNZ",
+        "persistenceUnit": "ToscaConceptMariaDBTest"
     }
 }

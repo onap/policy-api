@@ -22,8 +22,14 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.util.List;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of legacy operational policy operations.
@@ -32,7 +38,18 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyOperationalPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyOperationalPolicyProvider() throws PfModelException {
+
+        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
+        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of operational policies matching specified ID and version.
@@ -40,11 +57,12 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the list of LegacyOperationalPolicy objects
      */
-    public ToscaServiceTemplate fetchOperationalPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public List<LegacyOperationalPolicy> fetchOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+        //TODO
+        return null;
     }
 
     /**
@@ -54,9 +72,9 @@ public class LegacyOperationalPolicyProvider {
      *
      * @return the LegacyOperationalPolicy object
      */
-    public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) {
-        // placeholder
-        return new LegacyOperationalPolicy();
+    public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) throws PfModelException {
+        //TODO
+        return null;
     }
 
     /**
@@ -65,10 +83,11 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the list of LegacyOperationalPolicy objects
      */
-    public String deleteOperationalPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return DELETE_OK;
+    public List<LegacyOperationalPolicy> deleteOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+        //TODO
+        return null;
     }
 }
