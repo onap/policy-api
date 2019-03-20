@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -29,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
  * Class to perform unit test of ApiParameterGroup.
@@ -40,8 +41,10 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(
-                CommonTestData.API_GROUP_NAME, restServerParameters);
+                CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), apiParameters.getRestServerParameters().getHost());
@@ -58,8 +61,10 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup_NullName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(null,
-                        restServerParameters);
+                        restServerParameters, databaseProviderParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, apiParameters.getName());
@@ -71,9 +76,10 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup_EmptyName() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
-
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup("",
-                        restServerParameters);
+                        restServerParameters, databaseProviderParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", apiParameters.getName());
@@ -84,13 +90,28 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup_EmptyRestServerParameters() {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true);
-
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(
-                        CommonTestData.API_GROUP_NAME, restServerParameters);
+                        CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
                         .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
+                                        + "parameter group has status INVALID"));
+    }
+
+    @Test
+    public void testApiParameterGroup_EmptyDatabaseProviderParameters() {
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(true);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                        CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
+        final GroupValidationResult validationResult = apiParameters.validate();
+        assertFalse(validationResult.isValid());
+        assertTrue(validationResult.getResult()
+                        .contains("\"org.onap.policy.models.provider.PolicyModelsProviderParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
     }
 }

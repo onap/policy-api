@@ -24,23 +24,28 @@ import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.common.utils.validation.ParameterValidationUtils;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
  * Class to hold all parameters needed for Api component.
  *
  */
 public class ApiParameterGroup implements ParameterGroup {
+
     private String name;
     private RestServerParameters restServerParameters;
+    private PolicyModelsProviderParameters databaseProviderParameters;
 
     /**
      * Create the api parameter group.
      *
      * @param name the parameter group name
      */
-    public ApiParameterGroup(final String name, final RestServerParameters restServerParameters) {
+    public ApiParameterGroup(final String name, final RestServerParameters restServerParameters,
+            final PolicyModelsProviderParameters databaseProviderParameters) {
         this.name = name;
         this.restServerParameters = restServerParameters;
+        this.databaseProviderParameters = databaseProviderParameters;
     }
 
     /**
@@ -73,6 +78,15 @@ public class ApiParameterGroup implements ParameterGroup {
     }
 
     /**
+     * Return the databaseProviderParameters of this parameter group instance.
+     *
+     * @return the databaseProviderParameters
+     */
+    public PolicyModelsProviderParameters getDatabaseProviderParameters() {
+        return databaseProviderParameters;
+    }
+
+    /**
      * Validate the parameter group.
      *
      * @return the result of the validation
@@ -88,6 +102,12 @@ public class ApiParameterGroup implements ParameterGroup {
                     "must have restServerParameters to configure api rest server");
         } else {
             validationResult.setResult("restServerParameters", restServerParameters.validate());
+        }
+        if (databaseProviderParameters == null) {
+            validationResult.setResult("databaseProviderParameters", ValidationStatus.INVALID,
+                    "must have databaseProviderParameters to configure api rest server");
+        } else {
+            validationResult.setResult("databaseProviderParameters", databaseProviderParameters.validate());
         }
         return validationResult;
     }

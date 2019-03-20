@@ -22,6 +22,16 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import javax.ws.rs.core.Response;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.mapping.PlainToscaServiceTemplateMapper;
 import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
@@ -31,7 +41,18 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class PolicyTypeProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public PolicyTypeProvider() throws PfModelException {
+
+        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
+        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of policy types matching specified policy type ID and version.
@@ -39,11 +60,21 @@ public class PolicyTypeProvider {
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public PlainToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion)
+            throws PfModelException {
+
+        ToscaServiceTemplate serviceTemplate = modelsProvider.getPolicyTypes(
+                new PfConceptKey(policyTypeId, policyTypeVersion));
+        try {
+            modelsProvider.close();
+        } catch (Exception e) {
+            throw new PfModelException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "error closing connection to database", e);
+        }
+        return new PlainToscaServiceTemplateMapper().fromToscaServiceTemplate(serviceTemplate);
     }
 
     /**
@@ -51,11 +82,22 @@ public class PolicyTypeProvider {
      *
      * @param body the entity body of policy type
      *
-     * @return the ToscaServiceTemplate objects
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public PlainToscaServiceTemplate createPolicyType(PlainToscaServiceTemplate body) throws PfModelException {
+
+        PlainToscaServiceTemplateMapper mapper = new PlainToscaServiceTemplateMapper();
+        ToscaServiceTemplate mappedBody = mapper.toToscaServiceTemplate(body);
+
+        ToscaServiceTemplate serviceTemplate = modelsProvider.createPolicyTypes(mappedBody);
+        try {
+            modelsProvider.close();
+        } catch (Exception e) {
+            throw new PfModelException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "error closing connection to database", e);
+        }
+        return mapper.fromToscaServiceTemplate(serviceTemplate);
     }
 
     /**
@@ -64,10 +106,12 @@ public class PolicyTypeProvider {
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
      *
-     * @return a string message indicating the operation results
+     * @return the PlainToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public String deletePolicyTypes(String policyTypeId, String policyTypeVersion) {
-        // placeholder
-        return DELETE_OK;
+    public PlainToscaServiceTemplate deletePolicyTypes(String policyTypeId, String policyTypeVersion)
+            throws PfModelException {
+        //TODO
+        return null;
     }
 }

@@ -22,8 +22,14 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.util.List;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of legacy guard policy operations.
@@ -32,7 +38,18 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyGuardPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyGuardPolicyProvider() throws PfModelException {
+
+        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
+        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of guard policies matching specified ID and version.
@@ -40,11 +57,12 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the list of LegacyGuardPolicy objects
      */
-    public ToscaServiceTemplate fetchGuardPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public List<LegacyGuardPolicy> fetchGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+        //TODO
+        return null;
     }
 
     /**
@@ -52,11 +70,11 @@ public class LegacyGuardPolicyProvider {
      *
      * @param body the entity body of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the LegacyGuardPolicy object
      */
-    public ToscaServiceTemplate createGuardPolicy(LegacyGuardPolicy body) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public LegacyGuardPolicy createGuardPolicy(LegacyGuardPolicy body) throws PfModelException {
+        //TODO
+        return null;
     }
 
     /**
@@ -65,10 +83,11 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the PlainToscaServiceTemplate object
      */
-    public String deleteGuardPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return DELETE_OK;
+    public List<LegacyGuardPolicy> deleteGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+        //TODO
+        return null;
     }
 }
