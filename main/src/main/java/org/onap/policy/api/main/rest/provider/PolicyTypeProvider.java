@@ -22,6 +22,7 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
@@ -40,8 +41,10 @@ public class PolicyTypeProvider {
      * @param policyTypeVersion the version of policy type
      *
      * @return the ToscaServiceTemplate object
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion) {
+    public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion)
+            throws PfModelException {
         // placeholder
         return new ToscaServiceTemplate();
     }
@@ -52,8 +55,9 @@ public class PolicyTypeProvider {
      * @param body the entity body of policy type
      *
      * @return the ToscaServiceTemplate objects
+     * @throws PfModelException the PfModel parsing exception
      */
-    public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) {
+    public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) throws PfModelException {
         // placeholder
         return new ToscaServiceTemplate();
     }
@@ -65,8 +69,9 @@ public class PolicyTypeProvider {
      * @param policyTypeVersion the version of policy type
      *
      * @return a string message indicating the operation results
+     * @throws PfModelException the PfModel parsing exception
      */
-    public String deletePolicyTypes(String policyTypeId, String policyTypeVersion) {
+    public String deletePolicyTypes(String policyTypeId, String policyTypeVersion) throws PfModelException {
         // placeholder
         return DELETE_OK;
     }
