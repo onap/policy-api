@@ -22,8 +22,16 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.io.IOException;
+import java.util.Properties;
+import javax.ws.rs.core.Response;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of legacy guard policy operations.
@@ -32,7 +40,28 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyGuardPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyGuardPolicyProvider() throws PfModelException {
+
+        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
+        Properties prop = new Properties();
+        try {
+            prop.load(ResourceUtils.getResourceAsStream("PolicyModelsProviderParameters.properties"));
+        } catch (IOException e) {
+            throw new PfModelException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "error reading models provider config file", e);
+        }
+        parameters.setImplementation(prop.getProperty("implementation"));
+        parameters.setDatabaseUrl(prop.getProperty("databaseUrl"));
+        parameters.setPersistenceUnit(prop.getProperty("persistenceUnit"));
+
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of guard policies matching specified ID and version.
@@ -40,11 +69,12 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
      */
-    public ToscaServiceTemplate fetchGuardPolicies(String policyId, String policyVersion) {
+    public PlainToscaServiceTemplate fetchGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
         // placeholder
-        return new ToscaServiceTemplate();
+        return new PlainToscaServiceTemplate();
     }
 
     /**
@@ -52,11 +82,11 @@ public class LegacyGuardPolicyProvider {
      *
      * @param body the entity body of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
      */
-    public ToscaServiceTemplate createGuardPolicy(LegacyGuardPolicy body) {
+    public PlainToscaServiceTemplate createGuardPolicy(LegacyGuardPolicy body) throws PfModelException {
         // placeholder
-        return new ToscaServiceTemplate();
+        return new PlainToscaServiceTemplate();
     }
 
     /**
@@ -65,10 +95,11 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the PlainToscaServiceTemplate object
      */
-    public String deleteGuardPolicies(String policyId, String policyVersion) {
+    public PlainToscaServiceTemplate deleteGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
         // placeholder
-        return DELETE_OK;
+        return new PlainToscaServiceTemplate();
     }
 }

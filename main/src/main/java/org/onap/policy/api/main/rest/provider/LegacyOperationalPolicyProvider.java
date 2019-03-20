@@ -22,8 +22,13 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.provider.impl.DummyPolicyModelsProviderImpl;
+import org.onap.policy.models.tosca.authorative.concepts.PlainToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of legacy operational policy operations.
@@ -32,7 +37,23 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyOperationalPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyOperationalPolicyProvider() throws PfModelException {
+
+        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
+        // Use dummy provider tentatively to test dummy things
+        // Will change to use real database version
+        parameters.setImplementation(DummyPolicyModelsProviderImpl.class.getCanonicalName());
+        parameters.setDatabaseUrl("jdbc:dummy");
+        parameters.setPersistenceUnit("dummy");
+
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of operational policies matching specified ID and version.
@@ -40,11 +61,12 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the PlainToscaServiceTemplate object
      */
-    public ToscaServiceTemplate fetchOperationalPolicies(String policyId, String policyVersion) {
+    public PlainToscaServiceTemplate fetchOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
         // placeholder
-        return new ToscaServiceTemplate();
+        return new PlainToscaServiceTemplate();
     }
 
     /**
@@ -52,11 +74,11 @@ public class LegacyOperationalPolicyProvider {
      *
      * @param body the entity body of policy
      *
-     * @return the LegacyOperationalPolicy object
+     * @return the PlainToscaServiceTemplate object
      */
-    public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) {
+    public PlainToscaServiceTemplate createOperationalPolicy(LegacyOperationalPolicy body) throws PfModelException {
         // placeholder
-        return new LegacyOperationalPolicy();
+        return new PlainToscaServiceTemplate();
     }
 
     /**
@@ -65,10 +87,11 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the PlainToscaServiceTemplate object
      */
-    public String deleteOperationalPolicies(String policyId, String policyVersion) {
+    public PlainToscaServiceTemplate deleteOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
         // placeholder
-        return DELETE_OK;
+        return new PlainToscaServiceTemplate();
     }
 }
