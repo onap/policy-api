@@ -53,6 +53,7 @@ import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
@@ -83,6 +84,12 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS },
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = { @BasicAuthDefinition(key = "basicAuth") }))
 public class ApiRestController {
+
+    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
+    private static final String INVALID_BODY = "Invalid Body";
+    private static final String POLICY_TYPE_NOT_FOUND = "Policy Type Not Found";
+    private static final String POLICY_NOT_FOUND = "Policy Not Found";
+    private static final String DELETE_CONFLICT = "Delete Conflict, Rule Violation";
 
     /**
      * Retrieves the healthcheck status of the API component.
@@ -218,8 +225,16 @@ public class ApiRestController {
         })
     public Response getAllPolicyTypes(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(null, null)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().fetchPolicyTypes(null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                    .entity(INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
@@ -268,8 +283,23 @@ public class ApiRestController {
     public Response getAllVersionsOfPolicyType(
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, null)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
+                    .fetchPolicyTypes(policyTypeId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -320,8 +350,23 @@ public class ApiRestController {
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().fetchPolicyTypes(policyTypeId, versionId)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
+                    .fetchPolicyTypes(policyTypeId, versionId);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -370,8 +415,26 @@ public class ApiRestController {
     public Response createPolicyType(
             @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().createPolicyType(body)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().createPolicyType(body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -423,8 +486,26 @@ public class ApiRestController {
     public Response deleteAllVersionsOfPolicyType(
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, null)).build();
+
+        try {
+            String deleteResults = new PolicyTypeProvider().deletePolicyTypes(policyTypeId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(deleteResults).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else if (e.getStatusCode() == Response.Status.CONFLICT) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.CONFLICT)), requestId)
+                        .entity(DELETE_CONFLICT).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -478,8 +559,26 @@ public class ApiRestController {
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyTypeProvider().deletePolicyTypes(policyTypeId, versionId)).build();
+
+        try {
+            String deleteResults = new PolicyTypeProvider().deletePolicyTypes(policyTypeId, versionId);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(deleteResults).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else if (e.getStatusCode() == Response.Status.CONFLICT) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.CONFLICT)), requestId)
+                        .entity(DELETE_CONFLICT).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -531,8 +630,27 @@ public class ApiRestController {
             @PathParam("policyTypeVersion")
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, null, null)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, null, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -586,8 +704,27 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -643,9 +780,27 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion,
-                                                       policyId, policyVersion)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -701,8 +856,27 @@ public class ApiRestController {
             @QueryParam("type")
                 @ApiParam(value = "Version that can only be 'latest' or 'deployed'", required = true) String type,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().fetchPolicies(policyTypeId, policyTypeVersion, policyId, type)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .fetchPolicies(policyTypeId, policyTypeVersion, policyId, type);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -757,8 +931,27 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().createPolicy(policyTypeId, policyTypeVersion, body)).build();
+
+        try {
+            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+                    .createPolicy(policyTypeId, policyTypeVersion, body);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.BAD_REQUEST) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.BAD_REQUEST)), requestId)
+                        .entity(INVALID_BODY).build();
+            } else if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -813,8 +1006,27 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion, policyId, null)).build();
+
+        try {
+            String deleteResults = new PolicyProvider()
+                    .deletePolicies(policyTypeId, policyTypeVersion, policyId, null);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(deleteResults).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else if (e.getStatusCode() == Response.Status.CONFLICT) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.CONFLICT)), requestId)
+                        .entity(DELETE_CONFLICT).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     /**
@@ -871,9 +1083,27 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new PolicyProvider().deletePolicies(policyTypeId, policyTypeVersion,
-                                                        policyId, policyVersion)).build();
+
+        try {
+            String deleteResults = new PolicyProvider()
+                    .deletePolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.NO_CONTENT)), requestId)
+                    .entity(deleteResults).build();
+        } catch (PfModelException e) {
+            if (e.getStatusCode() == Response.Status.NOT_FOUND) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.NOT_FOUND)), requestId)
+                        .entity(POLICY_TYPE_NOT_FOUND).build();
+            } else if (e.getStatusCode() == Response.Status.CONFLICT) {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.CONFLICT)), requestId)
+                        .entity(DELETE_CONFLICT).build();
+            } else {
+                return addLoggingHeaders(addVersionControlHeaders(
+                        Response.status(Response.Status.INTERNAL_SERVER_ERROR)), requestId)
+                        .entity(INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
