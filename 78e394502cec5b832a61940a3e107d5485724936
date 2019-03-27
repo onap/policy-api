@@ -188,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "742b325f_efe13862",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-27T22:32:27Z",
+      "side": 1,
+      "message": "Yes, the implementation used should be set using configuration, not hard coded (except maybe in tests). You should always call close() because you don\u0027t know which implementation you will be using.",
+      "parentUuid": "53e871c0_044e0ed3",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8187d22d_e7d95e6f",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 4
