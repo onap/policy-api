@@ -48,6 +48,98 @@
     },
     {
       "key": {
+        "uuid": "d750ffdc_2ae7758a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-27T09:58:53Z",
+      "side": 1,
+      "message": "Same comments are valid for this class too.",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 38
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fd75fb7_5875f12e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-27T09:58:53Z",
+      "side": 1,
+      "message": "Same comments are valid for this class too.",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 44
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a03145c7_328fd5cd",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-27T09:58:53Z",
+      "side": 1,
+      "message": "I think this should be handled via configuration. So that the values can be changed during bootstrap.",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 47
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7468b89d_8dd406e9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-27T09:58:53Z",
+      "side": 1,
+      "message": "I don\u0027t see modelsProvider.close() anywhere?",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8187d22d_e7d95e6f",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 4
@@ -64,6 +156,29 @@
         "startChar": 1,
         "endLine": 110,
         "endChar": 9
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e0e3885_7edcae24",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-27T09:58:53Z",
+      "side": 1,
+      "message": "Same comments are valid for this class too.",
+      "range": {
+        "startLine": 40,
+        "startChar": 13,
+        "endLine": 40,
+        "endChar": 31
       },
       "revId": "78e394502cec5b832a61940a3e107d5485724936",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
