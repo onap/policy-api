@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "d320dcf9_b35f4980",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-27T16:58:00Z",
+      "side": 1,
+      "message": "Do you mean put them into a property file and read from it?",
+      "parentUuid": "a03145c7_328fd5cd",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 47
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7468b89d_8dd406e9",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 4
@@ -128,6 +152,30 @@
       "writtenOn": "2019-03-27T09:58:53Z",
       "side": 1,
       "message": "I don\u0027t see modelsProvider.close() anywhere?",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 30
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53e871c0_044e0ed3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-03-27T16:58:00Z",
+      "side": 1,
+      "message": "i don\u0027t put close() because it is for dummy only. dummy doesn\u0027t read from db. I\u0027ll add close() when change to db version.",
+      "parentUuid": "7468b89d_8dd406e9",
       "range": {
         "startLine": 62,
         "startChar": 8,
