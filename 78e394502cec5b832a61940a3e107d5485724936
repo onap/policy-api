@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a52e8323_e01249ad",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-27T09:33:28Z",
+      "side": 1,
+      "message": "Using try/multicatch would shorten the code in this class a fair bit:\nRepalce the code above with:\n\n        } catch (PfModelException | PfModelRuntimeException pfme) {\n            return addLoggingHeaders(\n                    addVersionControlHeaders(Response.status(pfme.getErrorResponse().getResponseCode())), requestId)\n                            .entity(pfme.getErrorResponse()).build();\n        }\n\nAlso applies to the other calls below in the class.",
+      "range": {
+        "startLine": 230,
+        "startChar": 1,
+        "endLine": 237,
+        "endChar": 62
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "483e935b_ea0c9e43",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-27T09:33:28Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 62
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8187d22d_e7d95e6f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-03-27T09:33:28Z",
+      "side": 1,
+      "message": "This should be done in the policy-models code and not in the API, because this is required in all cases of the policy being created, not just over the API (and I know the API is the only way to call the policy-models now but may not be so in the future)",
+      "range": {
+        "startLine": 100,
+        "startChar": 1,
+        "endLine": 110,
+        "endChar": 9
+      },
+      "revId": "78e394502cec5b832a61940a3e107d5485724936",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
