@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cf4a0fa_2a12a8d4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-28T10:46:38Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 102
+      },
+      "revId": "bb914ba117ccd9249b1599ab7d7f0c6ebc717697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7fa05_6f6d19d9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-28T10:46:38Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 47,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 47
+      },
+      "revId": "bb914ba117ccd9249b1599ab7d7f0c6ebc717697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab8ae080_1c6d5fcf",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-28T10:46:38Z",
+      "side": 1,
+      "message": "Should not add a new property file here. Instead the parameters should go to the main configuration file of the API component.\nHave a look at this review - https://gerrit.onap.org/r/#/c/83501/",
+      "range": {
+        "startLine": 55,
+        "startChar": 12,
+        "endLine": 55,
+        "endChar": 102
+      },
+      "revId": "bb914ba117ccd9249b1599ab7d7f0c6ebc717697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1537f947_086beb76",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-28T10:46:38Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 55,
+        "startChar": 12,
+        "endLine": 55,
+        "endChar": 102
+      },
+      "revId": "bb914ba117ccd9249b1599ab7d7f0c6ebc717697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "724e832f_8fcfbdab",
+        "filename": "main/src/main/resources/PolicyModelsProviderParameters.properties",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-03-28T10:46:38Z",
+      "side": 1,
+      "message": "This file should be deleted.",
+      "revId": "bb914ba117ccd9249b1599ab7d7f0c6ebc717697",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
