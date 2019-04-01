@@ -8,7 +8,7 @@ ENV POLICY_LOGS ${POLICY_LOGS}
 ENV POLICY_API_HOME=${POLICY_HOME}/api
 
 RUN mkdir -p ${POLICY_LOGS} ${POLICY_API_HOME} ${POLICY_API_HOME}/bin && \
-    chown  -R policy:policy ${POLICY_API_HOME}
+    chown -R policy:policy ${POLICY_API_HOME} ${POLICY_LOGS}
 
 RUN mkdir /packages
 COPY /maven/* /packages
