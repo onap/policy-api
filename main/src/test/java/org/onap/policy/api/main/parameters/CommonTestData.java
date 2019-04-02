@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -23,11 +23,15 @@
 
 package org.onap.policy.api.main.parameters;
 
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+
 /**
  * Class to hold/create all parameters for test cases.
  *
  */
 public class CommonTestData {
+
+    public static final String API_GROUP_NAME = "ApiGroup";
 
     private static final String REST_SERVER_PASSWORD = "zb!XztG34";
     private static final String REST_SERVER_USER = "healthcheck";
@@ -35,7 +39,13 @@ public class CommonTestData {
     private static final String REST_SERVER_HOST = "0.0.0.0";
     private static final boolean REST_SERVER_HTTPS = false;
     private static final boolean REST_SERVER_AAF = false;
-    public static final String API_GROUP_NAME = "ApiGroup";
+
+    private static final String PROVIDER_GROUP_NAME = "PolicyProviderParameterGroup";
+    private static final String PROVIDER_IMPL = "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl";
+    private static final String DATABASE_URL = "jdbc:h2:mem:testdb";
+    private static final String DATABASE_USER = "policy";
+    private static final String DATABASE_PASSWORD = "P01icY";
+    private static final String PERSISTENCE_UNIT = "ToscaConceptTest";
 
     /**
      * Returns an instance of RestServerParameters for test cases.
@@ -54,4 +64,25 @@ public class CommonTestData {
         return restServerParameters;
     }
 
+    /**
+     * Returns an instance of PolicyModelsProviderParameters for test cases.
+     *
+     * @param isEmpty boolean value to represent that object created should be empty or not
+     * @return the PolicyModelsProviderParameters object
+     */
+    public PolicyModelsProviderParameters getDatabaseProviderParameters(final boolean isEmpty) {
+        final PolicyModelsProviderParameters databaseProviderParameters;
+        if (!isEmpty) {
+            databaseProviderParameters = new PolicyModelsProviderParameters();
+            databaseProviderParameters.setName(PROVIDER_GROUP_NAME);
+            databaseProviderParameters.setImplementation(PROVIDER_IMPL);
+            databaseProviderParameters.setDatabaseUrl(DATABASE_URL);
+            databaseProviderParameters.setDatabaseUser(DATABASE_USER);
+            databaseProviderParameters.setDatabasePassword(DATABASE_PASSWORD);
+            databaseProviderParameters.setPersistenceUnit(PERSISTENCE_UNIT);
+        } else {
+            databaseProviderParameters = new PolicyModelsProviderParameters();
+        }
+        return databaseProviderParameters;
+    }
 }

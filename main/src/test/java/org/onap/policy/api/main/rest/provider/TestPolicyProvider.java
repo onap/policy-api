@@ -1,6 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2019 IBM.
+ * ONAP Policy API
+ * ================================================================================
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +20,6 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.exception;
+package org.onap.policy.api.main.rest.provider;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-
-public class PolicyApiRuntimeExceptionTest {
-
-    private PolicyApiRuntimeException policyApiRuntimeException;
-    private String message = "test exception message";
-    
-    @Before
-    public void setUp() {
-        policyApiRuntimeException = new PolicyApiRuntimeException(message);
-    }
-    
-    @Test
-    public void testContructor() {
-        policyApiRuntimeException = new PolicyApiRuntimeException(message, new Exception());
-        assertEquals(message, policyApiRuntimeException.getMessage());
-    }
-}
+public class TestPolicyProvider {}

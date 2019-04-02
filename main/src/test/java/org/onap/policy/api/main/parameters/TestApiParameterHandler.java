@@ -28,7 +28,6 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
@@ -153,7 +152,7 @@ public class TestApiParameterHandler {
     @Test
     public void testApiParameterGroup_InvalidRestServerParameters()
             throws PolicyApiException, IOException {
-        final String[] apiConfigParameters = 
+        final String[] apiConfigParameters =
             { "-c", "parameters/ApiConfigParameters_InvalidRestServerParameters.json" };
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
