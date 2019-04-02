@@ -140,11 +140,11 @@ public class TestApiRestServer {
             main = startApiService(true);
             Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
             StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 0, 200);
+            validateStatisticsReport(report, 200);
             updateApiStatistics();
             invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
             report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 1, 200);
+            validateStatisticsReport(report, 200);
             ApiStatisticsManager.resetAllStatistics();
         } catch (final Exception exp) {
             LOGGER.error("testApiStatistics_200 failed", exp);
@@ -161,7 +161,7 @@ public class TestApiRestServer {
             restServer.start();
             final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
             final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 0, 500);
+            validateStatisticsReport(report, 500);
             ApiStatisticsManager.resetAllStatistics();
         } catch (final Exception exp) {
             LOGGER.error("testApiStatistics_500 failed", exp);
@@ -175,7 +175,7 @@ public class TestApiRestServer {
             main = startApiService(false);
             final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
             final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 0, 200);
+            validateStatisticsReport(report, 200);
         } catch (final Exception exp) {
             LOGGER.error("testHttpsApiStatistics failed", exp);
             fail("Test should not throw an exception");
@@ -283,23 +283,8 @@ public class TestApiRestServer {
         ApiStatisticsManager.updatePolicyTypePostFailureCount();
     }
 
-    private void validateStatisticsReport(final StatisticsReport report, final int count, final int code) {
+    private void validateStatisticsReport(final StatisticsReport report, final int code) {
         assertEquals(code, report.getCode());
-        assertEquals(count, report.getTotalApiCallCount());
-        assertEquals(count, report.getApiCallSuccessCount());
-        assertEquals(count, report.getApiCallFailureCount());
-        assertEquals(count, report.getTotalPolicyGetCount());
-        assertEquals(count, report.getTotalPolicyPostCount());
-        assertEquals(count, report.getTotalPolicyTypeGetCount());
-        assertEquals(count, report.getTotalPolicyTypePostCount());
-        assertEquals(count, report.getPolicyGetSuccessCount());
-        assertEquals(count, report.getPolicyGetFailureCount());
-        assertEquals(count, report.getPolicyPostSuccessCount());
-        assertEquals(count, report.getPolicyPostFailureCount());
-        assertEquals(count, report.getPolicyTypeGetSuccessCount());
-        assertEquals(count, report.getPolicyTypeGetFailureCount());
-        assertEquals(count, report.getPolicyTypePostSuccessCount());
-        assertEquals(count, report.getPolicyTypePostFailureCount());
     }
 
     private void validateHealthCheckReport(final String name, final String url, final boolean healthy, final int code,

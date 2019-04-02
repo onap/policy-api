@@ -22,8 +22,16 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
+import java.util.Map;
+import javax.ws.rs.core.Response;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
+import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 
 /**
  * Class to provide all kinds of legacy guard policy operations.
@@ -32,7 +40,18 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyGuardPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyGuardPolicyProvider() throws PfModelException {
+
+        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
+        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of guard policies matching specified ID and version.
@@ -40,11 +59,14 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the map of LegacyGuardPolicyOutput objects
      */
-    public ToscaServiceTemplate fetchGuardPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public Map<String, LegacyGuardPolicyOutput> fetchGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+
+        Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.getGuardPolicy(policyId);
+        close();
+        return guardPolicies;
     }
 
     /**
@@ -52,11 +74,12 @@ public class LegacyGuardPolicyProvider {
      *
      * @param body the entity body of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the map of LegacyGuardPolicyOutput objectst
      */
-    public ToscaServiceTemplate createGuardPolicy(LegacyGuardPolicy body) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body) throws PfModelException {
+        Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.createGuardPolicy(body);
+        close();
+        return guardPolicies;
     }
 
     /**
@@ -65,10 +88,27 @@ public class LegacyGuardPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the map of LegacyGuardPolicyOutput objects
      */
-    public String deleteGuardPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return DELETE_OK;
+    public Map<String, LegacyGuardPolicyOutput> deleteGuardPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+
+        Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.deleteGuardPolicy(policyId);
+        close();
+        return guardPolicies;
+    }
+
+    /**
+     * Closes the connection to database.
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void close() throws PfModelException {
+        try {
+            modelsProvider.close();
+        } catch (Exception e) {
+            throw new PfModelException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "error closing connection to database", e);
+        }
     }
 }
