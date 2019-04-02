@@ -22,8 +22,14 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import javax.ws.rs.core.Response;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
-import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
 
 /**
  * Class to provide all kinds of legacy operational policy operations.
@@ -32,7 +38,18 @@ import org.onap.policy.models.tosca.simple.concepts.ToscaServiceTemplate;
  */
 public class LegacyOperationalPolicyProvider {
 
-    private static final String DELETE_OK = "Successfully deleted";
+    private PolicyModelsProvider modelsProvider;
+
+    /**
+     * Default constructor.
+     */
+    public LegacyOperationalPolicyProvider() throws PfModelException {
+
+        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
+        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        modelsProvider.init();
+    }
 
     /**
      * Retrieves a list of operational policies matching specified ID and version.
@@ -40,11 +57,14 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the LegacyOperationalPolicy object
      */
-    public ToscaServiceTemplate fetchOperationalPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return new ToscaServiceTemplate();
+    public LegacyOperationalPolicy fetchOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+
+        LegacyOperationalPolicy operationalPolicy = modelsProvider.getOperationalPolicy(policyId);
+        close();
+        return operationalPolicy;
     }
 
     /**
@@ -54,9 +74,11 @@ public class LegacyOperationalPolicyProvider {
      *
      * @return the LegacyOperationalPolicy object
      */
-    public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) {
-        // placeholder
-        return new LegacyOperationalPolicy();
+    public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) throws PfModelException {
+
+        LegacyOperationalPolicy operationalPolicy = modelsProvider.createOperationalPolicy(body);
+        close();
+        return operationalPolicy;
     }
 
     /**
@@ -65,10 +87,27 @@ public class LegacyOperationalPolicyProvider {
      * @param policyId the ID of policy
      * @param policyVersion the version of policy
      *
-     * @return a string message indicating the operation results
+     * @return the LegacyOperationalPolicy object
      */
-    public String deleteOperationalPolicies(String policyId, String policyVersion) {
-        // placeholder
-        return DELETE_OK;
+    public LegacyOperationalPolicy deleteOperationalPolicies(String policyId, String policyVersion)
+            throws PfModelException {
+
+        LegacyOperationalPolicy operationalPolicy = modelsProvider.deleteOperationalPolicy(policyId);
+        close();
+        return operationalPolicy;
+    }
+
+    /**
+     * Closes the connection to database.
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void close() throws PfModelException {
+        try {
+            modelsProvider.close();
+        } catch (Exception e) {
+            throw new PfModelException(
+                    Response.Status.INTERNAL_SERVER_ERROR, "error closing connection to database", e);
+        }
     }
 }
