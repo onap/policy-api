@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * and forwarding handlers.
  */
 public class ApiActivator {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiActivator.class);
 
     private final ApiParameterGroup apiParameterGroup;
@@ -112,7 +112,7 @@ public class ApiActivator {
      * @param apiParameterGroup the api parameter group
      */
     public void registerToParameterService(final ApiParameterGroup apiParameterGroup) {
-        ParameterService.register(apiParameterGroup);
+        ParameterService.register(apiParameterGroup, true);
     }
 
     /**

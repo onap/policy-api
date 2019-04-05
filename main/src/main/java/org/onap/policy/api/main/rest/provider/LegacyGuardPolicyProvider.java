@@ -50,7 +50,6 @@ public class LegacyGuardPolicyProvider {
         ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
         PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
         modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
-        modelsProvider.init();
     }
 
     /**
@@ -61,10 +60,11 @@ public class LegacyGuardPolicyProvider {
      *
      * @return the map of LegacyGuardPolicyOutput objects
      */
-    public Map<String, LegacyGuardPolicyOutput> fetchGuardPolicies(String policyId, String policyVersion)
+    public Map<String, LegacyGuardPolicyOutput> fetchGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
         Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.getGuardPolicy(policyId);
+
         close();
         return guardPolicies;
     }
@@ -77,7 +77,9 @@ public class LegacyGuardPolicyProvider {
      * @return the map of LegacyGuardPolicyOutput objectst
      */
     public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body) throws PfModelException {
+
         Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.createGuardPolicy(body);
+
         close();
         return guardPolicies;
     }
@@ -90,10 +92,11 @@ public class LegacyGuardPolicyProvider {
      *
      * @return the map of LegacyGuardPolicyOutput objects
      */
-    public Map<String, LegacyGuardPolicyOutput> deleteGuardPolicies(String policyId, String policyVersion)
+    public Map<String, LegacyGuardPolicyOutput> deleteGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
         Map<String, LegacyGuardPolicyOutput> guardPolicies = modelsProvider.deleteGuardPolicy(policyId);
+
         close();
         return guardPolicies;
     }

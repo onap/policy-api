@@ -20,7 +20,62 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.api.main.rest.provider;
 
-public class TestLegacyOperationalPolicyProvider {}
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import java.util.Base64;
+import org.junit.Before;
+import org.junit.Test;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * This class performs unit test of {@link LegacyOperationalPolicyProvider}
+ *
+ * @author Chenfei Gao (cgao@research.att.com)
+ */
+public class TestLegacyOperationalPolicyProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestPolicyProvider.class);
+
+    private LegacyOperationalPolicyProvider operationalPolicyProvider;
+
+    /**
+     * Initialize parameters.
+     */
+    @Before
+    public void setupParameters() throws PfModelException {
+
+        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
+        parameters.setDatabaseUrl("jdbc:h2:mem:testdb");
+        parameters.setDatabaseUser("policy");
+        parameters.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        parameters.setPersistenceUnit("ToscaConceptTest");
+        ApiParameterGroup paramGroup = new ApiParameterGroup("ApiGroup", null, parameters);
+        ParameterService.register(paramGroup, true);
+        operationalPolicyProvider = new LegacyOperationalPolicyProvider();
+    }
+
+    @Test
+    public void testFetchOperationalPolicy() {
+
+    }
+
+    @Test
+    public void testCreateOperationalPolicy() {
+
+    }
+
+    @Test
+    public void testDeleteOperationalPolicy() {
+
+    }
+}
