@@ -58,8 +58,8 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
  */
 @Path("/policy/api/v1")
 @Api(value = "Legacy Policy Design API")
-@Produces({"application/json; vnd.onap.guard", "application/json; vnd.onap.operational"})
-@Consumes({"application/json; vnd.onap.guard", "application/json; vnd.onap.operational"})
+@Produces("application/json")
+@Consumes("application/json")
 public class LegacyApiRestController {
 
     /**
@@ -69,7 +69,6 @@ public class LegacyApiRestController {
      */
     @GET
     @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies")
-    @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve all versions of guard policies",
             notes = "Returns a list of all versions of guard policies",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
@@ -108,7 +107,7 @@ public class LegacyApiRestController {
 
         try {
             Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .fetchGuardPolicies(null, null);
+                    .fetchGuardPolicy(null, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -127,7 +126,6 @@ public class LegacyApiRestController {
      */
     @GET
     @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}")
-    @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve all versions of a particular guard policy",
             notes = "Returns a list of all versions of the specified guard policy",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
@@ -168,7 +166,7 @@ public class LegacyApiRestController {
 
         try {
             Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .fetchGuardPolicies(policyId, null);
+                    .fetchGuardPolicy(policyId, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -188,7 +186,6 @@ public class LegacyApiRestController {
      */
     @GET
     @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
-    @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Retrieve one version of a particular guard policy",
             notes = "Returns a particular version of a specified guard policy",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
@@ -230,7 +227,7 @@ public class LegacyApiRestController {
 
         try {
             Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .fetchGuardPolicies(policyId, policyVersion);
+                    .fetchGuardPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -249,8 +246,6 @@ public class LegacyApiRestController {
      */
     @POST
     @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies")
-    @Consumes("application/json; vnd.onap.guard")
-    @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Create a new guard policy",
             notes = "Client should provide entity body of the new guard policy",
             authorizations = @Authorization(value = "basicAuth"),
@@ -310,7 +305,6 @@ public class LegacyApiRestController {
      */
     @DELETE
     @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
-    @Produces("application/json; vnd.onap.guard")
     @ApiOperation(value = "Delete a particular version of a guard policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
@@ -353,7 +347,7 @@ public class LegacyApiRestController {
 
         try {
             Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .deleteGuardPolicies(policyId, policyVersion);
+                    .deleteGuardPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -370,7 +364,6 @@ public class LegacyApiRestController {
      */
     @GET
     @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies")
-    @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve all versions of operational policies",
             notes = "Returns a list of all versions of operational policies",
             response = LegacyOperationalPolicy.class,
@@ -409,7 +402,7 @@ public class LegacyApiRestController {
 
         try {
             LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicies(null, null);
+                    .fetchOperationalPolicy(null, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -428,7 +421,6 @@ public class LegacyApiRestController {
      */
     @GET
     @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies/{policyId}")
-    @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve all versions of a particular operational policy",
             notes = "Returns a list of all versions of the specified operational policy",
             response = LegacyOperationalPolicy.class,
@@ -469,7 +461,7 @@ public class LegacyApiRestController {
 
         try {
             LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicies(policyId, null);
+                    .fetchOperationalPolicy(policyId, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -490,7 +482,6 @@ public class LegacyApiRestController {
     @GET
     @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/"
          + "policies/{policyId}/versions/{policyVersion}")
-    @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Retrieve one version of a particular operational policy",
             notes = "Returns a particular version of a specified operational policy",
             response = LegacyOperationalPolicy.class,
@@ -532,7 +523,7 @@ public class LegacyApiRestController {
 
         try {
             LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicies(policyId, policyVersion);
+                    .fetchOperationalPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -551,8 +542,6 @@ public class LegacyApiRestController {
      */
     @POST
     @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies")
-    @Consumes("application/json; vnd.onap.operational")
-    @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Create a new operational policy",
             notes = "Client should provide entity body of the new operational policy",
             authorizations = @Authorization(value = "basicAuth"),
@@ -614,7 +603,6 @@ public class LegacyApiRestController {
     @DELETE
     @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/"
          + "policies/{policyId}/versions/{policyVersion}")
-    @Produces("application/json; vnd.onap.operational")
     @ApiOperation(value = "Delete a particular version of a specified operational policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
@@ -657,7 +645,7 @@ public class LegacyApiRestController {
 
         try {
             LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .deleteOperationalPolicies(policyId, policyVersion);
+                    .deleteOperationalPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
