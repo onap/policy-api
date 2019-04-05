@@ -48,7 +48,6 @@ public class LegacyOperationalPolicyProvider {
         ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
         PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
         modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
-        modelsProvider.init();
     }
 
     /**
@@ -59,10 +58,11 @@ public class LegacyOperationalPolicyProvider {
      *
      * @return the LegacyOperationalPolicy object
      */
-    public LegacyOperationalPolicy fetchOperationalPolicies(String policyId, String policyVersion)
+    public LegacyOperationalPolicy fetchOperationalPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
         LegacyOperationalPolicy operationalPolicy = modelsProvider.getOperationalPolicy(policyId);
+
         close();
         return operationalPolicy;
     }
@@ -77,6 +77,7 @@ public class LegacyOperationalPolicyProvider {
     public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) throws PfModelException {
 
         LegacyOperationalPolicy operationalPolicy = modelsProvider.createOperationalPolicy(body);
+
         close();
         return operationalPolicy;
     }
@@ -89,10 +90,11 @@ public class LegacyOperationalPolicyProvider {
      *
      * @return the LegacyOperationalPolicy object
      */
-    public LegacyOperationalPolicy deleteOperationalPolicies(String policyId, String policyVersion)
+    public LegacyOperationalPolicy deleteOperationalPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
         LegacyOperationalPolicy operationalPolicy = modelsProvider.deleteOperationalPolicy(policyId);
+
         close();
         return operationalPolicy;
     }
