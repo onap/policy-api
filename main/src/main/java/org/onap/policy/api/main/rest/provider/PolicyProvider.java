@@ -22,6 +22,8 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.Response;
@@ -31,6 +33,7 @@ import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
+import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
@@ -74,19 +77,15 @@ public class PolicyProvider {
     public ToscaServiceTemplate fetchPolicies(String policyTypeId, String policyTypeVersion,
             String policyId, String policyVersion) throws PfModelException {
 
-        validatePolicyTypeExist(policyTypeId, policyTypeVersion);
+        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
+                .name(policyId).version(policyVersion)
+                .type(policyTypeId).typeVersion(policyTypeVersion).build();
+        ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
 
-        ToscaServiceTemplate serviceTemplate;
-        if (policyId == null || policyVersion == null) {
-            ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
-                    .name(policyId).version(policyVersion)
-                    .type(policyTypeId).typeVersion(policyTypeVersion).build();
-            serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
-        } else {
-            serviceTemplate = modelsProvider.getPolicies(policyId, policyVersion);
+        if (serviceTemplate.getToscaTopologyTemplate().getPolicies().isEmpty()) {
+            throw new PfModelException(Response.Status.NOT_FOUND,
+                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion, policyId, policyVersion));
         }
-
-        validatePolicyTypeMatch(policyTypeId, policyTypeVersion, serviceTemplate);
 
         close();
         return serviceTemplate;
@@ -106,14 +105,15 @@ public class PolicyProvider {
     public ToscaServiceTemplate fetchLatestPolicies(String policyTypeId, String policyTypeVersion,
             String policyId) throws PfModelException {
 
-        validatePolicyTypeExist(policyTypeId, policyTypeVersion);
-
         ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
                 .name(policyId).version(ToscaPolicyFilter.LATEST_VERSION)
                 .type(policyTypeId).typeVersion(policyTypeVersion).build();
         ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
 
-        validatePolicyTypeMatch(policyTypeId, policyTypeVersion, serviceTemplate);
+        if (serviceTemplate.getToscaTopologyTemplate().getPolicies().isEmpty()) {
+            throw new PfModelException(Response.Status.NOT_FOUND,
+                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion, policyId, null));
+        }
 
         close();
         return serviceTemplate;
@@ -133,19 +133,20 @@ public class PolicyProvider {
     public Map<Pair<String, String>, List<ToscaPolicy>> fetchDeployedPolicies(
             String policyTypeId, String policyTypeVersion, String policyId) throws PfModelException {
 
-        validatePolicyTypeExist(policyTypeId, policyTypeVersion);
-
-        ToscaPolicyIdentifier policyIdentifier = new ToscaPolicyIdentifier();
-        policyIdentifier.setName(policyId);
+        List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
+        policyTypes.add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
+        List<ToscaPolicyIdentifier> policies = new ArrayList<>();
+        policies.add(new ToscaPolicyIdentifier(policyId, null));
         PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder()
-                .policyType(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion))
-                .policy(policyIdentifier).build();
+                .policyTypeList(policyTypes).policyList(policies).build();
         List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
-
-        //TODO: I don't know how to get policies matching policyId that are deployed in those PDP groups
+        if (pdpGroups.isEmpty()) {
+            throw new PfModelException(Response.Status.NOT_FOUND,
+                    "policy with ID " + policyId + " has not been deployed yet");
+        }
 
         close();
-        return null;
+        return constructDeployedPolicyMap(pdpGroups, policyId);
     }
 
     /**
@@ -186,14 +187,14 @@ public class PolicyProvider {
     public ToscaServiceTemplate deletePolicy(String policyTypeId, String policyTypeVersion,
                                  String policyId, String policyVersion) throws PfModelException {
 
-        validatePolicyTypeExist(policyTypeId, policyTypeVersion);
-
-        ToscaServiceTemplate serviceTemplate = modelsProvider.getPolicies(policyId, policyVersion);
-
-        validatePolicyTypeMatch(policyTypeId, policyTypeVersion, serviceTemplate);
         validateDeleteEligibility(policyTypeId, policyTypeVersion, policyId, policyVersion);
 
         ToscaServiceTemplate deletedServiceTemplate = modelsProvider.deletePolicy(policyId, policyVersion);
+
+        if (deletedServiceTemplate == null) {
+            throw new PfModelException(Response.Status.NOT_FOUND,
+                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion, policyId, policyVersion));
+        }
 
         close();
         return deletedServiceTemplate;
@@ -230,14 +231,17 @@ public class PolicyProvider {
 
         List<Map<String, ToscaPolicy>> policies = serviceTemplate.getToscaTopologyTemplate().getPolicies();
         for (Map<String, ToscaPolicy> policy : policies) {
-            if (policy.size() != 1) {
+            if (policy.size() > 1) {
                 throw new PfModelException(Response.Status.BAD_REQUEST,
                         "one policy block contains more than one policies");
             }
             ToscaPolicy policyContent = policy.values().iterator().next();
-            if (!policyTypeId.equalsIgnoreCase(policyContent.getType())
-                    || !policyTypeVersion.equalsIgnoreCase(policyContent.getTypeVersion())) {
-                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type does not match");
+            if (!policyTypeId.equalsIgnoreCase(policyContent.getType())) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type id does not match");
+            }
+            if (policyContent.getTypeVersion() != null
+                    && !policyTypeVersion.equalsIgnoreCase(policyContent.getTypeVersion())) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type version does not match");
             }
         }
     }
@@ -255,14 +259,65 @@ public class PolicyProvider {
     private void validateDeleteEligibility(String policyTypeId, String policyTypeVersion,
             String policyId, String policyVersion) throws PfModelException {
 
+        List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
+        policyTypes.add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
+        List<ToscaPolicyIdentifier> policies = new ArrayList<>();
+        policies.add(new ToscaPolicyIdentifier(policyId, policyVersion));
         PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder()
-                .policyType(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion))
-                .policy(new ToscaPolicyIdentifier(policyId, policyVersion)).build();
-
+                .policyTypeList(policyTypes).matchPolicyTypesExactly(true)
+                .policyList(policies).matchPoliciesExactly(true).build();
         List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
         if (!pdpGroups.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT, "the policy has been deployed in pdp group");
         }
+    }
+
+    private Map<Pair<String, String>, List<ToscaPolicy>> constructDeployedPolicyMap(
+            List<PdpGroup> pdpGroups, String policyId) throws PfModelException {
+
+        Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicyMap = new HashMap<>();
+        for (PdpGroup pdpGroup : pdpGroups) {
+            List<ToscaPolicyIdentifier> policyIdentifiers = new ArrayList<>();
+            for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups()) {
+                for (ToscaPolicyIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
+                    if (policyId.equalsIgnoreCase(policyIdentifier.getName())) {
+                        policyIdentifiers.add(policyIdentifier);
+                    }
+                }
+            }
+            List<ToscaPolicy> deployedPolicies = new ArrayList<>();
+            if (!policyIdentifiers.isEmpty()) {
+                for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {
+                    deployedPolicies.addAll(
+                            modelsProvider.getPolicyList(policyIdentifier.getName(), policyIdentifier.getVersion()));
+                }
+            }
+            if (deployedPolicies.isEmpty()) {
+                throw new PfModelException(Response.Status.INTERNAL_SERVER_ERROR,
+                        "returned pdp group with ID " + pdpGroup.getName() + ":" + pdpGroup.getVersion()
+                      + " does not contain specified policy with ID " + policyId);
+            }
+            deployedPolicyMap.put(Pair.of(pdpGroup.getName(), pdpGroup.getVersion()), deployedPolicies);
+        }
+        return deployedPolicyMap;
+    }
+
+    /**
+     * Constructs returned message for not found resource.
+     *
+     * @param policyTypeId the ID of policy type
+     * @param policyTypeVersion the version of policy type
+     * @param policyId the ID of policy
+     * @param policyVersion the version of policy
+     *
+     * @return constructed message
+     */
+    private String constructResourceNotFoundMessage(String policyTypeId, String policyTypeVersion,
+            String policyId, String policyVersion) {
+        StringBuilder builder = new StringBuilder().append("policy with ID ").append(policyId)
+                .append(":").append(policyVersion).append(" and type ").append(policyTypeId).append(":")
+                .append(policyTypeVersion).append(" cannot be found");
+        return builder.toString();
     }
 
     /**

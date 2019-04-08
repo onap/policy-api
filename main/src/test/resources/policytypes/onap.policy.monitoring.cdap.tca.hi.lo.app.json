@@ -8,7 +8,7 @@
       }
     },
     {
-      "onap.policy.monitoring.cdap.tca.hi.lo.app": {
+      "onap.policies.monitoring.cdap.tca.hi.lo.app": {
         "derived_from": "onap.policies.Monitoring",
         "version": "1.0.0",
         "properties": {
