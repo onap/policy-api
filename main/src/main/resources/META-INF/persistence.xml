@@ -28,6 +28,9 @@
         <class>org.onap.policy.models.base.PfConceptKey</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaPolicyType</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaPolicy</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpGroup</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpSubGroup</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdp</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
@@ -48,6 +51,9 @@
         <class>org.onap.policy.models.base.PfConceptKey</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaPolicyType</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaPolicy</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpGroup</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpSubGroup</class>
+        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdp</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver" />
@@ -67,7 +73,7 @@
             <property name="eclipselink.logging.level.query" value="ALL" />
             <property name="eclipselink.logging.level.properties" value="ALL" /-->
 
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
             <property name="eclipselink.ddl-generation.output-mode" value="database" />
             <property name="eclipselink.logging.level" value="INFO" />
         </properties>
