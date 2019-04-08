@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12c26ae8_358832fa",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.PciPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-08T12:35:35Z",
+      "side": 1,
+      "message": "Typo: \"consraints\" - this is general - seems to be in all of the yaml ..",
+      "revId": "665ab6b2e7394b91d74e7cbdd084e1967e646644",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
