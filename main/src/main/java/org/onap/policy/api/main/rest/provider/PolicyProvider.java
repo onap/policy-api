@@ -76,17 +76,10 @@ public class PolicyProvider {
 
         validatePolicyTypeExist(policyTypeId, policyTypeVersion);
 
-        ToscaServiceTemplate serviceTemplate;
-        if (policyId == null || policyVersion == null) {
-            ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
-                    .name(policyId).version(policyVersion)
-                    .type(policyTypeId).typeVersion(policyTypeVersion).build();
-            serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
-        } else {
-            serviceTemplate = modelsProvider.getPolicies(policyId, policyVersion);
-        }
-
-        validatePolicyTypeMatch(policyTypeId, policyTypeVersion, serviceTemplate);
+        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
+                .name(policyId).version(policyVersion)
+                .type(policyTypeId).typeVersion(policyTypeVersion).build();
+        ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
 
         close();
         return serviceTemplate;
@@ -230,14 +223,17 @@ public class PolicyProvider {
 
         List<Map<String, ToscaPolicy>> policies = serviceTemplate.getToscaTopologyTemplate().getPolicies();
         for (Map<String, ToscaPolicy> policy : policies) {
-            if (policy.size() != 1) {
+            if (policy.size() > 1) {
                 throw new PfModelException(Response.Status.BAD_REQUEST,
                         "one policy block contains more than one policies");
             }
             ToscaPolicy policyContent = policy.values().iterator().next();
-            if (!policyTypeId.equalsIgnoreCase(policyContent.getType())
-                    || !policyTypeVersion.equalsIgnoreCase(policyContent.getTypeVersion())) {
-                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type does not match");
+            if (!policyTypeId.equalsIgnoreCase(policyContent.getType())) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type id does not match");
+            }
+            if (policyContent.getTypeVersion() != null
+                    && !policyTypeVersion.equalsIgnoreCase(policyContent.getTypeVersion())) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, "policy type version does not match");
             }
         }
     }

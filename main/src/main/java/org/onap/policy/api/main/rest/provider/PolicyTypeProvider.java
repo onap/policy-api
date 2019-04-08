@@ -27,13 +27,12 @@ import javax.ws.rs.core.Response;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.pdp.concepts.PdpGroup;
-import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -143,20 +142,17 @@ public class PolicyTypeProvider {
      *
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
      *
      * @throws PfModelException the PfModel parsing exception
      */
     private void validateDeleteEligibility(String policyTypeId, String policyTypeVersion) throws PfModelException {
 
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder()
-                .policyType(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion)).build();
-
-        List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
-        if (!pdpGroups.isEmpty()) {
+        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
+                .type(policyTypeId).typeVersion(policyTypeVersion).build();
+        List<ToscaPolicy> policies = modelsProvider.getFilteredPolicyList(policyFilter);
+        if (!policies.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
-                    "the policy type is parameterized by at least one policies that have been deployed in pdp group");
+                    "the policy type has been parameterized by at least one policies");
         }
     }
 
