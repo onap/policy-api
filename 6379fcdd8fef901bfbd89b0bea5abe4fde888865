@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2f02f529_d8751d87",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T15:24:53Z",
+      "side": 1,
+      "message": "Liam, there is @NotNull for ToscaPolicyIdentifier.version. Can we allow version to be null as when I use it for getting deployed policies, I don\u0027t know the deployed version. So simply put it null as what highlighted this line but it will raise NullPointerException.",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 62
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9473b1_e56da53b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 3
@@ -61,6 +84,30 @@
       "side": 1,
       "message": "You have the information right there in the PDPGroups that are returned. You need to search the returned object, something along the lines of:\n\nList\u003cToscaPolicy\u003e deployedPolicies \u003d new ...blah....\n\nfor (PdpGroup pdpGroup: returnedPdpgroupList) {\n   for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups() {\n    deployedPolicy\u003eist.add(....the ID of the policy deployed on the subgroup)\n}\n}",
       "parentUuid": "42995ba9_b7a6e52f",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 104
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c116052_0a3d3db5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T15:24:53Z",
+      "side": 1,
+      "message": "Got you. thx!",
+      "parentUuid": "61608fb0_fefa0def",
       "range": {
         "startLine": 143,
         "startChar": 0,
