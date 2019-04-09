@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "43e4d374_7805e5d8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T17:14:20Z",
+      "side": 1,
+      "message": "Jim, Can we remove @NotNull for version in ToscaPolicyIdentifier? I have one api to retrieve deployed policy versions. This api aims to get the version so we don\u0027t know the version in advance,",
+      "parentUuid": "ba9f7558_770e3aee",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 62
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9473b1_e56da53b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 3
