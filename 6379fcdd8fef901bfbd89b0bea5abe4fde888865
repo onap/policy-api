@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "e3efc9da_0fed45ea",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T18:47:32Z",
+      "side": 1,
+      "message": "Do I actually need to set matchPoliciesExactly for this purpose? I don\u0027t quite get this flag.",
+      "parentUuid": "693d83d6_8e522218",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 62
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9473b1_e56da53b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 3
@@ -203,6 +227,24 @@
       "writtenOn": "2019-04-09T17:58:38Z",
       "side": 1,
       "message": "seems like we could eliminate this query if deletePolicy() returned true/false to indicate found/not-found.",
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "768dd81e_385ff1a3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T18:47:32Z",
+      "side": 1,
+      "message": "good catch. will eliminate in next patch",
+      "parentUuid": "52c5d2c6_4c10e470",
       "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
