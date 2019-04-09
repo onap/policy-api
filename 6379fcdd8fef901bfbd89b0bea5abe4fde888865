@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd9473b1_e56da53b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-04-09T12:45:29Z",
+      "side": 1,
+      "message": "You search PdpGroups with a filter on the policy ids that that you want to find with matchPolicyExactly set to false. That will give you back a lit of all PDP groups that have the any of the policies deployed that you have on your policy list",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 104
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4344ba5e_5aa73709",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-04-09T12:45:29Z",
+      "side": 1,
+      "message": "You should send back the parameters of what you were deleting in the response message, that is something like \"Could not delete policy with ID someName:someVersion.\n\nSending back \"resource not found\" on a 404 doesn\u0027t really give the user any more help.\n\nSame comment for other response messages.",
+      "range": {
+        "startLine": 192,
+        "startChar": 22,
+        "endLine": 192,
+        "endChar": 38
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2801928c_70ce9f26",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-04-09T12:45:29Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 76,
+        "startChar": 66,
+        "endLine": 76,
+        "endChar": 84
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
