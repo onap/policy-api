@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "adc46511_7880552e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-09T21:41:55Z",
+      "side": 1,
+      "message": "Ok will fix that in new patch tonight",
+      "parentUuid": "b117217d_80aee1d3",
+      "revId": "1dc7af3a3c7e80f196b6c174d71937b063711445",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e46aeb1_71d4c7d9",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 4
