@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "693d83d6_8e522218",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-09T17:58:38Z",
+      "side": 1,
+      "message": "ToscaPolicyIdentifier purposely requires both a name and version.  ToscaPolicyIdentifierOptVersion accepts a null version.  However, the method, matchPoliciesExactly(), implies that it must exactly match, which implies both id \u0026 version.  Perhaps we want another flavor of matching?  Or the policList() method could be modified to accept a list of ToscaPolicyIdentifierOptVersion.",
+      "parentUuid": "43e4d374_7805e5d8",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 62
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9473b1_e56da53b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 3
@@ -162,6 +186,23 @@
         "endLine": 143,
         "endChar": 104
       },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52c5d2c6_4c10e470",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-09T17:58:38Z",
+      "side": 1,
+      "message": "seems like we could eliminate this query if deletePolicy() returned true/false to indicate found/not-found.",
       "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
