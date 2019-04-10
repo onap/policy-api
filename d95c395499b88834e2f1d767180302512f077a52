@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1c5d92_5662dacb",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-04-10T02:06:58Z",
+      "side": 1,
+      "message": "How are these overridden during lab installation?  These are only valid for local testing.   Ram is dealing with similar set up, if it is something still to be done, should touch base with Ram, and follow similar approach.",
+      "revId": "d95c395499b88834e2f1d767180302512f077a52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
