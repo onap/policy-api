@@ -22,20 +22,23 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Base64;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
  * This class performs unit test of {@link LegacyOperationalPolicyProvider}
@@ -44,38 +47,99 @@ import org.slf4j.LoggerFactory;
  */
 public class TestLegacyOperationalPolicyProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestPolicyProvider.class);
+    private static LegacyOperationalPolicyProvider operationalPolicyProvider;
+    private static PolicyModelsProviderParameters providerParams;
+    private static ApiParameterGroup apiParamGroup;
+    private static StandardCoder standardCoder;
 
-    private LegacyOperationalPolicyProvider operationalPolicyProvider;
+    private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.input.json";
 
     /**
-     * Initialize parameters.
+     * Initializes parameters.
+     *
+     * @throws PfModelException the PfModel parsing exception
      */
-    @Before
-    public void setupParameters() throws PfModelException {
+    @BeforeClass
+    public static void setupParameters() throws PfModelException {
 
-        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
-        parameters.setDatabaseUrl("jdbc:h2:mem:testdb");
-        parameters.setDatabaseUser("policy");
-        parameters.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
-        parameters.setPersistenceUnit("ToscaConceptTest");
-        ApiParameterGroup paramGroup = new ApiParameterGroup("ApiGroup", null, parameters);
-        ParameterService.register(paramGroup, true);
+        standardCoder = new StandardCoder();
+        providerParams = new PolicyModelsProviderParameters();
+        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
+        providerParams.setDatabaseUser("policy");
+        providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        providerParams.setPersistenceUnit("ToscaConceptTest");
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        ParameterService.register(apiParamGroup, true);
         operationalPolicyProvider = new LegacyOperationalPolicyProvider();
+    }
+
+    /**
+     * Closes up DB connections and deregisters API parameter group.
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    @AfterClass
+    public static void tearDown() throws PfModelException {
+
+        operationalPolicyProvider.close();
+        ParameterService.deregister(apiParamGroup);
     }
 
     @Test
     public void testFetchOperationalPolicy() {
 
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.fetchOperationalPolicy("dummy", null);
+        }).hasMessage("no policy found for policy ID: dummy");
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.fetchOperationalPolicy("dummy", "dummy");
+        }).hasMessage("no policy found for policy ID: dummy");
     }
 
     @Test
     public void testCreateOperationalPolicy() {
 
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+            LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+            assertNotNull(createdPolicy);
+            assertEquals("operational.restart", createdPolicy.getPolicyId());
+            assertTrue(createdPolicy.getContent()
+                    .startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
+        }).doesNotThrowAnyException();
     }
 
     @Test
     public void testDeleteOperationalPolicy() {
 
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.deleteOperationalPolicy("dummy", null);
+        }).hasMessage("version is marked @NonNull but is null");
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.deleteOperationalPolicy("dummy", "dummy");
+        }).hasMessage("no policy found for policy ID: dummy");
+
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+            LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+            assertNotNull(createdPolicy);
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
+            LegacyOperationalPolicy deletedPolicy = operationalPolicyProvider
+                    .deleteOperationalPolicy("operational.restart", "1.0.0");
+            assertNotNull(deletedPolicy);
+            assertEquals("operational.restart", deletedPolicy.getPolicyId());
+            assertTrue(deletedPolicy.getContent()
+                    .startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1.0.0");
+        }).hasMessage("no policy found for policy ID: operational.restart");
     }
 }

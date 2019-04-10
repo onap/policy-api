@@ -22,20 +22,21 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Base64;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * This class performs unit test of {@link PolicyTypeProvider}
@@ -44,43 +45,116 @@ import org.slf4j.LoggerFactory;
  */
 public class TestPolicyTypeProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestPolicyTypeProvider.class);
+    private static PolicyTypeProvider policyTypeProvider;
+    private static PolicyProvider policyProvider;
+    private static PolicyModelsProviderParameters providerParams;
+    private static ApiParameterGroup apiParamGroup;
+    private static StandardCoder standardCoder;
 
-    private PolicyTypeProvider policyTypeProvider;
+    private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policy.monitoring.cdap.tca.hi.lo.app.json";
 
     /**
-     * Initialize parameters.
+     * Initializes parameters.
+     *
+     * @throws PfModelException the PfModel parsing exception
      */
-    @Before
-    public void setupParameters() throws PfModelException {
+    @BeforeClass
+    public static void setupParameters() throws PfModelException {
 
-        PolicyModelsProviderParameters parameters = new PolicyModelsProviderParameters();
-        parameters.setDatabaseUrl("jdbc:h2:mem:testdb");
-        parameters.setDatabaseUser("policy");
-        parameters.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
-        parameters.setPersistenceUnit("ToscaConceptTest");
-        ApiParameterGroup paramGroup = new ApiParameterGroup("ApiGroup", null, parameters);
-        ParameterService.register(paramGroup, true);
+        standardCoder = new StandardCoder();
+        providerParams = new PolicyModelsProviderParameters();
+        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
+        providerParams.setDatabaseUser("policy");
+        providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        providerParams.setPersistenceUnit("ToscaConceptTest");
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
+        policyProvider = new PolicyProvider();
+    }
+
+    /**
+     * Closes up DB connections and deregisters API parameter group.
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    @AfterClass
+    public static void tearDown() throws PfModelException {
+
+        policyTypeProvider.close();
+        policyProvider.close();
+        ParameterService.deregister(apiParamGroup);
     }
 
     @Test
     public void testFetchPolicyTypes() {
 
+        assertThatCode(() -> {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            policyTypeProvider.fetchPolicyTypes("dummy", null);
+        }).hasMessage("policy type with ID dummy:null does not exist");
+
+        assertThatThrownBy(() -> {
+            policyTypeProvider.fetchPolicyTypes("dummy", "dummy");
+        }).hasMessage("policy type with ID dummy:dummy does not exist");
     }
 
     @Test
     public void testFetchLatestPolicyTypes() {
 
+        assertThatThrownBy(() -> {
+            policyTypeProvider.fetchLatestPolicyTypes("dummy");
+        }).hasMessage("policy type with ID dummy:null does not exist");
     }
 
     @Test
     public void testCreatePolicyType() {
 
+        assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+        }).doesNotThrowAnyException();
     }
 
     @Test
     public void testDeletePolicyType() {
 
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            ToscaServiceTemplate policyServiceTemplate =
+                    standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicy(
+                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+        }).doesNotThrowAnyException();
+
+        String exceptionMessage = "policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 "
+            + "cannot be deleted as it is parameterized by policies onap.restart.tca:1.0.0";
+        assertThatThrownBy(() -> {
+            policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+        }).hasMessage(exceptionMessage);
+
+        assertThatCode(() -> {
+            ToscaServiceTemplate serviceTemplate = policyProvider.deletePolicy(
+                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
+            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(
+                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+        }).hasMessage("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist");
     }
 }
