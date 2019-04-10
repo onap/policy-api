@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a71116af_6402a71c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-10T12:20:39Z",
+      "side": 1,
+      "message": "Good catch",
+      "parentUuid": "64264ceb_cfa0b186",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 16
+      },
+      "revId": "d95c395499b88834e2f1d767180302512f077a52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87aec6eb_aa941bb5",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 6
@@ -113,6 +137,24 @@
       "side": 1,
       "message": "I have it ready now - https://gerrit.onap.org/r/#/c/84854/",
       "parentUuid": "93d21645_14c63cf9",
+      "revId": "d95c395499b88834e2f1d767180302512f077a52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d17af82_48de899f",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-10T12:20:39Z",
+      "side": 1,
+      "message": "Thx! I’ll change it too after the demo",
+      "parentUuid": "aaeb067c_b4e0772a",
       "revId": "d95c395499b88834e2f1d767180302512f077a52",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
