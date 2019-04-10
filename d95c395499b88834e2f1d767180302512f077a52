@@ -98,6 +98,24 @@
       "revId": "d95c395499b88834e2f1d767180302512f077a52",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaeb067c_b4e0772a",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-04-10T11:27:36Z",
+      "side": 1,
+      "message": "I have it ready now - https://gerrit.onap.org/r/#/c/84854/",
+      "parentUuid": "93d21645_14c63cf9",
+      "revId": "d95c395499b88834e2f1d767180302512f077a52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
