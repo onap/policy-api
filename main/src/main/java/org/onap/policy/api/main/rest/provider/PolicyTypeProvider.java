@@ -22,6 +22,7 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
@@ -40,7 +41,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-public class PolicyTypeProvider {
+public class PolicyTypeProvider implements AutoCloseable {
 
     private PolicyModelsProvider modelsProvider;
 
@@ -76,7 +77,6 @@ public class PolicyTypeProvider {
                     constructResourceNotFoundMessage(policyTypeId, policyTypeVersion));
         }
 
-        close();
         return serviceTemplate;
     }
 
@@ -94,12 +94,11 @@ public class PolicyTypeProvider {
         ToscaPolicyTypeFilter policyTypeFilter = ToscaPolicyTypeFilter.builder()
                 .name(policyTypeId).version(ToscaPolicyTypeFilter.LATEST_VERSION).build();
         ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicyTypes(policyTypeFilter);
-        if (serviceTemplate.getPolicyTypes().isEmpty()) {
+        if (!hasPolicyType(serviceTemplate)) {
             throw new PfModelException(Response.Status.NOT_FOUND,
                     constructResourceNotFoundMessage(policyTypeId, null));
         }
 
-        close();
         return serviceTemplate;
     }
 
@@ -113,10 +112,7 @@ public class PolicyTypeProvider {
      */
     public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) throws PfModelException {
 
-        ToscaServiceTemplate serviceTemplate = modelsProvider.createPolicyTypes(body);
-
-        close();
-        return serviceTemplate;
+        return modelsProvider.createPolicyTypes(body);
     }
 
     /**
@@ -136,7 +132,11 @@ public class PolicyTypeProvider {
 
         ToscaServiceTemplate serviceTemplate = modelsProvider.deletePolicyType(policyTypeId, policyTypeVersion);
 
-        close();
+        if (!hasPolicyType(serviceTemplate)) {
+            throw new PfModelException(Response.Status.NOT_FOUND,
+                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion));
+        }
+
         return serviceTemplate;
     }
 
@@ -156,8 +156,29 @@ public class PolicyTypeProvider {
         List<ToscaPolicy> policies = modelsProvider.getFilteredPolicyList(policyFilter);
         if (!policies.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
-                    "the policy type has been parameterized by at least one policies");
+                    constructDeleteRuleViolationMessage(policyTypeId, policyTypeVersion, policies));
         }
+    }
+
+    /**
+     * Constructs returned message for policy type delete rule violation.
+     *
+     * @param policyTypeId the ID of policy type
+     * @param policyTypeVersion the version of policy type
+     * @param policies the list of policies that parameterizes specified policy type
+     *
+     * @return the constructed message
+     */
+    private String constructDeleteRuleViolationMessage(
+            String policyTypeId, String policyTypeVersion, List<ToscaPolicy> policies) {
+
+        List<String> policyNameVersionList = new ArrayList<>();
+        for (ToscaPolicy policy : policies) {
+            policyNameVersionList.add(policy.getName() + ":" + policy.getVersion());
+        }
+        String parameterizedPolicies = String.join(",", policyNameVersionList);
+        return "policy type with ID " + policyTypeId + ":" + policyTypeVersion
+                + " cannot be deleted as it is parameterized by policies " + parameterizedPolicies;
     }
 
     /**
@@ -198,7 +219,8 @@ public class PolicyTypeProvider {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    private void close() throws PfModelException {
+    @Override
+    public void close() throws PfModelException {
 
         try {
             modelsProvider.close();
