@@ -228,8 +228,8 @@ public class ApiRestController {
     public Response getAllPolicyTypes(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().fetchPolicyTypes(null, null);
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -288,9 +288,8 @@ public class ApiRestController {
             @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
-                    .fetchPolicyTypes(policyTypeId, null);
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -351,9 +350,8 @@ public class ApiRestController {
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
-                    .fetchPolicyTypes(policyTypeId, versionId);
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -412,8 +410,8 @@ public class ApiRestController {
             @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider().createPolicyType(body);
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -477,9 +475,8 @@ public class ApiRestController {
             @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyTypeProvider()
-                    .deletePolicyType(policyTypeId, versionId);
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -539,9 +536,9 @@ public class ApiRestController {
                 @ApiParam(value = "Version of policy type", required = true) String policyTypeVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
-                    .fetchPolicies(policyTypeId, policyTypeVersion, null, null);
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                    policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, null, null);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -605,8 +602,8 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyProvider
                     .fetchPolicies(policyTypeId, policyTypeVersion, policyId, null);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -673,8 +670,8 @@ public class ApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyProvider
                     .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -739,9 +736,9 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
-                    new PolicyProvider().fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId);
+                    policyProvider.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
@@ -805,8 +802,8 @@ public class ApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicies = new PolicyProvider()
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicies = policyProvider
                     .fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -872,8 +869,8 @@ public class ApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyProvider
                     .createPolicy(policyTypeId, policyTypeVersion, body);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -941,8 +938,8 @@ public class ApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            ToscaServiceTemplate serviceTemplate = new PolicyProvider()
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyProvider
                     .deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();

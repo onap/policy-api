@@ -105,9 +105,8 @@ public class LegacyApiRestController {
     public Response getAllGuardPolicies(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .fetchGuardPolicy(null, null);
+        try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
+            Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider.fetchGuardPolicy(null, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -164,9 +163,8 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
-                    .fetchGuardPolicy(policyId, null);
+        try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
+            Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider.fetchGuardPolicy(policyId, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -225,8 +223,8 @@ public class LegacyApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
+        try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
+            Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider
                     .fetchGuardPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
@@ -284,8 +282,8 @@ public class LegacyApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyGuardPolicyInput body) {
 
-        try {
-            Map<String, LegacyGuardPolicyOutput> policy = new LegacyGuardPolicyProvider().createGuardPolicy(body);
+        try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
+            Map<String, LegacyGuardPolicyOutput> policy = guardPolicyProvider.createGuardPolicy(body);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -345,8 +343,8 @@ public class LegacyApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            Map<String, LegacyGuardPolicyOutput> policies = new LegacyGuardPolicyProvider()
+        try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
+            Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider
                     .deleteGuardPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
@@ -400,9 +398,8 @@ public class LegacyApiRestController {
     public Response getAllOperationalPolicies(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicy(null, null);
+        try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
+            LegacyOperationalPolicy policy = operationalPolicyProvider.fetchOperationalPolicy(null, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -459,9 +456,8 @@ public class LegacyApiRestController {
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicy(policyId, null);
+        try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
+            LegacyOperationalPolicy policy = operationalPolicyProvider.fetchOperationalPolicy(policyId, null);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -521,9 +517,8 @@ public class LegacyApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .fetchOperationalPolicy(policyId, policyVersion);
+        try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
+            LegacyOperationalPolicy policy = operationalPolicyProvider.fetchOperationalPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -580,9 +575,8 @@ public class LegacyApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyOperationalPolicy body) {
 
-        try {
-            LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
-                    .createOperationalPolicy(body);
+        try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
+            LegacyOperationalPolicy policy = operationalPolicyProvider.createOperationalPolicy(body);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -643,8 +637,8 @@ public class LegacyApiRestController {
             @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
-        try {
-            LegacyOperationalPolicy policy = new LegacyOperationalPolicyProvider()
+        try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
+            LegacyOperationalPolicy policy = operationalPolicyProvider
                     .deleteOperationalPolicy(policyId, policyVersion);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();

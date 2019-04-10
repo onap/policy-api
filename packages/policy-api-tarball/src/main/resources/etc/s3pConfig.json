@@ -11,9 +11,9 @@
     "databaseProviderParameters": {
         "name": "PolicyProviderParameterGroup",
         "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
-        "databaseUrl": "jdbc:mariadb://localhost:3306/policy",
-        "databaseUser": "policy",
-        "databasePassword": "UDAxaWNZ",
-        "persistenceUnit": "ToscaConceptMariaDBTest"
+        "databaseUrl": "jdbc:mariadb://policydb:3306/policy",
+        "databaseUser": "policy_user",
+        "databasePassword": "cG9saWN5X3VzZXI=",
+        "persistenceUnit": "PolicyMariaDb"
     }
 }
