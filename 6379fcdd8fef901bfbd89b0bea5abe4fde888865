@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "fdbab0b2_8af15c1a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-10T00:41:26Z",
+      "side": 1,
+      "message": "sounds like we either add another filter option or you just retrieve the data and do the identifier check afterwards",
+      "parentUuid": "5d487959_38d8fa3d",
+      "range": {
+        "startLine": 137,
+        "startChar": 21,
+        "endLine": 137,
+        "endChar": 62
+      },
+      "revId": "6379fcdd8fef901bfbd89b0bea5abe4fde888865",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd9473b1_e56da53b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 3
