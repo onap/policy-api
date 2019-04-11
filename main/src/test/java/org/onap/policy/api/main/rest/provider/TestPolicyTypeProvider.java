@@ -64,6 +64,7 @@ public class TestPolicyTypeProvider {
 
         standardCoder = new StandardCoder();
         providerParams = new PolicyModelsProviderParameters();
+        providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));

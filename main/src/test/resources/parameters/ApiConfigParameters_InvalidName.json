@@ -5,5 +5,13 @@
         "port":6969,
         "userName":"healthcheck",
         "password":"zb!XztG34"
+    },
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseUrl": "jdbc:h2:mem:testdb",
+        "databaseUser": "policy",
+        "databasePassword": "UDAxaWNZ",
+        "persistenceUnit": "ToscaConceptTest"
     }
 }

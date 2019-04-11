@@ -42,6 +42,7 @@ public class CommonTestData {
 
     private static final String PROVIDER_GROUP_NAME = "PolicyProviderParameterGroup";
     private static final String PROVIDER_IMPL = "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl";
+    private static final String DATABASE_DRIVER = "org.h2.Driver";
     private static final String DATABASE_URL = "jdbc:h2:mem:testdb";
     private static final String DATABASE_USER = "policy";
     private static final String DATABASE_PASSWORD = "P01icY";
@@ -76,6 +77,7 @@ public class CommonTestData {
             databaseProviderParameters = new PolicyModelsProviderParameters();
             databaseProviderParameters.setName(PROVIDER_GROUP_NAME);
             databaseProviderParameters.setImplementation(PROVIDER_IMPL);
+            databaseProviderParameters.setDatabaseDriver(DATABASE_DRIVER);
             databaseProviderParameters.setDatabaseUrl(DATABASE_URL);
             databaseProviderParameters.setDatabaseUser(DATABASE_USER);
             databaseProviderParameters.setDatabasePassword(DATABASE_PASSWORD);

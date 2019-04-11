@@ -364,6 +364,66 @@ public class ApiRestController {
     }
 
     /**
+     * Retrieves latest version of a particular policy type.
+     *
+     * @param policyTypeId the ID of specified policy type
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    @GET
+    @Path("/policytypes/{policyTypeId}/versions/latest")
+    @ApiOperation(value = "Retrieve latest version of a policy type",
+            notes = "Returns latest version for the specified policy type",
+            response = ToscaServiceTemplate.class,
+            responseHeaders = {
+                    @ResponseHeader(name = "X-MinorVersion",
+                                    description = "Used to request or communicate a MINOR version back from the client"
+                                                + " to the server, and from the server back to the client",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-PatchVersion",
+                                    description = "Used only to communicate a PATCH version in a response for"
+                                                + " troubleshooting purposes only, and will not be provided by"
+                                                + " the client on request",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-LatestVersion",
+                                    description = "Used only to communicate an API's latest version",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-ONAP-RequestID",
+                                    description = "Used to track REST transactions for logging purpose",
+                                    response = UUID.class)
+            },
+            authorizations = @Authorization(value = "basicAuth"),
+            tags = { "PolicyType", },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
+            @ApiResponse(code = 401, message = "Authentication Error"),
+            @ApiResponse(code = 403, message = "Authorization Error"),
+            @ApiResponse(code = 404, message = "Resource Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+        })
+    public Response getLatestVersionOfPolicyType(
+            @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+            @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+
+        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
+                    .entity(serviceTemplate).build();
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
+            return addLoggingHeaders(addVersionControlHeaders(
+                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
+                    .entity(pfme.getErrorResponse()).build();
+        }
+    }
+
+    /**
      * Creates a new policy type.
      *
      * @param body the body of policy type following TOSCA definition
@@ -694,7 +754,7 @@ public class ApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/latest")
+    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest")
     @ApiOperation(value = "Retrieve the latest version of a particular policy",
             notes = "Returns the latest version of specified policy",
             response = ToscaServiceTemplate.class,
@@ -760,7 +820,7 @@ public class ApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/deployed")
+    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/deployed")
     @ApiOperation(value = "Retrieve deployed versions of a particular policy in pdp groups",
             notes = "Returns deployed versions of specified policy in pdp groups",
             response = ToscaPolicy.class, responseContainer = "List",
