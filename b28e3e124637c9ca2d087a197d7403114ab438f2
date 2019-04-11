@@ -16,6 +16,24 @@
       "revId": "b28e3e124637c9ca2d087a197d7403114ab438f2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c607c1a_ca29871d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-04-11T01:24:13Z",
+      "side": 1,
+      "message": "good catch. fix in next patch",
+      "parentUuid": "dbee9e43_c15b1360",
+      "revId": "b28e3e124637c9ca2d087a197d7403114ab438f2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
