@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbee9e43_c15b1360",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-04-11T00:46:43Z",
+      "side": 1,
+      "message": "if modeslProvider.close() only throws PfModelException, then no need to catch it and wrap it within another PfModelException.  ...unless the intent is to override the Status code, in which case, this is fine.\n\nsame comment applies to other files",
+      "revId": "b28e3e124637c9ca2d087a197d7403114ab438f2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
