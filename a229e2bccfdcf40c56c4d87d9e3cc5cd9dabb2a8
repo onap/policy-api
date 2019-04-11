@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50ece1a9_c3220c69",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-04-11T10:14:40Z",
+      "side": 1,
+      "message": "Yes, Nice!\n\nActually the filters work very well here, this is elegant.",
+      "range": {
+        "startLine": 110,
+        "startChar": 1,
+        "endLine": 119,
+        "endChar": 9
+      },
+      "revId": "a229e2bccfdcf40c56c4d87d9e3cc5cd9dabb2a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
