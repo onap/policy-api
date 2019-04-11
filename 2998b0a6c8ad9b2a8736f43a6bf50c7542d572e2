@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30980b91_d46691ee",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-11T23:13:40Z",
+      "side": 1,
+      "message": "Wow, can\u0027t wait to see code coverage after this.",
+      "revId": "2998b0a6c8ad9b2a8736f43a6bf50c7542d572e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
