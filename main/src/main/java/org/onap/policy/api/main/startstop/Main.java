@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Main {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     // The policy api Activator that activates the policy api service
@@ -75,6 +75,14 @@ public class Main {
             parameterGroup = new ApiParameterHandler().getParameters(arguments);
         } catch (final Exception e) {
             LOGGER.error("start of policy api service failed", e);
+            return;
+        }
+
+        // Initialize database
+        try {
+            new ApiDatabaseInitializer().initializeApiDatabase(parameterGroup.getDatabaseProviderParameters());
+        } catch (final PolicyApiException e) {
+            LOGGER.error("Preloading policy types into DB failed", e);
             return;
         }
 

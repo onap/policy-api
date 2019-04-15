@@ -171,6 +171,22 @@ public class TestPolicyProvider {
         }).hasMessage("policy with ID dummy:dummy and type dummy:dummy does not exist");
 
         assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            ToscaServiceTemplate policyServiceTemplate =
+                    standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate = policyProvider
+                    .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
             ToscaServiceTemplate serviceTemplate = policyProvider.deletePolicy(
                     "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
