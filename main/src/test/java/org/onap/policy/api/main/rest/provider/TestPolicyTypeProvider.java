@@ -129,6 +129,14 @@ public class TestPolicyTypeProvider {
     public void testDeletePolicyType() {
 
         assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             ToscaServiceTemplate policyServiceTemplate =
                     standardCoder.decode(policyString, ToscaServiceTemplate.class);
