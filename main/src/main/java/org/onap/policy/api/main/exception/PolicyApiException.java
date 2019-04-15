@@ -36,6 +36,15 @@ public class PolicyApiException extends Exception {
     }
 
     /**
+     * Instantiates a new policy api exception with a caused by exception.
+     *
+     * @param exp the exception that caused this exception to be thrown
+     */
+    public PolicyApiException(final Exception exp) {
+        super(exp);
+    }
+
+    /**
      * Instantiates a new policy api exception with a message and a caused by exception.
      *
      * @param message the message
