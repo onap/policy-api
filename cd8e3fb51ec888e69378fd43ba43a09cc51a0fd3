@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5dd9755_21754319",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-04-16T14:27:38Z",
+      "side": 1,
+      "message": "So FYI going forward, don\u0027t need to add this extra wrapping in there. Just adding the throws to the test method is sufficient.",
+      "range": {
+        "startLine": 131,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 30
+      },
+      "revId": "cd8e3fb51ec888e69378fd43ba43a09cc51a0fd3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
