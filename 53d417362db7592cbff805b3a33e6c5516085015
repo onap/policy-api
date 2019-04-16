@@ -93,6 +93,30 @@
       "revId": "53d417362db7592cbff805b3a33e6c5516085015",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57613eaf_dc691c3e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-04-16T13:16:28Z",
+      "side": 1,
+      "message": "Ad discussed, may be we can look at creating single ToscaServiceTemplate with all policy types in it. And then push that to DB in one go.",
+      "parentUuid": "91f26a07_c484e9c2",
+      "range": {
+        "startLine": 82,
+        "startChar": 12,
+        "endLine": 94,
+        "endChar": 13
+      },
+      "revId": "53d417362db7592cbff805b3a33e6c5516085015",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
