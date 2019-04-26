@@ -70,7 +70,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}")
+    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{policyId}")
     @ApiOperation(value = "Retrieve all versions of a particular guard policy",
             notes = "Returns a list of all versions of the specified guard policy",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
@@ -129,7 +129,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
+    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a particular guard policy",
             notes = "Returns a particular version of a specified guard policy",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
@@ -189,7 +189,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @POST
-    @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies")
+    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies")
     @ApiOperation(value = "Create a new guard policy",
             notes = "Client should provide entity body of the new guard policy",
             authorizations = @Authorization(value = "basicAuth"),
@@ -248,7 +248,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @DELETE
-    @Path("/policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
+    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a guard policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
             authorizations = @Authorization(value = "basicAuth"),
@@ -309,7 +309,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies/{policyId}")
+    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{policyId}")
     @ApiOperation(value = "Retrieve all versions of a particular operational policy",
             notes = "Returns a list of all versions of the specified operational policy",
             response = LegacyOperationalPolicy.class,
@@ -368,7 +368,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/"
+    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
          + "policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a particular operational policy",
             notes = "Returns a particular version of a specified operational policy",
@@ -428,7 +428,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @POST
-    @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies")
+    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies")
     @ApiOperation(value = "Create a new operational policy",
             notes = "Client should provide entity body of the new operational policy",
             authorizations = @Authorization(value = "basicAuth"),
@@ -487,7 +487,7 @@ public class LegacyApiRestController {
      * @return the Response object containing the results of the API operation
      */
     @DELETE
-    @Path("/policytypes/onap.policy.controlloop.operational/versions/1.0.0/"
+    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
          + "policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a specified operational policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",

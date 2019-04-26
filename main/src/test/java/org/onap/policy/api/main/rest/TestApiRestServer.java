@@ -106,30 +106,30 @@ public class TestApiRestServer {
         + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
 
     private static final String GUARD_POLICIES =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
     private static final String GUARD_POLICIES_VDNS_FL =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/guard.frequency.scaleout";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout";
     private static final String GUARD_POLICIES_VDNS_MINMAX =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/guard.minmax.scaleout";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout";
     private static final String GUARD_POLICIES_VDNS_FL_VERSION = "policytypes/"
-        + "onap.policy.controlloop.guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1.0.0";
     private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION = "policytypes/"
-        + "onap.policy.controlloop.guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1.0.0";
 
     private static final String OPS_POLICIES =
-            "policytypes/onap.policy.controlloop.operational/versions/1.0.0/policies";
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
     private static final String OPS_POLICIES_VCPE =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/operational.restart";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart";
     private static final String OPS_POLICIES_VDNS =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/operational.scaleout";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout";
     private static final String OPS_POLICIES_VFIREWALL =
-            "policytypes/onap.policy.controlloop.guard/versions/1.0.0/policies/operational.modifyconfig";
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig";
     private static final String OPS_POLICIES_VCPE_VERSION = "policytypes/"
-        + "onap.policy.controlloop.guard/versions/1.0.0/policies/operational.restart/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart/versions/1.0.0";
     private static final String OPS_POLICIES_VDNS_VERSION = "policytypes/"
-        + "onap.policy.controlloop.guard/versions/1.0.0/policies/operational.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout/versions/1.0.0";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
-        + "onap.policy.controlloop.guard/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0";
 
     private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private Main main;
