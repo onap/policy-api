@@ -4,6 +4,7 @@
         {
             "onap.policies.Monitoring": {
                 "derived_from": "tosca.policies.Root",
+                "version": "1.0.0",
                 "description": "a base policy type for all policies that governs monitoring provisioning"
             }
         },

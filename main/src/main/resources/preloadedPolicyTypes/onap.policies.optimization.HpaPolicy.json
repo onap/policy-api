@@ -11,6 +11,7 @@
         {
             "onap.policies.optimization.HpaPolicy": {
                 "derived_from": "onap.policies.Optimization",
+                "version": "1.0.0",
                 "properties": {
                     "policyScope": {
                         "type": "list",
