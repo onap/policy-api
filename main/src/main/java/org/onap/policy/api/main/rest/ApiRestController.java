@@ -59,6 +59,8 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide REST API services.
@@ -88,6 +90,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS },
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = { @BasicAuthDefinition(key = "basicAuth") }))
 public class ApiRestController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestController.class);
 
     /**
      * Retrieves the healthcheck status of the API component.
@@ -234,6 +238,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes - {}", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -294,6 +299,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{} - {}", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -356,6 +362,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/{} - {}", policyTypeId, versionId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -416,6 +423,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/latest - {}", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -476,6 +484,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("POST /policytypes - {}", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.POST);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -540,6 +549,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("DELETE /policytypes/{}/versions/{} - {}", policyTypeId, versionId, pfme);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -603,6 +613,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies - {}", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -669,6 +680,8 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("/policytypes/{}/versions/{}/policies/{} - {}", policyTypeId, policyTypeVersion, policyId,
+                    pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -737,6 +750,8 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/{} - {}", policyTypeId,
+                    policyTypeVersion, policyId, policyVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -803,6 +818,8 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/latest - {}", policyTypeId,
+                    policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -869,6 +886,8 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(deployedPolicies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/deployed - {}", policyTypeId,
+                    policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -936,6 +955,7 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("POST /policytypes/{}/versions/{}/policies - {}", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
@@ -1004,6 +1024,8 @@ public class ApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(serviceTemplate).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{} - {}", policyTypeId,
+                    policyTypeVersion, policyId, policyVersion, pfme);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
