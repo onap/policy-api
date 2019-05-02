@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61a1ab3d_aaf040ba",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-02T00:54:34Z",
+      "side": 1,
+      "message": "It should be pfme, else sonar will continue to flag it.",
+      "range": {
+        "startLine": 302,
+        "startChar": 67,
+        "endLine": 302,
+        "endChar": 90
+      },
+      "revId": "3f2ea63925aeb5454c13f3311ac8eb898f8a639d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51990384_1478323c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-05-02T00:54:34Z",
+      "side": 1,
+      "message": "error not debug",
+      "range": {
+        "startLine": 302,
+        "startChar": 19,
+        "endLine": 302,
+        "endChar": 24
+      },
+      "revId": "3f2ea63925aeb5454c13f3311ac8eb898f8a639d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
