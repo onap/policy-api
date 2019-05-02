@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7052fd80_b7129cbd",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-02T13:44:23Z",
+      "side": 1,
+      "message": "Note that network.log will contain all the URLs being hit along with the status code response, in some way this may be redundant information, but will satisfy sonar.   One possibility is to move the level to debug or trace, which satisfies sonar but doesn\u0027t add verbosity to the logs, provided the issue has been reported.   Your choice.",
+      "revId": "a962474f4c1498a335bfd1afaa7d15859ae04be2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
