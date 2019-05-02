@@ -50,6 +50,8 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide legacy REST API services.
@@ -61,6 +63,8 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 @Produces("application/json")
 @Consumes("application/json")
 public class LegacyApiRestController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyApiRestController.class);
 
     /**
      * Retrieves all versions of a particular guard policy.
@@ -114,6 +118,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{} - {}",
+                    policyId, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -175,6 +181,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}/versions/{}"
+                + " - {}", policyId, policyVersion, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -233,6 +241,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("POST /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies - {}",
+                    pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -295,6 +305,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("DELETE /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}/versions/{}"
+                + " - {}", policyId, policyVersion, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -353,6 +365,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{} - {}",
+                    policyId, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -414,6 +428,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
+                + "policies/{}/versions/{} - {}", policyId, policyVersion, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -472,6 +488,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("POST /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies - {}",
+                    pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -535,6 +553,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("DELETE /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
+                + "policies/{}/versions/{} - {}", policyId, policyVersion, pfme.getErrorResponse());
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
