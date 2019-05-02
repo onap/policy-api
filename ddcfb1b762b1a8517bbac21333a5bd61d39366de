@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dc4e9d2_3c0588ef",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-02T13:28:49Z",
+      "side": 1,
+      "message": "When passing exception, there\u0027s no need to have {}.   This is a general comment.",
+      "revId": "ddcfb1b762b1a8517bbac21333a5bd61d39366de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
