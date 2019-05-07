@@ -60,7 +60,11 @@ public class ApiDatabaseInitializer {
         "preloadedPolicyTypes/onap.policies.optimization.QueryPolicy.json",
         "preloadedPolicyTypes/onap.policies.optimization.SubscriberPolicy.json",
         "preloadedPolicyTypes/onap.policies.optimization.Vim_fit.json",
-        "preloadedPolicyTypes/onap.policies.optimization.VnfPolicy.json"
+        "preloadedPolicyTypes/onap.policies.optimization.VnfPolicy.json",
+        "preloadedPolicyTypes/onap.policies.controlloop.guard.Blacklist.json",
+        "preloadedPolicyTypes/onap.policies.controlloop.guard.FrequencyLimiter.json",
+        "preloadedPolicyTypes/onap.policies.controlloop.guard.MinMax.json",
+        "preloadedPolicyTypes/onap.policies.controlloop.Operational.json"
     };
 
     /**

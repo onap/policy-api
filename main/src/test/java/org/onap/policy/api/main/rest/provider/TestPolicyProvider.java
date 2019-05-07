@@ -52,7 +52,7 @@ public class TestPolicyProvider {
     private static StandardCoder standardCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
-    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policy.monitoring.cdap.tca.hi.lo.app.json";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID = "policies/vCPE.policy.bad.policytypeid.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
             "policies/vCPE.policy.bad.policytypeversion.json";

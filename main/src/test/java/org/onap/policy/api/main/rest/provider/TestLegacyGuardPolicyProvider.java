@@ -40,6 +40,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 
@@ -51,11 +52,16 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 public class TestLegacyGuardPolicyProvider {
 
     private static LegacyGuardPolicyProvider guardPolicyProvider;
+    private static PolicyTypeProvider policyTypeProvider;
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
 
     private static final String POLICY_RESOURCE = "policies/vDNS.policy.guard.frequency.input.json";
+    private static final String POLICY_TYPE_RESOURCE =
+            "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.json";
+    private static final String POLICY_TYPE_ID = "onap.policies.controlloop.guard.FrequencyLimiter:1.0.0";
+    private static final String POLICY_ID = "guard.frequency.scaleout:1.0.0";
 
     /**
      * Initializes parameters.
@@ -75,6 +81,7 @@ public class TestLegacyGuardPolicyProvider {
         apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
         ParameterService.register(apiParamGroup, true);
         guardPolicyProvider = new LegacyGuardPolicyProvider();
+        policyTypeProvider = new PolicyTypeProvider();
     }
 
     /**
@@ -86,6 +93,7 @@ public class TestLegacyGuardPolicyProvider {
     public static void tearDown() throws PfModelException {
 
         guardPolicyProvider.close();
+        policyTypeProvider.close();
         ParameterService.deregister(apiParamGroup);
     }
 
@@ -104,6 +112,19 @@ public class TestLegacyGuardPolicyProvider {
 
     @Test
     public void testCreateGuardPolicy() {
+
+        assertThatThrownBy(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyGuardPolicyInput policyToCreate = standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
+            guardPolicyProvider.createGuardPolicy(policyToCreate);
+        }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
+
+        assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -130,6 +151,13 @@ public class TestLegacyGuardPolicyProvider {
         }).hasMessage("no policy found for policy ID: dummy");
 
         assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyGuardPolicyInput policyToCreate = standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
             Map<String, LegacyGuardPolicyOutput> createdPolicy = guardPolicyProvider.createGuardPolicy(policyToCreate);
@@ -151,5 +179,10 @@ public class TestLegacyGuardPolicyProvider {
         assertThatThrownBy(() -> {
             guardPolicyProvider.deleteGuardPolicy("guard.frequency.scaleout", "1.0.0");
         }).hasMessage("no policy found for policy ID: guard.frequency.scaleout");
+
+        assertThatCode(() -> {
+            policyTypeProvider.deletePolicyType("onap.policies.controlloop.guard.FrequencyLimiter", "1.0.0");
+        }).doesNotThrowAnyException();
+
     }
 }
