@@ -144,7 +144,7 @@ public class TestApiRestServer {
     };
 
     private String[] toscaPolicyTypeResourceNames = {
-        "policytypes/onap.policy.monitoring.cdap.tca.hi.lo.app.json",
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.json"
     };
 
@@ -447,7 +447,7 @@ public class TestApiRestServer {
             main = startApiService(true);
             for (String resrcName : legacyGuardPolicyResourceNames) {
                 Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
-                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
         }).doesNotThrowAnyException();
     }
@@ -459,7 +459,7 @@ public class TestApiRestServer {
             main = startApiService(true);
             for (String resrcName : legacyOperationalPolicyResourceNames) {
                 Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
-                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
         }).doesNotThrowAnyException();
     }
@@ -601,7 +601,7 @@ public class TestApiRestServer {
             main = startApiService(false);
             for (String resrcName : legacyGuardPolicyResourceNames) {
                 Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, false);
-                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
         }).doesNotThrowAnyException();
     }
@@ -613,7 +613,7 @@ public class TestApiRestServer {
             main = startApiService(false);
             for (String resrcName : legacyOperationalPolicyResourceNames) {
                 Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, false);
-                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
         }).doesNotThrowAnyException();
     }

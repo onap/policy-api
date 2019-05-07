@@ -38,6 +38,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
@@ -48,11 +49,13 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 public class TestLegacyOperationalPolicyProvider {
 
     private static LegacyOperationalPolicyProvider operationalPolicyProvider;
+    private static PolicyTypeProvider policyTypeProvider;
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.input.json";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.json";
 
     /**
      * Initializes parameters.
@@ -72,6 +75,7 @@ public class TestLegacyOperationalPolicyProvider {
         apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
         ParameterService.register(apiParamGroup, true);
         operationalPolicyProvider = new LegacyOperationalPolicyProvider();
+        policyTypeProvider = new PolicyTypeProvider();
     }
 
     /**
@@ -101,6 +105,20 @@ public class TestLegacyOperationalPolicyProvider {
     @Test
     public void testCreateOperationalPolicy() {
 
+        assertThatThrownBy(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+            operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+        }).hasMessage("policy type onap.policies.controlloop.Operational:1.0.0 for "
+            + "policy operational.restart:1.0.0 does not exist");
+
+        assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
+
         assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
@@ -122,6 +140,13 @@ public class TestLegacyOperationalPolicyProvider {
         assertThatThrownBy(() -> {
             operationalPolicyProvider.deleteOperationalPolicy("dummy", "dummy");
         }).hasMessage("no policy found for policy ID: dummy");
+
+        assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
