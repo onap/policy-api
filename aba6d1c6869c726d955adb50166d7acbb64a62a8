@@ -16,6 +16,24 @@
       "revId": "aba6d1c6869c726d955adb50166d7acbb64a62a8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e118435b_dbe5a220",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-05-08T08:20:53Z",
+      "side": 1,
+      "message": "Because the policy types are not loaded in the database, these requests will now fail. Chenfei does load the policy types in other tests so I think that is sufficient.",
+      "parentUuid": "e7520fb6_512a1f3b",
+      "revId": "aba6d1c6869c726d955adb50166d7acbb64a62a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
