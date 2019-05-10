@@ -34,6 +34,7 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
+import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
@@ -133,7 +134,8 @@ public class PolicyProvider implements AutoCloseable {
 
         List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
         policyTypes.add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes).build();
+        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes)
+                .groupState(PdpState.ACTIVE).pdpState(PdpState.ACTIVE).build();
         List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
 
         if (pdpGroups.isEmpty()) {
