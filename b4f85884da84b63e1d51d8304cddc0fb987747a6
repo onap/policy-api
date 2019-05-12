@@ -16,6 +16,24 @@
       "revId": "b4f85884da84b63e1d51d8304cddc0fb987747a6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7963e341_70af8621",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-05-12T10:54:35Z",
+      "side": 1,
+      "message": "Agree to Jim, we don\u0027t need to check pdpState. Instead we need to check that atleast one instance of Pdp is registered to this group.\nAlso, as per me we should move this API to PAP to make the architecture clean. We are mixing Policy Development and Policy Administration information. Thoughts?",
+      "parentUuid": "7c89b8b4_d2b279e2",
+      "revId": "b4f85884da84b63e1d51d8304cddc0fb987747a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
