@@ -34,6 +34,24 @@
       "revId": "b4f85884da84b63e1d51d8304cddc0fb987747a6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9eeac011_6ab01b04",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-05-12T23:54:42Z",
+      "side": 1,
+      "message": "If the ACTIVE check is removed, is it possible that the PDP(s) responsible for its execution in the group to be in PASSIVE state?    If that was the case, CLAMP may be misled but the response.   \n\nI agree with Ram that this API should be in the PAP instead.",
+      "parentUuid": "7963e341_70af8621",
+      "revId": "b4f85884da84b63e1d51d8304cddc0fb987747a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
