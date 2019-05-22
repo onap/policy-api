@@ -95,8 +95,8 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
     public LegacyOperationalPolicy deleteOperationalPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        validateDeleteEligibility(policyId, policyVersion);
         validateLegacyOperationalPolicyVersion(policyVersion);
+        validateDeleteEligibility(policyId, policyVersion);
 
         return modelsProvider.deleteOperationalPolicy(policyId, policyVersion);
     }

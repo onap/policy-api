@@ -98,8 +98,8 @@ public class LegacyGuardPolicyProvider implements AutoCloseable {
     public Map<String, LegacyGuardPolicyOutput> deleteGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        validateDeleteEligibility(policyId, policyVersion);
         validateLegacyGuardPolicyVersion(policyVersion);
+        validateDeleteEligibility(policyId, policyVersion);
 
         return modelsProvider.deleteGuardPolicy(policyId, policyVersion);
     }

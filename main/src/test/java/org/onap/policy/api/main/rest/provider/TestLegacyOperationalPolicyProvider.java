@@ -178,7 +178,7 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.deleteOperationalPolicy("dummy", null);
-        }).hasMessage("version is marked @NonNull but is null");
+        }).hasMessage("legacy policy version is not an integer");
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.deleteOperationalPolicy("dummy", "dummy");

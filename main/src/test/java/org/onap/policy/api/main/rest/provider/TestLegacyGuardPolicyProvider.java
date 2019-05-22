@@ -189,7 +189,7 @@ public class TestLegacyGuardPolicyProvider {
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.deleteGuardPolicy("dummy", null);
-        }).hasMessage("version is marked @NonNull but is null");
+        }).hasMessage("legacy policy version is not an integer");
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.deleteGuardPolicy("dummy", "1.0.0");
