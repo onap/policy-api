@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "4b303f22_329ae071",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-05-22T14:38:06Z",
+      "side": 1,
+      "message": "valid point",
+      "parentUuid": "d8279b3b_3bff8eb7",
+      "revId": "bbf59429cf462ae417a16afa631c87f495e261df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ab00fb1_7e1ec7bb",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 1
