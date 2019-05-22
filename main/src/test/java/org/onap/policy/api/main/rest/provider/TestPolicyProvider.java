@@ -95,16 +95,16 @@ public class TestPolicyProvider {
     public void testFetchPolicies() {
 
         assertThatThrownBy(() -> {
-            policyProvider.fetchPolicies("dummy", "dummy", null, null);
-        }).hasMessage("policy with ID null:null and type dummy:dummy does not exist");
+            policyProvider.fetchPolicies("dummy", "1.0.0", null, null);
+        }).hasMessage("policy with ID null:null and type dummy:1.0.0 does not exist");
 
         assertThatThrownBy(() -> {
-            policyProvider.fetchPolicies("dummy", "dummy", "dummy", null);
-        }).hasMessage("policy with ID dummy:null and type dummy:dummy does not exist");
+            policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", null);
+        }).hasMessage("policy with ID dummy:null and type dummy:1.0.0 does not exist");
 
         assertThatThrownBy(() -> {
-            policyProvider.fetchPolicies("dummy", "dummy", "dummy", "dummy");
-        }).hasMessage("policy with ID dummy:dummy and type dummy:dummy does not exist");
+            policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0");
+        }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
     }
 
     @Test
@@ -127,8 +127,8 @@ public class TestPolicyProvider {
     public void testCreatePolicy() {
 
         assertThatThrownBy(() -> {
-            policyProvider.createPolicy("dummy", "dummy", new ToscaServiceTemplate());
-        }).hasMessage("policy type with ID dummy:dummy does not exist");
+            policyProvider.createPolicy("dummy", "1.0.0", new ToscaServiceTemplate());
+        }).hasMessage("policy type with ID dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
             String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
@@ -167,8 +167,8 @@ public class TestPolicyProvider {
     public void testDeletePolicy() {
 
         assertThatThrownBy(() -> {
-            policyProvider.deletePolicy("dummy", "dummy", "dummy", "dummy");
-        }).hasMessage("policy with ID dummy:dummy and type dummy:dummy does not exist");
+            policyProvider.deletePolicy("dummy", "1.0.0", "dummy", "1.0.0");
+        }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
             String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);

@@ -68,7 +68,10 @@ public class LegacyGuardPolicyProvider implements AutoCloseable {
     public Map<String, LegacyGuardPolicyOutput> fetchGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        return modelsProvider.getGuardPolicy(policyId);
+        if (policyVersion != null) {
+            validateLegacyGuardPolicyVersion(policyVersion);
+        }
+        return modelsProvider.getGuardPolicy(policyId, policyVersion);
     }
 
     /**
@@ -78,7 +81,8 @@ public class LegacyGuardPolicyProvider implements AutoCloseable {
      *
      * @return the map of LegacyGuardPolicyOutput objectst
      */
-    public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body) throws PfModelException {
+    public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body)
+            throws PfModelException {
 
         return modelsProvider.createGuardPolicy(body);
     }
@@ -95,8 +99,9 @@ public class LegacyGuardPolicyProvider implements AutoCloseable {
             throws PfModelException {
 
         validateDeleteEligibility(policyId, policyVersion);
+        validateLegacyGuardPolicyVersion(policyVersion);
 
-        return modelsProvider.deleteGuardPolicy(policyId);
+        return modelsProvider.deleteGuardPolicy(policyId, policyVersion);
     }
 
     /**
@@ -118,6 +123,23 @@ public class LegacyGuardPolicyProvider implements AutoCloseable {
         if (!pdpGroups.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeleteRuleViolationMessage(policyId, policyVersion, pdpGroups));
+        }
+    }
+
+    /**
+     * Validates whether the legacy guard policy version is an integer.
+     *
+     * @param policyVersion the version of policy
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateLegacyGuardPolicyVersion(String policyVersion) throws PfModelException {
+
+        try {
+            Integer.valueOf(policyVersion);
+        } catch (NumberFormatException exc) {
+            throw new PfModelException(Response.Status.BAD_REQUEST,
+                    "legacy policy version is not an integer", exc);
         }
     }
 

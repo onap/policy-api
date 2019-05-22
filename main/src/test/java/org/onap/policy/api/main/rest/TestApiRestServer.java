@@ -107,29 +107,34 @@ public class TestApiRestServer {
 
     private static final String GUARD_POLICIES =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
-    private static final String GUARD_POLICIES_VDNS_FL =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout";
-    private static final String GUARD_POLICIES_VDNS_MINMAX =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout";
+    private static final String GUARD_POLICIES_VDNS_FL_LATEST =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
+            + "/versions/latest";
+    private static final String GUARD_POLICIES_VDNS_MINMAX_LATEST =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout"
+            + "/versions/latest";
     private static final String GUARD_POLICIES_VDNS_FL_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1";
     private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1";
 
     private static final String OPS_POLICIES =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
-    private static final String OPS_POLICIES_VCPE =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart";
-    private static final String OPS_POLICIES_VDNS =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout";
-    private static final String OPS_POLICIES_VFIREWALL =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig";
+    private static final String OPS_POLICIES_VCPE_LATEST =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart"
+            + "/versions/latest";
+    private static final String OPS_POLICIES_VDNS_LATEST =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout"
+            + "/versions/latest";
+    private static final String OPS_POLICIES_VFIREWALL_LATEST =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig"
+            + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart/versions/1";
     private static final String OPS_POLICIES_VDNS_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0";
+        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1";
 
     private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private Main main;
@@ -469,28 +474,28 @@ public class TestApiRestServer {
 
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL, true);
+            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: guard.frequency.scaleout",
+            assertEquals("no policy found for policy: guard.frequency.scaleout:null",
                     error.getErrorMessage());
 
             rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: guard.frequency.scaleout",
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1",
                     error.getErrorMessage());
 
-            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX, true);
+            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: guard.minmax.scaleout",
+            assertEquals("no policy found for policy: guard.minmax.scaleout:null",
                     error.getErrorMessage());
 
             rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: guard.minmax.scaleout",
+            assertEquals("no policy found for policy: guard.minmax.scaleout:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -500,40 +505,40 @@ public class TestApiRestServer {
 
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = readResource(OPS_POLICIES_VCPE, true);
+            Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.restart",
+            assertEquals("no policy found for policy: operational.restart:null",
                     error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.restart",
+            assertEquals("no policy found for policy: operational.restart:1",
                     error.getErrorMessage());
 
-            rawResponse = readResource(OPS_POLICIES_VDNS, true);
+            rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.scaleout",
+            assertEquals("no policy found for policy: operational.scaleout:null",
                     error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.scaleout",
+            assertEquals("no policy found for policy: operational.scaleout:1",
                     error.getErrorMessage());
 
-            rawResponse = readResource(OPS_POLICIES_VFIREWALL, true);
+            rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.modifyconfig",
+            assertEquals("no policy found for policy: operational.modifyconfig:null",
                     error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.modifyconfig",
+            assertEquals("no policy found for policy: operational.modifyconfig:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -546,7 +551,7 @@ public class TestApiRestServer {
             Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: guard.frequency.scaleout",
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -559,7 +564,7 @@ public class TestApiRestServer {
             Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy ID: operational.restart",
+            assertEquals("no policy found for policy: operational.restart:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }

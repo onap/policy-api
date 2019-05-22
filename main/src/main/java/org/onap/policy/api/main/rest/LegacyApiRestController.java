@@ -67,16 +67,16 @@ public class LegacyApiRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyApiRestController.class);
 
     /**
-     * Retrieves all versions of a particular guard policy.
+     * Retrieves the latest version of a particular guard policy.
      *
      * @param policyId the ID of specified guard policy
      *
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{policyId}")
-    @ApiOperation(value = "Retrieve all versions of a particular guard policy",
-            notes = "Returns a list of all versions of the specified guard policy",
+    @Path("/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{policyId}/versions/latest")
+    @ApiOperation(value = "Retrieve the latest version of a particular guard policy",
+            notes = "Returns the latest version of the specified guard policy",
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
@@ -109,7 +109,7 @@ public class LegacyApiRestController {
             @ApiResponse(code = 404, message = "Resource Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response getAllVersionsOfGuardPolicy(
+    public Response getLatestVersionOfGuardPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
@@ -118,8 +118,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policies).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.error("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}",
-                    policyId, pfme);
+            LOGGER.error("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}"
+                + "/versions/latest", policyId, pfme);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();
@@ -313,16 +313,16 @@ public class LegacyApiRestController {
     }
 
     /**
-     * Retrieves all versions of a particular operational policy.
+     * Retrieves the latest version of a particular operational policy.
      *
      * @param policyId the ID of specified operational policy
      *
      * @return the Response object containing the results of the API operation
      */
     @GET
-    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{policyId}")
-    @ApiOperation(value = "Retrieve all versions of a particular operational policy",
-            notes = "Returns a list of all versions of the specified operational policy",
+    @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{policyId}/versions/latest")
+    @ApiOperation(value = "Retrieve the latest version of a particular operational policy",
+            notes = "Returns the latest version of the specified operational policy",
             response = LegacyOperationalPolicy.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
@@ -355,7 +355,7 @@ public class LegacyApiRestController {
             @ApiResponse(code = 404, message = "Resource Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
         })
-    public Response getAllVersionsOfOperationalPolicy(
+    public Response getLatestVersionOfOperationalPolicy(
             @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
@@ -364,8 +364,8 @@ public class LegacyApiRestController {
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
                     .entity(policy).build();
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.error("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{}",
-                    policyId, pfme);
+            LOGGER.error("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{}"
+                + "/versions/latest", policyId, pfme);
             return addLoggingHeaders(addVersionControlHeaders(
                     Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
                     .entity(pfme.getErrorResponse()).build();

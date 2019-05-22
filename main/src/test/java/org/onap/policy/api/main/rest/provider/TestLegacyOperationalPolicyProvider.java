@@ -98,11 +98,54 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", null);
-        }).hasMessage("no policy found for policy ID: dummy");
+        }).hasMessage("no policy found for policy: dummy:null");
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", "dummy");
-        }).hasMessage("no policy found for policy ID: dummy");
+        }).hasMessage("legacy policy version is not an integer");
+
+        assertThatCode(() -> {
+            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            ToscaServiceTemplate policyTypeServiceTemplate =
+                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+            LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+            assertNotNull(createdPolicy);
+
+            policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+            createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+            assertNotNull(createdPolicy);
+
+            LegacyOperationalPolicy firstVersion =
+                    operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
+            assertNotNull(firstVersion);
+            assertEquals("1",
+                    firstVersion.getPolicyVersion());
+
+            LegacyOperationalPolicy latestVersion =
+                    operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
+            assertNotNull(latestVersion);
+            assertEquals("2",
+                    latestVersion.getPolicyVersion());
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1.0.0");
+        }).hasMessage("legacy policy version is not an integer");
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "latest");;
+        }).hasMessage("legacy policy version is not an integer");
+
+        assertThatCode(() -> {
+            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
+            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "2");
+            policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");
+        }).doesNotThrowAnyException();
     }
 
     @Test
@@ -119,9 +162,7 @@ public class TestLegacyOperationalPolicyProvider {
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        }).doesNotThrowAnyException();
 
-        assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
             LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
@@ -141,25 +182,21 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.deleteOperationalPolicy("dummy", "dummy");
-        }).hasMessage("no policy found for policy ID: dummy");
+        }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
             String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        }).doesNotThrowAnyException();
 
-        assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
             LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
             assertNotNull(createdPolicy);
-        }).doesNotThrowAnyException();
 
-        assertThatCode(() -> {
             LegacyOperationalPolicy deletedPolicy = operationalPolicyProvider
-                    .deleteOperationalPolicy("operational.restart", "1.0.0");
+                    .deleteOperationalPolicy("operational.restart", "1");
             assertNotNull(deletedPolicy);
             assertEquals("operational.restart", deletedPolicy.getPolicyId());
             assertTrue(deletedPolicy.getContent()
@@ -167,8 +204,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {
-            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1.0.0");
-        }).hasMessage("no policy found for policy ID: operational.restart");
+            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
+        }).hasMessage("no policy found for policy: operational.restart:1");
 
         assertThatCode(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");

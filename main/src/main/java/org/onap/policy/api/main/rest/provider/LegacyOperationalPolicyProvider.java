@@ -66,7 +66,10 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
     public LegacyOperationalPolicy fetchOperationalPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        return modelsProvider.getOperationalPolicy(policyId);
+        if (policyVersion != null) {
+            validateLegacyOperationalPolicyVersion(policyVersion);
+        }
+        return modelsProvider.getOperationalPolicy(policyId, policyVersion);
     }
 
     /**
@@ -93,8 +96,9 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
             throws PfModelException {
 
         validateDeleteEligibility(policyId, policyVersion);
+        validateLegacyOperationalPolicyVersion(policyVersion);
 
-        return modelsProvider.deleteOperationalPolicy(policyId);
+        return modelsProvider.deleteOperationalPolicy(policyId, policyVersion);
     }
 
     /**
@@ -116,6 +120,23 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
         if (!pdpGroups.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeleteRuleViolationMessage(policyId, policyVersion, pdpGroups));
+        }
+    }
+
+    /**
+     * Validates whether the legacy operational policy version is an integer.
+     *
+     * @param policyVersion the version of policy
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateLegacyOperationalPolicyVersion(String policyVersion) throws PfModelException {
+
+        try {
+            Integer.valueOf(policyVersion);
+        } catch (NumberFormatException exc) {
+            throw new PfModelException(Response.Status.BAD_REQUEST,
+                    "legacy policy version is not an integer", exc);
         }
     }
 
