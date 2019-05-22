@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f46b6247_de2c1225",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-05-22T13:18:17Z",
+      "side": 1,
+      "message": "Hmm. I don\u0027t get it. What do you mean by reversed?",
+      "parentUuid": "0145c6ac_1d769f64",
+      "revId": "bbf59429cf462ae417a16afa631c87f495e261df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ab00fb1_7e1ec7bb",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2019-05-22T12:38:39Z",
       "side": 1,
       "message": "this doesn\u0027t appear to be used",
+      "revId": "bbf59429cf462ae417a16afa631c87f495e261df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fffec27_b12bce17",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-05-22T13:18:17Z",
+      "side": 1,
+      "message": "Oh, I just want to check if version is an integer here. Aiming to catch NumberFormatException if it is not. Perhaps it is not a good way to do it.",
+      "parentUuid": "722e0d82_43a5f081",
       "revId": "bbf59429cf462ae417a16afa631c87f495e261df",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
