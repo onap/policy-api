@@ -45,6 +45,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.api.main.rest.provider.LegacyGuardPolicyProvider;
 import org.onap.policy.api.main.rest.provider.LegacyOperationalPolicyProvider;
+import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
+import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
+import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
@@ -65,6 +71,8 @@ import org.slf4j.LoggerFactory;
 public class LegacyApiRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyApiRestController.class);
+
+    private final Coder coder = new StandardCoder();
 
     /**
      * Retrieves the latest version of a particular guard policy.
@@ -235,6 +243,11 @@ public class LegacyApiRestController {
     public Response createGuardPolicy(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyGuardPolicyInput body) {
+
+        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
+            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST,
+                            "/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies", toJson(body));
+        }
 
         try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
             Map<String, LegacyGuardPolicyOutput> policy = guardPolicyProvider.createGuardPolicy(body);
@@ -482,6 +495,11 @@ public class LegacyApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyOperationalPolicy body) {
 
+        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
+            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST,
+                            "/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies", toJson(body));
+        }
+
         try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
             LegacyOperationalPolicy policy = operationalPolicyProvider.createOperationalPolicy(body);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
@@ -569,5 +587,25 @@ public class LegacyApiRestController {
             return rb.header("X-ONAP-RequestID", UUID.randomUUID());
         }
         return rb.header("X-ONAP-RequestID", requestId);
+    }
+
+    /**
+     * Converts an object to a JSON string.
+     *
+     * @param object object to convert
+     * @return a JSON string representing the object
+     */
+    private String toJson(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        try {
+            return coder.encode(object);
+
+        } catch (CoderException e) {
+            LOGGER.warn("cannot convert {} to JSON", object.getClass().getName(), e);
+            return null;
+        }
     }
 }

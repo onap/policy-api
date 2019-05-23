@@ -54,7 +54,13 @@ import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
+import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
+import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -92,6 +98,8 @@ import org.slf4j.LoggerFactory;
 public class ApiRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestController.class);
+
+    private final Coder coder = new StandardCoder();
 
     /**
      * Retrieves the healthcheck status of the API component.
@@ -477,6 +485,10 @@ public class ApiRestController {
     public Response createPolicyType(
             @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+
+        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
+            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
+        }
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
@@ -948,6 +960,12 @@ public class ApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
 
+        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
+            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST,
+                            "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies",
+                            toJson(body));
+        }
+
         try (PolicyProvider policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .createPolicy(policyTypeId, policyTypeVersion, body);
@@ -1042,6 +1060,26 @@ public class ApiRestController {
             return rb.header("X-ONAP-RequestID", UUID.randomUUID());
         }
         return rb.header("X-ONAP-RequestID", requestId);
+    }
+
+    /**
+     * Converts an object to a JSON string.
+     *
+     * @param object object to convert
+     * @return a JSON string representing the object
+     */
+    private String toJson(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        try {
+            return coder.encode(object);
+
+        } catch (CoderException e) {
+            LOGGER.warn("cannot convert {} to JSON", object.getClass().getName(), e);
+            return null;
+        }
     }
 
     private enum Target {
