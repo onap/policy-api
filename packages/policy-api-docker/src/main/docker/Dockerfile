@@ -17,7 +17,7 @@ RUN tar xvfz /packages/policy-api.tar.gz --directory ${POLICY_API_HOME} && \
 
 WORKDIR ${POLICY_API_HOME}
 COPY policy-api.sh  bin/.
-RUN chown -R policy:policy * && chmod +x bin/*.sh && \
+RUN chown -R policy:policy * && chmod 755 bin/*.sh && \
     cp ${POLICY_API_HOME}/etc/ssl/* ${POLICY_HOME}/etc/ssl && chown policy:policy ${POLICY_HOME}/etc/ssl/*
 
 USER policy
