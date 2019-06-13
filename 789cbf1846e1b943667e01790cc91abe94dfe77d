@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ccbf585_76a99a50",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestRestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-13T13:14:10Z",
+      "side": 1,
+      "message": "remove trailing spaces\n\nsame comment on several lines below",
+      "revId": "789cbf1846e1b943667e01790cc91abe94dfe77d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
