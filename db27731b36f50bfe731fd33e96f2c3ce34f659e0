@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97ad3cbe_23652f06",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiStatisticsManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-13T13:12:02Z",
+      "side": 1,
+      "message": "maybe clone lines 39-42 after line 42 and then verify that the counts have all been updated to 2",
+      "revId": "db27731b36f50bfe731fd33e96f2c3ce34f659e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
