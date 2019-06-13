@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f57fa0d_55695d55",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-06-13T13:10:21Z",
+      "side": 1,
+      "message": "it is better to have separate tests, one with rest params\u003dnull and another with db params\u003dnull.\n\nin addition, the purpose of this test originally was to verify validation of a sub-structure (e.g., rest params). I\u0027d rather see the original test retained.\n\nas it is, I don\u0027t see how this change would increase code coverage.",
+      "revId": "d3fc6838934fdd53b90c23b8aaaf15013407e00f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
