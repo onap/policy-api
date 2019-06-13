@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 IBM .
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,18 +89,18 @@ public class TestApiParameterGroup {
     }
 
     @Test
-    public void testApiParameterGroup_EmptyRestServerParameters() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true);
-        final PolicyModelsProviderParameters databaseProviderParameters =
-                commonTestData.getDatabaseProviderParameters(false);
+    public void testApiParameterGroup_EmptyRestServerAndDBParameters() {
+        final RestServerParameters restServerParameters = null;
+        final PolicyModelsProviderParameters databaseProviderParameters = null;
         final ApiParameterGroup apiParameters = new ApiParameterGroup(
                         CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
-                        .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
+                        .contains("\"org.onap.policy.api.main.parameters.ApiParameterGroup\" INVALID, "
                                         + "parameter group has status INVALID"));
     }
+    
 
     @Test
     public void testApiParameterGroup_EmptyDatabaseProviderParameters() {
@@ -113,5 +114,16 @@ public class TestApiParameterGroup {
         assertTrue(validationResult.getResult()
                         .contains("\"org.onap.policy.models.provider.PolicyModelsProviderParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
+    }
+    
+    @Test
+    public void testName() {
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(true);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                        CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
+        apiParameters.setName("name");
+        assertEquals("name", apiParameters.getName());
     }
 }
