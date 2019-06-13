@@ -16,6 +16,24 @@
       "revId": "d3fc6838934fdd53b90c23b8aaaf15013407e00f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f60471ce_7db83abd",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-06-13T14:42:07Z",
+      "side": 1,
+      "message": "Let\u0027s retain the original test. And utilize the test added below, which only addresses the missing setName() line to be covered. That test can be enhanced to check for null values to cover remaining lines of code.",
+      "parentUuid": "7f57fa0d_55695d55",
+      "revId": "d3fc6838934fdd53b90c23b8aaaf15013407e00f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
