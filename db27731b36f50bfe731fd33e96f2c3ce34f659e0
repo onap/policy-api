@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0af35b6_7cdfc9af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-17T15:19:11Z",
+      "side": 1,
+      "message": "I Still don\u0027t agree with the need of this class. The coverage is already 100% achieved by TestApiRestServer",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 25
+      },
+      "revId": "db27731b36f50bfe731fd33e96f2c3ce34f659e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97ad3cbe_23652f06",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiStatisticsManager.java",
         "patchSetId": 1
