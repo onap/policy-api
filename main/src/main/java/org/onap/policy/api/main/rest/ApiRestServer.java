@@ -66,7 +66,7 @@ public class ApiRestServer implements Startable {
             servers = HttpServletServer.factory.build(getServerProperties());
             for (HttpServletServer server : servers) {
                 if (server.isAaf()) {
-                    server.addFilterClass(null, AafApiFilter.class.getCanonicalName());
+                    server.addFilterClass(null, AafApiFilter.class.getName());
                 }
                 server.start();
             }
@@ -92,8 +92,8 @@ public class ApiRestServer implements Startable {
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_PORT_SUFFIX,
                         Integer.toString(restServerParameters.getPort()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_REST_CLASSES_SUFFIX,
-                        String.join(",", LegacyApiRestController.class.getCanonicalName(),
-                                         ApiRestController.class.getCanonicalName()));
+                        String.join(",", LegacyApiRestController.class.getName(),
+                                         ApiRestController.class.getName()));
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_MANAGED_SUFFIX, "false");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_SWAGGER_SUFFIX, "true");
         props.setProperty(svcpfx + PolicyEndPointProperties.PROPERTY_HTTP_AUTH_USERNAME_SUFFIX,
