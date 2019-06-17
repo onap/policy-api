@@ -313,7 +313,7 @@ public class TestApiRestServer {
             Response rawResponse = readResource(POLICYTYPES, true);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertTrue(response.getPolicyTypes().get(0).isEmpty());
+            assertTrue(response.getPolicyTypes().isEmpty());
 
             rawResponse = readResource(POLICYTYPES_TCA, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
