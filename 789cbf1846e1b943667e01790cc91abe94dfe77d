@@ -39,6 +39,29 @@
       "revId": "789cbf1846e1b943667e01790cc91abe94dfe77d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28944815_269b610e",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestRestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-17T15:00:09Z",
+      "side": 1,
+      "message": "This class is already tested by TestApiParameterGroup.\n\nAlso, if we want to create a test file per class then \n1) We can use openpojo for simple getter/setter kind of validations. Have a look at TestStatisticsReport.java\n2) We must try to check GroupValidationResult and check if the values are valid.\n\nBut again the question is do we really need this test class? Thoughts?",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "789cbf1846e1b943667e01790cc91abe94dfe77d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
