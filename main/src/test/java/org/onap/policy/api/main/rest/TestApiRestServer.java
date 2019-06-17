@@ -169,18 +169,13 @@ public class TestApiRestServer {
      * Method for cleanup after each test.
      */
     @After
-    public void teardown() {
-
-        try {
-            if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
-                if (main != null) {
-                    stopApiService(main);
-                } else if (restServer != null) {
-                    restServer.stop();
-                }
+    public void teardown() throws Exception {
+        if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
+            if (main != null) {
+                stopApiService(main);
+            } else if (restServer != null) {
+                restServer.stop();
             }
-        } catch (InterruptedException | IOException | PolicyApiException exp) {
-            LOGGER.error("teardown failed", exp);
         }
     }
 
@@ -318,7 +313,7 @@ public class TestApiRestServer {
             Response rawResponse = readResource(POLICYTYPES, true);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertTrue(response.getPolicyTypes().get(0).isEmpty());
+            assertTrue(response.getPolicyTypes().isEmpty());
 
             rawResponse = readResource(POLICYTYPES_TCA, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
