@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "0488b0f0_19df1549",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-18T02:24:25Z",
+      "side": 1,
+      "message": "Hi Ram and Pamela,\nNow, I take repo xacml-pdp,which is mentioned in the ticket POLICY-1702, as a reference.\nIs there other repo I can refer to?",
+      "parentUuid": "f638755b_a000239d",
+      "range": {
+        "startLine": 8,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 15
+      },
+      "revId": "15af41a6b303c68f5e255e7a446980ba00852de2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a32e1522_c9768c8e",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "15af41a6b303c68f5e255e7a446980ba00852de2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e056329_299df358",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-18T02:24:25Z",
+      "side": 1,
+      "message": "will fix it.",
+      "parentUuid": "a32e1522_c9768c8e",
+      "range": {
+        "startLine": 21,
+        "startChar": 38,
+        "endLine": 21,
+        "endChar": 40
+      },
+      "revId": "15af41a6b303c68f5e255e7a446980ba00852de2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
