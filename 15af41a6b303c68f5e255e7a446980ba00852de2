@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "e6aa7a7f_a1928e3d",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-18T10:43:39Z",
+      "side": 1,
+      "message": "Okay, I saw xacml using only POLICY_HOME and other repos using POLICY_XXX_HOME. Got it we are just trying to make it consistent across policy repos. You can continue referring xacml.",
+      "parentUuid": "0488b0f0_19df1549",
+      "range": {
+        "startLine": 8,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 15
+      },
+      "revId": "15af41a6b303c68f5e255e7a446980ba00852de2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a32e1522_c9768c8e",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 1
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "will fix it.",
       "parentUuid": "a32e1522_c9768c8e",
+      "range": {
+        "startLine": 21,
+        "startChar": 38,
+        "endLine": 21,
+        "endChar": 40
+      },
+      "revId": "15af41a6b303c68f5e255e7a446980ba00852de2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a847af59_b6ac228c",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-18T10:43:39Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "2e056329_299df358",
       "range": {
         "startLine": 21,
         "startChar": 38,
