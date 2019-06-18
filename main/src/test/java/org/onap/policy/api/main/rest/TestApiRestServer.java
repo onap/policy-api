@@ -169,18 +169,13 @@ public class TestApiRestServer {
      * Method for cleanup after each test.
      */
     @After
-    public void teardown() {
-
-        try {
-            if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
-                if (main != null) {
-                    stopApiService(main);
-                } else if (restServer != null) {
-                    restServer.stop();
-                }
+    public void teardown() throws Exception {
+        if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
+            if (main != null) {
+                stopApiService(main);
+            } else if (restServer != null) {
+                restServer.stop();
             }
-        } catch (InterruptedException | IOException | PolicyApiException exp) {
-            LOGGER.error("teardown failed", exp);
         }
     }
 
