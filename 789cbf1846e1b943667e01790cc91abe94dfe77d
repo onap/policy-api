@@ -110,6 +110,30 @@
       "revId": "789cbf1846e1b943667e01790cc91abe94dfe77d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7bc64b3_fade0357",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestRestServerParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-18T13:05:24Z",
+      "side": 1,
+      "message": "Okay",
+      "parentUuid": "ef17dd52_94afd551",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "789cbf1846e1b943667e01790cc91abe94dfe77d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
