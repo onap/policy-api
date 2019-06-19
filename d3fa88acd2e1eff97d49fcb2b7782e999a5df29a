@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ecef97cd_7f126565",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-19T08:56:57Z",
+      "side": 1,
+      "message": "Same comment. Better to define POLICY_LOGS in policy-common-alpine Dockerfile and then use the same in child Dockerfile. Example - ${POLICY_LOGS}/api",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 37
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a102ad8_1cfdc982",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-19T08:56:57Z",
+      "side": 1,
+      "message": "Better to use ${POLICY_HOME}/api\nThat way if we want to change the base path of policy containers then it is just one change in policy-common-alpine Dockerfile.",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 32
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
