@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "9afbce27_717f030b",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2019-06-19T17:53:52Z",
+      "side": 1,
+      "message": "Same as the comment on the other patch:\n\nThe fabric8.io/docker-maven-plugin has filtering enabled by default. Properties that we want to replace are specified with the ${..} syntax and the replacement properties are specified through maven properties. Hence, in Dockerfile it is better to use ${..} only for ARGS that are supplied through properties for replacement, for all others we want to bypass this filtering hence remove the curly braces.\nFor example: check this patch out: https://gerrit.onap.org/r/#/c/policy/drools-applications/+/89204/8/controlloop/packages/docker-controlloop/src/main/docker/Dockerfile\nProperty BUILD_VERSION_APP_CL is supplied through properties for replacement in the file: https://gerrit.onap.org/r/#/c/policy/drools-applications/+/89204/8/controlloop/packages/docker-controlloop/pom.xml L47.",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a102ad8_1cfdc982",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
