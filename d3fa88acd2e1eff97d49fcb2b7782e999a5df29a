@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bbf5d22c_d22edeb5",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-20T15:35:15Z",
+      "side": 1,
+      "message": "I think that would be problematic.  The problem is that POLICY_LOGS from parent image will obfuscate this one, and won\u0027t take effect.   It will also have side effects on the other images.  Perhaps a POLICY_BASE_LOGS in parent image, and have POLICY_LOGS defaulted here with that.   In any case, I don\u0027t think the change belongs to this review, and would have to be done on a different submission, so this one could proceed as is for this particular line at least for now.",
+      "parentUuid": "ecef97cd_7f126565",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 37
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9afbce27_717f030b",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "33596a4f_5cb35e99",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-20T15:35:15Z",
+      "side": 1,
+      "message": "right, +1",
+      "parentUuid": "9afbce27_717f030b",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a102ad8_1cfdc982",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2019-06-19T08:56:57Z",
       "side": 1,
       "message": "Better to use ${POLICY_HOME}/api\nThat way if we want to change the base path of policy containers then it is just one change in policy-common-alpine Dockerfile.",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 32
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a70f8bb5_8eeb47da",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-20T15:35:15Z",
+      "side": 1,
+      "message": "Here is the same issue as above with obfuscation from the parent image for POLICY_HOME.\n\nIn any case, the basic idea here is that if you go to any policy image you go to the location of your base software regardless of which container you are:\n\ncd $POLICY_LOGS # I see all the logs\ncd $POLICY_HOME # I see my base installation.\n\nNot sure if \"api\" directory is redundant with accessing the \"api\" container.  I don\u0027t recall the dir layout here.",
+      "parentUuid": "7a102ad8_1cfdc982",
       "range": {
         "startLine": 8,
         "startChar": 16,
