@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cc142bc4_744bc054",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-21T08:00:54Z",
+      "side": 1,
+      "message": "ok, I will keep it unchanged.",
+      "parentUuid": "bbf5d22c_d22edeb5",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 37
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9afbce27_717f030b",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "3a7a979f_1f885579",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-21T08:00:54Z",
+      "side": 1,
+      "message": "Will fix it.",
+      "parentUuid": "33596a4f_5cb35e99",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7a102ad8_1cfdc982",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
@@ -140,6 +188,30 @@
       "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "265766ad_1fb4716f",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-21T08:00:54Z",
+      "side": 1,
+      "message": "Hi Jorge,\nDo you mean we\u0027d better to keep the POLICY_HOME as the parent image?\nIf so, I think the policy-api.sh should be updated, because it use the path /opt/app/policy/api as the location of base software now.",
+      "parentUuid": "a70f8bb5_8eeb47da",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 32
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
