@@ -212,6 +212,30 @@
       "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "173c3861_e5147237",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-06-21T16:41:54Z",
+      "side": 1,
+      "message": "I think the issue that you may find here is that if POLICY_HOME is defined in the parent, if you build this image, and instantiate a container from it, if you do an \"echo $POLICY_HOME\", you\u0027ll see the parent one, in other words, you\u0027ll see \"/opt/app/policy\" and not \"/opt/app/policy/api\".  Give it a try if you can to verify it to make sure, at least that\u0027s the behavior I experienced before.",
+      "parentUuid": "265766ad_1fb4716f",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 32
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
