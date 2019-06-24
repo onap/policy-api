@@ -236,6 +236,30 @@
       "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1c149d0_b9da9b42",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 5257
+      },
+      "writtenOn": "2019-06-24T08:06:45Z",
+      "side": 1,
+      "message": "Hi Jorge,\nI try as your suggestion, and the $POLICY_HOME is \"/opt/app/policy/api\".\nThe steps as below:\n1, build the image: mvn clean package docker:build\n2, start the container: docker run --entrypoint \"bash\" -it c34fd9ab1528\n3, check the $POLICY_HOME: echo $POLICY_HOME\noutput:\nbash-4.4$ echo $POLICY_HOME\n/opt/app/policy/api\n\nAnd the output of command `env` is:\n\nbash-4.4$ env\nPOLICY_HOME\u003d/opt/app/policy/api\nLANG\u003dC.UTF-8\nHOSTNAME\u003d307b918999f3\nJAVA_HOME\u003d/usr/lib/jvm/java-1.8-openjdk\nBUILD_VERSION\u003d1.4.0\nJAVA_VERSION\u003d8u201\nPWD\u003d/opt/app/policy/api/bin\nHOME\u003d/home/policy\nPOLICY_LOGS\u003d/var/log/onap/policy/api\nTERM\u003dxterm\nSHLVL\u003d1\nPATH\u003d/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin\nJAVA_ALPINE_VERSION\u003d8.201.08-r1\n_\u003d/usr/bin/env\nbash-4.4$ env\nPOLICY_HOME\u003d/opt/app/policy/api\nLANG\u003dC.UTF-8\nHOSTNAME\u003d307b918999f3\nJAVA_HOME\u003d/usr/lib/jvm/java-1.8-openjdk\nBUILD_VERSION\u003d1.4.0\nJAVA_VERSION\u003d8u201\nPWD\u003d/opt/app/policy/api/bin\nHOME\u003d/home/policy\nPOLICY_LOGS\u003d/var/log/onap/policy/api\nTERM\u003dxterm\nSHLVL\u003d1\nPATH\u003d/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin\nJAVA_ALPINE_VERSION\u003d8.201.08-r1\n_\u003d/usr/bin/env\nbash-4.4$",
+      "parentUuid": "173c3861_e5147237",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 32
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
