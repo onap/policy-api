@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "b0d230f1_9bbeb6d9",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-25T08:54:41Z",
+      "side": 1,
+      "message": "Now we know that the earlier proposal of having variable in base image ($POLICY_HOME) and then use it in child ($POLICY_HOME/api) works. Should we re-consider the same for $POLICY_LOGS as well. May be raise a JIRA and do it as part of that and let this code merge. Thoughts?",
+      "parentUuid": "cc142bc4_744bc054",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 37
+      },
+      "revId": "d3fa88acd2e1eff97d49fcb2b7782e999a5df29a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9afbce27_717f030b",
         "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
         "patchSetId": 2
