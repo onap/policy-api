@@ -2,6 +2,7 @@
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+#  Modifications Copyright (C) 2019 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +21,6 @@
 #
 
 JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/
-POLICY_API_HOME=/opt/app/policy/api
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
 KEYSTORE_PASSWD="Pol1cy_0nap"
 TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
@@ -35,9 +35,9 @@ fi
 
 if [ -z "$CONFIG_FILE" ]
   then
-    CONFIG_FILE="$POLICY_API_HOME/etc/defaultConfig.json"
+    CONFIG_FILE="$POLICY_HOME/etc/defaultConfig.json"
 fi
 
 echo "Policy api config file: $CONFIG_FILE"
 
-$JAVA_HOME/bin/java -cp "$POLICY_API_HOME/etc:$POLICY_API_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.api.main.startstop.Main -c $CONFIG_FILE
+$JAVA_HOME/bin/java -cp "$POLICY_HOME/etc:$POLICY_HOME/lib/*" -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" org.onap.policy.api.main.startstop.Main -c $CONFIG_FILE
