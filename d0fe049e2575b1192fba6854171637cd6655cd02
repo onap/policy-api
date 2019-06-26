@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b37d0c7_94e860da",
+        "filename": "packages/policy-api-docker/src/main/docker/policy-api.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-26T09:14:07Z",
+      "side": 1,
+      "message": "Curly braces",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 24
+      },
+      "revId": "d0fe049e2575b1192fba6854171637cd6655cd02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c27636d_41e68f6e",
+        "filename": "packages/policy-api-docker/src/main/docker/policy-api.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-06-26T09:14:07Z",
+      "side": 1,
+      "message": "Curly braces",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 26
+      },
+      "revId": "d0fe049e2575b1192fba6854171637cd6655cd02",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
