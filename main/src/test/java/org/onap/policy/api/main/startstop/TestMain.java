@@ -25,18 +25,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.CommonTestData;
+import org.onap.policy.common.utils.network.NetworkUtil;
 
 /**
  * Class to perform unit test of Main.
  *
  */
 public class TestMain {
+    private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
 
     @Test
-    public void testMain() throws PolicyApiException {
-        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters.json" };
+    public void testMain() throws Exception {
+        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
+                        "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
+        final String[] apiConfigParameters = { "-c", "src/test/resources/parameters/ApiConfigParametersXXX.json" };
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters().isValid());
         assertEquals(CommonTestData.API_GROUP_NAME, main.getParameters().getName());

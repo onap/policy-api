@@ -36,11 +36,12 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
  *
  */
 public class TestApiParameterGroup {
-    CommonTestData commonTestData = new CommonTestData();
+    private static final int PORT = 6969;
+    private CommonTestData commonTestData = new CommonTestData();
 
     @Test
     public void testApiParameterGroup() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(
@@ -60,7 +61,7 @@ public class TestApiParameterGroup {
 
     @Test
     public void testApiParameterGroup_NullName() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(null,
@@ -75,7 +76,7 @@ public class TestApiParameterGroup {
 
     @Test
     public void testApiParameterGroup_EmptyName() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup("",
@@ -89,7 +90,7 @@ public class TestApiParameterGroup {
 
     @Test
     public void testApiParameterGroup_EmptyRestServerParameters() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true);
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(true, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(
@@ -103,7 +104,7 @@ public class TestApiParameterGroup {
 
     @Test
     public void testApiParameterGroup_EmptyDatabaseProviderParameters() {
-        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false);
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(true);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(

@@ -30,6 +30,7 @@ import org.onap.policy.api.main.parameters.RestServerParameters;
 import org.onap.policy.api.main.rest.aaf.AafApiFilter;
 import org.onap.policy.common.capabilities.Startable;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
+import org.onap.policy.common.endpoints.http.server.HttpServletServerFactoryInstance;
 import org.onap.policy.common.endpoints.properties.PolicyEndPointProperties;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class ApiRestServer implements Startable {
     @Override
     public boolean start() {
         try {
-            servers = HttpServletServer.factory.build(getServerProperties());
+            servers = HttpServletServerFactoryInstance.getServerFactory().build(getServerProperties());
             for (HttpServletServer server : servers) {
                 if (server.isAaf()) {
                     server.addFilterClass(null, AafApiFilter.class.getName());

@@ -136,10 +136,12 @@ public class TestApiRestServer {
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
         + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1";
 
-    private static String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
+    private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
+    private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
     private Main main;
     private ApiRestServer restServer;
     private StandardCoder standardCoder = new StandardCoder();
+    private int port;
 
     // @formatter:off
     private String[] toscaPolicyResourceNames = {
@@ -170,12 +172,10 @@ public class TestApiRestServer {
      */
     @After
     public void teardown() throws Exception {
-        if (NetworkUtil.isTcpPortOpen("localhost", 6969, 1, 1000L)) {
-            if (main != null) {
-                stopApiService(main);
-            } else if (restServer != null) {
-                restServer.stop();
-            }
+        if (main != null) {
+            stopApiService(main);
+        } else if (restServer != null) {
+            restServer.stop();
         }
     }
 
@@ -196,7 +196,8 @@ public class TestApiRestServer {
     @Test
     public void testHealthCheckFailure() throws InterruptedException, IOException {
 
-        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
+        port = NetworkUtil.allocPort();
+        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
         restServerParams.setName(CommonTestData.API_GROUP_NAME);
         restServer = new ApiRestServer(restServerParams);
         try {
@@ -246,9 +247,10 @@ public class TestApiRestServer {
     }
 
     @Test
-    public void testApiStatistics_500() {
+    public void testApiStatistics_500() throws Exception {
 
-        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false);
+        port = NetworkUtil.allocPort();
+        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
         restServerParams.setName(CommonTestData.API_GROUP_NAME);
         restServer = new ApiRestServer(restServerParams);
         try {
@@ -693,19 +695,24 @@ public class TestApiRestServer {
         return invocationBuilder.delete();
     }
 
-    private Main startApiService(final boolean http) {
+    private Main startApiService(final boolean http) throws Exception {
+        port = NetworkUtil.allocPort();
 
         final String[] apiConfigParameters = new String[2];
         if (http) {
+            COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
+                            "src/test/resources/parameters/ApiConfigParametersXXX.json", port);
             apiConfigParameters[0] = "-c";
-            apiConfigParameters[1] = "parameters/ApiConfigParameters.json";
+            apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParametersXXX.json";
         } else {
             final Properties systemProps = System.getProperties();
             systemProps.put("javax.net.ssl.keyStore", KEYSTORE);
             systemProps.put("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
             System.setProperties(systemProps);
+            COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
+                            "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", port);
             apiConfigParameters[0] = "-c";
-            apiConfigParameters[1] = "parameters/ApiConfigParameters_Https.json";
+            apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json";
         }
         return new Main(apiConfigParameters);
     }
@@ -727,12 +734,12 @@ public class TestApiRestServer {
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
         client.register(GsonMessageBodyHandler.class);
 
-        final WebTarget webTarget = client.target("http://localhost:6969/policy/api/v1/" + endpoint);
+        final WebTarget webTarget = client.target("http://localhost:" + port + "/policy/api/v1/" + endpoint);
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
-            throw new IllegalStateException("cannot connect to port 6969");
+        if (!NetworkUtil.isTcpPortOpen("localhost", port, 60, 1000L)) {
+            throw new IllegalStateException("cannot connect to port " + port);
         }
         return invocationBuilder;
     }
@@ -764,12 +771,12 @@ public class TestApiRestServer {
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
         client.register(GsonMessageBodyHandler.class);
 
-        final WebTarget webTarget = client.target("https://localhost:6969/policy/api/v1/" + endpoint);
+        final WebTarget webTarget = client.target("https://localhost:" + port + "/policy/api/v1/" + endpoint);
 
         final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
-        if (!NetworkUtil.isTcpPortOpen("localhost", 6969, 6, 10000L)) {
-            throw new IllegalStateException("cannot connect to port 6969");
+        if (!NetworkUtil.isTcpPortOpen("localhost", port, 60, 1000L)) {
+            throw new IllegalStateException("cannot connect to port " + port);
         }
         return invocationBuilder;
     }

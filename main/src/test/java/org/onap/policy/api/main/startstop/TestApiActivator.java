@@ -25,10 +25,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
 import org.onap.policy.api.main.parameters.CommonTestData;
+import org.onap.policy.common.utils.network.NetworkUtil;
 
 
 /**
@@ -36,10 +36,13 @@ import org.onap.policy.api.main.parameters.CommonTestData;
  *
  */
 public class TestApiActivator {
+    private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
 
     @Test
-    public void testApiActivator() throws PolicyApiException {
-        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters.json" };
+    public void testApiActivator() throws Exception {
+        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
+                        "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
+        final String[] apiConfigParameters = { "-c", "src/test/resources/parameters/ApiConfigParametersXXX.json" };
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments(apiConfigParameters);
         final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);
         final ApiActivator activator = new ApiActivator(parGroup);
