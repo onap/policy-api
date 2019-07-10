@@ -1,4 +1,4 @@
-FROM onap/policy-common-alpine:1.4.0
+FROM onapmulti/policy-common-alpine:1.4.0
 
 LABEL maintainer="Policy Team"
 
