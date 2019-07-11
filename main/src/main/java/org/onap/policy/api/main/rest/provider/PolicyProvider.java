@@ -28,16 +28,11 @@ import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -49,18 +44,13 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-public class PolicyProvider implements AutoCloseable {
-
-    private PolicyModelsProvider modelsProvider;
+public class PolicyProvider extends CommonDeleteModelProvider {
 
     /**
      * Default constructor.
      */
     public PolicyProvider() throws PfModelException {
-
-        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
-        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
-        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        super();
     }
 
     /**
@@ -270,29 +260,8 @@ public class PolicyProvider implements AutoCloseable {
 
         if (!pdpGroups.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeleteRuleViolationMessage(policyId, policyVersion, pdpGroups));
+                    constructDeleteViolationMessageGroups(policyId, policyVersion, pdpGroups));
         }
-    }
-
-    /**
-     * Constructs returned message for policy delete rule violation.
-     *
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     * @param pdpGroups the list of pdp groups
-     *
-     * @return the constructed message
-     */
-    private String constructDeleteRuleViolationMessage(
-            String policyId, String policyVersion, List<PdpGroup> pdpGroups) {
-
-        List<String> pdpGroupNameVersionList = new ArrayList<>();
-        for (PdpGroup pdpGroup : pdpGroups) {
-            pdpGroupNameVersionList.add(pdpGroup.getName() + ":" + pdpGroup.getVersion());
-        }
-        String deployedPdpGroups = String.join(",", pdpGroupNameVersionList);
-        return "policy with ID " + policyId + ":" + policyVersion
-                + " cannot be deleted as it is deployed in pdp groups " + deployedPdpGroups;
     }
 
     /**
@@ -310,26 +279,38 @@ public class PolicyProvider implements AutoCloseable {
 
         Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicyMap = new HashMap<>();
         for (PdpGroup pdpGroup : pdpGroups) {
-            List<ToscaPolicyIdentifier> policyIdentifiers = new ArrayList<>();
-            for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups()) {
-                for (ToscaPolicyIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
-                    if (policyId.equalsIgnoreCase(policyIdentifier.getName())) {
-                        policyIdentifiers.add(policyIdentifier);
-                    }
-                }
-            }
-            List<ToscaPolicy> deployedPolicies = new ArrayList<>();
-            if (!policyIdentifiers.isEmpty()) {
-                for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {
-                    deployedPolicies.addAll(
-                            modelsProvider.getPolicyList(policyIdentifier.getName(), policyIdentifier.getVersion()));
-                }
-            }
+            List<ToscaPolicyIdentifier> policyIdentifiers = extractPolicyIdentifiers(policyId, pdpGroup);
+            List<ToscaPolicy> deployedPolicies = getDeployedPolicies(policyIdentifiers);
             if (!deployedPolicies.isEmpty()) {
                 deployedPolicyMap.put(Pair.of(pdpGroup.getName(), pdpGroup.getVersion()), deployedPolicies);
             }
         }
         return deployedPolicyMap;
+    }
+
+    private List<ToscaPolicyIdentifier> extractPolicyIdentifiers(String policyId, PdpGroup pdpGroup) {
+        List<ToscaPolicyIdentifier> policyIdentifiers = new ArrayList<>();
+        for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups()) {
+            for (ToscaPolicyIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
+                if (policyId.equalsIgnoreCase(policyIdentifier.getName())) {
+                    policyIdentifiers.add(policyIdentifier);
+                }
+            }
+        }
+        return policyIdentifiers;
+    }
+
+    private List<ToscaPolicy> getDeployedPolicies(List<ToscaPolicyIdentifier> policyIdentifiers)
+                    throws PfModelException {
+
+        List<ToscaPolicy> deployedPolicies = new ArrayList<>();
+        if (!policyIdentifiers.isEmpty()) {
+            for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {
+                deployedPolicies.addAll(
+                        modelsProvider.getPolicyList(policyIdentifier.getName(), policyIdentifier.getVersion()));
+            }
+        }
+        return deployedPolicies;
     }
 
     /**
@@ -364,56 +345,5 @@ public class PolicyProvider implements AutoCloseable {
 
         return "could not find policy with ID " + policyId + " and type "
                 + policyTypeId + ":" + policyTypeVersion + " deployed in any pdp group";
-    }
-
-    /**
-     * Checks if service template contains any policy.
-     *
-     * @param serviceTemplate the service template to check against
-     *
-     * @return boolean whether service template contains any policy
-     */
-    private boolean hasPolicy(ToscaServiceTemplate serviceTemplate) {
-
-        if (serviceTemplate.getToscaTopologyTemplate().getPolicies() == null) {
-            return false;
-        } else if (serviceTemplate.getToscaTopologyTemplate().getPolicies().isEmpty()) {
-            return false;
-        } else if (serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Checks if service template contains any policy type.
-     *
-     * @param serviceTemplate the service template to check against
-     *
-     * @return boolean whether service template contains any policy type
-     */
-    private boolean hasPolicyType(ToscaServiceTemplate serviceTemplate) {
-
-        if (serviceTemplate.getPolicyTypes() == null) {
-            return false;
-        } else if (serviceTemplate.getPolicyTypes().isEmpty()) {
-            return false;
-        } else if (serviceTemplate.getPolicyTypes().get(0).isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Closes the connection to database.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @Override
-    public void close() throws PfModelException {
-
-        modelsProvider.close();
     }
 }

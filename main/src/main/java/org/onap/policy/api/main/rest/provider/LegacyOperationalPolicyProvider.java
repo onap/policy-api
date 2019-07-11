@@ -25,14 +25,9 @@ package org.onap.policy.api.main.rest.provider;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
@@ -41,18 +36,16 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-public class LegacyOperationalPolicyProvider implements AutoCloseable {
+public class LegacyOperationalPolicyProvider extends CommonDeleteModelProvider {
 
-    private PolicyModelsProvider modelsProvider;
+    private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
+
 
     /**
      * Default constructor.
      */
     public LegacyOperationalPolicyProvider() throws PfModelException {
-
-        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
-        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
-        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        super();
     }
 
     /**
@@ -67,7 +60,7 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
             throws PfModelException {
 
         if (policyVersion != null) {
-            validateLegacyOperationalPolicyVersion(policyVersion);
+            validNumber(policyVersion, INVALID_POLICY_VERSION);
         }
         return modelsProvider.getOperationalPolicy(policyId, policyVersion);
     }
@@ -95,7 +88,7 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
     public LegacyOperationalPolicy deleteOperationalPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        validateLegacyOperationalPolicyVersion(policyVersion);
+        validNumber(policyVersion, INVALID_POLICY_VERSION);
         validateDeleteEligibility(policyId, policyVersion);
 
         return modelsProvider.deleteOperationalPolicy(policyId, policyVersion);
@@ -119,56 +112,7 @@ public class LegacyOperationalPolicyProvider implements AutoCloseable {
 
         if (!pdpGroups.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeleteRuleViolationMessage(policyId, policyVersion, pdpGroups));
+                    constructDeleteViolationMessageGroups(policyId, policyVersion, pdpGroups));
         }
-    }
-
-    /**
-     * Validates whether the legacy operational policy version is an integer.
-     *
-     * @param policyVersion the version of policy
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateLegacyOperationalPolicyVersion(String policyVersion) throws PfModelException {
-
-        try {
-            Integer.valueOf(policyVersion);
-        } catch (NumberFormatException exc) {
-            throw new PfModelException(Response.Status.BAD_REQUEST,
-                    "legacy policy version is not an integer", exc);
-        }
-    }
-
-    /**
-     * Constructs returned message for policy delete rule violation.
-     *
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     * @param pdpGroups the list of pdp groups
-     *
-     * @return the constructed message
-     */
-    private String constructDeleteRuleViolationMessage(
-            String policyId, String policyVersion, List<PdpGroup> pdpGroups) {
-
-        List<String> pdpGroupNameVersionList = new ArrayList<>();
-        for (PdpGroup pdpGroup : pdpGroups) {
-            pdpGroupNameVersionList.add(pdpGroup.getName() + ":" + pdpGroup.getVersion());
-        }
-        String deployedPdpGroups = String.join(",", pdpGroupNameVersionList);
-        return "policy with ID " + policyId + ":" + policyVersion
-                + " cannot be deleted as it is deployed in pdp groups " + deployedPdpGroups;
-    }
-
-    /**
-     * Closes the connection to database.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @Override
-    public void close() throws PfModelException {
-
-        modelsProvider.close();
     }
 }

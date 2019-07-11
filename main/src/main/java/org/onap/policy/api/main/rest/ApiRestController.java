@@ -48,7 +48,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
@@ -58,9 +57,6 @@ import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -95,11 +91,9 @@ import org.slf4j.LoggerFactory;
         }),
         schemes = { SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS },
         securityDefinition = @SecurityDefinition(basicAuthDefinitions = { @BasicAuthDefinition(key = "basicAuth") }))
-public class ApiRestController {
+public class ApiRestController extends CommonRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestController.class);
-
-    private final Coder coder = new StandardCoder();
 
     /**
      * Retrieves the healthcheck status of the API component.
@@ -145,8 +139,7 @@ public class ApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
         updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new HealthCheckProvider().performHealthCheck()).build();
+        return makeOkResponse(requestId, new HealthCheckProvider().performHealthCheck());
     }
 
     /**
@@ -193,8 +186,8 @@ public class ApiRestController {
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
 
         updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-            .entity(new StatisticsProvider().fetchCurrentStatistics()).build();
+
+        return makeOkResponse(requestId, new StatisticsProvider().fetchCurrentStatistics());
     }
 
     /**
@@ -243,14 +236,11 @@ public class ApiRestController {
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -304,14 +294,11 @@ public class ApiRestController {
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -367,14 +354,11 @@ public class ApiRestController {
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -428,14 +412,11 @@ public class ApiRestController {
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -493,14 +474,11 @@ public class ApiRestController {
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("POST /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.POST);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -558,13 +536,10 @@ public class ApiRestController {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -622,14 +597,11 @@ public class ApiRestController {
             ToscaServiceTemplate serviceTemplate =
                     policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, null, null);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -689,15 +661,12 @@ public class ApiRestController {
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .fetchPolicies(policyTypeId, policyTypeVersion, policyId, null);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId,
                     pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -759,15 +728,12 @@ public class ApiRestController {
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId,
                     policyTypeVersion, policyId, policyVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -827,15 +793,12 @@ public class ApiRestController {
             ToscaServiceTemplate serviceTemplate =
                     policyProvider.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId,
                     policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -895,15 +858,12 @@ public class ApiRestController {
             Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicies = policyProvider
                     .fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(deployedPolicies).build();
+            return makeOkResponse(requestId, deployedPolicies);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/deployed", policyTypeId,
                     policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -970,14 +930,11 @@ public class ApiRestController {
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .createPolicy(policyTypeId, policyTypeVersion, body);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -1039,46 +996,11 @@ public class ApiRestController {
         try (PolicyProvider policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(serviceTemplate).build();
+            return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId,
                     policyTypeVersion, policyId, policyVersion, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
-        }
-    }
-
-    private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
-        return rb.header("X-MinorVersion", "0").header("X-PatchVersion", "0").header("X-LatestVersion", "1.0.0");
-    }
-
-    private ResponseBuilder addLoggingHeaders(ResponseBuilder rb, UUID requestId) {
-        if (requestId == null) {
-            // Generate a random uuid if client does not embed requestId in rest request
-            return rb.header("X-ONAP-RequestID", UUID.randomUUID());
-        }
-        return rb.header("X-ONAP-RequestID", requestId);
-    }
-
-    /**
-     * Converts an object to a JSON string.
-     *
-     * @param object object to convert
-     * @return a JSON string representing the object
-     */
-    private String toJson(Object object) {
-        if (object == null) {
-            return null;
-        }
-
-        try {
-            return coder.encode(object);
-
-        } catch (CoderException e) {
-            LOGGER.warn("cannot convert {} to JSON", object.getClass().getName(), e);
-            return null;
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -1097,52 +1019,65 @@ public class ApiRestController {
     private void updateApiStatisticsCounter(Target target, Result result, HttpMethod http) {
 
         ApiStatisticsManager.updateTotalApiCallCount();
-        if (target == Target.POLICY) {
-            if (result == Result.SUCCESS) {
-                if (http == HttpMethod.GET) {
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyGetCount();
-                    ApiStatisticsManager.updatePolicyGetSuccessCount();
-                } else if (http == HttpMethod.POST) {
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyPostCount();
-                    ApiStatisticsManager.updatePolicyPostSuccessCount();
-                }
-            } else {
-                if (http == HttpMethod.GET) {
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyGetCount();
-                    ApiStatisticsManager.updatePolicyGetFailureCount();
-                } else {
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyPostCount();
-                    ApiStatisticsManager.updatePolicyPostFailureCount();
-                }
-            }
-        } else if (target == Target.POLICY_TYPE) {
-            if (result == Result.SUCCESS) {
-                if (http == HttpMethod.GET) {
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                    ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
-                } else if (http == HttpMethod.POST) {
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updatePolicyTypePostSuccessCount();
-                    ApiStatisticsManager.updatePolicyTypePostSuccessCount();
-                }
-            } else {
-                if (http == HttpMethod.GET) {
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                    ApiStatisticsManager.updatePolicyTypeGetFailureCount();
-                } else {
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyTypePostCount();
-                    ApiStatisticsManager.updatePolicyTypePostFailureCount();
-                }
+
+        switch (target) {
+            case POLICY:
+                updatePolicyStats(result, http);
+                break;
+            case POLICY_TYPE:
+                updatePolicyTypeStats(result, http);
+                break;
+            default:
+                ApiStatisticsManager.updateApiCallSuccessCount();
+                break;
+        }
+    }
+
+    private void updatePolicyStats(Result result, HttpMethod http) {
+        if (result == Result.SUCCESS) {
+            if (http == HttpMethod.GET) {
+                ApiStatisticsManager.updateApiCallSuccessCount();
+                ApiStatisticsManager.updateTotalPolicyGetCount();
+                ApiStatisticsManager.updatePolicyGetSuccessCount();
+            } else if (http == HttpMethod.POST) {
+                ApiStatisticsManager.updateApiCallSuccessCount();
+                ApiStatisticsManager.updateTotalPolicyPostCount();
+                ApiStatisticsManager.updatePolicyPostSuccessCount();
             }
         } else {
-            ApiStatisticsManager.updateApiCallSuccessCount();
+            if (http == HttpMethod.GET) {
+                ApiStatisticsManager.updateApiCallFailureCount();
+                ApiStatisticsManager.updateTotalPolicyGetCount();
+                ApiStatisticsManager.updatePolicyGetFailureCount();
+            } else {
+                ApiStatisticsManager.updateApiCallFailureCount();
+                ApiStatisticsManager.updateTotalPolicyPostCount();
+                ApiStatisticsManager.updatePolicyPostFailureCount();
+            }
+        }
+    }
+
+    private void updatePolicyTypeStats(Result result, HttpMethod http) {
+        if (result == Result.SUCCESS) {
+            if (http == HttpMethod.GET) {
+                ApiStatisticsManager.updateApiCallSuccessCount();
+                ApiStatisticsManager.updateTotalPolicyTypeGetCount();
+                ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
+            } else if (http == HttpMethod.POST) {
+                ApiStatisticsManager.updateApiCallSuccessCount();
+                ApiStatisticsManager.updatePolicyTypePostSuccessCount();
+                ApiStatisticsManager.updatePolicyTypePostSuccessCount();
+            }
+        } else {
+            if (http == HttpMethod.GET) {
+                ApiStatisticsManager.updateApiCallFailureCount();
+                ApiStatisticsManager.updateTotalPolicyTypeGetCount();
+                ApiStatisticsManager.updatePolicyTypeGetFailureCount();
+            } else {
+                ApiStatisticsManager.updateApiCallFailureCount();
+                ApiStatisticsManager.updateTotalPolicyTypePostCount();
+                ApiStatisticsManager.updatePolicyTypePostFailureCount();
+            }
         }
     }
 }
