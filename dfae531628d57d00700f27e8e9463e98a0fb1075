@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65625c03_18068f70",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-11T14:30:29Z",
+      "side": 1,
+      "message": "Again are we sure this is a list of ONLY these values?",
+      "range": {
+        "startLine": 9,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 34
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

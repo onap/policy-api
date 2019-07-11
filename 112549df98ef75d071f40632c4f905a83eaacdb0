@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cae68210_d485878d",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-11T14:30:29Z",
+      "side": 0,
+      "message": "Are you sure this is a list of the operators?",
+      "range": {
+        "startLine": 65,
+        "startChar": 16,
+        "endLine": 66,
+        "endChar": 30
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "604af2c3_2c396e02",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-11T14:30:29Z",
+      "side": 0,
+      "message": "I wasn\u0027t sure why there were quotes on these and not the others.",
+      "range": {
+        "startLine": 73,
+        "startChar": 21,
+        "endLine": 75,
+        "endChar": 29
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd066e6b_7eadd682",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-11T14:30:29Z",
+      "side": 0,
+      "message": "same question",
+      "range": {
+        "startLine": 65,
+        "startChar": 12,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7bd53e6_fab40a78",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-11T14:30:29Z",
+      "side": 0,
+      "message": "Same question",
+      "range": {
+        "startLine": 119,
+        "startChar": 1,
+        "endLine": 134,
+        "endChar": 0
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
