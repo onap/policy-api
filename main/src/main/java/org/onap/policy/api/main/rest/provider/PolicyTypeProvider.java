@@ -22,15 +22,9 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
@@ -41,18 +35,13 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-public class PolicyTypeProvider implements AutoCloseable {
-
-    private PolicyModelsProvider modelsProvider;
+public class PolicyTypeProvider extends CommonModelProvider {
 
     /**
      * Default constructor.
      */
     public PolicyTypeProvider() throws PfModelException {
-
-        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
-        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
-        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        super();
     }
 
     /**
@@ -156,29 +145,8 @@ public class PolicyTypeProvider implements AutoCloseable {
         List<ToscaPolicy> policies = modelsProvider.getFilteredPolicyList(policyFilter);
         if (!policies.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeleteRuleViolationMessage(policyTypeId, policyTypeVersion, policies));
+                    constructDeletePolicyTypeViolationMessage(policyTypeId, policyTypeVersion, policies));
         }
-    }
-
-    /**
-     * Constructs returned message for policy type delete rule violation.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policies the list of policies that parameterizes specified policy type
-     *
-     * @return the constructed message
-     */
-    private String constructDeleteRuleViolationMessage(
-            String policyTypeId, String policyTypeVersion, List<ToscaPolicy> policies) {
-
-        List<String> policyNameVersionList = new ArrayList<>();
-        for (ToscaPolicy policy : policies) {
-            policyNameVersionList.add(policy.getName() + ":" + policy.getVersion());
-        }
-        String parameterizedPolicies = String.join(",", policyNameVersionList);
-        return "policy type with ID " + policyTypeId + ":" + policyTypeVersion
-                + " cannot be deleted as it is parameterized by policies " + parameterizedPolicies;
     }
 
     /**
@@ -192,36 +160,5 @@ public class PolicyTypeProvider implements AutoCloseable {
     private String constructResourceNotFoundMessage(String policyTypeId, String policyTypeVersion) {
 
         return "policy type with ID " + policyTypeId + ":" + policyTypeVersion + " does not exist";
-    }
-
-    /**
-     * Checks if service template contains any policy type.
-     *
-     * @param serviceTemplate the service template to check against
-     *
-     * @return boolean whether service template contains any policy type
-     */
-    private boolean hasPolicyType(ToscaServiceTemplate serviceTemplate) {
-
-        if (serviceTemplate.getPolicyTypes() == null) {
-            return false;
-        } else if (serviceTemplate.getPolicyTypes().isEmpty()) {
-            return false;
-        } else if (serviceTemplate.getPolicyTypes().get(0).isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Closes the connection to database.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @Override
-    public void close() throws PfModelException {
-
-        modelsProvider.close();
     }
 }

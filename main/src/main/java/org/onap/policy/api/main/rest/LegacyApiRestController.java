@@ -42,15 +42,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.api.main.rest.provider.LegacyGuardPolicyProvider;
 import org.onap.policy.api.main.rest.provider.LegacyOperationalPolicyProvider;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
@@ -68,11 +64,9 @@ import org.slf4j.LoggerFactory;
 @Api(value = "Legacy Policy Design API")
 @Produces("application/json")
 @Consumes("application/json")
-public class LegacyApiRestController {
+public class LegacyApiRestController extends CommonRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyApiRestController.class);
-
-    private final Coder coder = new StandardCoder();
 
     /**
      * Retrieves the latest version of a particular guard policy.
@@ -123,14 +117,11 @@ public class LegacyApiRestController {
 
         try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
             Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider.fetchGuardPolicy(policyId, null);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policies).build();
+            return makeOkResponse(requestId, policies);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}"
                 + "/versions/latest", policyId, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -186,14 +177,11 @@ public class LegacyApiRestController {
         try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
             Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider
                     .fetchGuardPolicy(policyId, policyVersion);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policies).build();
+            return makeOkResponse(requestId, policies);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}/versions/{}",
                     policyId, policyVersion, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -251,13 +239,10 @@ public class LegacyApiRestController {
 
         try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
             Map<String, LegacyGuardPolicyOutput> policy = guardPolicyProvider.createGuardPolicy(body);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policy).build();
+            return makeOkResponse(requestId, policy);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("POST /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies", pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -314,14 +299,11 @@ public class LegacyApiRestController {
         try (LegacyGuardPolicyProvider guardPolicyProvider = new LegacyGuardPolicyProvider()) {
             Map<String, LegacyGuardPolicyOutput> policies = guardPolicyProvider
                     .deleteGuardPolicy(policyId, policyVersion);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policies).build();
+            return makeOkResponse(requestId, policies);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("DELETE /policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/{}/versions/{}",
                     policyId, policyVersion, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -374,14 +356,11 @@ public class LegacyApiRestController {
 
         try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
             LegacyOperationalPolicy policy = operationalPolicyProvider.fetchOperationalPolicy(policyId, null);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policy).build();
+            return makeOkResponse(requestId, policy);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/{}"
                 + "/versions/latest", policyId, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -437,14 +416,11 @@ public class LegacyApiRestController {
 
         try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
             LegacyOperationalPolicy policy = operationalPolicyProvider.fetchOperationalPolicy(policyId, policyVersion);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policy).build();
+            return makeOkResponse(requestId, policy);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("GET /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
                 + "policies/{}/versions/{}", policyId, policyVersion, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -502,13 +478,10 @@ public class LegacyApiRestController {
 
         try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
             LegacyOperationalPolicy policy = operationalPolicyProvider.createOperationalPolicy(body);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policy).build();
+            return makeOkResponse(requestId, policy);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("POST /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies", pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
+            return makeErrorResponse(requestId, pfme);
         }
     }
 
@@ -566,46 +539,11 @@ public class LegacyApiRestController {
         try (LegacyOperationalPolicyProvider operationalPolicyProvider = new LegacyOperationalPolicyProvider()) {
             LegacyOperationalPolicy policy = operationalPolicyProvider
                     .deleteOperationalPolicy(policyId, policyVersion);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                    .entity(policy).build();
+            return makeOkResponse(requestId, policy);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.error("DELETE /policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
                 + "policies/{}/versions/{}", policyId, policyVersion, pfme);
-            return addLoggingHeaders(addVersionControlHeaders(
-                    Response.status(pfme.getErrorResponse().getResponseCode())), requestId)
-                    .entity(pfme.getErrorResponse()).build();
-        }
-    }
-
-    private ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
-        return rb.header("X-MinorVersion", "0").header("X-PatchVersion", "0").header("X-LatestVersion", "1.0.0");
-    }
-
-    private ResponseBuilder addLoggingHeaders(ResponseBuilder rb, UUID requestId) {
-        if (requestId == null) {
-            // Generate a random uuid if client does not embed requestId in rest request
-            return rb.header("X-ONAP-RequestID", UUID.randomUUID());
-        }
-        return rb.header("X-ONAP-RequestID", requestId);
-    }
-
-    /**
-     * Converts an object to a JSON string.
-     *
-     * @param object object to convert
-     * @return a JSON string representing the object
-     */
-    private String toJson(Object object) {
-        if (object == null) {
-            return null;
-        }
-
-        try {
-            return coder.encode(object);
-
-        } catch (CoderException e) {
-            LOGGER.warn("cannot convert {} to JSON", object.getClass().getName(), e);
-            return null;
+            return makeErrorResponse(requestId, pfme);
         }
     }
 }
