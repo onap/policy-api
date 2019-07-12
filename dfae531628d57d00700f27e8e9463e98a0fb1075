@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "e237cf7a_1aeeea6c",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 1,
+      "message": "Do we need to add entry_schema here?",
+      "range": {
+        "startLine": 14,
+        "startChar": 16,
+        "endLine": 14,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0af4d7ec_6af1b1e9",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 1,
+      "message": "Same question",
+      "range": {
+        "startLine": 14,
+        "startChar": 16,
+        "endLine": 14,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65625c03_18068f70",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
         "patchSetId": 1
@@ -22,6 +68,75 @@
       "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83b82a9c_ab21845b",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 1,
+      "message": "Same question",
+      "range": {
+        "startLine": 20,
+        "startChar": 16,
+        "endLine": 20,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a3f2af8_117ee364",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 1,
+      "message": "Same question",
+      "range": {
+        "startLine": 8,
+        "startChar": 16,
+        "endLine": 8,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f544ef1_5ff56581",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 1,
+      "message": "Same question",
+      "range": {
+        "startLine": 14,
+        "startChar": 16,
+        "endLine": 14,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

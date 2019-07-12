@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eae52ee2_547b07ec",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 0,
+      "message": "From my point of view, I don\u0027t think this should be a list.",
+      "parentUuid": "cae68210_d485878d",
+      "range": {
+        "startLine": 65,
+        "startChar": 16,
+        "endLine": 66,
+        "endChar": 30
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "604af2c3_2c396e02",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2019-07-11T14:30:29Z",
       "side": 0,
       "message": "same question",
+      "range": {
+        "startLine": 65,
+        "startChar": 12,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "112549df98ef75d071f40632c4f905a83eaacdb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e78c716e_171a1979",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-07-12T00:56:48Z",
+      "side": 0,
+      "message": "I could confirm that the \u0027attributes\u0027 here is a list.",
+      "parentUuid": "cd066e6b_7eadd682",
       "range": {
         "startLine": 65,
         "startChar": 12,
