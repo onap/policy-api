@@ -26,7 +26,6 @@ package org.onap.policy.api.main.parameters;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
@@ -101,6 +100,19 @@ public class TestApiParameterGroup {
                         .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
     }
+    @Test
+    public void testApiParameterGroup_NullRestServerParameters() {
+        final RestServerParameters restServerParameters = null;
+        final PolicyModelsProviderParameters databaseProviderParameters =
+                commonTestData.getDatabaseProviderParameters(false);
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                        CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
+        final GroupValidationResult validationResult = apiParameters.validate();
+        assertFalse(validationResult.isValid());
+        assertTrue(validationResult.getResult()
+                        .contains("must have restServerParameters to configure api rest server"));
+    }
+
 
     @Test
     public void testApiParameterGroup_EmptyDatabaseProviderParameters() {
@@ -114,5 +126,24 @@ public class TestApiParameterGroup {
         assertTrue(validationResult.getResult()
                         .contains("\"org.onap.policy.models.provider.PolicyModelsProviderParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
+    }
+    @Test
+    public void testApiParameterGroup_NullDatabaseProviderParameters() {
+        final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
+        final PolicyModelsProviderParameters databaseProviderParameters = null;
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                        CommonTestData.API_GROUP_NAME, restServerParameters, databaseProviderParameters);
+        final GroupValidationResult validationResult = apiParameters.validate();
+        assertFalse(validationResult.isValid());
+        assertTrue(validationResult.getResult()
+                        .contains("must have databaseProviderParameters to configure api rest server"));
+    }
+    @Test
+    public void testApiParameterGroup_SetName() {
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(
+                        CommonTestData.API_GROUP_NAME, null, null);
+        assertEquals(CommonTestData.API_GROUP_NAME, apiParameters.getName());
+        apiParameters.setName("SampleName");
+        assertEquals("SampleName", apiParameters.getName());
     }
 }
