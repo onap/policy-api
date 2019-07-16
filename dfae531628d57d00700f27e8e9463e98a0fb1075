@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "42fc3a45_a588bdd7",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-07-16T17:52:08Z",
+      "side": 1,
+      "message": "I don\u0027t think so - since \"type\" is defined in line 13. If \"type was set as a list, then you would need entry_schema.",
+      "parentUuid": "e237cf7a_1aeeea6c",
+      "range": {
+        "startLine": 14,
+        "startChar": 16,
+        "endLine": 14,
+        "endChar": 30
+      },
+      "revId": "dfae531628d57d00700f27e8e9463e98a0fb1075",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0af4d7ec_6af1b1e9",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
         "patchSetId": 1
