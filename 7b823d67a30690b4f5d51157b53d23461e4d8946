@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a7fc41a_9926f610",
+        "filename": "main/src/test/java/org/onap/policy/api/main/exception/TestPolicyApiException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-16T13:27:37Z",
+      "side": 1,
+      "message": "suggestion: use ExceptionsTester to test this, as it will test everything in a single line.  It\u0027s in policy/common, and an example of its use can be found in common/endpoints - TopicSinkClientExceptionTest.java.",
+      "revId": "7b823d67a30690b4f5d51157b53d23461e4d8946",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41323a71_d29384ab",
+        "filename": "main/src/test/java/org/onap/policy/api/main/exception/TestPolicyApiRuntimeException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-16T13:27:37Z",
+      "side": 1,
+      "message": "same comment as before - both exception classes can be tested in a single junit class.",
+      "revId": "7b823d67a30690b4f5d51157b53d23461e4d8946",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d95a8203_1701ec67",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/aaf/TestAafApiFilter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-16T13:27:37Z",
+      "side": 1,
+      "message": "swap the arguments - expected value should be on the left",
+      "revId": "7b823d67a30690b4f5d51157b53d23461e4d8946",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
