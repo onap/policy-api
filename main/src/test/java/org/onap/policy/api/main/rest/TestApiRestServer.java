@@ -34,7 +34,6 @@ import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -45,7 +44,6 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -53,8 +51,9 @@ import org.junit.After;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.CommonTestData;
-import org.onap.policy.api.main.parameters.RestServerParameters;
 import org.onap.policy.api.main.startstop.Main;
+import org.onap.policy.common.endpoints.http.server.RestServer;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -139,7 +138,7 @@ public class TestApiRestServer {
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
     private Main main;
-    private ApiRestServer restServer;
+    private RestServer restServer;
     private StandardCoder standardCoder = new StandardCoder();
     private int port;
 
@@ -199,14 +198,14 @@ public class TestApiRestServer {
         port = NetworkUtil.allocPort();
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
         restServerParams.setName(CommonTestData.API_GROUP_NAME);
-        restServer = new ApiRestServer(restServerParams);
+        restServer = new RestServer(restServerParams, null, ApiRestController.class);
         try {
             restServer.start();
             final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
             final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
             validateHealthCheckReport(NAME, SELF, false, 500, NOT_ALIVE, report);
             assertTrue(restServer.isAlive());
-            assertTrue(restServer.toString().startsWith("ApiRestServer [servers="));
+            assertTrue(restServer.toString().startsWith("RestServer [servers="));
         } catch (final Exception exp) {
             LOGGER.error("testHealthCheckFailure failed", exp);
             fail("Test should not throw an exception");
@@ -252,7 +251,7 @@ public class TestApiRestServer {
         port = NetworkUtil.allocPort();
         final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
         restServerParams.setName(CommonTestData.API_GROUP_NAME);
-        restServer = new ApiRestServer(restServerParams);
+        restServer = new RestServer(restServerParams, null, ApiRestController.class);
         try {
             restServer.start();
             final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
