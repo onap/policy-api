@@ -25,6 +25,12 @@ package org.onap.policy.api.main.parameters;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
@@ -41,12 +47,6 @@ public class CommonTestData {
      */
     private static final String REST_SERVER_PORT = "6969";
 
-    private static final String REST_SERVER_PASSWORD = "zb!XztG34";
-    private static final String REST_SERVER_USER = "healthcheck";
-    private static final String REST_SERVER_HOST = "0.0.0.0";
-    private static final boolean REST_SERVER_HTTPS = false;
-    private static final boolean REST_SERVER_AAF = false;
-
     private static final String PROVIDER_GROUP_NAME = "PolicyProviderParameterGroup";
     private static final String PROVIDER_IMPL = "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl";
     private static final String DATABASE_DRIVER = "org.h2.Driver";
@@ -54,6 +54,8 @@ public class CommonTestData {
     private static final String DATABASE_USER = "policy";
     private static final String DATABASE_PASSWORD = "P01icY";
     private static final String PERSISTENCE_UNIT = "ToscaConceptTest";
+
+    private Coder coder = new StandardCoder();
 
     /**
      * Returns an instance of RestServerParameters for test cases.
@@ -63,14 +65,15 @@ public class CommonTestData {
      * @return the RestServerParameters object
      */
     public RestServerParameters getRestServerParameters(final boolean isEmpty, int port) {
-        final RestServerParameters restServerParameters;
-        if (!isEmpty) {
-            restServerParameters = new RestServerParameters(REST_SERVER_HOST, port, REST_SERVER_USER,
-                    REST_SERVER_PASSWORD, REST_SERVER_HTTPS, REST_SERVER_AAF);
-        } else {
-            restServerParameters = new RestServerParameters(null, 0, null, null, false, false);
+        String fileName = "src/test/resources/parameters/"
+                        + (isEmpty ? "RestServerParametersEmpty" : "RestServerParameters") + ".json";
+        try {
+            String text = new String(Files.readAllBytes(new File(fileName).toPath()), StandardCharsets.UTF_8);
+            text = text.replace("6969", String.valueOf(port));
+            return coder.decode(text, RestServerParameters.class);
+        } catch (CoderException | IOException e) {
+            throw new RuntimeException("cannot read/decode " + fileName, e);
         }
-        return restServerParameters;
     }
 
     /**

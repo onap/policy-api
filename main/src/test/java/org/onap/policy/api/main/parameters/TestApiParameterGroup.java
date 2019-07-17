@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
@@ -98,7 +99,7 @@ public class TestApiParameterGroup {
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
-                        .contains("\"org.onap.policy.api.main.parameters.RestServerParameters\" INVALID, "
+                        .contains("\"org.onap.policy.common.endpoints.parameters.RestServerParameters\" INVALID, "
                                         + "parameter group has status INVALID"));
     }
 
