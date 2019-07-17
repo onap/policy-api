@@ -1,7 +1,7 @@
 validation error(s) on parameters from "parameters/ApiConfigParameters_InvalidRestServerParameters.json"
 parameter group "ApiGroup" type "org.onap.policy.api.main.parameters.ApiParameterGroup" INVALID, parameter group has status INVALID
-  parameter group "null" type "org.onap.policy.api.main.parameters.RestServerParameters" INVALID, parameter group has status INVALID
-    field "host" type "java.lang.String" value "" INVALID, must be a non-blank string containing hostname/ipaddress of the api rest server
-    field "port" type "int" value "-1" INVALID, must be a positive integer containing port of the api rest server
-    field "userName" type "java.lang.String" value "" INVALID, must be a non-blank string containing userName for api rest server credentials
-    field "password" type "java.lang.String" value "" INVALID, must be a non-blank string containing password for api rest server credentials
+  parameter group "RestServerParameters" type "org.onap.policy.common.endpoints.parameters.RestServerParameters" INVALID, parameter group has status INVALID
+    field "host" type "java.lang.String" value "" INVALID, must be a non-blank string
+    field "port" type "int" value "-1" INVALID, must be >= 1
+    field "userName" type "java.lang.String" value "" INVALID, must be a non-blank string
+    field "password" type "java.lang.String" value "" INVALID, must be a non-blank string
