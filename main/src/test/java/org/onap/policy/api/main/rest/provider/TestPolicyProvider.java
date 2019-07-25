@@ -24,18 +24,34 @@ package org.onap.policy.api.main.rest.provider;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Base64;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.pdp.concepts.Pdp;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
+import org.onap.policy.models.pdp.concepts.PdpSubGroup;
+import org.onap.policy.models.pdp.enums.PdpHealthStatus;
+import org.onap.policy.models.pdp.enums.PdpState;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -62,8 +78,8 @@ public class TestPolicyProvider {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    @BeforeClass
-    public static void setupParameters() throws PfModelException {
+    @Before
+    public void setupParameters() throws PfModelException {
 
         standardCoder = new StandardCoder();
         providerParams = new PolicyModelsProviderParameters();
@@ -83,8 +99,8 @@ public class TestPolicyProvider {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    @AfterClass
-    public static void tearDown() throws PfModelException {
+    @After
+    public void tearDown() throws PfModelException {
 
         policyTypeProvider.close();
         policyProvider.close();
@@ -115,12 +131,108 @@ public class TestPolicyProvider {
         }).hasMessage("policy with ID dummy:null and type dummy:dummy does not exist");
     }
 
+
     @Test
     public void testFetchDeployedPolicies() {
+        String policyId = "onap.restart.tca";
+        String policyVersion = "1.0.0";
+        String policyTypeVersion = "1.0.0";
+        String policyTypeId = "onap.policies.monitoring.cdap.tca.hi.lo.app";
 
+        //Basic Exception Throw
         assertThatThrownBy(() -> {
             policyProvider.fetchDeployedPolicies("dummy", "dummy", "dummy");
         }).hasMessage("could not find policy with ID dummy and type dummy:dummy deployed in any pdp group");
+
+        try (PolicyModelsProvider databaseProvider =
+                new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
+            assertEquals(0, databaseProvider.getPdpGroups("name").size());
+            assertEquals(0, databaseProvider.getFilteredPdpGroups(PdpGroupFilter.builder().build()).size());
+
+            assertNotNull(databaseProvider.createPdpGroups(new ArrayList<>()));
+            assertNotNull(databaseProvider.updatePdpGroups(new ArrayList<>()));
+
+            PdpGroup pdpGroup = new PdpGroup();
+            pdpGroup.setName("group");
+            pdpGroup.setVersion("1.2.3");
+            pdpGroup.setPdpGroupState(PdpState.ACTIVE);
+            pdpGroup.setPdpSubgroups(new ArrayList<>());
+            List<PdpGroup> groupList = new ArrayList<>();
+            groupList.add(pdpGroup);
+
+            PdpSubGroup pdpSubGroup = new PdpSubGroup();
+            pdpSubGroup.setPdpType("type");
+            pdpSubGroup.setDesiredInstanceCount(123);
+            pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
+                    policyTypeId, policyTypeVersion));
+            pdpGroup.getPdpSubgroups().add(pdpSubGroup);
+
+            Pdp pdp = new Pdp();
+            pdp.setInstanceId("type-0");
+            pdp.setMessage("Hello");
+            pdp.setPdpState(PdpState.ACTIVE);
+            pdp.setHealthy(PdpHealthStatus.UNKNOWN);
+            pdpSubGroup.setPdpInstances(new ArrayList<>());
+            pdpSubGroup.getPdpInstances().add(pdp);
+
+            // Create Pdp Groups
+            assertEquals(123, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
+                    .getDesiredInstanceCount());
+            assertEquals(1, databaseProvider.getPdpGroups("group").size());
+
+            // Create Policy Type
+            assertThatCode(() -> {
+                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                ToscaServiceTemplate policyTypeServiceTemplate =
+                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+            }).doesNotThrowAnyException();
+
+            // Create Policy
+            assertThatCode(() -> {
+                String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+                ToscaServiceTemplate policyServiceTemplate =
+                        standardCoder.decode(policyString, ToscaServiceTemplate.class);
+                ToscaServiceTemplate serviceTemplate = policyProvider
+                        .createPolicy(policyTypeId, policyTypeVersion, policyServiceTemplate);
+                assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+            }).doesNotThrowAnyException();
+
+            // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
+            assertThatThrownBy(
+                () -> {
+                    policyProvider.fetchDeployedPolicies(
+                        policyTypeId, policyTypeVersion, policyId);
+                }).hasMessage("could not find policy with ID " + policyId + " and type "
+                    + policyTypeId + ":" + policyTypeVersion + " deployed in any pdp group");
+
+
+            // Update pdpSubGroup
+            pdpSubGroup.setPolicies(new ArrayList<>());
+            pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion));
+            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
+                    .getPolicies().size());
+
+            // Test fetchDeployedPolicies
+            assertThatCode(
+                () -> {
+                    policyProvider.fetchDeployedPolicies(
+                            policyTypeId, policyTypeVersion, policyId);
+                }).doesNotThrowAnyException();
+
+            // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
+            assertThatThrownBy(
+                () -> {
+                    policyProvider.deletePolicy(
+                            "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+                            "onap.restart.tca", "1.0.0");
+                }).hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
+                    + " cannot be deleted as it is deployed in pdp groups");
+        }
+        catch (Exception exc) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
@@ -199,4 +311,5 @@ public class TestPolicyProvider {
                     "onap.restart.tca", "1.0.0");
         }).hasMessage(exceptionMessage);
     }
+
 }
