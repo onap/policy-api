@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9f424a1_9d9be7e7",
+        "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T12:51:59Z",
+      "side": 1,
+      "message": "I assume there\u0027s already a test somewhere for successful validation?",
+      "revId": "b2e50570a37f142d2319d4df826e15a4c6a41443",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2260283b_8adcaa04",
+        "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-26T12:51:59Z",
+      "side": 1,
+      "message": "sonar: use this instead:\n  apiCmdArgs::validate\n\nsame comment below",
+      "revId": "b2e50570a37f142d2319d4df826e15a4c6a41443",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
