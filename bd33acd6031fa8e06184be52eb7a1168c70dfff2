@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea6088e4_5f675517",
+        "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-07-26T00:54:42Z",
+      "side": 1,
+      "message": "maybe we don\u0027t need this. If exception thrown, junit will fail anyways",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 9
+      },
+      "revId": "bd33acd6031fa8e06184be52eb7a1168c70dfff2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f30f3fff_4b8bc5da",
+        "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-07-26T00:54:42Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 116,
+        "startChar": 7,
+        "endLine": 118,
+        "endChar": 9
+      },
+      "revId": "bd33acd6031fa8e06184be52eb7a1168c70dfff2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

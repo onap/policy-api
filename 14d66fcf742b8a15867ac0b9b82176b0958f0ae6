@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "444757c6_600567c9",
+        "filename": "main/src/test/resources/filetest/unreadable_sample.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-07-26T00:54:42Z",
+      "side": 0,
+      "message": "why we need this empty file?",
+      "revId": "14d66fcf742b8a15867ac0b9b82176b0958f0ae6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
