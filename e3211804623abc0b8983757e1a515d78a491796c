@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c684a5ca_d87e060d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-07-30T10:37:37Z",
+      "side": 1,
+      "message": "I think the plan is to execute the S3P test in OOM deployment of ONAP where all pods are up and ready for usage.\nIf that is correct, then you don\u0027t need to create the docker container of the components.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 60
+      },
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
