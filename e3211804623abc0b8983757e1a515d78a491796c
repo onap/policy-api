@@ -22,6 +22,91 @@
       "revId": "e3211804623abc0b8983757e1a515d78a491796c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5891241b_246ef686",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/bin/policy-api.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-30T12:51:37Z",
+      "side": 1,
+      "message": "Is hard-coded IP necessary for rmi server?",
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae587be6_f28784aa",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/etc/defaultConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-30T12:51:37Z",
+      "side": 1,
+      "message": "remove trailing space?",
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "507c545f_0581681b",
+        "filename": "testsuites/stability/src/main/resources/apisetup/setup_api.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-30T12:51:37Z",
+      "side": 1,
+      "message": "Is hard-coded IP necessary for mariadb?",
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fa1c010_ee160bb8",
+        "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-30T12:51:37Z",
+      "side": 1,
+      "message": "hard-coded IP?",
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "640cfff0_113ec35b",
+        "filename": "testsuites/stability/src/main/resources/testplans/policy_api_stability.jmx",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-30T12:51:37Z",
+      "side": 1,
+      "message": "hard-coded IP?",
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
