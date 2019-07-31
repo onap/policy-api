@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "94294749_f06f5c46",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/bin/policy-api.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2019-07-31T10:14:06Z",
+      "side": 1,
+      "message": "We don\u0027t need these scripts anymore as we are targeting to run the S3P tests in OOM deployment of ONAP with all pods configured already.",
+      "parentUuid": "45a6f384_021addde",
+      "range": {
+        "startLine": 43,
+        "startChar": 544,
+        "endLine": 43,
+        "endChar": 555
+      },
+      "revId": "e3211804623abc0b8983757e1a515d78a491796c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ae587be6_f28784aa",
         "filename": "testsuites/stability/src/main/resources/apisetup/config/api/etc/defaultConfig.json",
         "patchSetId": 1
