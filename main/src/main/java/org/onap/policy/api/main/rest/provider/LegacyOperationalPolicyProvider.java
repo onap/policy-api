@@ -24,7 +24,9 @@ package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.ws.rs.core.Response;
+
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
@@ -39,6 +41,7 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 public class LegacyOperationalPolicyProvider extends CommonModelProvider {
 
     private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
+    private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
 
 
     /**
@@ -105,7 +108,7 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
     private void validateDeleteEligibility(String policyId, String policyVersion) throws PfModelException {
 
         List<ToscaPolicyIdentifier> policies = new ArrayList<>();
-        policies.add(new ToscaPolicyIdentifier(policyId, policyVersion));
+        policies.add(new ToscaPolicyIdentifier(policyId, policyVersion + LEGACY_MINOR_PATCH_SUFFIX));
         PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyList(policies).build();
 
         List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
