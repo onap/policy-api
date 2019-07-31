@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7147735e_4546c8c6",
+        "filename": "testsuites/stability/src/main/resources/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-31T19:53:18Z",
+      "side": 1,
+      "message": "remove trailing spaces",
+      "revId": "dfe8e58b617472d07cd0300ff432e4f52b6a5028",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47e3c1c7_bd028e17",
+        "filename": "testsuites/stability/src/main/resources/apisetup/setup_api.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-31T19:53:18Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "dfe8e58b617472d07cd0300ff432e4f52b6a5028",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce829b6a_0ba41e4a",
+        "filename": "testsuites/stability/src/main/resources/apisetup/setup_api.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-07-31T19:53:18Z",
+      "side": 1,
+      "message": "I think we decided to use ${xxx} instead of $xxx in scripts",
+      "revId": "dfe8e58b617472d07cd0300ff432e4f52b6a5028",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
