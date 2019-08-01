@@ -34,6 +34,7 @@ import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -44,6 +45,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -134,6 +136,19 @@ public class TestApiRestServer {
         + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
         + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1";
+
+    private static final String GET_DEPLOYED_VERSION_OF_POLICY =
+            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/"
+        + "1.0.0/policies/onap.restart.tca/versions/deployed";
+    private static final String GET_LATEST_VERSION_OF_OPERATIONAL_POLICY =
+            "policytypes/onap.policies.controlloop.Operational/versions/"
+            + "1.0.0/policies/operational.scaleout/versions/latest";
+    private static final String GET_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY =
+            "policytypes/onap.policies.controlloop.Operational/versions/"
+            + "1.0.0/policies/operational.scaleout/versions/3";
+    private static final String DEL_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY =
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
+                    + "policies/operational.scaleout/versions/1";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
@@ -616,6 +631,42 @@ public class TestApiRestServer {
                 Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, false);
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = readResource(GET_DEPLOYED_VERSION_OF_POLICY, true);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testGetLatestVersionOfOperatioalPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = readResource(GET_LATEST_VERSION_OF_OPERATIONAL_POLICY, true);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testGetSpecificVersionOfOperatioalPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = readResource(GET_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY, true);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDeleteSpecificVersionOfOperatioalPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(DEL_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY, true);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
         }).doesNotThrowAnyException();
     }
 
