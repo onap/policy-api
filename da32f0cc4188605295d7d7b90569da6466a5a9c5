@@ -16,6 +16,24 @@
       "revId": "da32f0cc4188605295d7d7b90569da6466a5a9c5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aae4e291_b3ae59fa",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 83
+      },
+      "writtenOn": "2019-08-01T20:22:14Z",
+      "side": 1,
+      "message": "Thank you! Fixed for this and other functions.",
+      "parentUuid": "68e527a7_5abecbcd",
+      "revId": "da32f0cc4188605295d7d7b90569da6466a5a9c5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
