@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9e001208_80982390",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-02T21:58:52Z",
+      "side": 1,
+      "message": "it looks to me like could use generic methods and parameters to collapse and/or refactor most of these methods - probably only need one flavor of each (may still need all three flavors of these top-level methods, but they can probably be shortened to one-liners invoking a common, generic method)",
+      "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
