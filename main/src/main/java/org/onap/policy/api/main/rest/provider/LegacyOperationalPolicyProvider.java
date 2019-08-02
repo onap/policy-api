@@ -24,9 +24,11 @@ package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
@@ -42,7 +44,8 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
 
     private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
     private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
-
+    private static final PfConceptKey LEGACY_OPERATIONAL_TYPE =
+            new PfConceptKey("onap.policies.controlloop.Operational", "1.0.0");
 
     /**
      * Default constructor.
@@ -66,6 +69,22 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
             validNumber(policyVersion, INVALID_POLICY_VERSION);
         }
         return modelsProvider.getOperationalPolicy(policyId, policyVersion);
+    }
+
+    /**
+     * Retrieves a list of deployed operational policies in each pdp group.
+     *
+     * @param policyId the ID of the policy
+     *
+     * @return a list of deployed policies in each pdp group
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    public Map<Pair<String, String>, List<LegacyOperationalPolicy>> fetchDeployedOperationalPolicies(String policyId)
+            throws PfModelException {
+
+        return collectDeployedPolicies(
+                policyId, LEGACY_OPERATIONAL_TYPE, modelsProvider::getOperationalPolicy, List::add, new ArrayList<>());
     }
 
     /**

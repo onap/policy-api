@@ -105,12 +105,17 @@ public class TestApiRestServer {
         + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
         + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
+    private static final String POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED = "policytypes/"
+            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/deployed";
 
     private static final String GUARD_POLICIES =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
     private static final String GUARD_POLICIES_VDNS_FL_LATEST =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
             + "/versions/latest";
+    private static final String GUARD_POLICIES_VDNS_FL_DEPLOYED =
+            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
+            + "/versions/deployed";
     private static final String GUARD_POLICIES_VDNS_MINMAX_LATEST =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout"
             + "/versions/latest";
@@ -122,33 +127,23 @@ public class TestApiRestServer {
     private static final String OPS_POLICIES =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
     private static final String OPS_POLICIES_VCPE_LATEST =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart"
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart"
             + "/versions/latest";
+    private static final String OPS_POLICIES_VCPE_DEPLOYED =
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart"
+            + "/versions/deployed";
     private static final String OPS_POLICIES_VDNS_LATEST =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout"
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout"
             + "/versions/latest";
     private static final String OPS_POLICIES_VFIREWALL_LATEST =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig"
+            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig"
             + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.restart/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart/versions/1";
     private static final String OPS_POLICIES_VDNS_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.scaleout/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/operational.modifyconfig/versions/1";
-
-    private static final String GET_DEPLOYED_VERSION_OF_POLICY =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/"
-        + "1.0.0/policies/onap.restart.tca/versions/deployed";
-    private static final String GET_LATEST_VERSION_OF_OPERATIONAL_POLICY =
-            "policytypes/onap.policies.controlloop.Operational/versions/"
-            + "1.0.0/policies/operational.scaleout/versions/latest";
-    private static final String GET_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY =
-            "policytypes/onap.policies.controlloop.Operational/versions/"
-            + "1.0.0/policies/operational.scaleout/versions/3";
-    private static final String DEL_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/"
-                    + "policies/operational.scaleout/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig/versions/1";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
@@ -568,6 +563,15 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testGetDeployedVersionsOfGuardPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_DEPLOYED, true);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
     public void testDeleteOperationalPolicy() {
 
         assertThatCode(() -> {
@@ -638,7 +642,7 @@ public class TestApiRestServer {
     public void testGetDeployedVersionsOfPolicy() {
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = readResource(GET_DEPLOYED_VERSION_OF_POLICY, true);
+            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         }).doesNotThrowAnyException();
     }
@@ -647,7 +651,7 @@ public class TestApiRestServer {
     public void testGetLatestVersionOfOperationalPolicy() {
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = readResource(GET_LATEST_VERSION_OF_OPERATIONAL_POLICY, true);
+            Response rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
         }).doesNotThrowAnyException();
     }
@@ -656,8 +660,17 @@ public class TestApiRestServer {
     public void testGetSpecificVersionOfOperationalPolicy() {
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = readResource(GET_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY, true);
+            Response rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfOperationalPolicy() {
+        assertThatCode(() -> {
+            main = startApiService(true);
+            Response rawResponse = readResource(OPS_POLICIES_VCPE_DEPLOYED, true);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         }).doesNotThrowAnyException();
     }
 
@@ -665,7 +678,7 @@ public class TestApiRestServer {
     public void testDeleteSpecificVersionOfOperationalPolicy() {
         assertThatCode(() -> {
             main = startApiService(true);
-            Response rawResponse = deleteResource(DEL_SPECIFIC_VERSION_OF_OPERATIONAL_POLICY, true);
+            Response rawResponse = deleteResource(OPS_POLICIES_VDNS_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
         }).doesNotThrowAnyException();
     }

@@ -25,6 +25,7 @@ package org.onap.policy.api.main.rest.provider;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -72,6 +73,11 @@ public class TestLegacyOperationalPolicyProvider {
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.json";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.Operational:1.0.0";
     private static final String POLICY_ID = "operational.restart:1.0.0";
+    private static final String POLICY_NAME = "operational.restart";
+    private static final String POLICY_VERSION = "1";
+    private static final String POLICY_TYPE_NAME = "onap.policies.controlloop.Operational";
+    private static final String POLICY_TYPE_VERSION = "1.0.0";
+    private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
 
     /**
      * Initializes parameters.
@@ -160,6 +166,104 @@ public class TestLegacyOperationalPolicyProvider {
             operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "2");
             policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testFetchDeployedOperationalPolicies() {
+
+        assertThatThrownBy(() -> {
+            operationalPolicyProvider.fetchDeployedOperationalPolicies("dummy");
+        }).hasMessage("could not find policy with ID dummy and type " + POLICY_TYPE_ID + " deployed in any pdp group");
+
+        try (PolicyModelsProvider databaseProvider =
+                new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
+            assertEquals(0, databaseProvider.getPdpGroups("name").size());
+            assertEquals(0, databaseProvider.getFilteredPdpGroups(PdpGroupFilter.builder().build()).size());
+
+            assertNotNull(databaseProvider.createPdpGroups(new ArrayList<>()));
+            assertNotNull(databaseProvider.updatePdpGroups(new ArrayList<>()));
+
+            PdpGroup pdpGroup = new PdpGroup();
+            pdpGroup.setName("group");
+            pdpGroup.setVersion("1.2.3");
+            pdpGroup.setPdpGroupState(PdpState.ACTIVE);
+            pdpGroup.setPdpSubgroups(new ArrayList<>());
+            List<PdpGroup> groupList = new ArrayList<>();
+            groupList.add(pdpGroup);
+
+            PdpSubGroup pdpSubGroup = new PdpSubGroup();
+            pdpSubGroup.setPdpType("type");
+            pdpSubGroup.setDesiredInstanceCount(123);
+            pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
+                    POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
+            pdpGroup.getPdpSubgroups().add(pdpSubGroup);
+
+            Pdp pdp = new Pdp();
+            pdp.setInstanceId("type-0");
+            pdp.setMessage("Hello");
+            pdp.setPdpState(PdpState.ACTIVE);
+            pdp.setHealthy(PdpHealthStatus.UNKNOWN);
+            pdpSubGroup.setPdpInstances(new ArrayList<>());
+            pdpSubGroup.getPdpInstances().add(pdp);
+
+            // Create Pdp Groups
+            assertEquals(123, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
+                    .getDesiredInstanceCount());
+            assertEquals(1, databaseProvider.getPdpGroups("group").size());
+
+            // Create Policy Type
+            assertThatCode(() -> {
+                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                ToscaServiceTemplate policyTypeServiceTemplate =
+                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+            }).doesNotThrowAnyException();
+
+            // Create Policy
+            assertThatCode(() -> {
+                String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+                LegacyOperationalPolicy policyToCreate =
+                        standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+                LegacyOperationalPolicy policyCreated = operationalPolicyProvider
+                        .createOperationalPolicy(policyToCreate);
+                assertEquals("operational.restart", policyCreated.getPolicyId());
+                assertEquals("1", policyCreated.getPolicyVersion());
+                assertFalse(policyCreated.getContent() == null);
+            }).doesNotThrowAnyException();
+
+            // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
+            assertThatThrownBy(
+                () -> {
+                    operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
+                }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type "
+                    + POLICY_TYPE_ID + " deployed in any pdp group");
+
+
+            // Update pdpSubGroup
+            pdpSubGroup.setPolicies(new ArrayList<>());
+            pdpSubGroup.getPolicies().add(
+                    new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
+            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
+                    .getPolicies().size());
+
+            // Test fetchDeployedPolicies
+            assertThatCode(
+                () -> {
+                    operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
+                }).doesNotThrowAnyException();
+
+            // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
+            assertThatThrownBy(
+                () -> {
+                    operationalPolicyProvider.deleteOperationalPolicy(
+                            POLICY_NAME, POLICY_VERSION);
+                }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
+                    + " cannot be deleted as it is deployed in pdp groups");
+        }
+        catch (Exception exc) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
