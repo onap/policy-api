@@ -23,7 +23,6 @@
 package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.Response;
@@ -31,8 +30,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
-import org.onap.policy.models.pdp.concepts.PdpSubGroup;
-import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -122,25 +119,7 @@ public class PolicyProvider extends CommonModelProvider {
     public Map<Pair<String, String>, List<ToscaPolicy>> fetchDeployedPolicies(
             String policyTypeId, String policyTypeVersion, String policyId) throws PfModelException {
 
-        List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
-        policyTypes.add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes)
-                .groupState(PdpState.ACTIVE).pdpState(PdpState.ACTIVE).build();
-        List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
-
-        if (pdpGroups.isEmpty()) {
-            throw new PfModelException(Response.Status.NOT_FOUND,
-                    constructDeploymentNotFoundMessage(policyTypeId, policyTypeVersion, policyId));
-        }
-
-        Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicyMap =
-                constructDeployedPolicyMap(pdpGroups, policyId);
-        if (deployedPolicyMap.isEmpty()) {
-            throw new PfModelException(Response.Status.NOT_FOUND,
-                    constructDeploymentNotFoundMessage(policyTypeId, policyTypeVersion, policyId));
-        }
-
-        return deployedPolicyMap;
+        return collectDeployedToscaPolicies(policyTypeId, policyTypeVersion, policyId);
     }
 
     /**
@@ -265,55 +244,6 @@ public class PolicyProvider extends CommonModelProvider {
     }
 
     /**
-     * Constructs the map of deployed pdp groups and deployed policies.
-     *
-     * @param pdpGroups the list of pdp groups that contain the specified policy
-     * @param policyId the ID of policy
-     *
-     * @return the constructed map of pdp groups and deployed policies
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private Map<Pair<String, String>, List<ToscaPolicy>> constructDeployedPolicyMap(
-            List<PdpGroup> pdpGroups, String policyId) throws PfModelException {
-
-        Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicyMap = new HashMap<>();
-        for (PdpGroup pdpGroup : pdpGroups) {
-            List<ToscaPolicyIdentifier> policyIdentifiers = extractPolicyIdentifiers(policyId, pdpGroup);
-            List<ToscaPolicy> deployedPolicies = getDeployedPolicies(policyIdentifiers);
-            if (!deployedPolicies.isEmpty()) {
-                deployedPolicyMap.put(Pair.of(pdpGroup.getName(), pdpGroup.getVersion()), deployedPolicies);
-            }
-        }
-        return deployedPolicyMap;
-    }
-
-    private List<ToscaPolicyIdentifier> extractPolicyIdentifiers(String policyId, PdpGroup pdpGroup) {
-        List<ToscaPolicyIdentifier> policyIdentifiers = new ArrayList<>();
-        for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups()) {
-            for (ToscaPolicyIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
-                if (policyId.equalsIgnoreCase(policyIdentifier.getName())) {
-                    policyIdentifiers.add(policyIdentifier);
-                }
-            }
-        }
-        return policyIdentifiers;
-    }
-
-    private List<ToscaPolicy> getDeployedPolicies(List<ToscaPolicyIdentifier> policyIdentifiers)
-                    throws PfModelException {
-
-        List<ToscaPolicy> deployedPolicies = new ArrayList<>();
-        if (!policyIdentifiers.isEmpty()) {
-            for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {
-                deployedPolicies.addAll(
-                        modelsProvider.getPolicyList(policyIdentifier.getName(), policyIdentifier.getVersion()));
-            }
-        }
-        return deployedPolicies;
-    }
-
-    /**
      * Constructs returned message for not found resource.
      *
      * @param policyTypeId the ID of policy type
@@ -328,22 +258,5 @@ public class PolicyProvider extends CommonModelProvider {
 
         return "policy with ID " + policyId + ":" + policyVersion
                 + " and type " + policyTypeId + ":" + policyTypeVersion + " does not exist";
-    }
-
-    /**
-     * Constructs returned message for not found policy deployment.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     *
-     * @return constructed message
-     */
-    private String constructDeploymentNotFoundMessage(String policyTypeId, String policyTypeVersion,
-            String policyId) {
-
-        return "could not find policy with ID " + policyId + " and type "
-                + policyTypeId + ":" + policyTypeVersion + " deployed in any pdp group";
     }
 }
