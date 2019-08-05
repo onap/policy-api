@@ -34,6 +34,24 @@
       "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a96308f_8f5e352b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-05T15:00:21Z",
+      "side": 1,
+      "message": "For instance, all of the getDeployedXxxPolicies methods could be replaced with a single method:\n\n    private \u003cT, R\u003e T getDeployedPolicies(List\u003cToscaPolicyIdentifier\u003e policyIdentifiers,\n                    BiFunctionWithEx\u003cString, String, R\u003e getter, BiConsumer\u003cT, R\u003e consumer,\n                    T data) throws PfModelException {\n\n        if (!policyIdentifiers.isEmpty()) {\n            for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {\n                R result \u003d getter.apply(policyIdentifier.getName(),\n                        policyIdentifier.getVersion().split(\"\\\\.\")[0]);\n                consumer.accept(data, result);\n            }\n        }\n        return data;\n    }\n\nthen it could be invoked like this:\n    \n            Map\u003cString, LegacyGuardPolicyOutput\u003e deployedGuardPolicies \u003d\n                            getDeployedPolicies(policyIdentifiers, modelsProvider::getGuardPolicy, Map::putAll, new HashMap\u003c\u003e());\n\nThat one method could be used in lieu of getDeployedPolicies, getDeployedOpPolicies, and getDeployedGuardPolicies.  A similar thing could be done to replace the constructXxx methods with a single method.  Likewise with the hasXxxPolicyVersion and collectXxx methods.",
+      "parentUuid": "a0b84d7c_6234e90e",
+      "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
