@@ -16,6 +16,24 @@
       "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0b84d7c_6234e90e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-05T14:12:39Z",
+      "side": 1,
+      "message": "Sounds like a good idea but I don\u0027t fully get it. Do you mean factory pattern? It would be appreciated if you can expand a little bit more.",
+      "parentUuid": "9e001208_80982390",
+      "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
