@@ -52,6 +52,24 @@
       "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c65ce3c_1b31758d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-05T15:21:14Z",
+      "side": 1,
+      "message": "of course, this test could also be deleted:\n\n    if (!policyIdentifiers.isEmpty())",
+      "parentUuid": "2a96308f_8f5e352b",
+      "revId": "cafc3a8f2422afc24740107aca0ce1b1e142c354",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
