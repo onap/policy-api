@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '2.1.1'
+project: 'policy-api'
+log_dir: 'policy-api-maven-stage-master/48/'
