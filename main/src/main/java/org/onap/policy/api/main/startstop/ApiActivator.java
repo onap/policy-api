@@ -75,6 +75,8 @@ public class ApiActivator {
      * @throws PolicyApiException if server start fails
      */
     private void startApiRestServer() throws PolicyApiException {
+        System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
+        System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
         apiParameterGroup.getRestServerParameters().setName(apiParameterGroup.getName());
         restServer = new RestServer(apiParameterGroup.getRestServerParameters(), AafApiFilter.class,
                         LegacyApiRestController.class,
