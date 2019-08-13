@@ -34,6 +34,24 @@
       "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "001a94ec_353b78bc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2019-08-13T15:04:59Z",
+      "side": 1,
+      "message": "Oh, so this already went in in El Alto, you\u0027re confirming right?   I have some very vague recollection, but wasn\u0027t sure.",
+      "parentUuid": "2e46c7a4_fc6e61db",
+      "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
