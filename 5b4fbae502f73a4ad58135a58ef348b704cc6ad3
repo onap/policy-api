@@ -16,6 +16,24 @@
       "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e46c7a4_fc6e61db",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-13T13:51:03Z",
+      "side": 1,
+      "message": "We purposely modified PAP to only allow one version of a policy to be deployed.",
+      "parentUuid": "5c57dedf_04fc4f4d",
+      "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
