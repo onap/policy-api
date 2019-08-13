@@ -52,6 +52,42 @@
       "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04014641_de0460b5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-13T15:18:09Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "001a94ec_353b78bc",
+      "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d149d4f_5b261658",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-13T15:18:09Z",
+      "side": 1,
+      "message": "Only one version of a policy to be deployed in each PDP instance or PDP subgroup or PDP group? which granularity?",
+      "parentUuid": "2e46c7a4_fc6e61db",
+      "revId": "5b4fbae502f73a4ad58135a58ef348b704cc6ad3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
