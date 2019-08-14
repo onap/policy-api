@@ -33,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Properties;
 
 import javax.net.ssl.SSLContext;
@@ -52,16 +53,22 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.CommonTestData;
+import org.onap.policy.api.main.rest.provider.PolicyProvider;
+import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
+import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
@@ -174,13 +181,44 @@ public class TestApiRestServer {
         "policies/vDNS.policy.operational.input.json",
         "policies/vFirewall.policy.operational.input.json"
     };
+    private static PolicyModelsProviderParameters providerParams;
+    private static ApiParameterGroup apiParamGroup;
+    private static PolicyProvider policyProvider;
+    private static PolicyTypeProvider policyTypeProvider;
+
     // @formatter:on
+
+    /**
+     * Initializes parameters.
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void setupParameters() throws PfModelException {
+
+        standardCoder = new StandardCoder();
+        providerParams = new PolicyModelsProviderParameters();
+        providerParams.setDatabaseDriver("org.h2.Driver");
+        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
+        providerParams.setDatabaseUser("policy");
+        providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        providerParams.setPersistenceUnit("ToscaConceptTest");
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        ParameterService.register(apiParamGroup, true);
+        policyTypeProvider = new PolicyTypeProvider();
+        policyProvider = new PolicyProvider();
+    }
 
     /**
      * Method for cleanup after each test.
      */
     @After
     public void teardown() throws Exception {
+        if (policyTypeProvider != null) {
+            policyTypeProvider.close();
+        }
+        if (policyProvider != null) {
+            policyProvider.close();
+        }
         if (main != null) {
             stopApiService(main);
         } else if (restServer != null) {
@@ -368,6 +406,48 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testReadPolicyTypesPersistent() throws PfModelException, Exception {
+
+        setupParameters();
+        main = startApiService(true);
+        for (String resrcName : toscaPolicyTypeResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+        }
+
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+        Response rawResponse = readResource(POLICYTYPES_TCA, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(POLICYTYPES_TCA_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(POLICYTYPES_COLLECTOR, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+    }
+
+    @Test
     public void testDeletePolicyType() {
 
         assertThatCode(() -> {
@@ -385,6 +465,24 @@ public class TestApiRestServer {
                 + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDeletePolicyTypePersistent() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);// create policy types
+        for (String resrcName : toscaPolicyTypeResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+        }
+        Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
     }
 
     @Test
@@ -438,6 +536,39 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testReadPoliciesPersistent() throws PfModelException, Exception {
+
+        setupParameters();
+        main = startApiService(true);
+        for (String resrcName : toscaPolicyTypeResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+        }
+
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+        Response rawResponse;
+        rawResponse = readResource(POLICYTYPES_TCA, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+    }
+
+    @Test
     public void testDeletePolicies() {
 
         assertThatCode(() -> {
@@ -449,6 +580,49 @@ public class TestApiRestServer {
                 + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDeletePolicyVersion() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);// create policy types
+        for (String resrcName : toscaPolicyTypeResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+        }
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+    }
+
+    @Test
+    public void testGetAllVersionOfPolicy() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);// create policy types
+        for (String resrcName : toscaPolicyTypeResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+        }
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+        Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
     }
 
     @Test
@@ -464,6 +638,19 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testCreateGuardPolicies1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);
+        for (String resrcName : legacyGuardPolicyResourceNames) {
+            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+    }
+
+    @Test
     public void testCreateOperationalPolicies() {
 
         assertThatCode(() -> {
@@ -473,6 +660,19 @@ public class TestApiRestServer {
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testCreateOperationalPolicies1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);
+        for (String resrcName : legacyOperationalPolicyResourceNames) {
+            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
     }
 
     @Test
@@ -504,6 +704,33 @@ public class TestApiRestServer {
             assertEquals("no policy found for policy: guard.minmax.scaleout:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testReadGuardPolicies1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);
+        for (String resrcName : legacyGuardPolicyResourceNames) {
+            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
     }
 
     @Test
@@ -550,6 +777,43 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testReadOperationalPolicies1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);
+        for (String resrcName : legacyOperationalPolicyResourceNames) {
+            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+        Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+        rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+    }
+
+    @Test
     public void testDeleteGuardPolicy() {
 
         assertThatCode(() -> {
@@ -560,6 +824,22 @@ public class TestApiRestServer {
             assertEquals("no policy found for policy: guard.frequency.scaleout:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDeleteGuardPolicy1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+        main = startApiService(true);
+
+        for (String resrcName : legacyGuardPolicyResourceNames) {
+            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+
+        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
     }
 
     @Test
@@ -582,6 +862,21 @@ public class TestApiRestServer {
             assertEquals("no policy found for policy: operational.restart:1",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testDeleteOperationalPolicy1() throws PfModelException, Exception {
+
+        setupParameters(); //setup DB
+
+        main = startApiService(true);
+        for (String resrcName : legacyOperationalPolicyResourceNames) {
+            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        }
+        Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
     }
 
     @Test
