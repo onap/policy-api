@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c098596e_956a04da",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-14T21:43:49Z",
+      "side": 1,
+      "message": "remove assertThatCode wrapper\n\nsame comment through-out",
+      "revId": "92ac425cd66a0452c60cb471291f6767d2839230",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ce974c3_d421e7b4",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-14T21:43:49Z",
+      "side": 1,
+      "message": "note: if one of the previous asserts fails, then unsetParameters() will not be called (perhaps it should be in an @After method)\n\nsame comment through-out",
+      "revId": "92ac425cd66a0452c60cb471291f6767d2839230",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
