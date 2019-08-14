@@ -23,11 +23,15 @@
 package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Map.Entry;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
@@ -44,7 +48,16 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
 
     private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
     private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
+    private static final Map<String, PfConceptKey> GUARD_POLICY_TYPE_MAP = new LinkedHashMap<>();
 
+    static {
+        GUARD_POLICY_TYPE_MAP.put("guard.frequency.",
+                new PfConceptKey("onap.policies.controlloop.guard.FrequencyLimiter:1.0.0"));
+        GUARD_POLICY_TYPE_MAP.put("guard.minmax.",
+                new PfConceptKey("onap.policies.controlloop.guard.MinMax:1.0.0"));
+        GUARD_POLICY_TYPE_MAP.put("guard.blacklist.",
+                new PfConceptKey("onap.policies.controlloop.guard.Blacklist:1.0.0"));
+    }
 
     /**
      * Default constructor.
@@ -68,6 +81,22 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
             validNumber(policyVersion, INVALID_POLICY_VERSION);
         }
         return modelsProvider.getGuardPolicy(policyId, policyVersion);
+    }
+
+    /**
+     * Retrieves a list of deployed guard policies in each pdp group.
+     *
+     * @param policyId the ID of the policy
+     *
+     * @return a list of deployed policies in each pdp group
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    public Map<Pair<String, String>, Map<String, LegacyGuardPolicyOutput>> fetchDeployedGuardPolicies(String policyId)
+            throws PfModelException {
+
+        return collectDeployedPolicies(
+                policyId, getGuardPolicyType(policyId), modelsProvider::getGuardPolicy, Map::putAll, new HashMap<>());
     }
 
     /**
@@ -120,5 +149,24 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
         }
+    }
+
+    /**
+     * Retrieves guard policy type given guard policy ID.
+     *
+     * @param policyId the ID of guard policy
+     *
+     * @return the concept key of guard policy type
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private PfConceptKey getGuardPolicyType(String policyId) throws PfModelException {
+
+        for (Entry<String, PfConceptKey> guardPolicyTypeEntry : GUARD_POLICY_TYPE_MAP.entrySet()) {
+            if (policyId.startsWith(guardPolicyTypeEntry.getKey())) {
+                return guardPolicyTypeEntry.getValue();
+            }
+        }
+        throw new PfModelException(Response.Status.BAD_REQUEST, "No policy type defined for " + policyId);
     }
 }

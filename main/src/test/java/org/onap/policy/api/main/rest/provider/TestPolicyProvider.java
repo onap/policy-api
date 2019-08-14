@@ -141,8 +141,8 @@ public class TestPolicyProvider {
 
         //Basic Exception Throw
         assertThatThrownBy(() -> {
-            policyProvider.fetchDeployedPolicies("dummy", "dummy", "dummy");
-        }).hasMessage("could not find policy with ID dummy and type dummy:dummy deployed in any pdp group");
+            policyProvider.fetchDeployedPolicies("dummy", "1.0.0", "dummy");
+        }).hasMessage("could not find policy with ID dummy and type dummy:1.0.0 deployed in any pdp group");
 
         try (PolicyModelsProvider databaseProvider =
                 new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {

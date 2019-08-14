@@ -803,7 +803,7 @@ public class ApiRestController extends CommonRestController {
     }
 
     /**
-     * Retrieves deployed versions of a particular policy in pdp groups.
+     * Retrieves deployed versions of a particular policy in PDP groups.
      *
      * @param policyTypeId the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
