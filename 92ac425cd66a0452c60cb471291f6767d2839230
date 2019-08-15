@@ -33,6 +33,29 @@
       "revId": "92ac425cd66a0452c60cb471291f6767d2839230",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2aef5f_1a981114",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-15T13:20:51Z",
+      "side": 1,
+      "message": "Similar to Jim comment above - do not need to wrap the whole test method. If an exception is thrown JUnit will fail appropriately. Unnecessary.",
+      "range": {
+        "startLine": 474,
+        "startChar": 8,
+        "endLine": 474,
+        "endChar": 30
+      },
+      "revId": "92ac425cd66a0452c60cb471291f6767d2839230",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
