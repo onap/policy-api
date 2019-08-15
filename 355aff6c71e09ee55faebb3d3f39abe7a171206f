@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "229511f8_54c6a1bd",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-15T22:27:49Z",
+      "side": 1,
+      "message": "just throw Exception\n\nsame comment below",
+      "revId": "355aff6c71e09ee55faebb3d3f39abe7a171206f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
