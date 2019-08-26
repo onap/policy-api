@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1042d7e_2faecb48",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3455
+      },
+      "writtenOn": "2019-08-26T20:40:38Z",
+      "side": 1,
+      "message": "The \"identity\" field may not be needed as this would be derived_from: onap.policies.Optimization",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "628c0b9f_82a07174",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.PciPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3455
+      },
+      "writtenOn": "2019-08-26T20:40:38Z",
+      "side": 1,
+      "message": "The \"identity\" field may not be needed as this would be derived_from: onap.policies.Optimization",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03d3e68b_a6595a29",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.QueryPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3455
+      },
+      "writtenOn": "2019-08-26T20:40:38Z",
+      "side": 1,
+      "message": "The \"identity\" field may not be needed as this would be derived_from: onap.policies.Optimization",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
