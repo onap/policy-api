@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "f5cc76a3_37dd7b18",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-27T13:14:29Z",
+      "side": 1,
+      "message": "No problem I will remove.",
+      "parentUuid": "b1042d7e_2faecb48",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "628c0b9f_82a07174",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.PciPolicy.yaml",
         "patchSetId": 3
@@ -59,6 +77,24 @@
     },
     {
       "key": {
+        "uuid": "00878352_8b953fa0",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.PciPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-27T13:14:29Z",
+      "side": 1,
+      "message": "No problem - but now the datatype pciProperties probably isn\u0027t needed? We could move those properties up into the root level.",
+      "parentUuid": "628c0b9f_82a07174",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "03d3e68b_a6595a29",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.QueryPolicy.yaml",
         "patchSetId": 3
@@ -70,6 +106,24 @@
       "writtenOn": "2019-08-26T20:40:38Z",
       "side": 1,
       "message": "The \"identity\" field may not be needed as this would be derived_from: onap.policies.Optimization",
+      "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70a1f14e_25cb8ff3",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.QueryPolicy.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-27T13:14:29Z",
+      "side": 1,
+      "message": "No problem - same question, we really don\u0027t need a datatype queryProperties.",
+      "parentUuid": "03d3e68b_a6595a29",
       "revId": "8167316875011044a12a3439b7ef7b2390371eeb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
