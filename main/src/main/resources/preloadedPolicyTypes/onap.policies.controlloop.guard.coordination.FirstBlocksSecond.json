@@ -8,16 +8,23 @@
          }
       },
       {
-         "onap.policies.controlloop.guard.MinMax": {
+         "onap.policies.controlloop.guard.Coordination": {
             "derived_from": "onap.policies.controlloop.Guard",
             "version": "1.0.0",
-            "description": "Supports Min/Max number of VF Modules",
+            "description": "Guard Policies for Control Loop Coordination"
+         }
+      },
+      {
+         "onap.policies.controlloop.guard.coordination.FirstBlocksSecond": {
+            "derived_from": "onap.policies.controlloop.guard.Coordination",
+            "version": "1.0.0",
+            "description": "Supports one Control Loop blocking another",
             "properties": {
-               "minmax_policy": {
+               "first_blocks_second_policy": {
                   "type": "map",
                   "description": null,
                   "entry_schema": {
-                     "type": "onap.datatypes.guard.MinMax"
+                     "type": "onap.datatypes.guard.coordination.FirstBlocksSecond"
                   }
                }
             }
@@ -26,7 +33,7 @@
    ],
    "data_types": [
       {
-         "onap.datatypes.guard.MinMax": {
+         "onap.datatypes.guard.coordination.FirstBlocksSecond": {
             "derived_from": "tosca.datatypes.Root",
             "properties": {
                "actor": {
@@ -39,25 +46,13 @@
                   "description": "Specifies the Recipe",
                   "required": true
                },
-               "time_range": {
-                  "type": "tosca.datatypes.TimeInterval",
-                  "description": "An optional range of time during the day the Min/Max limit is valid for.",
-                  "required": false
-               },
-               "controlLoopName": {
-                  "type": "string",
-                  "description": "An optional specific control loop to apply this guard to.",
-                  "required": false
-               },
-               "min_vf_module_instances": {
-                  "type": "integer",
+               "controlLoop": {
+                  "type": "list",
+                  "description": "Specific Control Loops to which to apply this guard",
                   "required": true,
-                  "description": "The minimum instances of this VF-Module"
-               },
-               "max_vf_module_instances": {
-                  "type": "integer",
-                  "required": false,
-                  "description": "The maximum instances of this VF-Module"
+                  "entry_schema": {
+                      "type": "string"
+                  }
                }
             }
          }
