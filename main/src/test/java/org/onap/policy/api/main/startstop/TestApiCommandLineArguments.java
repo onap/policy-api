@@ -43,7 +43,7 @@ public class TestApiCommandLineArguments {
     @Test(expected = PolicyApiRuntimeException.class)
     public void testApiCommandLineArgumentsStringArray() {
         String [] args = {"---d"};
-        ApiCommandLineArguments apiCmdArgs1 = new ApiCommandLineArguments(args);
+        new ApiCommandLineArguments(args);
     }
 
     @Test

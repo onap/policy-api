@@ -37,7 +37,7 @@
                },
                "recipe": {
                   "type": "string",
-                  "description": "Specified the Recipe",
+                  "description": "Specifies the Recipe",
                   "required": true
                },
                "time_range": {
