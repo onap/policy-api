@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f7bb2dc_57ca7592",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T15:33:09Z",
+      "side": 1,
+      "message": "i dont\u0027 get it why it\u0027s a map rather than a list or directly data_type? what does the key of map mean? Maybe we can directly use \"first_blocks_second_policy\"-\u003e\"type\": \"onap.datatypes.guard.coordination.FirstBlocksSecond\"? or don\u0027t even need the data_type, the properties of data_type would be the ones for FirstBlocksSecond.properties",
+      "range": {
+        "startLine": 24,
+        "startChar": 27,
+        "endLine": 24,
+        "endChar": 30
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdd41bfe_a3b6401b",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T15:33:09Z",
+      "side": 1,
+      "message": "Do we need to put valid_values constraint to actor, like existing enum values? the actor name would not be arbitrary string.",
+      "range": {
+        "startLine": 39,
+        "startChar": 16,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a747a4f1_dc360b20",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T15:33:09Z",
+      "side": 1,
+      "message": "the same for recipe",
+      "range": {
+        "startLine": 44,
+        "startChar": 16,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a716bf0_bd4c34ad",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T15:33:09Z",
+      "side": 1,
+      "message": "I envision some limitations of FirstBlocksSecond coordination policy if we define policy type like this. It will only coordinate two controlloops with the same actor and recipe. What about different actors/recipes but the same target? In my opinion, FirstBlocksSecond is a more general coordination function. It can be applied to two controlloops with arbitrary actor,recipe,target ideally.",
+      "range": {
+        "startLine": 49,
+        "startChar": 16,
+        "endLine": 49,
+        "endChar": 27
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee4cb615_7012dacc",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T15:33:09Z",
+      "side": 1,
+      "message": "I think we need one constraint for this list also, the size has to be 2 as we are coordinating 2 and only 2 controlloops",
+      "range": {
+        "startLine": 50,
+        "startChar": 27,
+        "endLine": 50,
+        "endChar": 31
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
