@@ -64,6 +64,7 @@ public class ApiDatabaseInitializer {
         "preloadedPolicyTypes/onap.policies.controlloop.guard.Blacklist.json",
         "preloadedPolicyTypes/onap.policies.controlloop.guard.FrequencyLimiter.json",
         "preloadedPolicyTypes/onap.policies.controlloop.guard.MinMax.json",
+        "preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
         "preloadedPolicyTypes/onap.policies.controlloop.Operational.json"
     };
 
