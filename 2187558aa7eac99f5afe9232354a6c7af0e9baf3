@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a9c079e_42dcaa5c",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-08-28T17:12:21Z",
+      "side": 1,
+      "message": "do we need Capital F?",
+      "range": {
+        "startLine": 18,
+        "startChar": 58,
+        "endLine": 18,
+        "endChar": 59
+      },
+      "revId": "2187558aa7eac99f5afe9232354a6c7af0e9baf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
