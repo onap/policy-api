@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b9d92e8_13b2f826",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-28T16:26:20Z",
+      "side": 1,
+      "message": "the problem is probably that I used a legacy policy type as the model for this.  Looking at the non-legacy policy types, it appears that the above \"properties\" should have policyScope, policyType, and identity.  And then instead of \"first_blocks_second_policy\", it can just have a \"properties\", whose type is defined below.",
+      "parentUuid": "9f7bb2dc_57ca7592",
+      "range": {
+        "startLine": 24,
+        "startChar": 27,
+        "endLine": 24,
+        "endChar": 30
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdd41bfe_a3b6401b",
         "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4c78ec0d_7fed1547",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-28T16:26:20Z",
+      "side": 1,
+      "message": "not needed - I\u0027ll delete it",
+      "parentUuid": "fdd41bfe_a3b6401b",
+      "range": {
+        "startLine": 39,
+        "startChar": 16,
+        "endLine": 39,
+        "endChar": 22
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a747a4f1_dc360b20",
         "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2019-08-28T15:33:09Z",
       "side": 1,
       "message": "the same for recipe",
+      "range": {
+        "startLine": 44,
+        "startChar": 16,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bfbdc84_c93a2c50",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-28T16:26:20Z",
+      "side": 1,
+      "message": "not needed - I\u0027ll delete it",
+      "parentUuid": "a747a4f1_dc360b20",
       "range": {
         "startLine": 44,
         "startChar": 16,
@@ -105,6 +177,30 @@
       "writtenOn": "2019-08-28T15:33:09Z",
       "side": 1,
       "message": "I think we need one constraint for this list also, the size has to be 2 as we are coordinating 2 and only 2 controlloops",
+      "range": {
+        "startLine": 50,
+        "startChar": 27,
+        "endLine": 50,
+        "endChar": 31
+      },
+      "revId": "91bbc871a6a260c6d4b30b237be6a6918ffea038",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adf210db_b59ccfc2",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-28T16:26:20Z",
+      "side": 1,
+      "message": "how is this specified?",
+      "parentUuid": "ee4cb615_7012dacc",
       "range": {
         "startLine": 50,
         "startChar": 27,
