@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa739328_3d9748d4",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-08-28T01:39:02Z",
+      "side": 1,
+      "message": "This part should be replaced by:\nflavorFeatures: \n    -    id: vg_1,\n         type: vnfc,\n         directives: \n             -    type: flavor_directives,\n                  attributes: \n                      -    attribute_name: flavor_label_vm_01,\n                           attribute_value: \"\"\n         flavorProperties:\n             -\n                  hpa-feature: basicCapabilities,\n                  mandatory: True,\n                  architecture: generic,\n                  directives: [],\n                  hpa-feature-attributes: \n                      -    hpa-attribute-key: numVirtualCpu\n                           hpa-attribute-value: 6,\n                           operator: [\u003e\u003d], \n                           unit: \"\"\n                      -    hpa-attribute-key: virtualMemSize\n                           hpa-attribute-value: 4\n                           operator: [\u003c\u003d]\n                           unit: \"\"\n            -\n                  hpa-feature: ovsDpdk,\n                  mandatory: False,\n                  architecture: generic,\n                  directives: [],\n                  hpa-feature-attributes:\n                      -    hpa-attribute-key: dataProcessingAccelerationLibrary\n                           hpa-attribute-value: ovsDpdk_version\n                           operator: [\u003d], \n                           unit: \"\"",
+      "range": {
+        "startLine": 68,
+        "startChar": 16,
+        "endLine": 72,
+        "endChar": 29
+      },
+      "revId": "ee90bdf154c97c3efcc18db5ab7b7f5368f68123",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
