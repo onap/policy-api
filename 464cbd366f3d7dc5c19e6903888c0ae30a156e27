@@ -16,6 +16,24 @@
       "revId": "464cbd366f3d7dc5c19e6903888c0ae30a156e27",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8be711a_f1281069",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-29T15:27:26Z",
+      "side": 1,
+      "message": "Not a good yaml formatter in eclipse",
+      "parentUuid": "1235d6dc_e584ec1b",
+      "revId": "464cbd366f3d7dc5c19e6903888c0ae30a156e27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
