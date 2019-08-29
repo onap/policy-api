@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1235d6dc_e584ec1b",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-08-29T14:16:21Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "464cbd366f3d7dc5c19e6903888c0ae30a156e27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
