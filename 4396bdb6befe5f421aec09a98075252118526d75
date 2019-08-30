@@ -22,6 +22,30 @@
       "revId": "4396bdb6befe5f421aec09a98075252118526d75",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fba8a774_ab46db1f",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T11:18:18Z",
+      "side": 1,
+      "message": "Ok - I would need help from folks to add anything for them, the next path I added empty list.",
+      "parentUuid": "a0b64a7f_77c704be",
+      "range": {
+        "startLine": 11,
+        "startChar": 12,
+        "endLine": 11,
+        "endChar": 23
+      },
+      "revId": "4396bdb6befe5f421aec09a98075252118526d75",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ab25fbd2_6bcddc7c",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T11:18:18Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "3b4ba754_bc13e10f",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "339c8adc_d7ee0dcd",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46f115b6_7a9a1785",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T11:18:18Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "339c8adc_d7ee0dcd",
+      "range": {
+        "startLine": 37,
+        "startChar": 16,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3aebd533_3ded3eca",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T11:18:18Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "1ccb7139_14f9ea2c",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf444164_70740b87",
         "filename": "main/src/test/resources/policytypes/onap.policies.optimization.VnfPolicy.yaml",
         "patchSetId": 9
@@ -91,6 +163,30 @@
       "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0161a492_7e93c427",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.VnfPolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T11:18:18Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "cf444164_70740b87",
+      "range": {
+        "startLine": 37,
+        "startChar": 16,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
