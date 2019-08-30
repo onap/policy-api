@@ -7,7 +7,7 @@ policy_types:
         properties:
             scope:
                 description: Scope for the policy - could be for a specific release.
-                type: string
+                type: list
                 matchable: true
                 required: true
             services:
