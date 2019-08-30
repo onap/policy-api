@@ -22,6 +22,30 @@
       "revId": "736fee18e6df968ed3fde55c94099302477b5b0e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d4e12b9_58146922",
+        "filename": "main/src/test/resources/policytypes/onap.policies.Optimization.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-08-30T15:52:39Z",
+      "side": 1,
+      "message": "Will fix in another review. Sorry.",
+      "parentUuid": "6055f769_29233f91",
+      "range": {
+        "startLine": 10,
+        "startChar": 22,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "736fee18e6df968ed3fde55c94099302477b5b0e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
