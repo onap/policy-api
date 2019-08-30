@@ -1,0 +1,10 @@
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Ruoyu Ying <ruoyu.ying@intel.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Liam Fallon <liam.fallon@est.tech>
+Submitted-by: Pamela Dragosh <pdragosh@research.att.com>
+Submitted-at: Fri, 30 Aug 2019 16:43:55 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/api/+/94693
+Project: policy/api
+Branch: refs/heads/master
