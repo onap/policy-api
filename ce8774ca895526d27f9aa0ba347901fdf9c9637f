@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b4ba754_bc13e10f",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-08-30T01:50:58Z",
+      "side": 0,
+      "message": "Can we keep this one?",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "339c8adc_d7ee0dcd",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-08-30T01:50:58Z",
+      "side": 0,
+      "message": "Same thing",
+      "range": {
+        "startLine": 37,
+        "startChar": 16,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ccb7139_14f9ea2c",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-08-30T01:50:58Z",
+      "side": 0,
+      "message": "Can we keep this one?",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf444164_70740b87",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.VnfPolicy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2977
+      },
+      "writtenOn": "2019-08-30T01:50:58Z",
+      "side": 0,
+      "message": "Same thing.",
+      "range": {
+        "startLine": 37,
+        "startChar": 16,
+        "endLine": 37,
+        "endChar": 30
+      },
+      "revId": "ce8774ca895526d27f9aa0ba347901fdf9c9637f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
