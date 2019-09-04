@@ -59,7 +59,7 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 
 /**
- * This class performs unit test of {@link LegacyGuardPolicyProvider}
+ * This class performs unit test of {@link LegacyGuardPolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */

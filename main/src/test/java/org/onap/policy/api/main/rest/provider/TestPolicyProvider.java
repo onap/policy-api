@@ -55,7 +55,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * This class performs unit test of {@link PolicyProvider}
+ * This class performs unit test of {@link PolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */

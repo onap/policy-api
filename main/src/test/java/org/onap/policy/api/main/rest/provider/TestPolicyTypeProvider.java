@@ -39,7 +39,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * This class performs unit test of {@link PolicyTypeProvider}
+ * This class performs unit test of {@link PolicyTypeProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
@@ -121,7 +121,7 @@ public class TestPolicyTypeProvider {
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
     }
 
@@ -133,7 +133,7 @@ public class TestPolicyTypeProvider {
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
@@ -159,7 +159,7 @@ public class TestPolicyTypeProvider {
         assertThatCode(() -> {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(
                     "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {

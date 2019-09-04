@@ -57,7 +57,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
- * This class performs unit test of {@link LegacyOperationalPolicyProvider}
+ * This class performs unit test of {@link LegacyOperationalPolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */

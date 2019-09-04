@@ -349,7 +349,7 @@ public class TestApiRestServer {
                 assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
                 ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
                 assertNotNull(response);
-                assertFalse(response.getPolicyTypes().get(0).isEmpty());
+                assertFalse(response.getPolicyTypes().isEmpty());
             }
         }).doesNotThrowAnyException();
     }
@@ -415,7 +415,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
 
         for (String resrcName : toscaPolicyResourceNames) {
@@ -478,7 +478,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -545,7 +545,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
 
         for (String resrcName : toscaPolicyResourceNames) {
@@ -593,7 +593,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : toscaPolicyResourceNames) {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
@@ -614,7 +614,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : toscaPolicyResourceNames) {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
@@ -889,7 +889,7 @@ public class TestApiRestServer {
                 assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
                 ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
                 assertNotNull(response);
-                assertFalse(response.getPolicyTypes().get(0).isEmpty());
+                assertFalse(response.getPolicyTypes().isEmpty());
             }
         }).doesNotThrowAnyException();
     }

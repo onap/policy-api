@@ -101,14 +101,26 @@ public class CommonModelProvider implements AutoCloseable {
     }
 
     /**
-     * Checks if the first element of a list contains data.
+     * Checks if the first element of a list of maps contains data.
      *
-     * @param list list to be examined
+     * @param listOfMapsToCheck list of maps to be examined
      * @return {@code true} if the list contains data, {@code false} otherwise
      */
-    protected <T> boolean hasData(List<Map<String, T>> list) {
+    protected <T> boolean hasData(List<Map<String, T>> listOfMapsToCheck) {
 
-        return (list != null && !list.isEmpty() && !list.get(0).isEmpty());
+        return (listOfMapsToCheck != null && !listOfMapsToCheck.isEmpty() && !listOfMapsToCheck.get(0).isEmpty());
+    }
+
+
+    /**
+     * Checks if a maps contains data.
+     *
+     * @param mapToCheck map to be examined
+     * @return {@code true} if the list contains data, {@code false} otherwise
+     */
+    protected <T> boolean hasData(Map<String, T> mapToCheck) {
+
+        return (mapToCheck != null && !mapToCheck.isEmpty());
     }
 
     /**
