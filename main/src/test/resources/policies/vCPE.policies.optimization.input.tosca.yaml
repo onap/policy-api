@@ -2,6 +2,40 @@ tosca_definitions_version: tosca_simple_yaml_1_0_0
 topology_template:
   policies:
     -
+        OSDF_CASABLANCA.Affinity_Default:
+            type: onap.policies.optimization.AffinityPolicy
+            version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.Affinity_Default
+                policy-version: 1
+            properties:
+                scope: []
+                services: []
+                resources: []
+                geography: [US]
+                identity: affinity_vCPE
+                applicableResources: any
+                affinityProperties:
+                    qualifier: same
+                    category: complex
+    -
+        OSDF_CASABLANCA.Affinity_vCPE_0:
+            type: onap.policies.optimization.AffinityPolicy
+            version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.Affinity_vCPE_0
+                policy-version: 1
+            properties:
+                scope: []
+                services: [vCPE]
+                resources: []
+                geography: [US]
+                identity: affinity_vCPE
+                applicableResources: any
+                affinityProperties:
+                    qualifier: different
+                    category: complex
+    -
         OSDF_CASABLANCA.Affinity_vCPE_1:
             type: onap.policies.optimization.AffinityPolicy
             version: 1.0.0
@@ -9,7 +43,7 @@ topology_template:
                 policy-id: OSDF_CASABLANCA.Affinity_vCPE_1
                 policy-version: 1
             properties:
-                scope: []
+                scope: [gold, platinum]
                 services: [vCPE]
                 resources: [vGMuxInfra, vG]
                 geography: [US, INTERNATIONAL]
@@ -17,7 +51,7 @@ topology_template:
                 applicableResources: any
                 affinityProperties:
                     qualifier: same
-                    category: complex
+                    category: availabilityZone
     -
         OSDF_CASABLANCA.Capacity_vG_1:
             type: onap.policies.optimization.Vim_fit
@@ -43,7 +77,7 @@ topology_template:
                 policy-id: OSDF_CASABLANCA.Distance_vG_1
                 policy-version: 1
             properties:
-                scope: []
+                scope: [platinum]
                 services: [vCPE]
                 resources: [vG]
                 geography: [US, INTERNATIONAL]
@@ -66,7 +100,7 @@ topology_template:
                 scope: []
                 services: [vCPE]
                 resources: [vG]
-                geography: [US, INTERNATIONAL]
+                geography: []
                 identity: hpa-vG
                 flavorFeatures:
                     -
@@ -149,7 +183,22 @@ topology_template:
                 identity: subscriber_vCPE
                 properties:
                     subscriberName: [subscriber_x, subscriber_y]
-                    subscriberRole: ["PVT Homing"]
+                    subscriberRole: [platinum]
+                    provStatus: [CAPPED]
+    -
+        OSDF_CASABLANCA.SubscriberPolicy_v2:
+            type: onap.policies.optimization.SubscriberPolicy
+            version: 1.0.0
+            metadata:
+                policy-id: OSDF_CASABLANCA.SubscriberPolicy_v2
+                policy-version: 1
+            properties:
+                scope: []
+                services: [vCPE]
+                identity: subscriber_vCPE
+                properties:
+                    subscriberName: [subscriber_a, subscriber_b]
+                    subscriberRole: [gold]
                     provStatus: [CAPPED]
     -
         OSDF_CASABLANCA.vnfPolicy_vG:
