@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b055dbf_da5876a9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2019-09-04T14:27:48Z",
+      "side": 1,
+      "message": "maybe we can remove this method? seems it is not being used anymore",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 5
+      },
+      "revId": "a9451c386e9e6326ea2f7c4f6278b313c73cae5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
