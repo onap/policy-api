@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +23,7 @@
 
 package org.onap.policy.api.main.startstop;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -49,6 +49,7 @@ public class ApiDatabaseInitializer {
     private StandardCoder standardCoder;
     private PolicyModelsProviderFactory factory;
 
+    // @formatter:off
     private static final String[] PRELOAD_POLICYTYPES = {
         "preloadedPolicyTypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json",
         "preloadedPolicyTypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.json",
@@ -67,6 +68,7 @@ public class ApiDatabaseInitializer {
         "preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
         "preloadedPolicyTypes/onap.policies.controlloop.Operational.json"
     };
+    // @formatter:on
 
     /**
      * Constructs the object.
@@ -87,27 +89,25 @@ public class ApiDatabaseInitializer {
 
         try (PolicyModelsProvider databaseProvider =
                 factory.createPolicyModelsProvider(policyModelsProviderParameters)) {
-            ToscaServiceTemplate policyTypes = new ToscaServiceTemplate();
-            policyTypes.setPolicyTypes(new ArrayList<Map<String,ToscaPolicyType>>());
-            policyTypes.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
+            ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+            serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
+            serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
             for (String pt : PRELOAD_POLICYTYPES) {
                 String policyTypeAsString = ResourceUtils.getResourceAsString(pt);
                 if (policyTypeAsString == null) {
                     throw new PolicyApiException("Preloading policy type cannot be found: " + pt);
                 }
-                ToscaServiceTemplate singlePolicyType = standardCoder.decode(policyTypeAsString,
-                        ToscaServiceTemplate.class);
+                ToscaServiceTemplate singlePolicyType =
+                        standardCoder.decode(policyTypeAsString, ToscaServiceTemplate.class);
                 if (singlePolicyType == null) {
                     throw new PolicyApiException("Error deserializing policy type from file: " + pt);
                 }
                 // Consolidate policy types
-                for (Map<String, ToscaPolicyType> eachPolicyType : singlePolicyType.getPolicyTypes()) {
-                    policyTypes.getPolicyTypes().add(eachPolicyType);
-                }
+                serviceTemplate.getPolicyTypes().putAll(singlePolicyType.getPolicyTypes());
             }
-            ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(policyTypes);
+            ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(serviceTemplate);
             if (createdPolicyTypes == null) {
-                throw new PolicyApiException("Error preloading policy types: " + policyTypes);
+                throw new PolicyApiException("Error preloading policy types: " + serviceTemplate);
             } else {
                 LOGGER.debug("Created initial policy types in DB - {}", createdPolicyTypes);
             }
