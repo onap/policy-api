@@ -75,6 +75,24 @@
       "revId": "a9451c386e9e6326ea2f7c4f6278b313c73cae5b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e4ed46c_ecbb2f35",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-04T17:22:33Z",
+      "side": 1,
+      "message": "Yes probably needs to be quoted - the optimization team had it this way originally and I undid them thinking I was being smart.",
+      "parentUuid": "a3c0dbea_eda06da8",
+      "revId": "a9451c386e9e6326ea2f7c4f6278b313c73cae5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
