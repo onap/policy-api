@@ -57,6 +57,24 @@
       "revId": "a9451c386e9e6326ea2f7c4f6278b313c73cae5b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3c0dbea_eda06da8",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-04T17:15:42Z",
+      "side": 1,
+      "message": "but will xacml take \"\u003d\u003e\"?  Maybe just need to quote it?",
+      "parentUuid": "638501f3_3e9e6ec0",
+      "revId": "a9451c386e9e6326ea2f7c4f6278b313c73cae5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
