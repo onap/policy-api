@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +31,7 @@ import java.util.Base64;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -39,7 +41,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * This class performs unit test of {@link PolicyTypeProvider}
+ * This class performs unit test of {@link PolicyTypeProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
@@ -51,8 +53,8 @@ public class TestPolicyTypeProvider {
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
 
-    private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
-    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json";
+    private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.yaml";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml";
 
     /**
      * Initializes parameters.
@@ -117,11 +119,12 @@ public class TestPolicyTypeProvider {
     public void testCreatePolicyType() {
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
     }
 
@@ -129,37 +132,36 @@ public class TestPolicyTypeProvider {
     public void testDeletePolicyType() {
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
-            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            ToscaServiceTemplate policyServiceTemplate =
-                    standardCoder.decode(policyString, ToscaServiceTemplate.class);
-            policyProvider.createPolicy(
-                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            String policyString = ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_RESOURCE));
+            ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
         }).doesNotThrowAnyException();
 
         String exceptionMessage = "policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 "
-            + "cannot be deleted as it is parameterized by policies onap.restart.tca:1.0.0";
+                + "cannot be deleted as it is parameterized by policies onap.restart.tca:1.0.0";
         assertThatThrownBy(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
         }).hasMessage(exceptionMessage);
 
         assertThatCode(() -> {
-            ToscaServiceTemplate serviceTemplate = policyProvider.deletePolicy(
-                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
+            ToscaServiceTemplate serviceTemplate = policyProvider
+                    .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(
-                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
-            assertFalse(serviceTemplate.getPolicyTypes().get(0).isEmpty());
+            ToscaServiceTemplate serviceTemplate =
+                    policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+            assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {

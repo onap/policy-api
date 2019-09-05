@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +37,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -55,7 +57,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifi
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * This class performs unit test of {@link PolicyProvider}
+ * This class performs unit test of {@link PolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
@@ -68,7 +70,7 @@ public class TestPolicyProvider {
     private static StandardCoder standardCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
-    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID = "policies/vCPE.policy.bad.policytypeid.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
             "policies/vCPE.policy.bad.policytypeversion.json";
@@ -139,7 +141,7 @@ public class TestPolicyProvider {
         String policyTypeVersion = "1.0.0";
         String policyTypeId = "onap.policies.monitoring.cdap.tca.hi.lo.app";
 
-        //Basic Exception Throw
+        // Basic Exception Throw
         assertThatThrownBy(() -> {
             policyProvider.fetchDeployedPolicies("dummy", "1.0.0", "dummy");
         }).hasMessage("could not find policy with ID dummy and type dummy:1.0.0 deployed in any pdp group");
@@ -164,8 +166,7 @@ public class TestPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
-                    policyTypeId, policyTypeVersion));
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -183,7 +184,8 @@ public class TestPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                String policyTypeString =
+                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
                 ToscaServiceTemplate policyTypeServiceTemplate =
                         standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -194,43 +196,36 @@ public class TestPolicyProvider {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
                 ToscaServiceTemplate policyServiceTemplate =
                         standardCoder.decode(policyString, ToscaServiceTemplate.class);
-                ToscaServiceTemplate serviceTemplate = policyProvider
-                        .createPolicy(policyTypeId, policyTypeVersion, policyServiceTemplate);
+                ToscaServiceTemplate serviceTemplate =
+                        policyProvider.createPolicy(policyTypeId, policyTypeVersion, policyServiceTemplate);
                 assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
             }).doesNotThrowAnyException();
 
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
-            assertThatThrownBy(
-                () -> {
-                    policyProvider.fetchDeployedPolicies(
-                        policyTypeId, policyTypeVersion, policyId);
-                }).hasMessage("could not find policy with ID " + policyId + " and type "
-                    + policyTypeId + ":" + policyTypeVersion + " deployed in any pdp group");
+            assertThatThrownBy(() -> {
+                policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
+            })  .hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
+                    + policyTypeVersion + " deployed in any pdp group");
 
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion));
-            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                    .getPolicies().size());
+            assertEquals(1,
+                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
 
             // Test fetchDeployedPolicies
-            assertThatCode(
-                () -> {
-                    policyProvider.fetchDeployedPolicies(
-                            policyTypeId, policyTypeVersion, policyId);
-                }).doesNotThrowAnyException();
+            assertThatCode(() -> {
+                policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
+            }).doesNotThrowAnyException();
 
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
-            assertThatThrownBy(
-                () -> {
-                    policyProvider.deletePolicy(
-                            "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
-                            "onap.restart.tca", "1.0.0");
-                }).hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
+            assertThatThrownBy(() -> {
+                policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
+                        "1.0.0");
+            })  .hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
                     + " cannot be deleted as it is deployed in pdp groups");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
     }
@@ -243,7 +238,8 @@ public class TestPolicyProvider {
         }).hasMessage("policy type with ID dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -267,8 +263,7 @@ public class TestPolicyProvider {
 
         assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            ToscaServiceTemplate policyServiceTemplate =
-                    standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
@@ -283,7 +278,8 @@ public class TestPolicyProvider {
         }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -291,24 +287,23 @@ public class TestPolicyProvider {
 
         assertThatCode(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            ToscaServiceTemplate policyServiceTemplate =
-                    standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
             ToscaServiceTemplate serviceTemplate = policyProvider
                     .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         }).doesNotThrowAnyException();
 
         assertThatCode(() -> {
-            ToscaServiceTemplate serviceTemplate = policyProvider.deletePolicy(
-                    "onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
+            ToscaServiceTemplate serviceTemplate = policyProvider
+                    .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         }).doesNotThrowAnyException();
 
         String exceptionMessage = "policy with ID onap.restart.tca:1.0.0 and type "
-            + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist";
+                + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist";
         assertThatThrownBy(() -> {
-            policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
-                    "onap.restart.tca", "1.0.0");
+            policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
+                    "1.0.0");
         }).hasMessage(exceptionMessage);
     }
 

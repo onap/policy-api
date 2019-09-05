@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +38,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -57,7 +59,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
- * This class performs unit test of {@link LegacyOperationalPolicyProvider}
+ * This class performs unit test of {@link LegacyOperationalPolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
@@ -70,7 +72,7 @@ public class TestLegacyOperationalPolicyProvider {
     private static StandardCoder standardCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.input.json";
-    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.json";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.yaml";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.Operational:1.0.0";
     private static final String POLICY_ID = "operational.restart:1.0.0";
     private static final String POLICY_NAME = "operational.restart";
@@ -125,7 +127,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -143,14 +146,12 @@ public class TestLegacyOperationalPolicyProvider {
             LegacyOperationalPolicy firstVersion =
                     operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
             assertNotNull(firstVersion);
-            assertEquals("1",
-                    firstVersion.getPolicyVersion());
+            assertEquals("1", firstVersion.getPolicyVersion());
 
             LegacyOperationalPolicy latestVersion =
                     operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
             assertNotNull(latestVersion);
-            assertEquals("2",
-                    latestVersion.getPolicyVersion());
+            assertEquals("2", latestVersion.getPolicyVersion());
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {
@@ -195,8 +196,8 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
-                    POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
+            pdpSubGroup.getSupportedPolicyTypes()
+                    .add(new ToscaPolicyTypeIdentifier(POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -214,7 +215,8 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                String policyTypeString =
+                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
                 ToscaServiceTemplate policyTypeServiceTemplate =
                         standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -225,43 +227,38 @@ public class TestLegacyOperationalPolicyProvider {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
                 LegacyOperationalPolicy policyToCreate =
                         standardCoder.decode(policyString, LegacyOperationalPolicy.class);
-                LegacyOperationalPolicy policyCreated = operationalPolicyProvider
-                        .createOperationalPolicy(policyToCreate);
+                LegacyOperationalPolicy policyCreated =
+                        operationalPolicyProvider.createOperationalPolicy(policyToCreate);
                 assertEquals("operational.restart", policyCreated.getPolicyId());
                 assertEquals("1", policyCreated.getPolicyVersion());
                 assertFalse(policyCreated.getContent() == null);
             }).doesNotThrowAnyException();
 
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
-            assertThatThrownBy(
-                () -> {
-                    operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
-                }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type "
-                    + POLICY_TYPE_ID + " deployed in any pdp group");
+            assertThatThrownBy(() -> {
+                operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
+            })  .hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
+                    + " deployed in any pdp group");
 
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
-            pdpSubGroup.getPolicies().add(
-                    new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
-            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                    .getPolicies().size());
+            pdpSubGroup.getPolicies()
+                    .add(new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
+            assertEquals(1,
+                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
 
             // Test fetchDeployedPolicies
-            assertThatCode(
-                () -> {
-                    operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
-                }).doesNotThrowAnyException();
+            assertThatCode(() -> {
+                operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
+            }).doesNotThrowAnyException();
 
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
-            assertThatThrownBy(
-                () -> {
-                    operationalPolicyProvider.deleteOperationalPolicy(
-                            POLICY_NAME, POLICY_VERSION);
-                }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
+            assertThatThrownBy(() -> {
+                operationalPolicyProvider.deleteOperationalPolicy(POLICY_NAME, POLICY_VERSION);
+            })  .hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
                     + " cannot be deleted as it is deployed in pdp groups");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
     }
@@ -276,7 +273,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -286,8 +284,7 @@ public class TestLegacyOperationalPolicyProvider {
             LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
             assertNotNull(createdPolicy);
             assertEquals("operational.restart", createdPolicy.getPolicyId());
-            assertTrue(createdPolicy.getContent()
-                    .startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
+            assertTrue(createdPolicy.getContent().startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
         }).doesNotThrowAnyException();
     }
 
@@ -319,8 +316,7 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
-                    policyTypeId, policyTypeVersion));
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -338,9 +334,10 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                String policyTypeString =
+                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
                 ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -357,13 +354,12 @@ public class TestLegacyOperationalPolicyProvider {
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion + legacyMinorPatchSuffix));
-            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                   .getPolicies().size());
+            assertEquals(1,
+                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
             assertThatThrownBy(() -> {
                 operationalPolicyProvider.deleteOperationalPolicy(policyId, policyVersion);
             }).hasMessageContaining("cannot be deleted as it is deployed in pdp groups");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
     }
@@ -380,7 +376,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -390,12 +387,11 @@ public class TestLegacyOperationalPolicyProvider {
             LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
             assertNotNull(createdPolicy);
 
-            LegacyOperationalPolicy deletedPolicy = operationalPolicyProvider
-                    .deleteOperationalPolicy("operational.restart", "1");
+            LegacyOperationalPolicy deletedPolicy =
+                    operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
             assertNotNull(deletedPolicy);
             assertEquals("operational.restart", deletedPolicy.getPolicyId());
-            assertTrue(deletedPolicy.getContent()
-                    .startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
+            assertTrue(deletedPolicy.getContent().startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {

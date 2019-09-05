@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +23,7 @@
 
 package org.onap.policy.api.main.startstop;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -36,6 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * This class creates initial policy types in the database.
@@ -49,24 +50,26 @@ public class ApiDatabaseInitializer {
     private StandardCoder standardCoder;
     private PolicyModelsProviderFactory factory;
 
+    // @formatter:off
     private static final String[] PRELOAD_POLICYTYPES = {
-        "preloadedPolicyTypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json",
-        "preloadedPolicyTypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.json",
-        "preloadedPolicyTypes/onap.policies.optimization.AffinityPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.DistancePolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.HpaPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.OptimizationPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.PciPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.QueryPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.SubscriberPolicy.json",
-        "preloadedPolicyTypes/onap.policies.optimization.Vim_fit.json",
-        "preloadedPolicyTypes/onap.policies.optimization.VnfPolicy.json",
-        "preloadedPolicyTypes/onap.policies.controlloop.guard.Blacklist.json",
-        "preloadedPolicyTypes/onap.policies.controlloop.guard.FrequencyLimiter.json",
-        "preloadedPolicyTypes/onap.policies.controlloop.guard.MinMax.json",
-        "preloadedPolicyTypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.json",
-        "preloadedPolicyTypes/onap.policies.controlloop.Operational.json"
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
+        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "policytypes/onap.policies.optimization.PciPolicy.yaml",
+        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
+        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
+        "policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "policytypes/onap.policies.optimization.VnfPolicy.yaml",
+        "policytypes/onap.policies.controlloop.guard.Blacklist.yaml",
+        "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
+        "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
+        "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
+        "policytypes/onap.policies.controlloop.Operational.yaml"
     };
+    // @formatter:on
 
     /**
      * Constructs the object.
@@ -87,27 +90,29 @@ public class ApiDatabaseInitializer {
 
         try (PolicyModelsProvider databaseProvider =
                 factory.createPolicyModelsProvider(policyModelsProviderParameters)) {
-            ToscaServiceTemplate policyTypes = new ToscaServiceTemplate();
-            policyTypes.setPolicyTypes(new ArrayList<Map<String,ToscaPolicyType>>());
-            policyTypes.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
+            ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+            serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
+            serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
             for (String pt : PRELOAD_POLICYTYPES) {
-                String policyTypeAsString = ResourceUtils.getResourceAsString(pt);
-                if (policyTypeAsString == null) {
+                String policyTypeAsStringYaml = ResourceUtils.getResourceAsString(pt);
+                if (policyTypeAsStringYaml == null) {
                     throw new PolicyApiException("Preloading policy type cannot be found: " + pt);
                 }
-                ToscaServiceTemplate singlePolicyType = standardCoder.decode(policyTypeAsString,
-                        ToscaServiceTemplate.class);
+
+                Object yamlObject = new Yaml().load(policyTypeAsStringYaml);
+                String policyTypeAsString = new StandardCoder().encode(yamlObject);
+
+                ToscaServiceTemplate singlePolicyType =
+                        standardCoder.decode(policyTypeAsString, ToscaServiceTemplate.class);
                 if (singlePolicyType == null) {
                     throw new PolicyApiException("Error deserializing policy type from file: " + pt);
                 }
                 // Consolidate policy types
-                for (Map<String, ToscaPolicyType> eachPolicyType : singlePolicyType.getPolicyTypes()) {
-                    policyTypes.getPolicyTypes().add(eachPolicyType);
-                }
+                serviceTemplate.getPolicyTypes().putAll(singlePolicyType.getPolicyTypes());
             }
-            ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(policyTypes);
+            ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(serviceTemplate);
             if (createdPolicyTypes == null) {
-                throw new PolicyApiException("Error preloading policy types: " + policyTypes);
+                throw new PolicyApiException("Error preloading policy types: " + serviceTemplate);
             } else {
                 LOGGER.debug("Created initial policy types in DB - {}", createdPolicyTypes);
             }

@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +39,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -59,7 +61,7 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 
 /**
- * This class performs unit test of {@link LegacyGuardPolicyProvider}
+ * This class performs unit test of {@link LegacyGuardPolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
@@ -75,7 +77,7 @@ public class TestLegacyGuardPolicyProvider {
     private static final String POLICY_RESOURCE_VER1 = "policies/vDNS.policy.guard.frequency.input.ver1.json";
     private static final String POLICY_RESOURCE_VER2 = "policies/vDNS.policy.guard.frequency.input.ver2.json";
     private static final String POLICY_TYPE_RESOURCE =
-            "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.json";
+            "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.guard.FrequencyLimiter:1.0.0";
     private static final String POLICY_TYPE_NAME = "onap.policies.controlloop.guard.FrequencyLimiter";
     private static final String POLICY_TYPE_VERSION = "1.0.0";
@@ -131,7 +133,8 @@ public class TestLegacyGuardPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -203,8 +206,8 @@ public class TestLegacyGuardPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
-                    POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
+            pdpSubGroup.getSupportedPolicyTypes()
+                    .add(new ToscaPolicyTypeIdentifier(POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -222,7 +225,8 @@ public class TestLegacyGuardPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                String policyTypeString =
+                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
                 ToscaServiceTemplate policyTypeServiceTemplate =
                         standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -233,41 +237,36 @@ public class TestLegacyGuardPolicyProvider {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
                 LegacyGuardPolicyInput policyToCreate =
                         standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
-                Map<String, LegacyGuardPolicyOutput> policyCreated = guardPolicyProvider
-                        .createGuardPolicy(policyToCreate);
+                Map<String, LegacyGuardPolicyOutput> policyCreated =
+                        guardPolicyProvider.createGuardPolicy(policyToCreate);
                 assertFalse(policyCreated.isEmpty());
             }).doesNotThrowAnyException();
 
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
-            assertThatThrownBy(
-                () -> {
-                    guardPolicyProvider.fetchDeployedGuardPolicies(POLICY_NAME);
-                }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type "
-                    + POLICY_TYPE_ID + " deployed in any pdp group");
+            assertThatThrownBy(() -> {
+                guardPolicyProvider.fetchDeployedGuardPolicies(POLICY_NAME);
+            })  .hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
+                    + " deployed in any pdp group");
 
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
-            pdpSubGroup.getPolicies().add(
-                    new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
-            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                    .getPolicies().size());
+            pdpSubGroup.getPolicies()
+                    .add(new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
+            assertEquals(1,
+                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
 
             // Test fetchDeployedPolicies
-            assertThatCode(
-                () -> {
-                    guardPolicyProvider.fetchDeployedGuardPolicies(POLICY_NAME);
-                }).doesNotThrowAnyException();
+            assertThatCode(() -> {
+                guardPolicyProvider.fetchDeployedGuardPolicies(POLICY_NAME);
+            }).doesNotThrowAnyException();
 
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
-            assertThatThrownBy(
-                () -> {
-                    guardPolicyProvider.deleteGuardPolicy(
-                            POLICY_NAME, POLICY_VERSION);
-                }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
+            assertThatThrownBy(() -> {
+                guardPolicyProvider.deleteGuardPolicy(POLICY_NAME, POLICY_VERSION);
+            })  .hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
                     + " cannot be deleted as it is deployed in pdp groups");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
     }
@@ -282,7 +281,8 @@ public class TestLegacyGuardPolicyProvider {
         }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -327,8 +327,7 @@ public class TestLegacyGuardPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(
-                    policyTypeId, policyTypeVersion));
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -346,17 +345,18 @@ public class TestLegacyGuardPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+                String policyTypeString =
+                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
                 ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
             // Create Policy
             assertThatCode(() -> {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-                LegacyGuardPolicyInput policyToCreate = standardCoder.decode(policyString,
-                        LegacyGuardPolicyInput.class);
+                LegacyGuardPolicyInput policyToCreate =
+                        standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
                 Map<String, LegacyGuardPolicyOutput> createdPolicy =
                         guardPolicyProvider.createGuardPolicy(policyToCreate);
                 assertNotNull(createdPolicy);
@@ -366,14 +366,12 @@ public class TestLegacyGuardPolicyProvider {
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion + legacyMinorPatchSuffix));
-            assertEquals(1, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                   .getPolicies().size());
+            assertEquals(1,
+                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
             assertThatThrownBy(() -> {
-                guardPolicyProvider
-                        .deleteGuardPolicy("guard.frequency.scaleout", "1");
+                guardPolicyProvider.deleteGuardPolicy("guard.frequency.scaleout", "1");
             }).hasMessageContaining("cannot be deleted as it is deployed in pdp groups");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
     }
@@ -389,7 +387,8 @@ public class TestLegacyGuardPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString = ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE);
+            String policyTypeString =
+                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
             ToscaServiceTemplate policyTypeServiceTemplate =
                     standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
@@ -400,8 +399,8 @@ public class TestLegacyGuardPolicyProvider {
             assertNotNull(createdPolicy);
             assertFalse(createdPolicy.isEmpty());
 
-            Map<String, LegacyGuardPolicyOutput> deletedPolicy = guardPolicyProvider
-                    .deleteGuardPolicy("guard.frequency.scaleout", "1");
+            Map<String, LegacyGuardPolicyOutput> deletedPolicy =
+                    guardPolicyProvider.deleteGuardPolicy("guard.frequency.scaleout", "1");
             assertNotNull(deletedPolicy);
             assertFalse(deletedPolicy.isEmpty());
             assertTrue(deletedPolicy.containsKey("guard.frequency.scaleout"));

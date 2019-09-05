@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +53,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
 import org.junit.Test;
+import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.CommonTestData;
@@ -109,48 +111,47 @@ public class TestApiRestServer {
     private static final String POLICYTYPES_TCA_POLICIES_VCPE =
             "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION = "policytypes/"
-        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
+            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
-        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
+            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED = "policytypes/"
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/deployed";
 
-    private static final String GUARD_POLICIES =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
+    private static final String GUARD_POLICIES = "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
     private static final String GUARD_POLICIES_VDNS_FL_LATEST =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
-            + "/versions/latest";
+                    + "/versions/latest";
     private static final String GUARD_POLICIES_VDNS_FL_DEPLOYED =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
-            + "/versions/deployed";
+                    + "/versions/deployed";
     private static final String GUARD_POLICIES_VDNS_MINMAX_LATEST =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout"
-            + "/versions/latest";
+                    + "/versions/latest";
     private static final String GUARD_POLICIES_VDNS_FL_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1";
-    private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1";
+            + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1";
+    private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION =
+            "policytypes/" + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1";
 
     private static final String OPS_POLICIES =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
     private static final String OPS_POLICIES_VCPE_LATEST =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart"
-            + "/versions/latest";
+                    + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_DEPLOYED =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart"
-            + "/versions/deployed";
+                    + "/versions/deployed";
     private static final String OPS_POLICIES_VDNS_LATEST =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout"
-            + "/versions/latest";
+                    + "/versions/latest";
     private static final String OPS_POLICIES_VFIREWALL_LATEST =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig"
-            + "/versions/latest";
+                    + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart/versions/1";
+            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.restart/versions/1";
     private static final String OPS_POLICIES_VDNS_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout/versions/1";
+            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
-        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig/versions/1";
+            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig/versions/1";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
@@ -167,8 +168,8 @@ public class TestApiRestServer {
     };
 
     private String[] toscaPolicyTypeResourceNames = {
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.json",
-        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.json"
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml"
     };
 
     private String[] legacyGuardPolicyResourceNames = {
@@ -349,7 +350,7 @@ public class TestApiRestServer {
                 assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
                 ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
                 assertNotNull(response);
-                assertFalse(response.getPolicyTypes().get(0).isEmpty());
+                assertFalse(response.getPolicyTypes().isEmpty());
             }
         }).doesNotThrowAnyException();
     }
@@ -386,21 +387,21 @@ public class TestApiRestServer {
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
             assertEquals("policy type with ID "
-                + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
                     error.getErrorMessage());
 
             rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
             assertEquals("policy type with ID "
-                + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
                     error.getErrorMessage());
 
             rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
             assertEquals("policy type with ID "
-                + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -415,7 +416,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
 
         for (String resrcName : toscaPolicyResourceNames) {
@@ -462,7 +463,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
             assertEquals("policy type with ID "
-                + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -470,7 +471,7 @@ public class TestApiRestServer {
     @Test
     public void testDeletePolicyTypePersistent() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);// create policy types
         for (String resrcName : toscaPolicyTypeResourceNames) {
@@ -478,7 +479,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -508,29 +509,33 @@ public class TestApiRestServer {
             Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy with ID null:null and "
-                + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+            assertEquals(
+                    "policy with ID null:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
 
             rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy with ID onap.restart.tca:null and "
-                + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+            assertEquals(
+                    "policy with ID onap.restart.tca:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
 
             rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy with ID onap.restart.tca:1.0.0 and "
-                + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+            assertEquals(
+                    "policy with ID onap.restart.tca:1.0.0 and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
 
             rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy with ID onap.restart.tca:null and "
-                + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+            assertEquals(
+                    "policy with ID onap.restart.tca:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -545,7 +550,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
 
         for (String resrcName : toscaPolicyResourceNames) {
@@ -576,8 +581,9 @@ public class TestApiRestServer {
             Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy with ID onap.restart.tca:1.0.0 and "
-                + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+            assertEquals(
+                    "policy with ID onap.restart.tca:1.0.0 and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                     error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
@@ -585,7 +591,7 @@ public class TestApiRestServer {
     @Test
     public void testDeletePolicyVersion() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);// create policy types
         for (String resrcName : toscaPolicyTypeResourceNames) {
@@ -593,7 +599,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : toscaPolicyResourceNames) {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
@@ -606,7 +612,7 @@ public class TestApiRestServer {
     @Test
     public void testGetAllVersionOfPolicy() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);// create policy types
         for (String resrcName : toscaPolicyTypeResourceNames) {
@@ -614,7 +620,7 @@ public class TestApiRestServer {
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
-            assertFalse(response.getPolicyTypes().get(0).isEmpty());
+            assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : toscaPolicyResourceNames) {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
@@ -640,7 +646,7 @@ public class TestApiRestServer {
     @Test
     public void testCreateGuardPolicies1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);
         for (String resrcName : legacyGuardPolicyResourceNames) {
@@ -665,7 +671,7 @@ public class TestApiRestServer {
     @Test
     public void testCreateOperationalPolicies1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);
         for (String resrcName : legacyOperationalPolicyResourceNames) {
@@ -683,33 +689,29 @@ public class TestApiRestServer {
             Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:null",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: guard.frequency.scaleout:null", error.getErrorMessage());
 
             rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
 
             rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.minmax.scaleout:null",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: guard.minmax.scaleout:null", error.getErrorMessage());
 
             rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.minmax.scaleout:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: guard.minmax.scaleout:1", error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
 
     @Test
     public void testReadGuardPolicies1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);
         for (String resrcName : legacyGuardPolicyResourceNames) {
@@ -741,45 +743,39 @@ public class TestApiRestServer {
             Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:null",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.restart:null", error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.scaleout:null",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.scaleout:null", error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.scaleout:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.scaleout:1", error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.modifyconfig:null",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.modifyconfig:null", error.getErrorMessage());
 
             rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.modifyconfig:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.modifyconfig:1", error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
 
     @Test
     public void testReadOperationalPolicies1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);
         for (String resrcName : legacyOperationalPolicyResourceNames) {
@@ -821,15 +817,14 @@ public class TestApiRestServer {
             Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
 
     @Test
     public void testDeleteGuardPolicy1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
         main = startApiService(true);
 
         for (String resrcName : legacyGuardPolicyResourceNames) {
@@ -859,15 +854,14 @@ public class TestApiRestServer {
             Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:1",
-                    error.getErrorMessage());
+            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
         }).doesNotThrowAnyException();
     }
 
     @Test
     public void testDeleteOperationalPolicy1() throws Exception {
 
-        setupParameters(); //setup DB
+        setupParameters(); // setup DB
 
         main = startApiService(true);
         for (String resrcName : legacyOperationalPolicyResourceNames) {
@@ -889,7 +883,7 @@ public class TestApiRestServer {
                 assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
                 ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
                 assertNotNull(response);
-                assertFalse(response.getPolicyTypes().get(0).isEmpty());
+                assertFalse(response.getPolicyTypes().isEmpty());
             }
         }).doesNotThrowAnyException();
     }
@@ -979,9 +973,10 @@ public class TestApiRestServer {
     }
 
     private Response createResource(String endpoint, String resourceName, boolean http) throws Exception {
-
-        ToscaServiceTemplate rawServiceTemplate = standardCoder.decode(
-                ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
+        String serviceTamplateAsJson =
+                ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(resourceName));
+        ToscaServiceTemplate rawServiceTemplate =
+                standardCoder.decode(serviceTamplateAsJson, ToscaServiceTemplate.class);
         final Invocation.Builder invocationBuilder;
 
         if (http) {
@@ -996,8 +991,8 @@ public class TestApiRestServer {
 
     private Response createGuardPolicy(String endpoint, String resourceName, boolean http) throws Exception {
 
-        LegacyGuardPolicyInput rawGuardPolicy = standardCoder.decode(
-                ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
+        LegacyGuardPolicyInput rawGuardPolicy =
+                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
         final Invocation.Builder invocationBuilder;
 
         if (http) {
@@ -1012,8 +1007,8 @@ public class TestApiRestServer {
 
     private Response createOperationalPolicy(String endpoint, String resourceName, boolean http) throws Exception {
 
-        LegacyOperationalPolicy rawOpsPolicy = standardCoder.decode(
-                ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
+        LegacyOperationalPolicy rawOpsPolicy =
+                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
         final Invocation.Builder invocationBuilder;
 
         if (http) {
@@ -1059,7 +1054,7 @@ public class TestApiRestServer {
         final String[] apiConfigParameters = new String[2];
         if (http) {
             COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
-                            "src/test/resources/parameters/ApiConfigParametersXXX.json", port);
+                    "src/test/resources/parameters/ApiConfigParametersXXX.json", port);
             apiConfigParameters[0] = "-c";
             apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParametersXXX.json";
         } else {
@@ -1068,7 +1063,7 @@ public class TestApiRestServer {
             systemProps.put("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
             System.setProperties(systemProps);
             COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
-                            "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", port);
+                    "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", port);
             apiConfigParameters[0] = "-c";
             apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json";
         }
@@ -1120,8 +1115,8 @@ public class TestApiRestServer {
 
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
         sc.init(null, noopTrustManager, new SecureRandom());
-        final ClientBuilder clientBuilder = ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host,
-                session) -> true);
+        final ClientBuilder clientBuilder =
+                ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
         final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
         client.register(feature);
