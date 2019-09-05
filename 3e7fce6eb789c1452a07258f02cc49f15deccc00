@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac9f0620_d543cfec",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.optimization.AffinityPolicy.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "This has a separate file now that defines this policy. Just need to convert the yaml to json.",
+      "range": {
+        "startLine": 4,
+        "startChar": 1,
+        "endLine": 8,
+        "endChar": 6
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f750ffe2_374d0c57",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.optimization.DistancePolicy.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 4,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 6
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8803fce0_fec63b26",
+        "filename": "main/src/main/resources/preloadedPolicyTypes/onap.policies.optimization.HpaPolicy.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 4,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 6
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6811d2a8_612504ee",
+        "filename": "main/src/test/resources/policytypes/onap.policies.Optimization.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "FYI - The other way with brackets was conform to spec. No need to reformat.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 0
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3442e3c5_09f1b579",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "missing the \u003e should be \u0027\u003e\u0027",
+      "range": {
+        "startLine": 45,
+        "startChar": 20,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "140c4ba8_5e89c4c1",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "so this should also be changed to quoted \u0027\u003e\u003d\u0027",
+      "range": {
+        "startLine": 46,
+        "startChar": 20,
+        "endLine": 46,
+        "endChar": 22
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5647d8f3_4f99f23d",
+        "filename": "main/src/test/resources/policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-05T11:56:11Z",
+      "side": 1,
+      "message": "change to \u0027\u003e\u003d\u0027 - may need to quote others",
+      "range": {
+        "startLine": 94,
+        "startChar": 26,
+        "endLine": 94,
+        "endChar": 28
+      },
+      "revId": "3e7fce6eb789c1452a07258f02cc49f15deccc00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
