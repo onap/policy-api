@@ -38,10 +38,10 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.Pdp;
@@ -70,6 +70,7 @@ public class TestLegacyOperationalPolicyProvider {
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
+    private static StandardYamlCoder standardYamlCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.input.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.yaml";
@@ -90,6 +91,7 @@ public class TestLegacyOperationalPolicyProvider {
     public void setupParameters() throws PfModelException {
 
         standardCoder = new StandardCoder();
+        standardYamlCoder = new StandardYamlCoder();
         providerParams = new PolicyModelsProviderParameters();
         providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
@@ -127,10 +129,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString =
-                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-            ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -215,10 +215,8 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString =
-                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-                ToscaServiceTemplate policyTypeServiceTemplate =
-                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -273,10 +271,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString =
-                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-            ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -334,10 +330,8 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString =
-                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-                ToscaServiceTemplate policyTypeServiceTemplate =
-                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -376,10 +370,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            String policyTypeString =
-                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-            ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
