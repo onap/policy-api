@@ -64,8 +64,8 @@ import org.slf4j.LoggerFactory;
  */
 @Path("/policy/api/v1")
 @Api(value = "Legacy Policy Design API")
-@Produces("application/json")
-@Consumes("application/json")
+@Produces({"application/json", "application/yaml"})
+@Consumes({"application/json", "application/yaml"})
 public class LegacyApiRestController extends CommonRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LegacyApiRestController.class);

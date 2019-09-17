@@ -37,10 +37,10 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.Pdp;
@@ -68,6 +68,7 @@ public class TestPolicyProvider {
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
+    private static StandardYamlCoder standardYamlCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml";
@@ -84,6 +85,7 @@ public class TestPolicyProvider {
     public void setupParameters() throws PfModelException {
 
         standardCoder = new StandardCoder();
+        standardYamlCoder = new StandardYamlCoder();
         providerParams = new PolicyModelsProviderParameters();
         providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
@@ -184,10 +186,8 @@ public class TestPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                String policyTypeString =
-                        ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-                ToscaServiceTemplate policyTypeServiceTemplate =
-                        standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -238,10 +238,8 @@ public class TestPolicyProvider {
         }).hasMessage("policy type with ID dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString =
-                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-            ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         }).doesNotThrowAnyException();
 
@@ -278,10 +276,8 @@ public class TestPolicyProvider {
         }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
 
         assertThatCode(() -> {
-            String policyTypeString =
-                    ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE));
-            ToscaServiceTemplate policyTypeServiceTemplate =
-                    standardCoder.decode(policyTypeString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         }).doesNotThrowAnyException();
 

@@ -22,14 +22,12 @@
 
 package org.onap.policy.api.main.rest;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
@@ -45,15 +43,12 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.After;
 import org.junit.Test;
-import org.onap.policy.api.main.ApiTestSupportUtilities;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.CommonTestData;
@@ -61,11 +56,13 @@ import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.startstop.Main;
 import org.onap.policy.common.endpoints.http.server.RestServer;
+import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
@@ -89,6 +86,8 @@ public class TestApiRestServer {
     private static final String ALIVE = "alive";
     private static final String SELF = "self";
     private static final String NAME = "Policy API";
+    private static final String APP_JSON = "application/json";
+    private static final String APP_YAML = "application/yaml";
 
     private static final String HEALTHCHECK_ENDPOINT = "healthcheck";
     private static final String STATISTICS_ENDPOINT = "statistics";
@@ -158,23 +157,42 @@ public class TestApiRestServer {
     private Main main;
     private RestServer restServer;
     private StandardCoder standardCoder = new StandardCoder();
+    private StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
     private int port;
 
     // @formatter:off
     private String[] toscaPolicyResourceNames = {
         "policies/vCPE.policy.monitoring.input.tosca.json",
+        "policies/vCPE.policy.monitoring.input.tosca.yaml",
         "policies/vDNS.policy.monitoring.input.tosca.json",
+        "policies/vDNS.policy.monitoring.input.tosca.yaml",
         "policies/vFirewall.policy.monitoring.input.tosca.json",
+        "policies/vFirewall.policy.monitoring.input.tosca.yaml"
     };
 
     private String[] toscaPolicyTypeResourceNames = {
         "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
-        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml"
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
+        "policytypes/onap.policies.Optimization.yaml",
+        "policytypes/onap.policies.controlloop.Operational.yaml",
+        "policytypes/onap.policies.controlloop.guard.Blacklist.yaml",
+        "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
+        "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
+        "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
+        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
+        "policytypes/onap.policies.optimization.PciPolicy.yaml",
+        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
+        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
+        "policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "policytypes/onap.policies.optimization.VnfPolicy.yaml"
     };
 
     private String[] legacyGuardPolicyResourceNames = {
         "policies/vDNS.policy.guard.frequency.input.json",
-        "policies/vDNS.policy.guard.minmax.input.json",
+        "policies/vDNS.policy.guard.minmax.input.json"
     };
 
     private String[] legacyOperationalPolicyResourceNames = {
@@ -182,6 +200,7 @@ public class TestApiRestServer {
         "policies/vDNS.policy.operational.input.json",
         "policies/vFirewall.policy.operational.input.json"
     };
+
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static PolicyProvider policyProvider;
@@ -228,106 +247,6 @@ public class TestApiRestServer {
     }
 
     @Test
-    public void testHealthCheckSuccess() {
-
-        try {
-            main = startApiService(true);
-            final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
-            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
-            validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
-        } catch (final Exception exp) {
-            LOGGER.error("testHealthCheckSuccess failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testHealthCheckFailure() throws InterruptedException, IOException {
-
-        port = NetworkUtil.allocPort();
-        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
-        restServerParams.setName(CommonTestData.API_GROUP_NAME);
-        restServer = new RestServer(restServerParams, null, ApiRestController.class);
-        try {
-            restServer.start();
-            final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT);
-            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
-            validateHealthCheckReport(NAME, SELF, false, 500, NOT_ALIVE, report);
-            assertTrue(restServer.isAlive());
-            assertTrue(restServer.toString().startsWith("RestServer [servers="));
-        } catch (final Exception exp) {
-            LOGGER.error("testHealthCheckFailure failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testHttpsHealthCheckSuccess() {
-
-        try {
-            main = startApiService(false);
-            final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT);
-            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
-            validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
-        } catch (final Exception exp) {
-            LOGGER.error("testHttpsHealthCheckSuccess failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testApiStatistics_200() {
-
-        try {
-            main = startApiService(true);
-            Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
-            StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 200);
-            updateApiStatistics();
-            invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
-            report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 200);
-            ApiStatisticsManager.resetAllStatistics();
-        } catch (final Exception exp) {
-            LOGGER.error("testApiStatistics_200 failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testApiStatistics_500() throws Exception {
-
-        port = NetworkUtil.allocPort();
-        final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
-        restServerParams.setName(CommonTestData.API_GROUP_NAME);
-        restServer = new RestServer(restServerParams, null, ApiRestController.class);
-        try {
-            restServer.start();
-            final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT);
-            final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 500);
-            ApiStatisticsManager.resetAllStatistics();
-        } catch (final Exception exp) {
-            LOGGER.error("testApiStatistics_500 failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
-    public void testHttpsApiStatistics() {
-
-        try {
-            main = startApiService(false);
-            final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT);
-            final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-            validateStatisticsReport(report, 200);
-        } catch (final Exception exp) {
-            LOGGER.error("testHttpsApiStatistics failed", exp);
-            fail("Test should not throw an exception");
-        }
-    }
-
-    @Test
     public void testApiStatisticsConstructorIsPrivate() {
 
         try {
@@ -342,8 +261,7 @@ public class TestApiRestServer {
 
     @Test
     public void testCreatePolicyTypes() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(true);
             for (String resrcName : toscaPolicyTypeResourceNames) {
                 Response rawResponse = createResource(POLICYTYPES, resrcName, true);
@@ -352,144 +270,14 @@ public class TestApiRestServer {
                 assertNotNull(response);
                 assertFalse(response.getPolicyTypes().isEmpty());
             }
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadPolicyTypes() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(POLICYTYPES, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertTrue(response.getPolicyTypes().isEmpty());
-
-            rawResponse = readResource(POLICYTYPES_TCA, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:null does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_TCA_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_TCA_LATEST, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:null does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_COLLECTOR, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID "
-                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID "
-                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID "
-                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
-                    error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadPolicyTypesPersistent() throws Exception {
-
-        setupParameters();
-        main = startApiService(true);
-        for (String resrcName : toscaPolicyTypeResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertNotNull(response);
-            assertFalse(response.getPolicyTypes().isEmpty());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
         }
-
-        for (String resrcName : toscaPolicyResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = readResource(POLICYTYPES_TCA, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(POLICYTYPES_TCA_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(POLICYTYPES_TCA_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(POLICYTYPES_COLLECTOR, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-    }
-
-    @Test
-    public void testDeletePolicyType() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = deleteResource(POLICYTYPES_COLLECTOR_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type with ID "
-                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
-                    error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testDeletePolicyTypePersistent() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);// create policy types
-        for (String resrcName : toscaPolicyTypeResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertNotNull(response);
-            assertFalse(response.getPolicyTypes().isEmpty());
-        }
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
     }
 
     @Test
     public void testCreatePolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(true);
             for (String resrcName : toscaPolicyResourceNames) {
                 Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
@@ -498,385 +286,68 @@ public class TestApiRestServer {
                 assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                         error.getErrorMessage());
             }
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadPolicies() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(
-                    "policy with ID null:null and "
-                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(
-                    "policy with ID onap.restart.tca:null and "
-                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(
-                    "policy with ID onap.restart.tca:1.0.0 and "
-                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-
-            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(
-                    "policy with ID onap.restart.tca:null and "
-                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadPoliciesPersistent() throws Exception {
-
-        setupParameters();
-        main = startApiService(true);
-        for (String resrcName : toscaPolicyTypeResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertNotNull(response);
-            assertFalse(response.getPolicyTypes().isEmpty());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
         }
-
-        for (String resrcName : toscaPolicyResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse;
-        rawResponse = readResource(POLICYTYPES_TCA, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-    }
-
-    @Test
-    public void testDeletePolicies() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(
-                    "policy with ID onap.restart.tca:1.0.0 and "
-                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
-                    error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testDeletePolicyVersion() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);// create policy types
-        for (String resrcName : toscaPolicyTypeResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertNotNull(response);
-            assertFalse(response.getPolicyTypes().isEmpty());
-        }
-        for (String resrcName : toscaPolicyResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-    }
-
-    @Test
-    public void testGetAllVersionOfPolicy() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);// create policy types
-        for (String resrcName : toscaPolicyTypeResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-            assertNotNull(response);
-            assertFalse(response.getPolicyTypes().isEmpty());
-        }
-        for (String resrcName : toscaPolicyResourceNames) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-        Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
     }
 
     @Test
     public void testCreateGuardPolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(true);
             for (String resrcName : legacyGuardPolicyResourceNames) {
                 Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
-        }).doesNotThrowAnyException();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
-    public void testCreateGuardPolicies1() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);
-        for (String resrcName : legacyGuardPolicyResourceNames) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+    public void testCreateGuardPoliciesPersistent() {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);
+            for (String resrcName : legacyGuardPolicyResourceNames) {
+                Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
         }
-
     }
 
     @Test
     public void testCreateOperationalPolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(true);
             for (String resrcName : legacyOperationalPolicyResourceNames) {
                 Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testCreateOperationalPolicies1() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);
-        for (String resrcName : legacyOperationalPolicyResourceNames) {
-            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
         }
-
     }
 
     @Test
-    public void testReadGuardPolicies() {
-
-        assertThatCode(() -> {
+    public void testCreateOperationalPoliciesPersistent() {
+        try {
+            setupParameters(); // setup DB
             main = startApiService(true);
-            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:null", error.getErrorMessage());
-
-            rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
-
-            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.minmax.scaleout:null", error.getErrorMessage());
-
-            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.minmax.scaleout:1", error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadGuardPolicies1() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);
-        for (String resrcName : legacyGuardPolicyResourceNames) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            for (String resrcName : legacyOperationalPolicyResourceNames) {
+                Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
         }
-
-        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-    }
-
-    @Test
-    public void testReadOperationalPolicies() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:null", error.getErrorMessage());
-
-            rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
-
-            rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.scaleout:null", error.getErrorMessage());
-
-            rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.scaleout:1", error.getErrorMessage());
-
-            rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.modifyconfig:null", error.getErrorMessage());
-
-            rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.modifyconfig:1", error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testReadOperationalPolicies1() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);
-        for (String resrcName : legacyOperationalPolicyResourceNames) {
-            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-        rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-
-    }
-
-    @Test
-    public void testDeleteGuardPolicy() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testDeleteGuardPolicy1() throws Exception {
-
-        setupParameters(); // setup DB
-        main = startApiService(true);
-
-        for (String resrcName : legacyGuardPolicyResourceNames) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfGuardPolicy() {
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_DEPLOYED, true);
-            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testDeleteOperationalPolicy() {
-
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testDeleteOperationalPolicy1() throws Exception {
-
-        setupParameters(); // setup DB
-
-        main = startApiService(true);
-        for (String resrcName : legacyOperationalPolicyResourceNames) {
-            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-        Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
     }
 
     @Test
     public void testHttpsCreatePolicyTypes() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(false);
             for (String resrcName : toscaPolicyTypeResourceNames) {
                 Response rawResponse = createResource(POLICYTYPES, resrcName, false);
@@ -885,13 +356,14 @@ public class TestApiRestServer {
                 assertNotNull(response);
                 assertFalse(response.getPolicyTypes().isEmpty());
             }
-        }).doesNotThrowAnyException();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
     public void testHttpsCreatePolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(false);
             for (String resrcName : toscaPolicyResourceNames) {
                 Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, false);
@@ -900,149 +372,1028 @@ public class TestApiRestServer {
                 assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                         error.getErrorMessage());
             }
-        }).doesNotThrowAnyException();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
     public void testHttpsCreateGuardPolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(false);
             for (String resrcName : legacyGuardPolicyResourceNames) {
                 Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, false);
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
-        }).doesNotThrowAnyException();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
     public void testHttpsCreateOperationalPolicies() {
-
-        assertThatCode(() -> {
+        try {
             main = startApiService(false);
             for (String resrcName : legacyOperationalPolicyResourceNames) {
                 Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, false);
                 assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             }
-        }).doesNotThrowAnyException();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
-    public void testGetDeployedVersionsOfPolicy() {
-        assertThatCode(() -> {
+    public void testHealthCheckSuccessJson() {
+        testHealthCheckSuccess(APP_JSON);
+    }
+
+    @Test
+    public void testHealthCheckSuccessYaml() {
+        testHealthCheckSuccess(APP_YAML);
+    }
+
+
+
+    private void testHealthCheckSuccess(String mediaType) {
+
+        try {
             main = startApiService(true);
-            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED, true);
+            final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT, mediaType);
+            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+            validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
+        } catch (final Exception exp) {
+            LOGGER.error("testHealthCheckSuccess failed", exp);
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testHealthCheckFailureJson() {
+        testHealthCheckFailure(APP_JSON);
+    }
+
+    @Test
+    public void testHealthCheckFailureYaml() {
+        testHealthCheckFailure(APP_YAML);
+    }
+
+    private void testHealthCheckFailure(String mediaType) {
+        try {
+            port = NetworkUtil.allocPort();
+            final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
+            restServerParams.setName(CommonTestData.API_GROUP_NAME);
+            restServer = new RestServer(restServerParams, null, ApiRestController.class);
+
+            restServer.start();
+            final Invocation.Builder invocationBuilder = sendHttpRequest(HEALTHCHECK_ENDPOINT, mediaType);
+            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+            validateHealthCheckReport(NAME, SELF, false, 500, NOT_ALIVE, report);
+            assertTrue(restServer.isAlive());
+            assertTrue(restServer.toString().startsWith("RestServer [servers="));
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testHttpsHealthCheckSuccessJson() {
+        testHttpsHealthCheckSuccess(APP_JSON);
+    }
+
+    @Test
+    public void testHttpsHealthCheckSuccessYaml() {
+        testHttpsHealthCheckSuccess(APP_YAML);
+    }
+
+    private void testHttpsHealthCheckSuccess(String mediaType) {
+        try {
+            main = startApiService(false);
+            final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT, mediaType);
+            final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
+            validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testApiStatistics_200_Json() {
+        testApiStatistics_200(APP_JSON);
+    }
+
+    @Test
+    public void testApiStatistics_200_Yaml() {
+        testApiStatistics_200(APP_YAML);
+    }
+
+    private void testApiStatistics_200(String mediaType) {
+        try {
+            main = startApiService(true);
+            Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT, mediaType);
+            StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+            validateStatisticsReport(report, 200);
+            updateApiStatistics();
+            invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT, mediaType);
+            report = invocationBuilder.get(StatisticsReport.class);
+            validateStatisticsReport(report, 200);
+            ApiStatisticsManager.resetAllStatistics();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testHttpsApiStatisticsJson() {
+        testHttpsApiStatistics(APP_JSON);
+    }
+
+    @Test
+    public void testHttpsApiStatisticsYaml() {
+        testHttpsApiStatistics(APP_YAML);
+    }
+
+    private void testHttpsApiStatistics(String mediaType) {
+        try {
+            main = startApiService(false);
+            final Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType);
+            final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+            validateStatisticsReport(report, 200);
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testApiStatistics_500_Json() {
+        testApiStatistics_500(APP_JSON);
+    }
+
+    @Test
+    public void testApiStatistics_500_Yaml() {
+        testApiStatistics_500(APP_YAML);
+    }
+
+
+    private void testApiStatistics_500(String mediaType) {
+        try {
+            port = NetworkUtil.allocPort();
+            final RestServerParameters restServerParams = new CommonTestData().getRestServerParameters(false, port);
+            restServerParams.setName(CommonTestData.API_GROUP_NAME);
+            restServer = new RestServer(restServerParams, null, ApiRestController.class);
+
+            restServer.start();
+            final Invocation.Builder invocationBuilder = sendHttpRequest(STATISTICS_ENDPOINT, mediaType);
+            final StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
+            validateStatisticsReport(report, 500);
+            ApiStatisticsManager.resetAllStatistics();
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+
+    @Test
+    public void testReadPolicyTypesJson() {
+        testReadPolicyTypes(APP_JSON);
+    }
+
+    @Test
+    public void testReadPolicyTypesYaml() {
+        testReadPolicyTypes(APP_YAML);
+    }
+
+    private void testReadPolicyTypes(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(POLICYTYPES, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertTrue(response.getPolicyTypes().isEmpty());
+
+            rawResponse = readResource(POLICYTYPES_TCA, true, mediaType);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
-    }
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:null does not exist",
+                    error.getErrorMessage());
 
-    @Test
-    public void testGetLatestVersionOfOperationalPolicy() {
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testGetSpecificVersionOfOperationalPolicy() {
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true);
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfOperationalPolicy() {
-        assertThatCode(() -> {
-            main = startApiService(true);
-            Response rawResponse = readResource(OPS_POLICIES_VCPE_DEPLOYED, true);
+            rawResponse = readResource(POLICYTYPES_TCA_VERSION, true, mediaType);
             assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_TCA_LATEST, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:null does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID "
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID "
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID "
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:null does not exist",
+                    error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
     @Test
-    public void testDeleteSpecificVersionOfOperationalPolicy() {
-        assertThatCode(() -> {
+    public void testReadPolicyTypesPersistentJson() {
+        testReadPolicyTypesPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testReadPolicyTypesPersistentYaml() {
+        testReadPolicyTypesPersistent(APP_YAML);
+    }
+
+    private void testReadPolicyTypesPersistent(String mediaType) {
+        try {
+            setupParameters();
             main = startApiService(true);
-            Response rawResponse = deleteResource(OPS_POLICIES_VDNS_VERSION, true);
+            for (String resrcName : toscaPolicyTypeResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+                assertNotNull(response);
+                assertFalse(response.getPolicyTypes().isEmpty());
+            }
+
+            for (String resrcName : toscaPolicyResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+
+            Response rawResponse = readResource(POLICYTYPES_TCA, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+            rawResponse = readResource(POLICYTYPES_TCA_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(POLICYTYPES_TCA_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeletePolicyTypeJson() {
+        testDeletePolicyType(APP_JSON);
+    }
+
+    @Test
+    public void testDeletePolicyTypeYaml() {
+        testDeletePolicyType(APP_YAML);
+    }
+
+    private void testDeletePolicyType(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = deleteResource(POLICYTYPES_COLLECTOR_VERSION, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type with ID "
+                    + "onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server:1.0.0 does not exist",
+                    error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeletePolicyTypePersistentJson() {
+        testDeletePolicyTypePersistent(APP_JSON);
+    }
+
+    @Test
+    public void testDeletePolicyTypePersistentYaml() {
+        testDeletePolicyTypePersistent(APP_YAML);
+    }
+
+    private void testDeletePolicyTypePersistent(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);// create policy types
+            for (String resrcName : toscaPolicyTypeResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+                assertNotNull(response);
+                assertFalse(response.getPolicyTypes().isEmpty());
+            }
+            Response rawResponse = deleteResource(POLICYTYPES_TCA_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+
+    @Test
+    public void testReadPoliciesJson() {
+        testReadPolicies(APP_JSON);
+    }
+
+    @Test
+    public void testReadPoliciesYaml() {
+        testReadPolicies(APP_YAML);
+    }
+
+    private void testReadPolicies(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(
+                    "policy with ID null:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(
+                    "policy with ID onap.restart.tca:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(
+                    "policy with ID onap.restart.tca:1.0.0 and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(
+                    "policy with ID onap.restart.tca:null and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testReadPoliciesPersistentJson() {
+        testReadPoliciesPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testReadPoliciesPersistentYaml() {
+        testReadPoliciesPersistent(APP_YAML);
+    }
+
+    private void testReadPoliciesPersistent(String mediaType) {
+        try {
+            setupParameters();
+            main = startApiService(true);
+            for (String resrcName : toscaPolicyTypeResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+                assertNotNull(response);
+                assertFalse(response.getPolicyTypes().isEmpty());
+            }
+
+            for (String resrcName : toscaPolicyResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+
+            Response rawResponse;
+            rawResponse = readResource(POLICYTYPES_TCA, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+            rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeletePoliciesJson() {
+        testDeletePolicies(APP_JSON);
+    }
+
+    @Test
+    public void testDeletePoliciesYaml() {
+        testDeletePolicies(APP_YAML);
+    }
+
+    private void testDeletePolicies(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(
+                    "policy with ID onap.restart.tca:1.0.0 and "
+                            + "type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                    error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeletePolicyVersionJson() {
+        testDeletePolicyVersion(APP_JSON);
+    }
+
+    @Test
+    public void testDeletePolicyVersionYaml() {
+        testDeletePolicyVersion(APP_YAML);
+    }
+
+    private void testDeletePolicyVersion(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);// create policy types
+            for (String resrcName : toscaPolicyTypeResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+                assertNotNull(response);
+                assertFalse(response.getPolicyTypes().isEmpty());
+            }
+            for (String resrcName : toscaPolicyResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+            Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testGetAllVersionOfPolicyJson() {
+        testGetAllVersionOfPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetAllVersionOfPolicyYaml() {
+        testGetAllVersionOfPolicy(APP_YAML);
+    }
+
+    private void testGetAllVersionOfPolicy(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);// create policy types
+            for (String resrcName : toscaPolicyTypeResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+                ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+                assertNotNull(response);
+                assertFalse(response.getPolicyTypes().isEmpty());
+            }
+            for (String resrcName : toscaPolicyResourceNames) {
+                Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+
+    @Test
+    public void testReadGuardPoliciesJson() {
+        testReadGuardPolicies(APP_JSON);
+    }
+
+    @Test
+    public void testReadGuardPoliciesYaml() {
+        testReadGuardPolicies(APP_YAML);
+    }
+
+    private void testReadGuardPolicies(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true, mediaType);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
-        }).doesNotThrowAnyException();
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: guard.frequency.scaleout:null", error.getErrorMessage());
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: guard.minmax.scaleout:null", error.getErrorMessage());
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: guard.minmax.scaleout:1", error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
     }
 
-    private Response createResource(String endpoint, String resourceName, boolean http) throws Exception {
-        String serviceTamplateAsJson =
-                ApiTestSupportUtilities.yaml2Json(ResourceUtils.getResourceAsString(resourceName));
-        ToscaServiceTemplate rawServiceTemplate =
-                standardCoder.decode(serviceTamplateAsJson, ToscaServiceTemplate.class);
+    @Test
+    public void testReadGuardPoliciesPersistentJson() {
+        testReadGuardPoliciesPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testReadGuardPoliciesPersistentYaml() {
+        testReadGuardPoliciesPersistent(APP_YAML);
+    }
+
+    private void testReadGuardPoliciesPersistent(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);
+            for (String resrcName : legacyGuardPolicyResourceNames) {
+                Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+
+            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+
+    @Test
+    public void testReadOperationalPoliciesJson() {
+        testReadOperationalPolicies(APP_JSON);
+    }
+
+    @Test
+    public void testReadOperationalPoliciesYaml() {
+        testReadOperationalPolicies(APP_YAML);
+    }
+
+    private void testReadOperationalPolicies(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.restart:null", error.getErrorMessage());
+
+            rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
+
+            rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.scaleout:null", error.getErrorMessage());
+
+            rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.scaleout:1", error.getErrorMessage());
+
+            rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.modifyconfig:null", error.getErrorMessage());
+
+            rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.modifyconfig:1", error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testReadOperationalPoliciesPersistentJson() {
+        testReadOperationalPoliciesPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testReadOperationalPoliciesPersistentYaml() {
+        testReadOperationalPoliciesPersistent(APP_YAML);
+    }
+
+    private void testReadOperationalPoliciesPersistent(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);
+            for (String resrcName : legacyOperationalPolicyResourceNames) {
+                Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+
+            Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+
+            rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteGuardPolicyJson() {
+        testDeleteGuardPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testDeleteGuardPolicyYaml() {
+        testDeleteGuardPolicy(APP_YAML);
+    }
+
+    private void testDeleteGuardPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: guard.frequency.scaleout:1", error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteGuardPolicyPersistentJson() {
+        testDeleteGuardPolicyPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testDeleteGuardPolicyPersistentYaml() {
+        testDeleteGuardPolicyPersistent(APP_YAML);
+    }
+
+    private void testDeleteGuardPolicyPersistent(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);
+
+            for (String resrcName : legacyGuardPolicyResourceNames) {
+                Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+
+            Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfGuardPolicyJson() {
+        testGetDeployedVersionsOfGuardPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfGuardPolicyYaml() {
+        testGetDeployedVersionsOfGuardPolicy(APP_YAML);
+    }
+
+    private void testGetDeployedVersionsOfGuardPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_DEPLOYED, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteOperationalPolicyJson() {
+        testDeleteOperationalPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testDeleteOperationalPolicyYaml() {
+        testDeleteOperationalPolicy(APP_YAML);
+    }
+
+    private void testDeleteOperationalPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteOperationalPolicyPersistentJson() {
+        testDeleteOperationalPolicyPersistent(APP_JSON);
+    }
+
+    @Test
+    public void testDeleteOperationalPolicyPersistentYaml() {
+        testDeleteOperationalPolicyPersistent(APP_YAML);
+    }
+
+    private void testDeleteOperationalPolicyPersistent(String mediaType) {
+        try {
+            setupParameters(); // setup DB
+            main = startApiService(true);
+            for (String resrcName : legacyOperationalPolicyResourceNames) {
+                Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName, true);
+                assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            }
+            Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, true, mediaType);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+
+    @Test
+    public void testGetDeployedVersionsOfPolicyJson() {
+        testGetDeployedVersionsOfPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfPolicyYaml() {
+        testGetDeployedVersionsOfPolicy(APP_YAML);
+    }
+
+    private void testGetDeployedVersionsOfPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testGetLatestVersionOfOperationalPolicyJson() {
+        testGetLatestVersionOfOperationalPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetLatestVersionOfOperationalPolicyYaml() {
+        testGetLatestVersionOfOperationalPolicy(APP_YAML);
+    }
+
+    private void testGetLatestVersionOfOperationalPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testGetSpecificVersionOfOperationalPolicyJson() {
+        testGetSpecificVersionOfOperationalPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetSpecificVersionOfOperationalPolicyYaml() {
+        testGetSpecificVersionOfOperationalPolicy(APP_YAML);
+    }
+
+    private void testGetSpecificVersionOfOperationalPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfOperationalPolicyJson() {
+        testGetDeployedVersionsOfOperationalPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetDeployedVersionsOfOperationalPolicyYaml() {
+        testGetDeployedVersionsOfOperationalPolicy(APP_YAML);
+    }
+
+    private void testGetDeployedVersionsOfOperationalPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = readResource(OPS_POLICIES_VCPE_DEPLOYED, true, mediaType);
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testDeleteSpecificVersionOfOperationalPolicyJson() {
+        testDeleteSpecificVersionOfOperationalPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testDeleteSpecificVersionOfOperationalPolicyYaml() {
+        testDeleteSpecificVersionOfOperationalPolicy(APP_YAML);
+    }
+
+    private void testDeleteSpecificVersionOfOperationalPolicy(String mediaType) {
+        try {
+            main = startApiService(true);
+            Response rawResponse = deleteResource(OPS_POLICIES_VDNS_VERSION, true, mediaType);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        } catch (Exception exp) {
+            fail("Test should not throw an exception");
+        }
+    }
+
+    private Response createResource(String endpoint, String resourceName, boolean http)
+            throws Exception {
+
+        String mediaType = APP_JSON; // default media type
+        ToscaServiceTemplate rawServiceTemplate = new ToscaServiceTemplate();
+        if (resourceName.endsWith(".json")) {
+            rawServiceTemplate = standardCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
+        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
+            mediaType = APP_YAML;
+            rawServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
+        }
+
         final Invocation.Builder invocationBuilder;
 
         if (http) {
-            invocationBuilder = sendHttpRequest(endpoint);
+            invocationBuilder = sendHttpRequest(endpoint, mediaType);
         } else {
-            invocationBuilder = sendHttpsRequest(endpoint);
+            invocationBuilder = sendHttpsRequest(endpoint, mediaType);
         }
 
-        Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, MediaType.APPLICATION_JSON);
+        Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
         return invocationBuilder.post(entity);
     }
 
-    private Response createGuardPolicy(String endpoint, String resourceName, boolean http) throws Exception {
+    private Response createGuardPolicy(String endpoint, String resourceName, boolean http)
+            throws Exception {
 
-        LegacyGuardPolicyInput rawGuardPolicy =
-                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
+        String mediaType = APP_JSON; // default media type
+        LegacyGuardPolicyInput rawGuardPolicy = new LegacyGuardPolicyInput();
+        if (resourceName.endsWith(".json")) {
+            rawGuardPolicy = standardCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
+        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
+            mediaType = APP_YAML;
+            rawGuardPolicy = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
+        }
+
         final Invocation.Builder invocationBuilder;
 
         if (http) {
-            invocationBuilder = sendHttpRequest(endpoint);
+            invocationBuilder = sendHttpRequest(endpoint, mediaType);
         } else {
-            invocationBuilder = sendHttpsRequest(endpoint);
+            invocationBuilder = sendHttpsRequest(endpoint, mediaType);
         }
 
-        Entity<LegacyGuardPolicyInput> entity = Entity.entity(rawGuardPolicy, MediaType.APPLICATION_JSON);
+        Entity<LegacyGuardPolicyInput> entity = Entity.entity(rawGuardPolicy, mediaType);
         return invocationBuilder.post(entity);
     }
 
-    private Response createOperationalPolicy(String endpoint, String resourceName, boolean http) throws Exception {
+    private Response createOperationalPolicy(String endpoint, String resourceName, boolean http)
+            throws Exception {
 
-        LegacyOperationalPolicy rawOpsPolicy =
-                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
+        String mediaType = APP_JSON; // default media type
+        LegacyOperationalPolicy rawOpsPolicy = new LegacyOperationalPolicy();
+        if (resourceName.endsWith(".json")) {
+            rawOpsPolicy = standardCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
+        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
+            mediaType = APP_YAML;
+            rawOpsPolicy = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
+        }
+
         final Invocation.Builder invocationBuilder;
 
         if (http) {
-            invocationBuilder = sendHttpRequest(endpoint);
+            invocationBuilder = sendHttpRequest(endpoint, mediaType);
         } else {
-            invocationBuilder = sendHttpsRequest(endpoint);
+            invocationBuilder = sendHttpsRequest(endpoint, mediaType);
         }
 
-        Entity<LegacyOperationalPolicy> entity = Entity.entity(rawOpsPolicy, MediaType.APPLICATION_JSON);
+        Entity<LegacyOperationalPolicy> entity = Entity.entity(rawOpsPolicy, mediaType);
         return invocationBuilder.post(entity);
     }
 
-    private Response readResource(String endpoint, boolean http) throws Exception {
+    private Response readResource(String endpoint, boolean http, String mediaType) throws Exception {
 
         final Invocation.Builder invocationBuilder;
 
         if (http) {
-            invocationBuilder = sendHttpRequest(endpoint);
+            invocationBuilder = sendHttpRequest(endpoint, mediaType);
         } else {
-            invocationBuilder = sendHttpsRequest(endpoint);
+            invocationBuilder = sendHttpsRequest(endpoint, mediaType);
         }
 
         return invocationBuilder.get();
 
     }
 
-    private Response deleteResource(String endpoint, boolean http) throws Exception {
+    private Response deleteResource(String endpoint, boolean http, String mediaType) throws Exception {
 
         final Invocation.Builder invocationBuilder;
 
         if (http) {
-            invocationBuilder = sendHttpRequest(endpoint);
+            invocationBuilder = sendHttpRequest(endpoint, mediaType);
         } else {
-            invocationBuilder = sendHttpsRequest(endpoint);
+            invocationBuilder = sendHttpsRequest(endpoint, mediaType);
         }
 
         return invocationBuilder.delete();
@@ -1075,7 +1426,7 @@ public class TestApiRestServer {
         main.shutdown();
     }
 
-    private Invocation.Builder sendHttpRequest(final String endpoint) throws Exception {
+    private Invocation.Builder sendHttpRequest(final String endpoint, String mediaType) throws Exception {
 
         final ClientConfig clientConfig = new ClientConfig();
 
@@ -1085,11 +1436,15 @@ public class TestApiRestServer {
         final Client client = ClientBuilder.newClient(clientConfig);
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        client.register(GsonMessageBodyHandler.class);
+        if (APP_JSON.equalsIgnoreCase(mediaType)) {
+            client.register(GsonMessageBodyHandler.class);
+        } else if (APP_YAML.equalsIgnoreCase(mediaType)) {
+            client.register(YamlMessageBodyHandler.class);
+        }
 
         final WebTarget webTarget = client.target("http://localhost:" + port + "/policy/api/v1/" + endpoint);
 
-        final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        final Invocation.Builder invocationBuilder = webTarget.request(mediaType);
 
         if (!NetworkUtil.isTcpPortOpen("localhost", port, 60, 1000L)) {
             throw new IllegalStateException("cannot connect to port " + port);
@@ -1097,7 +1452,7 @@ public class TestApiRestServer {
         return invocationBuilder;
     }
 
-    private Invocation.Builder sendHttpsRequest(final String endpoint) throws Exception {
+    private Invocation.Builder sendHttpsRequest(final String endpoint, String mediaType) throws Exception {
 
         final TrustManager[] noopTrustManager = new TrustManager[] { new X509TrustManager() {
 
@@ -1122,11 +1477,15 @@ public class TestApiRestServer {
         client.register(feature);
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        client.register(GsonMessageBodyHandler.class);
+        if (APP_JSON.equalsIgnoreCase(mediaType)) {
+            client.register(GsonMessageBodyHandler.class);
+        } else if (APP_YAML.equalsIgnoreCase(mediaType)) {
+            client.register(YamlMessageBodyHandler.class);
+        }
 
         final WebTarget webTarget = client.target("https://localhost:" + port + "/policy/api/v1/" + endpoint);
 
-        final Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        final Invocation.Builder invocationBuilder = webTarget.request(mediaType);
 
         if (!NetworkUtil.isTcpPortOpen("localhost", port, 60, 1000L)) {
             throw new IllegalStateException("cannot connect to port " + port);
