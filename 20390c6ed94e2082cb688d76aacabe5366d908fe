@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a850997f_a153f52c",
+        "filename": "main/src/test/java/org/onap/policy/api/main/ApiTestSupportUtilities.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:28:54Z",
+      "side": 1,
+      "message": "Cool!  It\u0027s always nice when code can go away.",
+      "revId": "20390c6ed94e2082cb688d76aacabe5366d908fe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9edcd3c5_919fca15",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:28:54Z",
+      "side": 1,
+      "message": "I\u0027d suggest just removing the try/catch wrapper and add \"throws xxx\" to the method declaration.\n\nsame comment through-out",
+      "revId": "20390c6ed94e2082cb688d76aacabe5366d908fe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b0873a2_2875ea78",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1297,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-09-17T13:28:54Z",
+      "side": 1,
+      "message": "suggestion: could do this as a parameterized method, passing Class\u003cT\u003e as the final argument, and then eliminate the need for the other createXxx methods",
+      "revId": "20390c6ed94e2082cb688d76aacabe5366d908fe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
