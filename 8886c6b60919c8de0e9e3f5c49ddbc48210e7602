@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7a52400_094bb3ad",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 10
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5109
+      },
+      "writtenOn": "2019-09-18T11:09:47Z",
+      "side": 1,
+      "message": "Please confirm this is the right version for master branch. I noticed it was not updated when the version of the api was updated.",
+      "range": {
+        "startLine": 1,
+        "startChar": 31,
+        "endLine": 1,
+        "endChar": 36
+      },
+      "revId": "8886c6b60919c8de0e9e3f5c49ddbc48210e7602",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
