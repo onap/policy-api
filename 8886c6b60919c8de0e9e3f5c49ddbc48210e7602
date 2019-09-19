@@ -22,6 +22,30 @@
       "revId": "8886c6b60919c8de0e9e3f5c49ddbc48210e7602",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fd16f9b_07618e45",
+        "filename": "packages/policy-api-docker/src/main/docker/Dockerfile",
+        "patchSetId": 10
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-09-19T17:32:50Z",
+      "side": 1,
+      "message": "No should be 2.0.0\n\nThanks!",
+      "parentUuid": "c7a52400_094bb3ad",
+      "range": {
+        "startLine": 1,
+        "startChar": 31,
+        "endLine": 1,
+        "endChar": 36
+      },
+      "revId": "8886c6b60919c8de0e9e3f5c49ddbc48210e7602",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
