@@ -145,6 +145,20 @@ public class PolicyProvider extends CommonModelProvider {
     }
 
     /**
+     * Creates one or more new policies.
+     *
+     * @param body the entity body of policy
+     *
+     * @return the ToscaServiceTemplate object
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    public ToscaServiceTemplate createPolicies(ToscaServiceTemplate body) throws PfModelException {
+
+        return modelsProvider.createPolicies(body);
+    }
+
+    /**
      * Deletes the policy matching specified ID and version of both policy type and policy.
      *
      * @param policyTypeId the ID of policy type

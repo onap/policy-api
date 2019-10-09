@@ -75,6 +75,19 @@ public class TestPolicyProvider {
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID = "policies/vCPE.policy.bad.policytypeid.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
             "policies/vCPE.policy.bad.policytypeversion.json";
+    private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
+
+    // @formatter:off
+    private String[] toscaPolicyTypeResourceNames = {
+        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
+        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
+        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
+        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
+        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
+        "policytypes/onap.policies.optimization.Vim_fit.yaml",
+        "policytypes/onap.policies.optimization.VnfPolicy.yaml"
+    };
+    // @formatter:on
 
     /**
      * Initializes parameters.
@@ -266,6 +279,32 @@ public class TestPolicyProvider {
                     .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void testSimpleCreatePolicy() throws Exception {
+
+        String errorMessage = "policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
+            + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist";
+        assertThatThrownBy(() -> {
+            String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
+            ToscaServiceTemplate multiPoliciesServiceTemplate =
+                    standardCoder.decode(multiPoliciesString, ToscaServiceTemplate.class);
+            policyProvider.createPolicies(multiPoliciesServiceTemplate);
+        }).hasMessage(errorMessage);
+
+        // Create required policy types
+        for (String policyTypeName : toscaPolicyTypeResourceNames) {
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                    ResourceUtils.getResourceAsString(policyTypeName), ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }
+
+        // Create multiple policies in one call
+        String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
+        ToscaServiceTemplate multiPoliciesServiceTemplate =
+                standardCoder.decode(multiPoliciesString, ToscaServiceTemplate.class);
+        policyProvider.createPolicies(multiPoliciesServiceTemplate);
     }
 
     @Test

@@ -151,6 +151,7 @@ public class TestApiRestServer {
             + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.scaleout/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
             + "onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfig/versions/1";
+    private static final String POLICIES = "policies";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
     private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
@@ -168,6 +169,11 @@ public class TestApiRestServer {
         "policies/vDNS.policy.monitoring.input.tosca.yaml",
         "policies/vFirewall.policy.monitoring.input.tosca.json",
         "policies/vFirewall.policy.monitoring.input.tosca.yaml"
+    };
+
+    private String[] toscaPoliciesResourceNames = {
+        "policies/vCPE.policies.optimization.input.tosca.json",
+        "policies/vCPE.policies.optimization.input.tosca.yaml"
     };
 
     private String[] toscaPolicyTypeResourceNames = {
@@ -292,6 +298,44 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testCreatePoliciesPersistent() throws Exception {
+        setupParameters(); // setup DB
+        main = startApiService(true);
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getToscaTopologyTemplate().getPolicies().isEmpty());
+        }
+    }
+
+    @Test
+    public void testSimpleCreatePolicies() throws Exception {
+        main = startApiService(true);
+        for (String resrcName : toscaPoliciesResourceNames) {
+            Response rawResponse = createResource(POLICIES, resrcName, true);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
+                + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist", error.getErrorMessage());
+        }
+    }
+
+    @Test
+    public void testSimpleCreatePoliciesPersistent() throws Exception {
+        setupParameters(); // setup DB
+        main = startApiService(true);
+        for (String resrcName : toscaPoliciesResourceNames) {
+            Response rawResponse = createResource(POLICIES, resrcName, true);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getToscaTopologyTemplate().getPolicies().isEmpty());
+        }
+    }
+
+    @Test
     public void testCreateGuardPolicies() {
         try {
             main = startApiService(true);
@@ -374,6 +418,44 @@ public class TestApiRestServer {
             }
         } catch (Exception exp) {
             fail("Test should not throw an exception");
+        }
+    }
+
+    @Test
+    public void testHttpsCreatePoliciesPersistent() throws Exception {
+        setupParameters(); // setup DB
+        main = startApiService(false);
+        for (String resrcName : toscaPolicyResourceNames) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, false);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getToscaTopologyTemplate().getPolicies().isEmpty());
+        }
+    }
+
+    @Test
+    public void testHttpsSimpleCreatePolicies() throws Exception {
+        main = startApiService(false);
+        for (String resrcName : toscaPoliciesResourceNames) {
+            Response rawResponse = createResource(POLICIES, resrcName, false);
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals("policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
+                + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist", error.getErrorMessage());
+        }
+    }
+
+    @Test
+    public void testHttpsSimpleCreatePoliciesPersistent() throws Exception {
+        setupParameters(); // setup DB
+        main = startApiService(false);
+        for (String resrcName : toscaPoliciesResourceNames) {
+            Response rawResponse = createResource(POLICIES, resrcName, false);
+            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertNotNull(response);
+            assertFalse(response.getToscaTopologyTemplate().getPolicies().isEmpty());
         }
     }
 
