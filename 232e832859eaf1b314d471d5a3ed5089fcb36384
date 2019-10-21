@@ -46,6 +46,30 @@
       "revId": "232e832859eaf1b314d471d5a3ed5089fcb36384",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7785ca8_dc453fe4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-10-21T22:08:26Z",
+      "side": 1,
+      "message": "Just checked again, it is there in models-examples all right, I didn\u0027t see it because it was down at the bottom of the list.\n\nIgnore my comment!",
+      "parentUuid": "b24ed373_94690db8",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 47
+      },
+      "revId": "232e832859eaf1b314d471d5a3ed5089fcb36384",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
