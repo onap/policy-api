@@ -22,6 +22,30 @@
       "revId": "232e832859eaf1b314d471d5a3ed5089fcb36384",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b24ed373_94690db8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-10-21T18:54:55Z",
+      "side": 1,
+      "message": "No it was its own file. Maybe it doesn\u0027t need to be bundled in the others - are multiple copies exist? Or first one loaded is there? The xacml pdp needs to be retrieve this policy type and only this one. I wasn\u0027t sure if it was there.",
+      "parentUuid": "c8e7f644_c0a9736f",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 47
+      },
+      "revId": "232e832859eaf1b314d471d5a3ed5089fcb36384",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
