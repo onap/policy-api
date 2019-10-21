@@ -54,6 +54,7 @@ public class ApiDatabaseInitializer {
     private static final String[] PRELOAD_POLICYTYPES = {
         "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
+        "policytypes/onap.policies.Optimization.yaml",
         "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
         "policytypes/onap.policies.optimization.DistancePolicy.yaml",
         "policytypes/onap.policies.optimization.HpaPolicy.yaml",
