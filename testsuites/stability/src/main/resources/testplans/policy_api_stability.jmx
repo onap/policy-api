@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy API Stability" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy API Performance" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -5188,6 +5188,552 @@ if (prev.getResponseCode() == &apos;200&apos;) {
     assert res instanceof Map;
     assert res.topology_template.policies instanceof List;
     assert res.topology_template.policies.size == 1;
+    assert res.topology_template.policies[0] instanceof Map;
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Simple Create TCA Policies" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;tosca_definitions_version&quot;: &quot;tosca_simple_yaml_1_0_0&quot;,&#xd;
+    &quot;topology_template&quot;: {&#xd;
+        &quot;policies&quot;: [&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;3.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;4.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;5.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;6.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;7.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;8.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;9.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;10.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            },&#xd;
+            {&#xd;
+                &quot;onap.restart.tca&quot;: {&#xd;
+                    &quot;type&quot;: &quot;onap.policies.monitoring.cdap.tca.hi.lo.app&quot;,&#xd;
+                    &quot;version&quot;: &quot;11.0.0&quot;,&#xd;
+                    &quot;type_version&quot;: &quot;2.0.0&quot;,&#xd;
+                    &quot;metadata&quot;: {&#xd;
+                        &quot;policy-id&quot;: &quot;onap.restart.tca&quot;&#xd;
+                    },&#xd;
+                    &quot;properties&quot;: {&#xd;
+                        &quot;tca_policy&quot;: {&#xd;
+                            &quot;domain&quot;: &quot;measurementsForVfScaling&quot;,&#xd;
+                            &quot;metricsPerEventName&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;eventName&quot;: &quot;Measurement_vGMUX&quot;,&#xd;
+                                    &quot;controlLoopSchemaType&quot;: &quot;VNF&quot;,&#xd;
+                                    &quot;policyScope&quot;: &quot;DCAE&quot;,&#xd;
+                                    &quot;policyName&quot;: &quot;DCAE.Config_tca-hi-lo&quot;,&#xd;
+                                    &quot;policyVersion&quot;: &quot;v0.0.1&quot;,&#xd;
+                                    &quot;thresholds&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;EQUAL&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;MAJOR&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ABATED&quot;&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;closedLoopControlName&quot;: &quot;ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e&quot;,&#xd;
+                                            &quot;version&quot;: &quot;1.0.2&quot;,&#xd;
+                                            &quot;fieldPath&quot;: &quot;$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value&quot;,&#xd;
+                                            &quot;thresholdValue&quot;: 0,&#xd;
+                                            &quot;direction&quot;: &quot;GREATER&quot;,&#xd;
+                                            &quot;severity&quot;: &quot;CRITICAL&quot;,&#xd;
+                                            &quot;closedLoopEventStatus&quot;: &quot;ONSET&quot;&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        }&#xd;
+                    }&#xd;
+                }&#xd;
+            }&#xd;
+        ]&#xd;
+    }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/policy/api/v1/policies</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import groovy.json.JsonSlurper;
+
+def res = [];
+if (prev.getResponseCode() == &apos;200&apos;) {
+    def jsonSlurper = new JsonSlurper();
+    res = jsonSlurper.parseText(prev.getResponseDataAsString());
+
+    assert res instanceof Map;
+    assert res.topology_template.policies instanceof List;
+    assert res.topology_template.policies.size == 11;
     assert res.topology_template.policies[0] instanceof Map;
 }</stringProp>
           </JSR223Assertion>
