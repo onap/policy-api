@@ -68,7 +68,8 @@ public class ApiDatabaseInitializer {
         "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
         "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
         "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
-        "policytypes/onap.policies.controlloop.Operational.yaml"
+        "policytypes/onap.policies.controlloop.Operational.yaml",
+        "policytypes/onap.policies.Naming.yaml"
     };
     // @formatter:on
 
