@@ -33,6 +33,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +104,7 @@ public class TestLegacyGuardPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         guardPolicyProvider = new LegacyGuardPolicyProvider();
         policyTypeProvider = new PolicyTypeProvider();

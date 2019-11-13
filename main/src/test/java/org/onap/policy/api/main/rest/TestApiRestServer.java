@@ -33,6 +33,7 @@ import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Properties;
 
 import javax.net.ssl.SSLContext;
@@ -228,7 +229,7 @@ public class TestApiRestServer {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();
@@ -694,6 +695,26 @@ public class TestApiRestServer {
         } catch (Exception exp) {
             fail("Test should not throw an exception");
         }
+    }
+
+    @Test
+    public void testReadPreloadPolicyTypesPersistentJson() throws Exception {
+        setupParameters();
+        main = startApiService(true);
+        Response rawResponse = readResource(POLICYTYPES, true, APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(21, response.getPolicyTypes().size());
+    }
+
+    @Test
+    public void testReadPreloadPolicyTypesPersistentYaml() throws Exception {
+        setupParameters();
+        main = startApiService(true);
+        Response rawResponse = readResource(POLICYTYPES, true, APP_YAML);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(21, response.getPolicyTypes().size());
     }
 
     @Test

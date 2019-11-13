@@ -25,13 +25,13 @@ package org.onap.policy.api.main.startstop;
 
 import java.util.LinkedHashMap;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -50,29 +50,6 @@ public class ApiDatabaseInitializer {
     private StandardCoder standardCoder;
     private PolicyModelsProviderFactory factory;
 
-    // @formatter:off
-    private static final String[] PRELOAD_POLICYTYPES = {
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
-        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
-        "policytypes/onap.policies.Optimization.yaml",
-        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
-        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
-        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
-        "policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
-        "policytypes/onap.policies.optimization.PciPolicy.yaml",
-        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
-        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
-        "policytypes/onap.policies.optimization.Vim_fit.yaml",
-        "policytypes/onap.policies.optimization.VnfPolicy.yaml",
-        "policytypes/onap.policies.controlloop.guard.Blacklist.yaml",
-        "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
-        "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
-        "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
-        "policytypes/onap.policies.controlloop.Operational.yaml",
-        "policytypes/onap.policies.Naming.yaml"
-    };
-    // @formatter:on
-
     /**
      * Constructs the object.
      */
@@ -84,18 +61,18 @@ public class ApiDatabaseInitializer {
     /**
      * Initializes database by preloading policy types.
      *
-     * @param policyModelsProviderParameters the database parameters
+     * @param apiParameterGroup the apiParameterGroup parameters
      * @throws PolicyApiException in case of errors.
      */
-    public void initializeApiDatabase(final PolicyModelsProviderParameters policyModelsProviderParameters)
+    public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup)
             throws PolicyApiException {
 
         try (PolicyModelsProvider databaseProvider =
-                factory.createPolicyModelsProvider(policyModelsProviderParameters)) {
+                factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
             ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
             serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
-            for (String pt : PRELOAD_POLICYTYPES) {
+            for (String pt : apiParameterGroup.getPreloadPolicyTypes()) {
                 String policyTypeAsStringYaml = ResourceUtils.getResourceAsString(pt);
                 if (policyTypeAsStringYaml == null) {
                     throw new PolicyApiException("Preloading policy type cannot be found: " + pt);

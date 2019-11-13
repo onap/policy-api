@@ -28,6 +28,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Base64;
+import java.util.Collections;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -70,7 +72,7 @@ public class TestPolicyTypeProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();
