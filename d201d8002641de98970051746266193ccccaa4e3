@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e47206e8_26c2bdc7",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-11-13T13:53:33Z",
+      "side": 1,
+      "message": "change \"\u003cString\u003e\" to \"\u003c\u003e\", if javac will allow it - or could use Collections.emptyList() or Arrays.asList()\n\nsame comment below and in other files",
+      "revId": "d201d8002641de98970051746266193ccccaa4e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
