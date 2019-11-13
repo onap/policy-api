@@ -105,7 +105,7 @@ public class TestPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, new ArrayList<String>());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();

@@ -80,7 +80,7 @@ public class Main {
 
         // Initialize database
         try {
-            new ApiDatabaseInitializer().initializeApiDatabase(parameterGroup.getDatabaseProviderParameters());
+            new ApiDatabaseInitializer().initializeApiDatabase(parameterGroup);
         } catch (final PolicyApiException e) {
             LOGGER.error("Preloading policy types into DB failed", e);
             return;

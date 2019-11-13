@@ -98,7 +98,7 @@ public class TestLegacyOperationalPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams);
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, new ArrayList<String>());
         ParameterService.register(apiParamGroup, true);
         operationalPolicyProvider = new LegacyOperationalPolicyProvider();
         policyTypeProvider = new PolicyTypeProvider();

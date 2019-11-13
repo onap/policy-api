@@ -14,5 +14,6 @@
         "databaseUser": "policy",
         "databasePassword": "UDAxaWNZ",
         "persistenceUnit": "ToscaConceptTest"
-    }
+    },
+    "preloadPolicyTypes": []
 }

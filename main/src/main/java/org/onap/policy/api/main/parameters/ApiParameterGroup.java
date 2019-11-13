@@ -20,6 +20,8 @@
 
 package org.onap.policy.api.main.parameters;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.common.parameters.ParameterGroup;
@@ -36,17 +38,22 @@ public class ApiParameterGroup implements ParameterGroup {
     private String name;
     private RestServerParameters restServerParameters;
     private PolicyModelsProviderParameters databaseProviderParameters;
+    private List<String> preloadPolicyTypes;
 
     /**
      * Create the api parameter group.
      *
      * @param name the parameter group name
+     * @param restServerParameters the parameters for instantiating API rest server
+     * @param databaseProviderParameters the parameters for instantiating database provider
+     * @param preloadPolicyTypes the list of preloaded policy types
      */
     public ApiParameterGroup(final String name, final RestServerParameters restServerParameters,
-            final PolicyModelsProviderParameters databaseProviderParameters) {
+            final PolicyModelsProviderParameters databaseProviderParameters, final List<String> preloadPolicyTypes) {
         this.name = name;
         this.restServerParameters = restServerParameters;
         this.databaseProviderParameters = databaseProviderParameters;
+        this.preloadPolicyTypes = preloadPolicyTypes;
     }
 
     /**
@@ -85,6 +92,15 @@ public class ApiParameterGroup implements ParameterGroup {
      */
     public PolicyModelsProviderParameters getDatabaseProviderParameters() {
         return databaseProviderParameters;
+    }
+
+    /**
+     * Return the preloadPolicyTypes of this parameter group instance.
+     *
+     * @return the preloadPolicyTypes
+     */
+    public List<String> getPreloadPolicyTypes() {
+        return preloadPolicyTypes;
     }
 
     /**
