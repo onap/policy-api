@@ -704,7 +704,7 @@ public class TestApiRestServer {
         Response rawResponse = readResource(POLICYTYPES, true, APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(21, response.getPolicyTypes().size());
+        assertEquals(25, response.getPolicyTypes().size());
     }
 
     @Test
@@ -714,7 +714,7 @@ public class TestApiRestServer {
         Response rawResponse = readResource(POLICYTYPES, true, APP_YAML);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(21, response.getPolicyTypes().size());
+        assertEquals(25, response.getPolicyTypes().size());
     }
 
     @Test
