@@ -21,6 +21,7 @@
 
 package org.onap.policy.api.main.startstop;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -63,7 +64,7 @@ public class TestMain {
     @Test
     public void testMain_Help() {
         final String[] apiConfigParameters = { "-h" };
-        Main.main(apiConfigParameters);
+        assertThatCode(() -> Main.main(apiConfigParameters)).doesNotThrowAnyException();
     }
 
     @Test

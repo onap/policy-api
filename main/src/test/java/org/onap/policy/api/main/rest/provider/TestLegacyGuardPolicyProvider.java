@@ -244,7 +244,7 @@ public class TestLegacyGuardPolicyProvider {
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
             assertThatThrownBy(() -> {
                 guardPolicyProvider.fetchDeployedGuardPolicies(POLICY_NAME);
-            })  .hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
+            }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
                     + " deployed in any pdp group");
 
 
@@ -263,7 +263,7 @@ public class TestLegacyGuardPolicyProvider {
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
             assertThatThrownBy(() -> {
                 guardPolicyProvider.deleteGuardPolicy(POLICY_NAME, POLICY_VERSION);
-            })  .hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
+            }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
                     + " cannot be deleted as it is deployed in pdp groups");
         } catch (Exception exc) {
             fail("Test should not throw an exception");

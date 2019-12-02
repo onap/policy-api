@@ -218,7 +218,7 @@ public class TestPolicyProvider {
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
             assertThatThrownBy(() -> {
                 policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
-            })  .hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
+            }).hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
                     + policyTypeVersion + " deployed in any pdp group");
 
 
@@ -237,7 +237,7 @@ public class TestPolicyProvider {
             assertThatThrownBy(() -> {
                 policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
                         "1.0.0");
-            })  .hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
+            }).hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
                     + " cannot be deleted as it is deployed in pdp groups");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
