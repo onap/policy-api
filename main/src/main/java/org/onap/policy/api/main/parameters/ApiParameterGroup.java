@@ -20,7 +20,6 @@
 
 package org.onap.policy.api.main.parameters;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.parameters.GroupValidationResult;
