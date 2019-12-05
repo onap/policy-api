@@ -85,7 +85,7 @@ public class TestApiRestServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestApiRestServer.class);
     private static final String NOT_ALIVE = "not alive";
     private static final String ALIVE = "alive";
-    private static final String SELF = "self";
+    private static final String SELF = NetworkUtil.getHostname();
     private static final String NAME = "Policy API";
     private static final String APP_JSON = "application/json";
     private static final String APP_YAML = "application/yaml";
