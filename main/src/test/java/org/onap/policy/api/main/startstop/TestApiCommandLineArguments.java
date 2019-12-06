@@ -24,15 +24,6 @@ package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
-import java.util.Set;
-
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
@@ -75,32 +66,5 @@ public class TestApiCommandLineArguments {
             .isInstanceOf(PolicyApiException.class)
             .hasMessageContaining(
                     "policy api configuration file \"src/test\\resources/filetest\\n\" does not exist");
-    }
-
-    @Test
-    public void testDirectoryValidateReadableFile() {
-        apiCmdArgs.setConfigurationFilePath("src/test/resources/");
-        assertThatThrownBy(
-                apiCmdArgs::validate
-            )
-            .isInstanceOf(PolicyApiException.class)
-            .hasMessageContaining("file \"src/test/resources/\" is not a normal file");
-    }
-
-    @Test
-    public void testReadPermissionValidateReadableFile() throws IOException {
-        String filepath =  "src/test/resources/unreadablefile.json";
-        Set<PosixFilePermission> notReadable = PosixFilePermissions.fromString("-wx-wx-wx");
-        FileAttribute<?> permissions = PosixFilePermissions.asFileAttribute(notReadable);
-        Path pathObj = Paths.get(filepath);
-        Files.createFile(pathObj, permissions);
-        apiCmdArgs.setConfigurationFilePath(filepath);
-        assertThatThrownBy(
-                apiCmdArgs::validate
-            )
-            .isInstanceOf(PolicyApiException.class)
-            .hasMessageContaining(
-                "file \"src/test/resources/unreadablefile.json\" is ureadable");
-        Files.deleteIfExists(pathObj);
     }
 }
