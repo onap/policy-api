@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Arrays;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -117,8 +118,7 @@ public class ApiCommandLineArguments {
         final String[] remainingArgs = commandLine.getArgs();
 
         if (remainingArgs.length > 0 && commandLine.hasOption('c') || remainingArgs.length > 0) {
-            throw new PolicyApiException(
-                    "too many command line arguments specified : " + Arrays.toString(args));
+            throw new PolicyApiException("too many command line arguments specified : " + Arrays.toString(args));
         }
 
         if (remainingArgs.length == 1) {
@@ -233,13 +233,6 @@ public class ApiCommandLineArguments {
         final File theFile = new File(fileUrl.getPath());
         if (!theFile.exists()) {
             throw new PolicyApiException(fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" does not exist");
-        }
-        if (!theFile.isFile()) {
-            throw new PolicyApiException(
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is not a normal file");
-        }
-        if (!theFile.canRead()) {
-            throw new PolicyApiException(fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is ureadable");
         }
     }
 }

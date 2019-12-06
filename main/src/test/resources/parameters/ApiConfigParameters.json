@@ -36,6 +36,7 @@
         "policytypes/onap.policies.Naming.yaml",
         "policytypes/onap.policies.drools.Controller.yaml",
         "policytypes/onap.policies.native.Drools.yaml",
-        "policytypes/onap.policies.native.Xacml.yaml"
+        "policytypes/onap.policies.native.Xacml.yaml",
+        "policytypes/onap.policies.native.Apex.yaml"
     ]
 }
