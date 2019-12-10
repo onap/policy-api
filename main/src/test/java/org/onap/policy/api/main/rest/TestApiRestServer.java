@@ -186,15 +186,15 @@ public class TestApiRestServer {
         "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
         "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
         "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
-        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
-        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
-        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
-        "policytypes/onap.policies.optimization.OptimizationPolicy.yaml",
-        "policytypes/onap.policies.optimization.PciPolicy.yaml",
-        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
-        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
-        "policytypes/onap.policies.optimization.Vim_fit.yaml",
-        "policytypes/onap.policies.optimization.VnfPolicy.yaml"
+        "policytypes/onap.policies.optimization.resource.AffinityPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.DistancePolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.HpaPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.OptimizationPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.PciPolicy.yaml",
+        "policytypes/onap.policies.optimization.service.QueryPolicy.yaml",
+        "policytypes/onap.policies.optimization.service.SubscriberPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.Vim_fit.yaml",
+        "policytypes/onap.policies.optimization.resource.VnfPolicy.yaml"
     };
 
     private String[] legacyGuardPolicyResourceNames = {
@@ -318,8 +318,8 @@ public class TestApiRestServer {
             Response rawResponse = createResource(POLICIES, resrcName, true);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
-                + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist", error.getErrorMessage());
+            assertEquals("policy type onap.policies.optimization.resource.AffinityPolicy:1.0.0 for "
+                + "policy OSDF_CASABLANCA.Affinity_Default:1.0.0 does not exist", error.getErrorMessage());
         }
     }
 
@@ -442,8 +442,8 @@ public class TestApiRestServer {
             Response rawResponse = createResource(POLICIES, resrcName, false);
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
             ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals("policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
-                + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist", error.getErrorMessage());
+            assertEquals("policy type onap.policies.optimization.resource.AffinityPolicy:1.0.0 for "
+                + "policy OSDF_CASABLANCA.Affinity_Default:1.0.0 does not exist", error.getErrorMessage());
         }
     }
 
@@ -704,7 +704,7 @@ public class TestApiRestServer {
         Response rawResponse = readResource(POLICYTYPES, true, APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(26, response.getPolicyTypes().size());
+        assertEquals(28, response.getPolicyTypes().size());
     }
 
     @Test
@@ -714,7 +714,7 @@ public class TestApiRestServer {
         Response rawResponse = readResource(POLICYTYPES, true, APP_YAML);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(26, response.getPolicyTypes().size());
+        assertEquals(28, response.getPolicyTypes().size());
     }
 
     @Test

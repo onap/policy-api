@@ -80,13 +80,13 @@ public class TestPolicyProvider {
 
     // @formatter:off
     private String[] toscaPolicyTypeResourceNames = {
-        "policytypes/onap.policies.optimization.AffinityPolicy.yaml",
-        "policytypes/onap.policies.optimization.DistancePolicy.yaml",
-        "policytypes/onap.policies.optimization.HpaPolicy.yaml",
-        "policytypes/onap.policies.optimization.QueryPolicy.yaml",
-        "policytypes/onap.policies.optimization.SubscriberPolicy.yaml",
-        "policytypes/onap.policies.optimization.Vim_fit.yaml",
-        "policytypes/onap.policies.optimization.VnfPolicy.yaml"
+        "policytypes/onap.policies.optimization.resource.AffinityPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.DistancePolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.HpaPolicy.yaml",
+        "policytypes/onap.policies.optimization.service.QueryPolicy.yaml",
+        "policytypes/onap.policies.optimization.service.SubscriberPolicy.yaml",
+        "policytypes/onap.policies.optimization.resource.Vim_fit.yaml",
+        "policytypes/onap.policies.optimization.resource.VnfPolicy.yaml"
     };
     // @formatter:on
 
@@ -285,8 +285,8 @@ public class TestPolicyProvider {
     @Test
     public void testSimpleCreatePolicy() throws Exception {
 
-        String errorMessage = "policy type onap.policies.optimization.AffinityPolicy:0.0.0 for "
-            + "policy OSDF_CASABLANCA.Affinity_vCPE_1:1.0.0 does not exist";
+        String errorMessage = "policy type onap.policies.optimization.resource.AffinityPolicy:1.0.0 for "
+            + "policy OSDF_CASABLANCA.Affinity_Default:1.0.0 does not exist";
         assertThatThrownBy(() -> {
             String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
             ToscaServiceTemplate multiPoliciesServiceTemplate =
