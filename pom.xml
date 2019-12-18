@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.1-SNAPSHOT</version>
         <relativePath />
     </parent>
 
@@ -47,8 +47,8 @@
         <sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-        <policy.common.version>1.6.1</policy.common.version>
-        <policy.models.version>2.2.0-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.6.2-SNAPSHOT</policy.common.version>
+        <policy.models.version>2.2.1-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
@@ -71,6 +71,29 @@
             <groupId>org.onap.policy.common</groupId>
             <artifactId>policy-endpoints</artifactId>
             <version>${policy.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-security</artifactId>
+            <version>9.4.25.v20191220</version>
+        </dependency>
+                <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${version.jersey}</version>
         </dependency>
     </dependencies>
 
@@ -123,7 +146,7 @@
                                 with minor changes -->
                             <configLocation>onap-checkstyle/onap-java-style.xml</configLocation>
                             <!-- <sourceDirectory> is needed so that checkstyle ignores the generated sources directory -->
-                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                            <sourceDirectories>${project.build.sourceDirectory}</sourceDirectories>
                             <includeResources>true</includeResources>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <includeTestResources>true</includeTestResources>
