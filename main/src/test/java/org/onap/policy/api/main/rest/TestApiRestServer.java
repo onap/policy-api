@@ -1565,10 +1565,12 @@ public class TestApiRestServer {
             }
 
             @Override
-            public void checkClientTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {}
+            public void checkClientTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {
+            }
 
             @Override
-            public void checkServerTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {}
+            public void checkServerTrusted(final java.security.cert.X509Certificate[] certs, final String authType) {
+            }
         } };
 
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
