@@ -30,7 +30,6 @@ import org.onap.policy.api.main.parameters.ApiParameterHandler;
 import org.onap.policy.api.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.network.NetworkUtil;
 
-
 /**
  * Class to perform unit test of ApiActivator.
  *
@@ -40,9 +39,9 @@ public class TestApiActivator {
 
     @Test
     public void testApiActivator() throws Exception {
-        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
-                        "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
-        final String[] apiConfigParameters = { "-c", "src/test/resources/parameters/ApiConfigParametersXXX.json" };
+        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
+                "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
+        final String[] apiConfigParameters = {"-c", "src/test/resources/parameters/ApiConfigParametersXXX.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments(apiConfigParameters);
         final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);
         final ApiActivator activator = new ApiActivator(parGroup);
