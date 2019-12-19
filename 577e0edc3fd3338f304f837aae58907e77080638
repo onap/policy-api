@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "adfbc30b_ff285544",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T18:17:58Z",
+      "side": 1,
+      "message": "Hmmm ok yes. I think this was added for possibly 2 reasons 1) sonar and/or 2) we were pairwise testing and had no idea what was happening. So maybe in another review we can determine which should be logged as debug vs error vs info.",
+      "parentUuid": "1daaf63b_223cdaa7",
+      "range": {
+        "startLine": 211,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 51
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc4c5f8f_3102646a",
         "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterHandler.java",
         "patchSetId": 1
@@ -45,6 +69,29 @@
       "revId": "577e0edc3fd3338f304f837aae58907e77080638",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6baf69b1_f4ea9d35",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2019-12-19T18:17:58Z",
+      "side": 1,
+      "message": "extra s",
+      "range": {
+        "startLine": 244,
+        "startChar": 30,
+        "endLine": 244,
+        "endChar": 31
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     },
     {
       "key": {
