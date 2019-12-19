@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1daaf63b_223cdaa7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "In this endpoint class and in others, HTTP return codes other than 200 are logged as errors. Return codes other than 200 are application errors, not system errors and are sometimes not even application errors. Eg 404 not found sometimes just means there\u0027s nothing in the database.",
+      "range": {
+        "startLine": 211,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 51
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc4c5f8f_3102646a",
+        "filename": "main/src/test/java/org/onap/policy/api/main/parameters/TestApiParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "All tests only use HTTPS now because testing for HTTP and HTTPS separately does not increase coverage in the controller.",
+      "range": {
+        "startLine": 130,
+        "startChar": 64,
+        "endLine": 130,
+        "endChar": 89
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3b2a5e1_9f477346",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "We now only do initiation of the API for test once for all tests",
+      "range": {
+        "startLine": 240,
+        "startChar": 1,
+        "endLine": 257,
+        "endChar": 1
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f70c166_d9bfbbc0",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "And close down at the end of all classes.",
+      "range": {
+        "startLine": 261,
+        "startChar": 1,
+        "endLine": 270,
+        "endChar": 1
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eef4c495_2c3562da",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "This means that the test data must be cleared down at the end of each test as the DB is no longer been dropped.",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 302,
+        "endChar": 5
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74d01b3_0ccf6d98",
+        "filename": "main/src/test/resources/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-19T16:07:37Z",
+      "side": 1,
+      "message": "More fine grained control of logging.",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 53,
+        "endChar": 16
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
