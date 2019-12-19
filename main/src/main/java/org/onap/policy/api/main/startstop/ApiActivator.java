@@ -34,8 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class wraps a distributor so that it can be activated as a complete service together with all its api
- * and forwarding handlers.
+ * This class wraps a distributor so that it can be activated as a complete service together with all its api and
+ * forwarding handlers.
  */
 public class ApiActivator {
 
@@ -77,11 +77,9 @@ public class ApiActivator {
     private void startApiRestServer() throws PolicyApiException {
         apiParameterGroup.getRestServerParameters().setName(apiParameterGroup.getName());
         restServer = new RestServer(apiParameterGroup.getRestServerParameters(), AafApiFilter.class,
-                        LegacyApiRestController.class,
-                        ApiRestController.class);
+                LegacyApiRestController.class, ApiRestController.class);
         if (!restServer.start()) {
-            throw new PolicyApiException(
-                    "Failed to start api rest server. Check log for more details...");
+            throw new PolicyApiException("Failed to start api rest server. Check log for more details...");
         }
     }
 
@@ -96,7 +94,9 @@ public class ApiActivator {
             ApiActivator.setAlive(false);
 
             // Stop the api rest server
-            restServer.stop();
+            if (restServer.isAlive()) {
+                restServer.stop();
+            }
         } catch (final Exception exp) {
             throw new PolicyApiException("Policy api service termination failed", exp);
         }
@@ -126,7 +126,9 @@ public class ApiActivator {
      * @param apiParameterGroup the api parameter group
      */
     public void deregisterToParameterService(final ApiParameterGroup apiParameterGroup) {
-        ParameterService.deregister(apiParameterGroup.getName());
+        if (ParameterService.contains(apiParameterGroup.getName())) {
+            ParameterService.deregister(apiParameterGroup.getName());
+        }
     }
 
     /**

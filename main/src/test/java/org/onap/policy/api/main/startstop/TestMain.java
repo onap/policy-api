@@ -38,9 +38,9 @@ public class TestMain {
 
     @Test
     public void testMain() throws Exception {
-        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters.json",
-                        "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
-        final String[] apiConfigParameters = { "-c", "src/test/resources/parameters/ApiConfigParametersXXX.json" };
+        COMMON_TEST_DATA.makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
+                "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
+        final String[] apiConfigParameters = {"-c", "src/test/resources/parameters/ApiConfigParametersXXX.json"};
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters().isValid());
         assertEquals(CommonTestData.API_GROUP_NAME, main.getParameters().getName());
@@ -56,20 +56,20 @@ public class TestMain {
 
     @Test
     public void testMain_InvalidArguments() {
-        final String[] apiConfigParameters = { "parameters/ApiConfigParameters.json" };
+        final String[] apiConfigParameters = {"parameters/ApiConfigParameters.json"};
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters() == null);
     }
 
     @Test
     public void testMain_Help() {
-        final String[] apiConfigParameters = { "-h" };
+        final String[] apiConfigParameters = {"-h"};
         assertThatCode(() -> Main.main(apiConfigParameters)).doesNotThrowAnyException();
     }
 
     @Test
     public void testMain_InvalidParameters() {
-        final String[] apiConfigParameters = { "-c", "parameters/ApiConfigParameters_InvalidName.json" };
+        final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidName.json"};
         final Main main = new Main(apiConfigParameters);
         assertTrue(main.getParameters() == null);
     }

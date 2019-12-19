@@ -43,14 +43,13 @@ public class TestCommonRestController {
     public void testAddLoggingHeaders() {
         UUID requestId = UUID.randomUUID();
         ResponseBuilder rb =
-            crc.addLoggingHeaders(
-              crc.addVersionControlHeaders(Response.status(Response.Status.OK)), requestId);
+                crc.addLoggingHeaders(crc.addVersionControlHeaders(Response.status(Response.Status.OK)), requestId);
         assertTrue(rb.equals(rb.header("X-ONAP-RequestID", requestId)));
     }
 
     /*
-    * Tests null response for null object
-    */
+     * Tests null response for null object
+     */
     @Test
     public void testToJsonNull() {
         assertNull(crc.toJson(null));
