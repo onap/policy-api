@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "68d4904c_f4d62d32",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2019-12-20T18:01:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6baf69b1_f4ea9d35",
+      "range": {
+        "startLine": 244,
+        "startChar": 30,
+        "endLine": 244,
+        "endChar": 31
+      },
+      "revId": "577e0edc3fd3338f304f837aae58907e77080638",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3b2a5e1_9f477346",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
         "patchSetId": 1
