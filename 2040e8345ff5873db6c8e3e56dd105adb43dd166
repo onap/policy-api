@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f21fd44d_bf7a58c3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "maybe move these lines inside the \"if\" test",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a63aaebd_e3175274",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "maybe change field names to uppercase\n\nsame comment for other static fields",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d67fc1f7_464aaf6c",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "I\u0027d prefer that we check the error message (or parts of it) to verify that the expected error (path) was generated\n\nsame comment in other test methods",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe206980_679ce5ba",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "maybe extract the relevant portion of testCreatePolicyTypes into its own method that these other test cases can invoke",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91e9828f_0a99e50e",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "why wrap in try/catch?  this prevents eclipse from displaying a stack trace\n\nsame comment through-out",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbe11f35_ab21bb94",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "probably still a good idea to test a few not-found cases here, even though they\u0027re checked in other test methods\n\nsame comment for other testReadXxx methods",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32a884fb_504d46df",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1050,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2019-12-24T14:46:13Z",
+      "side": 1,
+      "message": "don\u0027t need this - use the one in NetworkUtil (AlwaysTrustManager?)",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
