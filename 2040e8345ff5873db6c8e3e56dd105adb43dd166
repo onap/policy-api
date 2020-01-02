@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "b5a6e0de_50b5a672",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-02T16:06:53Z",
+      "side": 1,
+      "message": "Yeah. I added this just for testing with CLAMP when the code was initially built and less stable. I am fine with either leave it and rely on integration team to override logback to have more verbosed msgs or remove logging this per prod requirement. The descriptive msg is already packaged with returned code in \"pfme\" that is passed into \"makeErrorResponse\".",
+      "parentUuid": "42d7ecfd_a99bfe14",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f21fd44d_bf7a58c3",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 2
