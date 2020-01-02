@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c73b9a44_34dbf959",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "The normal approach taken in my experience is that the production code has logging at a very terse level for production code, and that the option is there to increase logging for testing and debugging. Logs should only be produced in production for real system errors where the system is failing (Server down, memory ran out, disk full, db corrupted)\n\nI am following that maxim here.\n\nThe problem here is that:\n1. The logging of all messages is too verbose\n2. Logs of normal conditions (A policy not being in the DB) are being logged as errors\n\nOf course we should be able to log all messages but this should not be the default situation.",
+      "parentUuid": "7331fa91_159d0a4a",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f21fd44d_bf7a58c3",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-12-24T14:46:13Z",
       "side": 1,
       "message": "maybe move these lines inside the \"if\" test",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6115c7bb_7cae86b2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "I treated the ApiActivator and restServer separately because when I looked at the implementation, it is not clear to me that we can just close the restServer.",
+      "parentUuid": "f21fd44d_bf7a58c3",
       "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "da24ada5_f59c9bd1",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a63aaebd_e3175274",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d67fc1f7_464aaf6c",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2019-12-24T14:46:13Z",
       "side": 1,
       "message": "I\u0027d prefer that we check the error message (or parts of it) to verify that the expected error (path) was generated\n\nsame comment in other test methods",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9098959a_3709833e",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d67fc1f7_464aaf6c",
       "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "aed7936e_ff701566",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe206980_679ce5ba",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91e9828f_0a99e50e",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2019-12-24T14:46:13Z",
       "side": 1,
       "message": "why wrap in try/catch?  this prevents eclipse from displaying a stack trace\n\nsame comment through-out",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd6b2d20_69da36f4",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91e9828f_0a99e50e",
       "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "46c51ec8_be08e4e9",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Could we leave those and do them in another review?",
+      "parentUuid": "cbe11f35_ab21bb94",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32a884fb_504d46df",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
         "patchSetId": 2
@@ -132,6 +258,24 @@
       "writtenOn": "2019-12-24T14:46:13Z",
       "side": 1,
       "message": "don\u0027t need this - use the one in NetworkUtil (AlwaysTrustManager?)",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e6563d8_d9755db3",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1050,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-02T12:30:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32a884fb_504d46df",
       "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
