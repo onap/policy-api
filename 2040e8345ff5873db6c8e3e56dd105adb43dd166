@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "42d7ecfd_a99bfe14",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-02T15:40:57Z",
+      "side": 1,
+      "message": "Yes I agree - the integration team should be able via the K8S charts to override default logback.xml to provide more details if necessary. We had Chenfei add these because I believe there really were none to begin with (I think that\u0027s what it was - I could be wrong). Now that the code is more stable, we can change these to what we would expect in production. The returned HTTP error codes should be enough, along with perhaps changing the error message payload to be more descriptive. I noticed some of the error messages being returned had no JSON format. Perhaps we re-visit that.",
+      "parentUuid": "c73b9a44_34dbf959",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f21fd44d_bf7a58c3",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 2
@@ -241,6 +259,24 @@
       "side": 1,
       "message": "Could we leave those and do them in another review?",
       "parentUuid": "cbe11f35_ab21bb94",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820b1e9f_970752a6",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-02T15:40:57Z",
+      "side": 1,
+      "message": "Yes fine with me.",
+      "parentUuid": "46c51ec8_be08e4e9",
       "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
