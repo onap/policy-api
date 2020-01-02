@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "2d63bdf5_0ecda3fd",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-01-02T17:01:46Z",
+      "side": 1,
+      "message": "There are 2 aspects: 1) how to categorize logging messages, and 2) default logging level at labs.  \n\nRegarding 2) I agree, would want to go out at WARN default logging level as default configuration\n\nRegarding 1), the jump from error to debug is high.   To me, it will fit best the info level, as I think it has importance, more than for example, that printing every incoming byte in the wire as the apache http client library does, that will be put together in the same category.\n\nIf the issue is analyzable somewhat postmortem by some other means in the http respose as Pam and Chenfei are pointing out, I could be with it, although the message categorization as debug does not seem right to me.",
+      "parentUuid": "b5a6e0de_50b5a672",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f21fd44d_bf7a58c3",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 2
