@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "9fa75d1c_101a1fbd",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-03T13:01:18Z",
+      "side": 1,
+      "message": "Hmm ok - I see your point. I would be agreeable for these to be INFO vs DEBUG.",
+      "parentUuid": "2d63bdf5_0ecda3fd",
+      "revId": "2040e8345ff5873db6c8e3e56dd105adb43dd166",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f21fd44d_bf7a58c3",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiActivator.java",
         "patchSetId": 2
