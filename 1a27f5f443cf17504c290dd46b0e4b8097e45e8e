@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "104807a3_0ba8d0b5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-08T18:51:34Z",
+      "side": 1,
+      "message": "Yes. I miss that. Will address in new patch",
+      "parentUuid": "a83dcc19_8f0040f3",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 3
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1a6cc7db_b75bb63c",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2020-01-08T11:48:22Z",
       "side": 1,
       "message": "You can get rid of this boolean by simply checking if the invalidPolicyNames list is empty at the end of the scan fo the policies.",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 285,
+        "endChar": 6
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ba1e5e4_90bd2e2f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-08T18:51:34Z",
+      "side": 1,
+      "message": "Good point. Thanks!",
+      "parentUuid": "efe0e97c_3daeddfc",
       "range": {
         "startLine": 285,
         "startChar": 0,
