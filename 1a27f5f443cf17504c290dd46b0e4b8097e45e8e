@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a83dcc19_8f0040f3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "Should you not check that this is 404 not found and throw this exception back up for all other cases other than 404? If this call throws an exception other than 404, then it should be reported I think.",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 3
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a6cc7db_b75bb63c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "Same as other comment",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 3
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efe0e97c_3daeddfc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "You can get rid of this boolean by simply checking if the invalidPolicyNames list is empty at the end of the scan fo the policies.",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 285,
+        "endChar": 6
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cb33d3d_1d6c0bf6",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "if (!invalidPolicyNames().isEmpty()) {\n    blah blah\n}",
+      "range": {
+        "startLine": 295,
+        "startChar": 0,
+        "endLine": 295,
+        "endChar": 4
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37586858_937317e3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "I wonder would we be better doing this in policy-models in the database provider? Maybe we should change it to simply reject a policy write if the policy exists in the DB.\n\nWe have the update there on the provider for updates if that\u0027s what people want to do.\n\nLet\u0027s discuss at the scrum today.",
+      "range": {
+        "startLine": 302,
+        "startChar": 4,
+        "endLine": 404,
+        "endChar": 1
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd8336b_f9bcda6d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-01-08T11:48:22Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 157,
+        "startChar": 1,
+        "endLine": 249,
+        "endChar": 1
+      },
+      "revId": "1a27f5f443cf17504c290dd46b0e4b8097e45e8e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
