@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
@@ -109,6 +109,7 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
     public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body)
             throws PfModelException {
 
+        validateGuardPolicyVersion(body);
         return modelsProvider.createGuardPolicy(body);
     }
 
@@ -149,6 +150,58 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
         }
+    }
+
+    /**
+     * Validates the provided guard policy version in the payload.
+     *
+     * @param body the guard policy payload
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateGuardPolicyVersion(LegacyGuardPolicyInput body) throws PfModelException {
+
+        validateGuardPolicyVersionExist(body);
+        validateNoDuplicateVersionInDb(body);
+    }
+
+    /**
+     * Validates that the guard policy has version specified.
+     *
+     * @param body the guard policy payload
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateGuardPolicyVersionExist(LegacyGuardPolicyInput body) throws PfModelException {
+
+        if (body.getPolicyVersion() == null) {
+            String errMsg = "mandantory field 'version' is missing in the policy: " + body.getPolicyId();
+            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
+        }
+    }
+
+    /**
+     * Validates that there is no duplicate version already stored in the database.
+     *
+     * @param body the guard policy payload
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateNoDuplicateVersionInDb(LegacyGuardPolicyInput body) throws PfModelException {
+
+        try {
+            modelsProvider.getGuardPolicy(body.getPolicyId(), body.getPolicyVersion());
+        } catch (PfModelRuntimeException exc) {
+            return;
+        }
+
+        // If it gets here, there is one duplicate version stored in the DB.
+        // Try to get the latest version and return it to the user.
+        Map<String, LegacyGuardPolicyOutput> latest = modelsProvider.getGuardPolicy(body.getPolicyId(), null);
+        final String[] versionArray = latest.values().iterator().next().getVersion().split("\\.");
+        String errMsg = "guard policy " + body.getPolicyId() + ":" + body.getPolicyVersion()
+            + " already exists; its latest version is " + versionArray[0];
+        throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
     }
 
     /**
