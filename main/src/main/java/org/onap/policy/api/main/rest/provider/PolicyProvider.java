@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,12 @@
 package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
@@ -66,10 +69,8 @@ public class PolicyProvider extends CommonModelProvider {
     public ToscaServiceTemplate fetchPolicies(String policyTypeId, String policyTypeVersion,
             String policyId, String policyVersion) throws PfModelException {
 
-        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
-                .name(policyId).version(policyVersion)
-                .type(policyTypeId).typeVersion(policyTypeVersion).build();
-        ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
+        ToscaServiceTemplate serviceTemplate = getFilteredPolicies(
+                policyTypeId, policyTypeVersion, policyId, policyVersion);
 
         if (!hasPolicy(serviceTemplate)) {
             throw new PfModelException(Response.Status.NOT_FOUND,
@@ -93,10 +94,8 @@ public class PolicyProvider extends CommonModelProvider {
     public ToscaServiceTemplate fetchLatestPolicies(String policyTypeId, String policyTypeVersion,
             String policyId) throws PfModelException {
 
-        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
-                .name(policyId).version(ToscaPolicyFilter.LATEST_VERSION)
-                .type(policyTypeId).typeVersion(policyTypeVersion).build();
-        ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
+        ToscaServiceTemplate serviceTemplate = getFilteredPolicies(
+                policyTypeId, policyTypeVersion, policyId, ToscaPolicyFilter.LATEST_VERSION);
 
         if (!hasPolicy(serviceTemplate)) {
             throw new PfModelException(Response.Status.NOT_FOUND,
@@ -125,11 +124,11 @@ public class PolicyProvider extends CommonModelProvider {
     }
 
     /**
-     * Creates a new policy for a policy type ID and version.
+     * Creates one or more new policies for the same policy type ID and version.
      *
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
-     * @param body the entity body of policy
+     * @param body the entity body of polic(ies)
      *
      * @return the ToscaServiceTemplate object
      *
@@ -140,7 +139,7 @@ public class PolicyProvider extends CommonModelProvider {
 
         validatePolicyTypeExist(policyTypeId, policyTypeVersion);
         validatePolicyTypeMatch(policyTypeId, policyTypeVersion, body);
-
+        validatePolicyVersion(body);
         return modelsProvider.createPolicies(body);
     }
 
@@ -155,6 +154,7 @@ public class PolicyProvider extends CommonModelProvider {
      */
     public ToscaServiceTemplate createPolicies(ToscaServiceTemplate body) throws PfModelException {
 
+        validatePolicyVersion(body);
         return modelsProvider.createPolicies(body);
     }
 
@@ -257,6 +257,145 @@ public class PolicyProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
         }
+    }
+
+    /**
+     * Validates the provided policy version in the payload.
+     *
+     * @param body the provided TOSCA service template which contains the policies
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validatePolicyVersion(ToscaServiceTemplate body) throws PfModelException {
+
+        validatePolicyVersionExist(body);
+        validateNoDuplicateVersionInDb(body);
+        validateNoDuplicateVersionInPl(body);
+    }
+
+    /**
+     * Validates the existence of at least one policies in the provided payload.
+     *
+     * @param body the TOSCA service template payload to check against
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validatePolicyVersionExist(ToscaServiceTemplate body) throws PfModelException {
+
+        List<String> invalidPolicyNames = new ArrayList<>();
+        for (Map<String, ToscaPolicy> policy : body.getToscaTopologyTemplate().getPolicies()) {
+            ToscaPolicy policyContent = policy.values().iterator().next();
+            if (policyContent.getVersion() == null) {
+                invalidPolicyNames.add(policy.keySet().iterator().next());
+            }
+        }
+
+        if (!invalidPolicyNames.isEmpty()) {
+            String errMsg = "mandantory 'version' field is missing in policies: "
+                + String.join(", ", invalidPolicyNames);
+            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
+        }
+    }
+
+    /**
+     * Validates there is no duplicate policy version stored in the database.
+     *
+     * @param body the TOSCA service template payload to check against
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateNoDuplicateVersionInDb(ToscaServiceTemplate body) throws PfModelException {
+
+        Map<String, String> invalidPolicies = new HashMap<>();
+        for (Map<String, ToscaPolicy> policy: body.getToscaTopologyTemplate().getPolicies()) {
+            ToscaPolicy policyContent = policy.values().iterator().next();
+            String policyName = policy.keySet().iterator().next();
+            String policyVersion = policyContent.getVersion();
+            String policyTypeName = policyContent.getType();
+            String policyTypeVersion = policyContent.getTypeVersion();
+            ToscaServiceTemplate serviceTemplate =
+                    getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, policyVersion);
+            if (hasPolicy(serviceTemplate)) {
+                String latestVersion = getFilteredPolicies(policyTypeName, policyTypeVersion,
+                        policyName, ToscaPolicyFilter.LATEST_VERSION).getToscaTopologyTemplate().getPoliciesAsMap()
+                        .values().iterator().next().getVersion();
+                invalidPolicies.put(String.join(":", policyName, policyVersion), latestVersion);
+            }
+        }
+
+        if (!invalidPolicies.isEmpty()) {
+            List<String> duplicateVersions = new ArrayList<>();
+            for (Entry<String, String> invalidPolicy : invalidPolicies.entrySet()) {
+                String eachDuplicateVersion = "policy " + invalidPolicy.getKey()
+                    + " already exists; its latest version is " + invalidPolicy.getValue();
+                duplicateVersions.add(eachDuplicateVersion);
+            }
+            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, String.join("\n", duplicateVersions));
+        }
+    }
+
+    /**
+     * Validates there is no duplicate policy version in the provided payload if multiple policies are present.
+     *
+     * @param body the TOSCA service template payload to check against
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private void validateNoDuplicateVersionInPl(ToscaServiceTemplate body) throws PfModelException {
+
+        List<Map<String, ToscaPolicy>> policies = body.getToscaTopologyTemplate().getPolicies();
+        List<String> duplicateVersions = new ArrayList<>();
+        for (int i = 0; i < policies.size() - 1; i++) {
+            for (int j = i + 1; j < policies.size(); j++) {
+                if (hasSameNameVersion(policies.get(i), policies.get(j))) {
+                    String nameVersion = policies.get(i).keySet().iterator().next() + ":"
+                        + policies.get(i).values().iterator().next().getVersion();
+                    duplicateVersions.add(nameVersion);
+                }
+            }
+        }
+
+        if (!duplicateVersions.isEmpty()) {
+            String errMsg = "the same version of policies '" + String.join(", ", duplicateVersions)
+                + "' appear multiple times in the payload";
+            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
+        }
+    }
+
+    /**
+     * Checks if two policies have the same name and version.
+     *
+     * @param policy1 the first policy
+     * @param policy2 the second policy
+     *
+     * @return the boolean flag to indicate the result
+     */
+    private boolean hasSameNameVersion(Map<String, ToscaPolicy> policy1, Map<String, ToscaPolicy> policy2) {
+
+        return (policy1.keySet().iterator().next().equals(policy2.keySet().iterator().next())
+                && policy1.values().iterator().next().getVersion().equals(
+                        policy2.values().iterator().next().getVersion()));
+    }
+
+    /**
+     * Retrieves the specified version of the policy.
+     *
+     * @param policyTypeName the name of the policy type
+     * @param policyTypeVersion the version of the policy type
+     * @param policyName the name of the policy
+     * @param policyVersion the version of the policy
+     *
+     * @return the TOSCA service template containing the specified version of the policy
+     *
+     * @throws PfModelException the PfModel parsing exception
+     */
+    private ToscaServiceTemplate getFilteredPolicies(String policyTypeName, String policyTypeVersion,
+            String policyName, String policyVersion) throws PfModelException {
+
+        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
+                .name(policyName).version(policyVersion)
+                .type(policyTypeName).typeVersion(policyTypeVersion).build();
+        return modelsProvider.getFilteredPolicies(policyFilter);
     }
 
     /**
