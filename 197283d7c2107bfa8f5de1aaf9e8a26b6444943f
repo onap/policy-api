@@ -22,6 +22,30 @@
       "revId": "197283d7c2107bfa8f5de1aaf9e8a26b6444943f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc3deec8_bfa74d14",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-09T15:31:01Z",
+      "side": 1,
+      "message": "Possibly - there can be a cleanup of dependencies within repos themselves. But let\u0027s maybe wait and do that later. Just minimal stuff for now for JDK 11. I think the dependencyManagement needs a sweep.",
+      "parentUuid": "6f99c5d1_733f9b97",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 21
+      },
+      "revId": "197283d7c2107bfa8f5de1aaf9e8a26b6444943f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
