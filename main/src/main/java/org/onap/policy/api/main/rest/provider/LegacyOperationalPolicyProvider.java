@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,13 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide all kinds of legacy operational policy operations.
@@ -41,6 +44,8 @@ import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
  * @author Chenfei Gao (cgao@research.att.com)
  */
 public class LegacyOperationalPolicyProvider extends CommonModelProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyOperationalPolicyProvider.class);
 
     private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
     private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
@@ -84,7 +89,7 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
             throws PfModelException {
 
         return collectDeployedPolicies(
-                policyId, LEGACY_OPERATIONAL_TYPE, modelsProvider::getOperationalPolicy, List::add, new ArrayList<>());
+                policyId, LEGACY_OPERATIONAL_TYPE, modelsProvider::getOperationalPolicy, List::add, new ArrayList<>(5));
     }
 
     /**
@@ -96,6 +101,7 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
      */
     public LegacyOperationalPolicy createOperationalPolicy(LegacyOperationalPolicy body) throws PfModelException {
 
+        validateOperationalPolicyVersion(body);
         return modelsProvider.createOperationalPolicy(body);
     }
 
@@ -126,7 +132,7 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
      */
     private void validateDeleteEligibility(String policyId, String policyVersion) throws PfModelException {
 
-        List<ToscaPolicyIdentifier> policies = new ArrayList<>();
+        List<ToscaPolicyIdentifier> policies = new ArrayList<>(5);
         policies.add(new ToscaPolicyIdentifier(policyId, policyVersion + LEGACY_MINOR_PATCH_SUFFIX));
         PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyList(policies).build();
 
@@ -136,5 +142,65 @@ public class LegacyOperationalPolicyProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
         }
+    }
+
+    /**
+     * Validates the specified version of the operational policy provided in the payload.
+     *
+     * @param body the operational policy payload
+     *
+     * @throws PfModelException on errors parsing PfModel
+     */
+    private void validateOperationalPolicyVersion(LegacyOperationalPolicy body) throws PfModelException {
+
+        validateOperationalPolicyVersionExist(body);
+        validateNoDuplicateVersionInDb(body);
+    }
+
+    /**
+     * Validates whether the version of the operational policy is specified in the payload.
+     *
+     * @param body the operational policy payload
+     *
+     * @throws PfModelException on errors parsing PfModel
+     */
+    private void validateOperationalPolicyVersionExist(LegacyOperationalPolicy body) throws PfModelException {
+
+        if (body.getPolicyVersion() == null) {
+            String errMsg = "mandatory field 'policy-version' is missing in the policy: " + body.getPolicyId();
+            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
+        }
+    }
+
+    /**
+     * Validates that there is no duplicate version of the operational policy which is already stored in the database.
+     *
+     * @param body the operational policy payload
+     *
+     * @throws PfModelException on errors parsing PfModel
+     */
+    private void validateNoDuplicateVersionInDb(LegacyOperationalPolicy body) throws PfModelException {
+
+        try {
+            modelsProvider.getOperationalPolicy(body.getPolicyId(), body.getPolicyVersion());
+        } catch (PfModelRuntimeException exc) {
+            if (exc.getErrorResponse().getResponseCode() == Response.Status.BAD_REQUEST
+                    && exc.getErrorResponse().getErrorMessage().contains("no policy found")) {
+                String debugMessage = "no duplicate policy " + body.getPolicyId() + ":" + body.getPolicyVersion()
+                    + " found in the DB" ;
+                LOGGER.debug(debugMessage);
+                return;
+            } else {
+                throw new PfModelException(exc.getErrorResponse().getResponseCode(), "unexpected runtime error", exc);
+            }
+        }
+
+        // There is one duplicate version stored in the DB.
+        // Try to get the latest version
+        LegacyOperationalPolicy latest = modelsProvider.getOperationalPolicy(body.getPolicyId(), null);
+        final String[] versionArray = latest.getPolicyVersion().split("\\.");
+        String errMsg = "operational policy " + body.getPolicyId() + ":" + body.getPolicyVersion()
+            + " already exists; its latest version is " + versionArray[0];
+        throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
     }
 }
