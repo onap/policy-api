@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f99c5d1_733f9b97",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1757
+      },
+      "writtenOn": "2020-01-09T15:25:20Z",
+      "side": 1,
+      "message": "It might be a good idea to add these to parent/integration/pom.xml? (policy/models requires these dependencies as well and im guessing other projects will as well)",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 21
+      },
+      "revId": "197283d7c2107bfa8f5de1aaf9e8a26b6444943f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
