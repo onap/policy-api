@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -104,13 +104,16 @@ public class TestApiRestServer {
             "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE =
             "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca";
-    private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION = "policytypes/"
+    private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION1 = "policytypes/"
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
+    private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION2 = "policytypes/"
+            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/2.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED = "policytypes/"
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/deployed";
 
+    private static final String GUARD_POLICYTYPE = "onap.policies.controlloop.Guard";
     private static final String GUARD_POLICIES = "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
     private static final String GUARD_POLICIES_VDNS_FL_LATEST =
             "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
@@ -126,6 +129,7 @@ public class TestApiRestServer {
     private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION =
             "policytypes/" + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1";
 
+    private static final String OPS_POLICYTYPE = "onap.policies.controlloop.Operational";
     private static final String OPS_POLICIES =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
     private static final String OPS_POLICIES_VCPE_LATEST =
@@ -165,7 +169,7 @@ public class TestApiRestServer {
         "policies/vCPE.policies.optimization.input.tosca.yaml"
     };
 
-    private static final String[] TOSCA_PPOLICYTYPE_RESOURCE_NAMES = {
+    private static final String[] TOSCA_POLICYTYPE_RESOURCE_NAMES = {
         "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
         "policytypes/onap.policies.Optimization.yaml",
@@ -190,10 +194,21 @@ public class TestApiRestServer {
         "policies/vDNS.policy.guard.minmax.input.json"
     };
 
+    private static final String[] LEGACY_GUARD_POLICY_NAMES = {
+        "guard.frequency.scaleout",
+        "guard.minmax.scaleout"
+    };
+
     private static final String[] LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES = {
         "policies/vCPE.policy.operational.input.json",
         "policies/vDNS.policy.operational.input.json",
         "policies/vFirewall.policy.operational.input.json"
+    };
+
+    private static final String[] LEGACY_OPERATIONAL_POLICY_NAMES = {
+        "operational.restart",
+        "operational.scaleout",
+        "operational.modifyconfig"
     };
 
     private static PolicyModelsProviderParameters providerParams;
@@ -271,23 +286,17 @@ public class TestApiRestServer {
      */
     @Before
     public void beforeClearDatabase() throws Exception {
+
         Response rawResponse = readResource(POLICYTYPES, APP_JSON);
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
 
         for (ToscaEntityKey policyTypeKey : response.getPolicyTypesAsMap().keySet()) {
-            String getPoliciesPath =
-                    "policytypes/" + policyTypeKey.getName() + "/versions/" + policyTypeKey.getVersion() + "/policies";
-
-            Response rawPolicyResponse = readResource(getPoliciesPath, APP_JSON);
-            if (Response.Status.OK.getStatusCode() == rawPolicyResponse.getStatus()) {
-                ToscaServiceTemplate policyResponse = rawPolicyResponse.readEntity(ToscaServiceTemplate.class);
-
-                for (ToscaEntityKey policyKey : policyResponse.getToscaTopologyTemplate().getPoliciesAsMap().keySet()) {
-                    String deletePolicyPath =
-                            "policytypes/" + policyTypeKey.getName() + "/versions/" + policyTypeKey.getVersion()
-                                    + "/policies/" + policyKey.getName() + "/versions/" + policyKey.getVersion();
-                    deleteResource(deletePolicyPath, APP_JSON);
-                }
+            if (GUARD_POLICYTYPE.equals(policyTypeKey.getName())
+                    || OPS_POLICYTYPE.equals(policyTypeKey.getName())) {
+                deleteLegacyPolicies(LEGACY_GUARD_POLICY_NAMES, GUARD_POLICYTYPE);
+                deleteLegacyPolicies(LEGACY_OPERATIONAL_POLICY_NAMES, OPS_POLICYTYPE);
+            } else {
+                deleteToscaPolicies(policyTypeKey);
             }
 
             String deletePolicyTypePath =
@@ -312,7 +321,7 @@ public class TestApiRestServer {
 
     @Test
     public void testCreatePolicyTypes() throws Exception {
-        for (String resrcName : TOSCA_PPOLICYTYPE_RESOURCE_NAMES) {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -329,7 +338,7 @@ public class TestApiRestServer {
         Response rawResponse2 = createResource(POLICYTYPES, standardCoder.encode(response));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
-        assertEquals("no policy types specified on service template", errorResponse.getErrorMessage());
+        assertEquals("no policy types specified in the service template", errorResponse.getErrorMessage());
     }
 
     @Test
@@ -378,7 +387,7 @@ public class TestApiRestServer {
         Response rawResponse2 = createResource(POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
-        assertEquals("policy type NULL:0.0.0 for policy onap.restart.tca:1.0.0 does not exist",
+        assertEquals("policy type NULL:0.0.0 for policy onap.restart.tca:2.0.0 does not exist",
                 errorResponse.getErrorMessage());
     }
 
@@ -531,7 +540,10 @@ public class TestApiRestServer {
         rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, mediaType);
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION2, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, mediaType);
@@ -551,7 +563,7 @@ public class TestApiRestServer {
     private void testDeletePolicies(String mediaType) throws Exception {
         createPolicyTypes();
 
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, mediaType);
+        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
         assertEquals(
@@ -571,7 +583,7 @@ public class TestApiRestServer {
     }
 
     private void testDeletePolicyVersion(String mediaType) throws Exception {
-        for (String resrcName : TOSCA_PPOLICYTYPE_RESOURCE_NAMES) {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -582,14 +594,25 @@ public class TestApiRestServer {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, mediaType);
+        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION, mediaType);
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals(
                 "policy with ID onap.restart.tca:1.0.0 and type "
+                        + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                errorResponse.getErrorMessage());
+
+        rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION2, mediaType);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION2, mediaType);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
+        errorResponse = rawResponse.readEntity(ErrorResponse.class);
+        assertEquals(
+                "policy with ID onap.restart.tca:2.0.0 and type "
                         + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
                 errorResponse.getErrorMessage());
 
@@ -621,7 +644,7 @@ public class TestApiRestServer {
     }
 
     private void testGetAllVersionOfPolicy(String mediaType) throws Exception {
-        for (String resrcName : TOSCA_PPOLICYTYPE_RESOURCE_NAMES) {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -920,7 +943,7 @@ public class TestApiRestServer {
     }
 
     private void createPolicyTypes() throws Exception {
-        for (String resrcName : TOSCA_PPOLICYTYPE_RESOURCE_NAMES) {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
@@ -1005,5 +1028,34 @@ public class TestApiRestServer {
         assertEquals(healthy, report.isHealthy());
         assertEquals(code, report.getCode());
         assertEquals(message, report.getMessage());
+    }
+
+    private void deleteToscaPolicies(ToscaEntityKey policyTypeKey) throws Exception {
+
+        String getPoliciesPath =
+                "policytypes/" + policyTypeKey.getName() + "/versions/" + policyTypeKey.getVersion() + "/policies";
+
+        Response rawPolicyResponse = readResource(getPoliciesPath, APP_JSON);
+        if (Response.Status.OK.getStatusCode() == rawPolicyResponse.getStatus()) {
+            ToscaServiceTemplate policyResponse = rawPolicyResponse.readEntity(ToscaServiceTemplate.class);
+
+            for (ToscaEntityKey policyKey : policyResponse.getToscaTopologyTemplate().getPoliciesAsMap().keySet()) {
+                String deletePolicyPath =
+                        "policytypes/" + policyTypeKey.getName() + "/versions/" + policyTypeKey.getVersion()
+                                + "/policies/" + policyKey.getName() + "/versions/" + policyKey.getVersion();
+                deleteResource(deletePolicyPath, APP_JSON);
+            }
+        }
+    }
+
+    private void deleteLegacyPolicies(String[] legacyPolicyNames, String legacyPolicyType) throws Exception {
+
+        for (String policyName : legacyPolicyNames) {
+            String policyPath =
+                    "policytypes/" + legacyPolicyType + "/versions/1.0.0/policies/" + policyName + "/versions/1";
+            if (Response.Status.OK.getStatusCode() == readResource(policyPath, APP_JSON).getStatus()) {
+                deleteResource(policyPath, APP_JSON);
+            }
+        }
     }
 }

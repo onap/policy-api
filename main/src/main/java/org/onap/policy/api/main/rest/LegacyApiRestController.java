@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,26 +236,35 @@ public class LegacyApiRestController extends CommonRestController {
             authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Guard Policy",},
             response = LegacyGuardPolicyOutput.class, responseContainer = "Map",
             responseHeaders = {
-                @ResponseHeader(name = "X-MinorVersion",
-                        description = "Used to request or communicate a MINOR version back from the client"
-                                + " to the server, and from the server back to the client",
-                        response = String.class),
-                @ResponseHeader(name = "X-PatchVersion",
-                        description = "Used only to communicate a PATCH version in a response for"
-                                + " troubleshooting purposes only, and will not be provided by"
-                                + " the client on request",
-                        response = String.class),
-                @ResponseHeader(name = "X-LatestVersion",
-                        description = "Used only to communicate an API's latest version", response = String.class),
-                @ResponseHeader(name = "X-ONAP-RequestID",
-                        description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            extensions = {@Extension(name = "interface info",
-                    properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid Body"),
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+                    @ResponseHeader(name = "X-MinorVersion",
+                                    description = "Used to request or communicate a MINOR version back from the client"
+                                                + " to the server, and from the server back to the client",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-PatchVersion",
+                                    description = "Used only to communicate a PATCH version in a response for"
+                                                + " troubleshooting purposes only, and will not be provided by"
+                                                + " the client on request",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-LatestVersion",
+                                    description = "Used only to communicate an API's latest version",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-ONAP-RequestID",
+                                    description = "Used to track REST transactions for logging purpose",
+                                    response = UUID.class)
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid Body"),
+            @ApiResponse(code = 401, message = "Authentication Error"),
+            @ApiResponse(code = 403, message = "Authorization Error"),
+            @ApiResponse(code = 406, message = "Not Acceptable Payload"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+        })
     public Response createGuardPolicy(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyGuardPolicyInput body) {
@@ -489,26 +498,35 @@ public class LegacyApiRestController extends CommonRestController {
             authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
             response = LegacyOperationalPolicy.class,
             responseHeaders = {
-                @ResponseHeader(name = "X-MinorVersion",
-                        description = "Used to request or communicate a MINOR version back from the client"
-                                + " to the server, and from the server back to the client",
-                        response = String.class),
-                @ResponseHeader(name = "X-PatchVersion",
-                        description = "Used only to communicate a PATCH version in a response for"
-                                + " troubleshooting purposes only, and will not be provided by"
-                                + " the client on request",
-                        response = String.class),
-                @ResponseHeader(name = "X-LatestVersion",
-                        description = "Used only to communicate an API's latest version", response = String.class),
-                @ResponseHeader(name = "X-ONAP-RequestID",
-                        description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            extensions = {@Extension(name = "interface info",
-                    properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid Body"),
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+                    @ResponseHeader(name = "X-MinorVersion",
+                                    description = "Used to request or communicate a MINOR version back from the client"
+                                                + " to the server, and from the server back to the client",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-PatchVersion",
+                                    description = "Used only to communicate a PATCH version in a response for"
+                                                + " troubleshooting purposes only, and will not be provided by"
+                                                + " the client on request",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-LatestVersion",
+                                    description = "Used only to communicate an API's latest version",
+                                    response = String.class),
+                    @ResponseHeader(name = "X-ONAP-RequestID",
+                                    description = "Used to track REST transactions for logging purpose",
+                                    response = UUID.class)
+            },
+            extensions = {
+                    @Extension(name = "interface info", properties = {
+                            @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                            @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+                    })
+            })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid Body"),
+            @ApiResponse(code = 401, message = "Authentication Error"),
+            @ApiResponse(code = 403, message = "Authorization Error"),
+            @ApiResponse(code = 406, message = "Not Acceptable Payload"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+        })
     public Response createOperationalPolicy(
             @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
             @ApiParam(value = "Entity body of policy", required = true) LegacyOperationalPolicy body) {

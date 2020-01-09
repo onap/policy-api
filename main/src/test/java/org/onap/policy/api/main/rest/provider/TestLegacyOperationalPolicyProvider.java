@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -119,7 +119,7 @@ public class TestLegacyOperationalPolicyProvider {
     }
 
     @Test
-    public void testFetchOperationalPolicy() {
+    public void testFetchOperationalPolicy() throws Exception {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", null);
@@ -129,31 +129,24 @@ public class TestLegacyOperationalPolicyProvider {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", "dummy");
         }).hasMessage("legacy policy version is not an integer");
 
-        assertThatCode(() -> {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
-            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
-            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
-            LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
-            assertNotNull(createdPolicy);
+        String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+        LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+        LegacyOperationalPolicy createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+        assertNotNull(createdPolicy);
 
-            policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
-            createdPolicy = operationalPolicyProvider.createOperationalPolicy(policyToCreate);
-            assertNotNull(createdPolicy);
+        LegacyOperationalPolicy firstVersion =
+                operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
+        assertNotNull(firstVersion);
+        assertEquals("1", firstVersion.getPolicyVersion());
 
-            LegacyOperationalPolicy firstVersion =
-                    operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
-            assertNotNull(firstVersion);
-            assertEquals("1", firstVersion.getPolicyVersion());
-
-            LegacyOperationalPolicy latestVersion =
-                    operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
-            assertNotNull(latestVersion);
-            assertEquals("2", latestVersion.getPolicyVersion());
-        }).doesNotThrowAnyException();
+        LegacyOperationalPolicy latestVersion =
+                operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
+        assertNotNull(latestVersion);
+        assertEquals("1", latestVersion.getPolicyVersion());
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1.0.0");
@@ -163,11 +156,8 @@ public class TestLegacyOperationalPolicyProvider {
             operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "latest");;
         }).hasMessage("legacy policy version is not an integer");
 
-        assertThatCode(() -> {
-            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
-            operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "2");
-            policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");
-        }).doesNotThrowAnyException();
+        operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
+        policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");
     }
 
     @Test
