@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87a614d1_c303ba4b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-09T15:00:36Z",
+      "side": 1,
+      "message": "I think sonar will complain if you don\u0027t log the exception - maybe log it as debug?",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c28fc421_c75ea9f7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-09T15:00:36Z",
+      "side": 1,
+      "message": "same comment as before about logging the exception",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e1facb6_f750a658",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-09T15:00:36Z",
+      "side": 1,
+      "message": "initialize the expected array size in the constructor",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a128b6b7_39a6d0bb",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-09T15:00:36Z",
+      "side": 1,
+      "message": "\"mandantory\" \u003d\u003e \"mandatory\"",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3fdbbb_9ad0244f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-09T15:00:36Z",
+      "side": 1,
+      "message": "initialize expected array size",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
