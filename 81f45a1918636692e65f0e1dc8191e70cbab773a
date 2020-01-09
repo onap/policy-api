@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "37ba7926_8535f4a8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-09T18:27:47Z",
+      "side": 1,
+      "message": "done.",
+      "parentUuid": "87a614d1_c303ba4b",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c28fc421_c75ea9f7",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 3
@@ -77,6 +95,24 @@
       "writtenOn": "2020-01-09T15:00:36Z",
       "side": 1,
       "message": "same comment as before about logging the exception",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42bc3c9a_ed5d150d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-09T18:27:47Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "c28fc421_c75ea9f7",
       "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -100,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "7f799744_346ee4a3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-09T18:27:47Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "5e1facb6_f750a658",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a128b6b7_39a6d0bb",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 3
@@ -117,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "41fed3f0_033cd624",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-09T18:27:47Z",
+      "side": 1,
+      "message": "done. thx",
+      "parentUuid": "a128b6b7_39a6d0bb",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f3fdbbb_9ad0244f",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 3
@@ -128,6 +200,24 @@
       "writtenOn": "2020-01-09T15:00:36Z",
       "side": 1,
       "message": "initialize expected array size",
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8838b23_73c44f0e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-09T18:27:47Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "7f3fdbbb_9ad0244f",
       "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
