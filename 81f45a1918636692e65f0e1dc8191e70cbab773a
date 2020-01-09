@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41067493_b87cb6dc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-09T15:18:16Z",
+      "side": 1,
+      "message": "Hmm - let\u0027s go back to the wiki on that and only change if it we absolutely must. I am guessing this has to do with modifications to the payload itself. Which I don\u0027t think we have changed.",
+      "parentUuid": "c95abe40_7daaaa0a",
+      "range": {
+        "startLine": 396,
+        "startChar": 28,
+        "endLine": 396,
+        "endChar": 91
+      },
+      "revId": "81f45a1918636692e65f0e1dc8191e70cbab773a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87a614d1_c303ba4b",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
         "patchSetId": 3
