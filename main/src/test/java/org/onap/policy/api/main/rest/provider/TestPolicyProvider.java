@@ -76,6 +76,9 @@ public class TestPolicyProvider {
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID = "policies/vCPE.policy.bad.policytypeid.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
             "policies/vCPE.policy.bad.policytypeversion.json";
+    private static final String POLICY_RESOURCE_WITH_NO_POLICY_VERSION = "policies/vCPE.policy.no.policyversion.json";
+    private static final String POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION =
+            "policies/vCPE.policy.duplicate.policyversion.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
 
     // @formatter:off
@@ -86,7 +89,8 @@ public class TestPolicyProvider {
         "policytypes/onap.policies.optimization.service.QueryPolicy.yaml",
         "policytypes/onap.policies.optimization.service.SubscriberPolicy.yaml",
         "policytypes/onap.policies.optimization.resource.Vim_fit.yaml",
-        "policytypes/onap.policies.optimization.resource.VnfPolicy.yaml"
+        "policytypes/onap.policies.optimization.resource.VnfPolicy.yaml",
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml"
     };
     // @formatter:on
 
@@ -245,17 +249,15 @@ public class TestPolicyProvider {
     }
 
     @Test
-    public void testCreatePolicy() {
+    public void testCreatePolicy() throws Exception {
 
         assertThatThrownBy(() -> {
             policyProvider.createPolicy("dummy", "1.0.0", new ToscaServiceTemplate());
         }).hasMessage("policy type with ID dummy:1.0.0 does not exist");
 
-        assertThatCode(() -> {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
-            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        }).doesNotThrowAnyException();
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         assertThatThrownBy(() -> {
             String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID);
@@ -273,13 +275,35 @@ public class TestPolicyProvider {
                     badPolicyServiceTemplate);
         }).hasMessage("policy type version does not match");
 
-        assertThatCode(() -> {
-            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
-            ToscaServiceTemplate serviceTemplate = policyProvider
-                    .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
-            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
-        }).doesNotThrowAnyException();
+        assertThatThrownBy(() -> {
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_POLICY_VERSION);
+            ToscaServiceTemplate badPolicyServiceTemplate =
+                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+                    badPolicyServiceTemplate);
+        }).hasMessage("mandatory 'version' field is missing in policies: onap.restart.tca");
+
+        assertThatThrownBy(() -> {
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION);
+            ToscaServiceTemplate badPolicyServiceTemplate =
+                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+                    badPolicyServiceTemplate);
+        }).hasMessage("the same version of policies 'onap.restart.tca:1.0.0' appear multiple times in the payload");
+
+        String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+        ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = policyProvider
+                .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+        assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+
+        assertThatThrownBy(() -> {
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            ToscaServiceTemplate badPolicyServiceTemplate =
+                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+                    badPolicyServiceTemplate);
+        }).hasMessage("policy onap.restart.tca:1.0.0 already exists; its latest version is 1.0.0");
     }
 
     @Test
@@ -306,6 +330,13 @@ public class TestPolicyProvider {
         ToscaServiceTemplate multiPoliciesServiceTemplate =
                 standardCoder.decode(multiPoliciesString, ToscaServiceTemplate.class);
         policyProvider.createPolicies(multiPoliciesServiceTemplate);
+
+        assertThatThrownBy(() -> {
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION);
+            ToscaServiceTemplate badPolicyServiceTemplate =
+                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
+            policyProvider.createPolicies(badPolicyServiceTemplate);
+        }).hasMessage("the same version of policies 'onap.restart.tca:1.0.0' appear multiple times in the payload");
     }
 
     @Test

@@ -78,6 +78,8 @@ public class TestLegacyGuardPolicyProvider {
     private static final String POLICY_RESOURCE = "policies/vDNS.policy.guard.frequency.input.json";
     private static final String POLICY_RESOURCE_VER1 = "policies/vDNS.policy.guard.frequency.input.ver1.json";
     private static final String POLICY_RESOURCE_VER2 = "policies/vDNS.policy.guard.frequency.input.ver2.json";
+    private static final String POLICY_RESOURCE_WITH_NO_VERSION =
+            "policies/vDNS.policy.guard.frequency.no.policyversion.json";
     private static final String POLICY_TYPE_RESOURCE =
             "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.guard.FrequencyLimiter:1.0.0";
@@ -271,7 +273,7 @@ public class TestLegacyGuardPolicyProvider {
     }
 
     @Test
-    public void testCreateGuardPolicy() {
+    public void testCreateGuardPolicy() throws Exception {
 
         assertThatThrownBy(() -> {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -279,21 +281,33 @@ public class TestLegacyGuardPolicyProvider {
             guardPolicyProvider.createGuardPolicy(policyToCreate);
         }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
 
-        assertThatCode(() -> {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
-            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
-            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
-            LegacyGuardPolicyInput policyToCreate = standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
-            Map<String, LegacyGuardPolicyOutput> createdPolicy = guardPolicyProvider.createGuardPolicy(policyToCreate);
-            assertNotNull(createdPolicy);
-            assertFalse(createdPolicy.isEmpty());
-            assertTrue(createdPolicy.containsKey("guard.frequency.scaleout"));
-            assertEquals("onap.policies.controlloop.guard.FrequencyLimiter",
-                    createdPolicy.get("guard.frequency.scaleout").getType());
-            assertEquals("1.0.0", createdPolicy.get("guard.frequency.scaleout").getVersion());
-        }).doesNotThrowAnyException();
+        String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+        LegacyGuardPolicyInput policyToCreate = standardCoder.decode(policyString, LegacyGuardPolicyInput.class);
+        Map<String, LegacyGuardPolicyOutput> createdPolicy = guardPolicyProvider.createGuardPolicy(policyToCreate);
+        assertNotNull(createdPolicy);
+        assertFalse(createdPolicy.isEmpty());
+        assertTrue(createdPolicy.containsKey("guard.frequency.scaleout"));
+        assertEquals("onap.policies.controlloop.guard.FrequencyLimiter",
+                createdPolicy.get("guard.frequency.scaleout").getType());
+        assertEquals("1.0.0", createdPolicy.get("guard.frequency.scaleout").getVersion());
+
+        assertThatThrownBy(() -> {
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_VERSION);
+            LegacyGuardPolicyInput badPolicyToCreate =
+                    standardCoder.decode(badPolicyString, LegacyGuardPolicyInput.class);
+            guardPolicyProvider.createGuardPolicy(badPolicyToCreate);
+        }).hasMessage("mandatory field 'policy-version' is missing in the policy: guard.frequency.scaleout");
+
+        assertThatThrownBy(() -> {
+            String duplicatePolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyGuardPolicyInput duplicatePolicyToCreate =
+                    standardCoder.decode(duplicatePolicyString, LegacyGuardPolicyInput.class);
+            guardPolicyProvider.createGuardPolicy(duplicatePolicyToCreate);
+        }).hasMessage("guard policy guard.frequency.scaleout:1 already exists; its latest version is 1");
     }
 
     @Test
