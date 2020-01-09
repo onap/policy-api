@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d61fae1f_2f265858",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/bin/policy-api.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-01-09T13:40:19Z",
+      "side": 1,
+      "message": "That\u0027s interesting - we may want to look at cleaning these up. They should probably are already set via the Docker image.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 40
+      },
+      "revId": "0ea376fa2a07586b24d3c6d166668ee8dc6e654d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
