@@ -121,6 +121,91 @@
     },
     {
       "key": {
+        "uuid": "a7c1425d_2752f5dc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
+      "side": 1,
+      "message": "probably leave \"5\" out size the size is unknown",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af12a28c_9b8a3bba",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
+      "side": 1,
+      "message": "could leave \"5\" off since the size is unknown",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c27516a_598c2425",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
+      "side": 1,
+      "message": "use invalidPolicyTypes.size() instead of \"5\"",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4fff8ca5_1cccc70f",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a79425cc_3cac22fb",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "806b716f_f939692c",
         "filename": "main/src/test/resources/policies/vCPE.policy.monitoring.input.tosca.v2.yaml",
         "patchSetId": 3
@@ -130,6 +215,23 @@
         "id": 477
       },
       "writtenOn": "2020-01-10T18:02:07Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7334844a_cc936ff1",
+        "filename": "main/src/test/resources/policies/vDNS.policy.monitoring.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T18:39:26Z",
       "side": 1,
       "message": "trailing spaces",
       "revId": "2901c9378f42daffde3c231a768694ae006112c2",
