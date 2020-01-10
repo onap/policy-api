@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0696bcf0_e003157d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T16:55:35Z",
+      "side": 1,
+      "message": "can leave the size out since we don\u0027t really know what size to expect",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79991a11_0ff28c29",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T16:55:35Z",
+      "side": 1,
+      "message": "maybe use \"{}\" in the debug() call instead of string concatenation",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed15793d_6dfd32b0",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T16:55:35Z",
+      "side": 1,
+      "message": "same comment about \"{}\"",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cf3dea7_00311e22",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T16:55:35Z",
+      "side": 1,
+      "message": "looks like these should both be \"1\" instead of \"5\" as only one item is being added to each list",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f83603b2_44246306",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-10T16:55:35Z",
+      "side": 1,
+      "message": "use getPolicies().size() instead of \"5\"",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
