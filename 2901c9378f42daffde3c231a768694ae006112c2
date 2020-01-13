@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "514b1582_66dfe70b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "I think ObjectUtils.isEmpty() is kind of different. It basically checks if the map has zero key-value pairs. Here we want to check if any key in the map (could be policies or policy types) would have null value or not. That being said, we don\u0027t allow a map entry with valid key (e.g. policy name) but null value (null policy content).",
+      "parentUuid": "94d42747_1c76b743",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0696bcf0_e003157d",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2020-01-10T16:55:35Z",
       "side": 1,
       "message": "can leave the size out since we don\u0027t really know what size to expect",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52beefa1_e0f67748",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "0696bcf0_e003157d",
       "revId": "2901c9378f42daffde3c231a768694ae006112c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "fd6146c3_20ebff4a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "79991a11_0ff28c29",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed15793d_6dfd32b0",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 3
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "00e042d9_d7618b38",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "ed15793d_6dfd32b0",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77ff1c51_dc440dfc",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 3
@@ -81,6 +153,24 @@
       "writtenOn": "2020-01-10T18:02:07Z",
       "side": 1,
       "message": "it seems that this block is repeated across methods and could be consolidated into a single method",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98d7d1b6_38d5b90e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "They check different type of payload, LegacyGuardPolicyInput and LegacyOperationalPolicy. I put them in separate methods.",
+      "parentUuid": "77ff1c51_dc440dfc",
       "revId": "2901c9378f42daffde3c231a768694ae006112c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -138,6 +228,24 @@
     },
     {
       "key": {
+        "uuid": "f5dbce25_d7624ecf",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "a7c1425d_2752f5dc",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af12a28c_9b8a3bba",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 3
@@ -155,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "41ebec90_5a6cfdcc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "af12a28c_9b8a3bba",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c27516a_598c2425",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
         "patchSetId": 3
@@ -166,6 +292,24 @@
       "writtenOn": "2020-01-10T18:39:26Z",
       "side": 1,
       "message": "use invalidPolicyTypes.size() instead of \"5\"",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "965a40ae_f1980020",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyTypeProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "7c27516a_598c2425",
       "revId": "2901c9378f42daffde3c231a768694ae006112c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -206,6 +350,24 @@
     },
     {
       "key": {
+        "uuid": "0ce25085_088a09ff",
+        "filename": "main/src/test/resources/policies/vCPE.policies.optimization.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done for both",
+      "parentUuid": "a79425cc_3cac22fb",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "806b716f_f939692c",
         "filename": "main/src/test/resources/policies/vCPE.policy.monitoring.input.tosca.v2.yaml",
         "patchSetId": 3
@@ -223,6 +385,24 @@
     },
     {
       "key": {
+        "uuid": "a00db5b8_c7d7fc61",
+        "filename": "main/src/test/resources/policies/vCPE.policy.monitoring.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "806b716f_f939692c",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7334844a_cc936ff1",
         "filename": "main/src/test/resources/policies/vDNS.policy.monitoring.input.tosca.v2.yaml",
         "patchSetId": 3
@@ -234,6 +414,24 @@
       "writtenOn": "2020-01-10T18:39:26Z",
       "side": 1,
       "message": "trailing spaces",
+      "revId": "2901c9378f42daffde3c231a768694ae006112c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98f9cd0b_bd7e87e3",
+        "filename": "main/src/test/resources/policies/vDNS.policy.monitoring.input.tosca.v2.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T15:41:08Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "7334844a_cc936ff1",
       "revId": "2901c9378f42daffde3c231a768694ae006112c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
