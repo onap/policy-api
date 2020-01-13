@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "47532e81_88901154",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyGuardPolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T17:33:07Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "32b2f405_9494e4a8",
+      "revId": "db63efd9bdad4d9382a5da8459083870fe560c23",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec8bccaa_e10f9b76",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2020-01-13T16:59:45Z",
       "side": 1,
       "message": "same comment as before",
+      "revId": "db63efd9bdad4d9382a5da8459083870fe560c23",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fd5ac30_5a4747a8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/LegacyOperationalPolicyProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-01-13T17:33:07Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "ec8bccaa_e10f9b76",
       "revId": "db63efd9bdad4d9382a5da8459083870fe560c23",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
