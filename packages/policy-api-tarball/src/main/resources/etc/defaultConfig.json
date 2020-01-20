@@ -37,6 +37,7 @@
         "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
         "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
         "policytypes/onap.policies.controlloop.Operational.yaml",
+        "policytypes/onap.policies.controlloop.operational.Common.yaml",
         "policytypes/onap.policies.Naming.yaml",
         "policytypes/onap.policies.drools.Controller.yaml",
         "policytypes/onap.policies.native.Drools.yaml",
