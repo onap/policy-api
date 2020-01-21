@@ -27,7 +27,7 @@
     <dependencySets>
         <dependencySet>
             <useProjectArtifact>true</useProjectArtifact>
-            <outputDirectory>/lib</outputDirectory>
+            <outputDirectory>${file.separator}lib</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>
             <includes>
@@ -43,7 +43,7 @@
                 <include>*.json</include>
                 <include>*.xml</include>
             </includes>
-            <outputDirectory>/etc</outputDirectory>
+            <outputDirectory>${file.separator}etc</outputDirectory>
             <lineEnding>unix</lineEnding>
             <excludes>
                 <exclude>*.formatted</exclude>
@@ -55,7 +55,7 @@
             <includes>
                 <include>policy*</include>
             </includes>
-            <outputDirectory>/etc/ssl</outputDirectory>
+            <outputDirectory>${file.separator}etc${file.separator}ssl</outputDirectory>
             <lineEnding>keep</lineEnding>
         </fileSet>
     </fileSets>
