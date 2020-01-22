@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.parameters.ParameterService;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -80,6 +81,12 @@ public class TestPolicyProvider {
     private static final String POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION =
             "policies/vCPE.policy.duplicate.policyversion.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
+
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
+            "policytypes/onap.policies.controlloop.operational.Common.yaml";
+    private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
+    public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
+
 
     // @formatter:off
     private String[] toscaPolicyTypeResourceNames = {
@@ -304,6 +311,19 @@ public class TestPolicyProvider {
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
         }).hasMessage("policy onap.restart.tca:1.0.0 already exists; its latest version is 1.0.0");
+    }
+
+    @Test
+    public void testCreateOperationalDroolsPolicy() throws CoderException, PfModelException {
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_OPERATIONAL);
+        ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate =
+                policyProvider.createPolicy(POLICY_TYPE_OPERATIONAL_DROOLS, "1.0.0", policyServiceTemplate);
+        assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
     }
 
     @Test
