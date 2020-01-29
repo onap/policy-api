@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b353b8c3_a047340f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/PolicyValidatorFactory.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "sonar: don\u0027t include \"exc\" in both the logger call and in the thrown exception\n\nsame comment elsewhere",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea5ee4c2_f408319b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/PolicyValidatorParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "subclass from ParameterGroupImpl and then you can delete the validate() method",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "781cb175_f1b07425",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "TBD \u003d\u003e TODO (so sonar will identify it)\n\nsame comment elsewhere",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d84a526_c38477d4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "eliminate this check\n\nsame comment below",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b667c8f3_acab0c0f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "add a validation that it has exactly one entry?",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22f1a1b7_f7bec1b1",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "why not put this in a property file?  Can decode it into BusTopicParams and pass that to the client factory build() method directly.  Whether it\u0027s read from a property file or not, BusTopicParams are probably easier to use than Properties.",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "919401a2_4aed1981",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "cache the rule-artifact and re-use it for all three of these lines",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6facdfc_6d70ba5a",
+        "filename": "main/src/test/java/org/onap/policy/api/main/validator/PolicyValidatorFactoryTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "maybe add a success case",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba572233_e6a84402",
+        "filename": "main/src/test/resources/policies/example.policy.native.drools.input.tosca.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-29T23:09:16Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
