@@ -1,0 +1,28 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_0_0",
+    "topology_template": {
+        "policies": [
+            {
+                "example.drools.policy": {
+                    "type": "onap.policies.native.Drools",
+                    "type_version": "1.0.0",
+                    "version": "1.0.0",
+                    "metadata": {
+                        "policy-id": "example.drools.policy"
+                    },
+                    "properties": {
+                        "rule_artifact": {
+                            "groupId": "org.onap.policy.native.drools",
+                            "artifactId": "example-valid-drools-policy",
+                            "version": "1.0.0-SNAPSHOT"
+                        },
+                        "controller": {
+                            "controllerPolicyName": "example.controller.policy",
+                            "controllerPolicyVersion": "1.0.0"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

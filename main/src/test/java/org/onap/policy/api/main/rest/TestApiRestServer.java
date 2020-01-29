@@ -55,6 +55,7 @@ import org.onap.policy.api.main.parameters.CommonTestData;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.startstop.Main;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -212,6 +213,7 @@ public class TestApiRestServer {
     };
 
     private static PolicyModelsProviderParameters providerParams;
+    private static PolicyValidatorParameters validatorParams;
     private static ApiParameterGroup apiParamGroup;
     private static PolicyProvider policyProvider;
     private static PolicyTypeProvider policyTypeProvider;
@@ -238,7 +240,9 @@ public class TestApiRestServer {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        validatorParams = PolicyValidatorParameters.builder().nexusName("localhost").nexusPort("8081").build();
+        apiParamGroup = new ApiParameterGroup(
+                "ApiGroup", null, providerParams, validatorParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
 
         policyTypeProvider = new PolicyTypeProvider();

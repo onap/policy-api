@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -52,6 +53,7 @@ public class TestPolicyTypeProvider {
     private static PolicyTypeProvider policyTypeProvider;
     private static PolicyProvider policyProvider;
     private static PolicyModelsProviderParameters providerParams;
+    private static PolicyValidatorParameters validatorParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardYamlCoder standardYamlCoder;
 
@@ -66,6 +68,8 @@ public class TestPolicyTypeProvider {
 
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
+            "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
     public static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
     public static final String POLICY_TYPE_OPERATIONAL_APEX = "onap.policies.controlloop.operational.common.Apex";
     public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
@@ -85,7 +89,9 @@ public class TestPolicyTypeProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        validatorParams = PolicyValidatorParameters.builder().nexusName("localhost").nexusPort("8081").build();
+        apiParamGroup = new ApiParameterGroup(
+                "ApiGroup", null, providerParams, validatorParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();
@@ -154,17 +160,24 @@ public class TestPolicyTypeProvider {
 
     @Test
     public void testCreateOperationalPolicyTypes() throws CoderException, PfModelException {
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_COMMON));
-        assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_APEX));
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_DROOLS));
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_COMMON, POLICY_TYPE_VERSION);
-        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_APEX, POLICY_TYPE_VERSION);
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_DROOLS, POLICY_TYPE_VERSION);
+    }
+
+    @Test
+    public void testCreateApexOperationalPolicyTypes() throws CoderException, PfModelException {
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+            ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_APEX), ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_APEX));
+        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_APEX, POLICY_TYPE_VERSION);
     }
 
     @Test

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -54,6 +55,8 @@ public class CommonTestData {
     private static final String DATABASE_USER = "policy";
     private static final String DATABASE_PASSWORD = "P01icY";
     private static final String PERSISTENCE_UNIT = "ToscaConceptTest";
+
+    private static final String LOCALHOST = "localhost";
 
     private Coder coder = new StandardCoder();
 
@@ -97,6 +100,18 @@ public class CommonTestData {
             databaseProviderParameters = new PolicyModelsProviderParameters();
         }
         return databaseProviderParameters;
+    }
+
+    /**
+     * Returns an instance of PolicyValidatorParameters for test cases.
+     *
+     * @return the PolicyValidatorParameters object
+     */
+    public PolicyValidatorParameters getPolicyValidatorParameters() {
+        PolicyValidatorParameters params = PolicyValidatorParameters.builder()
+                .nexusName(LOCALHOST).nexusPort("8081").build();
+        params.setName("defaultPolicyValidator");
+        return params;
     }
 
     /**

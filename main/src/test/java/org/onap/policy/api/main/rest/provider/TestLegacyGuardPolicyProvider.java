@@ -41,6 +41,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -71,6 +72,7 @@ public class TestLegacyGuardPolicyProvider {
     private static LegacyGuardPolicyProvider guardPolicyProvider;
     private static PolicyTypeProvider policyTypeProvider;
     private static PolicyModelsProviderParameters providerParams;
+    private static PolicyValidatorParameters validatorParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
     private static StandardYamlCoder standardYamlCoder;
@@ -106,7 +108,9 @@ public class TestLegacyGuardPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        validatorParams = PolicyValidatorParameters.builder().nexusName("localhost").nexusPort("8081").build();
+        apiParamGroup = new ApiParameterGroup(
+                "ApiGroup", null, providerParams, validatorParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         guardPolicyProvider = new LegacyGuardPolicyProvider();
         policyTypeProvider = new PolicyTypeProvider();
