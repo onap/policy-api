@@ -140,6 +140,9 @@ public class PolicyProvider extends CommonModelProvider {
         validatePolicyTypeExist(policyTypeId, policyTypeVersion);
         validatePolicyTypeMatch(policyTypeId, policyTypeVersion, body);
         validatePolicyVersion(body);
+        policyValidator.validatePoliciesAgainstPolicyTypes(body.getToscaTopologyTemplate().getPolicies());
+        policyValidator.validateNativePolicies(body.getToscaTopologyTemplate().getPolicies());
+
         return modelsProvider.createPolicies(body);
     }
 
@@ -148,13 +151,16 @@ public class PolicyProvider extends CommonModelProvider {
      *
      * @param body the entity body of policy
      *
-     * @return the ToscaServiceTemplate object
+     * @return the ToscaServiceTemplate object.
      *
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate createPolicies(ToscaServiceTemplate body) throws PfModelException {
 
         validatePolicyVersion(body);
+        policyValidator.validatePoliciesAgainstPolicyTypes(body.getToscaTopologyTemplate().getPolicies());
+        policyValidator.validateNativePolicies(body.getToscaTopologyTemplate().getPolicies());
+
         return modelsProvider.createPolicies(body);
     }
 
