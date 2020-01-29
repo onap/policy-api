@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -67,6 +68,7 @@ public class TestPolicyProvider {
     private static PolicyProvider policyProvider;
     private static PolicyTypeProvider policyTypeProvider;
     private static PolicyModelsProviderParameters providerParams;
+    private static PolicyValidatorParameters validatorParams;
     private static ApiParameterGroup apiParamGroup;
     private static StandardCoder standardCoder;
     private static StandardYamlCoder standardYamlCoder;
@@ -110,7 +112,9 @@ public class TestPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        validatorParams = new PolicyValidatorParameters();
+        apiParamGroup = new ApiParameterGroup(
+                "ApiGroup", null, providerParams, validatorParams, Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();

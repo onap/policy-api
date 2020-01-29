@@ -32,6 +32,9 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.api.main.validator.PolicyValidator;
+import org.onap.policy.api.main.validator.PolicyValidatorFactory;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
@@ -53,6 +56,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class CommonModelProvider implements AutoCloseable {
 
     protected final PolicyModelsProvider modelsProvider;
+    protected final PolicyValidator policyValidator;
 
     /**
      * Constructs the object, populating {@link #modelsProvider}.
@@ -63,7 +67,9 @@ public class CommonModelProvider implements AutoCloseable {
 
         ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
         PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
+        PolicyValidatorParameters validatorParameters = parameterGroup.getPolicyValidatorParameters();
         modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
+        policyValidator = new PolicyValidatorFactory().createPolicyValidator(validatorParameters);
     }
 
     /**
