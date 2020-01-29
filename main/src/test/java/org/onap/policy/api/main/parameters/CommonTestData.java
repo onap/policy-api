@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import org.onap.policy.api.main.validator.PolicyValidatorParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -97,6 +98,15 @@ public class CommonTestData {
             databaseProviderParameters = new PolicyModelsProviderParameters();
         }
         return databaseProviderParameters;
+    }
+
+    /**
+     * Returns an instance of PolicyValidatorParameters for test cases.
+     *
+     * @return the PolicyValidatorParameters object
+     */
+    public PolicyValidatorParameters getPolicyValidatorParameters() {
+        return new PolicyValidatorParameters();
     }
 
     /**
