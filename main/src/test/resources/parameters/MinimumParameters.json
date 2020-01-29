@@ -15,5 +15,11 @@
         "databasePassword": "UDAxaWNZ",
         "persistenceUnit": "ToscaConceptTest"
     },
+    "policyValidatorParameters": {
+        "name": "defaultPolicyValidator",
+        "implementation": "org.onap.policy.api.main.validator.impl.DefaultPolicyValidatorImpl",
+        "nexusName": "nexus",
+        "nexusPort": "8081"
+    },
     "preloadPolicyTypes": []
 }
