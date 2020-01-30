@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f0cbb3df_0ffa2001",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/PolicyValidatorParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-30T17:04:53Z",
+      "side": 1,
+      "message": "FYI: this review has been merged now, so you can use either approach: subclass from ParameterGroupImpl or use BeanValidator.",
+      "parentUuid": "cd6aef20_824c5155",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "781cb175_f1b07425",
         "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
         "patchSetId": 3
