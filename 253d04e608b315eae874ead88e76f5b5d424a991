@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "cd6aef20_824c5155",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/PolicyValidatorParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-01-30T07:26:20Z",
+      "side": 1,
+      "message": "As an alternative, you can use the new BeanValidator which lets you use annotations to decide what gets validated and then the validate method becomes a single line:\nhttps://gerrit.onap.org/r/#/c/policy/common/+/100923/",
+      "parentUuid": "ea5ee4c2_f408319b",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "781cb175_f1b07425",
         "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
         "patchSetId": 3
