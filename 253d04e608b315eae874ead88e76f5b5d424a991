@@ -157,6 +157,23 @@
     },
     {
       "key": {
+        "uuid": "3b22edd0_3e9a4ad2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/validator/impl/DefaultPolicyValidatorImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-01-31T01:30:54Z",
+      "side": 1,
+      "message": "All this seems painful, and I think you have a bunch of other more complicated policy types to write the same code.   May be we could reconsider I move back the work I was doing to the models, or common. so you could reuse it (note today I just moved it to the drools-pdp from models after meet).   In any case, if you were to reuse the framework I mentioned, validation of types per field, presence of required, regex values validation, and conversion to a domain model would be one line of code.  In case of errors will give you a list of faulty locations so you could send back to the client.   If interested, check the junits in this review https://gerrit.onap.org/r/#/c/policy/drools-pdp/+/100968/ and see if it fits these needs.",
+      "revId": "253d04e608b315eae874ead88e76f5b5d424a991",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6facdfc_6d70ba5a",
         "filename": "main/src/test/java/org/onap/policy/api/main/validator/PolicyValidatorFactoryTest.java",
         "patchSetId": 3
