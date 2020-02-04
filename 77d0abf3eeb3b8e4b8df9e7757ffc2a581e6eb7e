@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0f3effad_6762f6bf",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2020-02-04T12:29:10Z",
+      "side": 1,
+      "message": "oops! Thanks. Done.",
+      "parentUuid": "ee3f2515_fff1a039",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 72
+      },
+      "revId": "77d0abf3eeb3b8e4b8df9e7757ffc2a581e6eb7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d8358938_aa6fdf6a",
         "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "77d0abf3eeb3b8e4b8df9e7757ffc2a581e6eb7e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10a497f7_7d47e685",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2020-02-04T12:29:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8358938_aa6fdf6a",
+      "range": {
+        "startLine": 37,
+        "startChar": 8,
+        "endLine": 37,
+        "endChar": 65
+      },
+      "revId": "77d0abf3eeb3b8e4b8df9e7757ffc2a581e6eb7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
