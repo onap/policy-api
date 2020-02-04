@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee3f2515_fff1a039",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-04T12:24:10Z",
+      "side": 1,
+      "message": "already defined - can you move the apex one up here so they are together??",
+      "range": {
+        "startLine": 40,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 72
+      },
+      "revId": "77d0abf3eeb3b8e4b8df9e7757ffc2a581e6eb7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8358938_aa6fdf6a",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-04T12:24:10Z",
+      "side": 1,
+      "message": "same here - can you move them up so all the controlloop are together?",
+      "range": {
+        "startLine": 37,
+        "startChar": 8,
+        "endLine": 37,
+        "endChar": 65
+      },
+      "revId": "77d0abf3eeb3b8e4b8df9e7757ffc2a581e6eb7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
