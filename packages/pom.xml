@@ -26,7 +26,7 @@
         <version>2.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>packages</artifactId>
+    <artifactId>api-packages</artifactId>
     <packaging>pom</packaging>
     <name>Policy api packages</name>
 
