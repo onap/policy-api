@@ -481,7 +481,7 @@ public class TestApiRestServer {
         Map<String, Object> operation =
                 (Map<String, Object>) ((Map<String, Object>) operations.get(0)).get("operation");
         assertEquals("APPC", operation.get("actor"));
-        assertEquals("Restart", operation.get("recipe"));
+        assertEquals("Restart", operation.get("operation"));
     }
 
     @Test
