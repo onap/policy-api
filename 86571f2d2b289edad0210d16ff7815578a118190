@@ -22,6 +22,23 @@
       "revId": "86571f2d2b289edad0210d16ff7815578a118190",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "180da3bd_651c35a4",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-13T14:06:48Z",
+      "side": 1,
+      "message": "\"docker logs \u003capi\u003e\" shows a lot of eclipselink activity.   Not sure if it goes to the regular logs.  May be, it should be moved to DEBUG?",
+      "revId": "86571f2d2b289edad0210d16ff7815578a118190",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
