@@ -68,6 +68,8 @@ public class TestPolicyTypeProvider {
 
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
+            "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
             "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
     public static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
@@ -168,6 +170,10 @@ public class TestPolicyTypeProvider {
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_COMMON));
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS), ToscaServiceTemplate.class);
+        serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_DROOLS));
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_DROOLS, POLICY_TYPE_VERSION);

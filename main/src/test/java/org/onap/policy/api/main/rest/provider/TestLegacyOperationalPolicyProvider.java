@@ -73,7 +73,7 @@ public class TestLegacyOperationalPolicyProvider {
     private static StandardCoder standardCoder;
     private static StandardYamlCoder standardYamlCoder;
 
-    private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.input.json";
+    private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.legacy.input.json";
     private static final String POLICY_RESOURCE_WITH_NO_VERSION =
             "policies/vDNS.policy.operational.no.policyversion.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.yaml";
