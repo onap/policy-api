@@ -66,8 +66,10 @@ public class TestPolicyTypeProvider {
             "policytypes/onap.policies.optimization.Resource.no.version.yaml";
     private static final String POLICY_TYPE_NAME_MONITORING = "onap.policies.monitoring.cdap.tca.hi.lo.app";
 
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
+            "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
             "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
     public static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
@@ -164,10 +166,14 @@ public class TestPolicyTypeProvider {
     @Test
     public void testCreateOperationalPolicyTypes() throws CoderException, PfModelException {
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_COMMON));
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS), ToscaServiceTemplate.class);
+        serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_DROOLS));
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_DROOLS, POLICY_TYPE_VERSION);
@@ -177,7 +183,7 @@ public class TestPolicyTypeProvider {
     @Test
     public void testCreateApexOperationalPolicyTypes() throws CoderException, PfModelException {
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         policyTypeServiceTemplate = standardYamlCoder.decode(
                 ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_APEX), ToscaServiceTemplate.class);
