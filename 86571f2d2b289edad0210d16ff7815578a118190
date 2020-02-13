@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "c9b89b6a_0037cd8f",
+        "filename": "main/src/main/resources/META-INF/persistence.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-13T17:15:24Z",
+      "side": 1,
+      "message": "yeah, I meant WARN",
+      "parentUuid": "6bdce5eb_3d5eccc1",
+      "revId": "86571f2d2b289edad0210d16ff7815578a118190",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49b9b69a_9dd3b2ec",
         "filename": "main/src/test/resources/META-INF/persistence.xml",
         "patchSetId": 1
