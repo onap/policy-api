@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +24,9 @@
 package org.onap.policy.api.main.rest.provider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.ws.rs.core.Response;
 
 import org.onap.policy.models.base.PfModelException;
@@ -87,8 +87,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
         ToscaServiceTemplate serviceTemplate =
                 getFilteredPolicyTypes(policyTypeId, ToscaPolicyTypeFilter.LATEST_VERSION);
         if (!hasPolicyType(serviceTemplate)) {
-            throw new PfModelException(Response.Status.NOT_FOUND,
-                    constructResourceNotFoundMessage(policyTypeId, null));
+            throw new PfModelException(Response.Status.NOT_FOUND, constructResourceNotFoundMessage(policyTypeId, null));
         }
 
         return serviceTemplate;
@@ -108,7 +107,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.BAD_REQUEST,
                     "no policy types specified in the service template");
         }
-        validatePolicyTypeVersion(body);
+        validatePolicyTypeVersionExist(body);
         return modelsProvider.createPolicyTypes(body);
     }
 
@@ -138,8 +137,8 @@ public class PolicyTypeProvider extends CommonModelProvider {
     }
 
     /**
-     * Validates whether specified policy type can be deleted based on the rule that
-     * policy type parameterized by at least one policies cannot be deleted.
+     * Validates whether specified policy type can be deleted based on the rule that policy type parameterized by at
+     * least one policies cannot be deleted.
      *
      * @param policyTypeId the ID of policy type
      * @param policyTypeVersion the version of policy type
@@ -148,26 +147,13 @@ public class PolicyTypeProvider extends CommonModelProvider {
      */
     private void validateDeleteEligibility(String policyTypeId, String policyTypeVersion) throws PfModelException {
 
-        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder()
-                .type(policyTypeId).typeVersion(policyTypeVersion).build();
+        ToscaPolicyFilter policyFilter =
+                ToscaPolicyFilter.builder().type(policyTypeId).typeVersion(policyTypeVersion).build();
         List<ToscaPolicy> policies = modelsProvider.getFilteredPolicyList(policyFilter);
         if (!policies.isEmpty()) {
             throw new PfModelException(Response.Status.CONFLICT,
                     constructDeletePolicyTypeViolationMessage(policyTypeId, policyTypeVersion, policies));
         }
-    }
-
-    /**
-     * Validates the provided policy type version in the payload.
-     *
-     * @param body the provided TOSCA service template which contains the policy types
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validatePolicyTypeVersion(ToscaServiceTemplate body) throws PfModelException {
-
-        validatePolicyTypeVersionExist(body);
-        validateNoDuplicateVersionInDb(body);
     }
 
     /**
@@ -180,7 +166,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
     private void validatePolicyTypeVersionExist(ToscaServiceTemplate body) throws PfModelException {
 
         List<String> invalidPolicyTypeNames = new ArrayList<>();
-        for (Entry<String, ToscaPolicyType> policyType: body.getPolicyTypes().entrySet()) {
+        for (Entry<String, ToscaPolicyType> policyType : body.getPolicyTypes().entrySet()) {
             if (!"tosca.policies.Root".equals(policyType.getValue().getDerivedFrom())
                     && policyType.getValue().getVersion() == null) {
                 invalidPolicyTypeNames.add(policyType.getKey());
@@ -191,41 +177,6 @@ public class PolicyTypeProvider extends CommonModelProvider {
             String errorMsg = "mandatory 'version' field is missing in policy types: "
                     + String.join(", ", invalidPolicyTypeNames);
             throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errorMsg);
-        }
-    }
-
-    /**
-     * Validates that there is no duplicate version of the policy type stored in the database.
-     *
-     * @param body the TOSCA service template payload
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateNoDuplicateVersionInDb(ToscaServiceTemplate body) throws PfModelException {
-
-        Map<String, String> invalidPolicyTypes = new HashMap<>();
-        for (Entry<String, ToscaPolicyType> policyType: body.getPolicyTypes().entrySet()) {
-            if ("tosca.policies.Root".equals(policyType.getValue().getDerivedFrom())) {
-                continue;
-            }
-            String policyTypeName = policyType.getKey();
-            String policyTypeVersion = policyType.getValue().getVersion();
-            ToscaServiceTemplate serviceTemplate = getFilteredPolicyTypes(policyTypeName, policyTypeVersion);
-            if (hasPolicyType(serviceTemplate)) {
-                String latestVersion = getFilteredPolicyTypes(policyTypeName, ToscaPolicyTypeFilter.LATEST_VERSION)
-                        .getPolicyTypesAsMap().entrySet().iterator().next().getKey().getVersion();
-                invalidPolicyTypes.put(String.join(":", policyTypeName, policyTypeVersion), latestVersion);
-            }
-        }
-
-        if (!invalidPolicyTypes.isEmpty()) {
-            List<String> duplicateVersions = new ArrayList<>(invalidPolicyTypes.size());
-            for (Entry<String, String> invalidPolicyType : invalidPolicyTypes.entrySet()) {
-                String eachDuplicateVersion = "policy type " + invalidPolicyType.getKey()
-                    + " already exists; its latest version is " + invalidPolicyType.getValue();
-                duplicateVersions.add(eachDuplicateVersion);
-            }
-            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, String.join("\n", duplicateVersions));
         }
     }
 
@@ -242,8 +193,8 @@ public class PolicyTypeProvider extends CommonModelProvider {
     private ToscaServiceTemplate getFilteredPolicyTypes(String policyTypeName, String policyTypeVersion)
             throws PfModelException {
 
-        ToscaPolicyTypeFilter policyTypeFilter = ToscaPolicyTypeFilter.builder()
-                .name(policyTypeName).version(policyTypeVersion).build();
+        ToscaPolicyTypeFilter policyTypeFilter =
+                ToscaPolicyTypeFilter.builder().name(policyTypeName).version(policyTypeVersion).build();
         return modelsProvider.getFilteredPolicyTypes(policyTypeFilter);
     }
 

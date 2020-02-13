@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,6 @@ public class TestLegacyOperationalPolicyProvider {
             "policies/vDNS.policy.operational.no.policyversion.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.yaml";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.Operational:1.0.0";
-    private static final String POLICY_ID = "operational.restart:1.0.0";
     private static final String POLICY_NAME = "operational.restart";
     private static final String POLICY_VERSION = "1";
     private static final String POLICY_TYPE_NAME = "onap.policies.controlloop.Operational";
@@ -131,8 +130,8 @@ public class TestLegacyOperationalPolicyProvider {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", "dummy");
         }).hasMessage("legacy policy version is not an integer");
 
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -155,7 +154,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatThrownBy(() -> {
-            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "latest");;
+            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "latest");
+            ;
         }).hasMessage("legacy policy version is not an integer");
 
         operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
@@ -208,8 +208,8 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                        .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -228,9 +228,8 @@ public class TestLegacyOperationalPolicyProvider {
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
             assertThatThrownBy(() -> {
                 operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
-            })  .hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
+            }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
                     + " deployed in any pdp group");
-
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
@@ -247,7 +246,7 @@ public class TestLegacyOperationalPolicyProvider {
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
             assertThatThrownBy(() -> {
                 operationalPolicyProvider.deleteOperationalPolicy(POLICY_NAME, POLICY_VERSION);
-            })  .hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
+            }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
                     + " cannot be deleted as it is deployed in pdp groups");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
@@ -261,10 +260,11 @@ public class TestLegacyOperationalPolicyProvider {
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
             operationalPolicyProvider.createOperationalPolicy(policyToCreate);
-        }).hasMessage("policy type " + POLICY_TYPE_ID + " for policy " + POLICY_ID + " does not exist");
+        }).hasMessageContaining(
+                "no policy types are defined on the service template for the policies in the topology template");
 
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -335,8 +335,8 @@ public class TestLegacyOperationalPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                        .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -375,8 +375,8 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("legacy policy version is not an integer");
 
         assertThatCode(() -> {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                    .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);

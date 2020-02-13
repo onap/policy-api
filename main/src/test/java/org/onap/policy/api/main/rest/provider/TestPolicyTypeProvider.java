@@ -23,12 +23,14 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Base64;
 import java.util.Collections;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,6 +41,7 @@ import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -66,7 +69,7 @@ public class TestPolicyTypeProvider {
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
-        "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
+            "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
     public static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
     public static final String POLICY_TYPE_OPERATIONAL_APEX = "onap.policies.controlloop.operational.common.Apex";
     public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
@@ -131,22 +134,27 @@ public class TestPolicyTypeProvider {
     @Test
     public void testCreatePolicyType() throws Exception {
 
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
 
-        String errorMessage = "policy type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 already exists; "
-                + "its latest version is 1.0.0";
-        assertThatThrownBy(() -> {
-            ToscaServiceTemplate duplicatePolicyType = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
-            policyTypeProvider.createPolicyType(duplicatePolicyType);
-        }).hasMessage(errorMessage);
+        assertThatCode(() -> {
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
+
+        ToscaPolicyType policyType =
+                policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.cdap.tca.hi.lo.app");
+        policyType.setDescription("Some other description");
 
         assertThatThrownBy(() -> {
-            ToscaServiceTemplate badPolicyType = standardYamlCoder.decode(ResourceUtils.getResourceAsString(
-                    POLICY_TYPE_RESOURCE_WITH_NO_VERSION), ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).hasMessageContaining("entity in incoming fragment does not equal existing entity");
+
+        assertThatThrownBy(() -> {
+            ToscaServiceTemplate badPolicyType =
+                    standardYamlCoder.decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_WITH_NO_VERSION),
+                            ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(badPolicyType);
         }).hasMessage("mandatory 'version' field is missing in policy types: onap.policies.optimization.Resource");
 
@@ -155,22 +163,25 @@ public class TestPolicyTypeProvider {
 
     @Test
     public void testCreateOperationalPolicyTypes() throws CoderException, PfModelException {
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_COMMON));
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_DROOLS));
 
-        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_COMMON, POLICY_TYPE_VERSION);
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_DROOLS, POLICY_TYPE_VERSION);
+        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_COMMON, POLICY_TYPE_VERSION);
     }
 
     @Test
     public void testCreateApexOperationalPolicyTypes() throws CoderException, PfModelException {
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-            ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_APEX), ToscaServiceTemplate.class);
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_APEX), ToscaServiceTemplate.class);
+        serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_APEX));
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_APEX, POLICY_TYPE_VERSION);
     }
@@ -178,13 +189,13 @@ public class TestPolicyTypeProvider {
     @Test
     public void testDeletePolicyType() throws Exception {
 
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
 
-        ToscaServiceTemplate policyServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_RESOURCE_MONITORING), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
 
         String exceptionMessage = "policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 "
@@ -193,16 +204,15 @@ public class TestPolicyTypeProvider {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
         }).hasMessage(exceptionMessage);
 
-        serviceTemplate = policyProvider
-                .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
+        serviceTemplate = policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+                "onap.restart.tca", "1.0.0");
         assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
-        serviceTemplate =
-                policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+        serviceTemplate = policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
         assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
 
         assertThatThrownBy(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
-        }).hasMessage("policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist");
+        }).hasMessage("policy types for onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 do not exist");
     }
 }

@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,28 +78,14 @@ public class TestPolicyProvider {
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
             "policies/vCPE.policy.bad.policytypeversion.json";
     private static final String POLICY_RESOURCE_WITH_NO_POLICY_VERSION = "policies/vCPE.policy.no.policyversion.json";
-    private static final String POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION =
-            "policies/vCPE.policy.duplicate.policyversion.json";
+    private static final String POLICY_RESOURCE_WITH_DIFFERENT_FIELDS =
+            "policies/vCPE.policy.different.policy.fields.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
 
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
     private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
     public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
-
-
-    // @formatter:off
-    private String[] toscaPolicyTypeResourceNames = {
-        "policytypes/onap.policies.optimization.resource.AffinityPolicy.yaml",
-        "policytypes/onap.policies.optimization.resource.DistancePolicy.yaml",
-        "policytypes/onap.policies.optimization.resource.HpaPolicy.yaml",
-        "policytypes/onap.policies.optimization.service.QueryPolicy.yaml",
-        "policytypes/onap.policies.optimization.service.SubscriberPolicy.yaml",
-        "policytypes/onap.policies.optimization.resource.Vim_fit.yaml",
-        "policytypes/onap.policies.optimization.resource.VnfPolicy.yaml",
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml"
-    };
-    // @formatter:on
 
     /**
      * Initializes parameters.
@@ -141,15 +127,15 @@ public class TestPolicyProvider {
 
         assertThatThrownBy(() -> {
             policyProvider.fetchPolicies("dummy", "1.0.0", null, null);
-        }).hasMessage("policy with ID null:null and type dummy:1.0.0 does not exist");
+        }).hasMessage("service template not found in database");
 
         assertThatThrownBy(() -> {
             policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", null);
-        }).hasMessage("policy with ID dummy:null and type dummy:1.0.0 does not exist");
+        }).hasMessage("service template not found in database");
 
         assertThatThrownBy(() -> {
             policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0");
-        }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
+        }).hasMessage("service template not found in database");
     }
 
     @Test
@@ -157,9 +143,8 @@ public class TestPolicyProvider {
 
         assertThatThrownBy(() -> {
             policyProvider.fetchLatestPolicies("dummy", "dummy", "dummy");
-        }).hasMessage("policy with ID dummy:null and type dummy:dummy does not exist");
+        }).hasMessage("service template not found in database");
     }
-
 
     @Test
     public void testFetchDeployedPolicies() {
@@ -211,8 +196,8 @@ public class TestPolicyProvider {
 
             // Create Policy Type
             assertThatCode(() -> {
-                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                        ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                        .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -229,9 +214,8 @@ public class TestPolicyProvider {
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
             assertThatThrownBy(() -> {
                 policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
-            })  .hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
+            }).hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
                     + policyTypeVersion + " deployed in any pdp group");
-
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
@@ -248,7 +232,7 @@ public class TestPolicyProvider {
             assertThatThrownBy(() -> {
                 policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
                         "1.0.0");
-            })  .hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
+            }).hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
                     + " cannot be deleted as it is deployed in pdp groups");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
@@ -260,11 +244,13 @@ public class TestPolicyProvider {
 
         assertThatThrownBy(() -> {
             policyProvider.createPolicy("dummy", "1.0.0", new ToscaServiceTemplate());
-        }).hasMessage("policy type with ID dummy:1.0.0 does not exist");
+        }).hasMessage("topology template not specified on service template");
 
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        assertThatCode(() -> policyTypeProvider.createPolicyType(policyTypeServiceTemplate)).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {
             String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID);
@@ -272,7 +258,8 @@ public class TestPolicyProvider {
                     standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
-        }).hasMessage("policy type id does not match");
+        }).hasMessageContaining(
+                "policy type onap.policies.monitoring.cdap.tca.hi.lo.appxxx:0.0.0 referenced in policy not found");
 
         assertThatThrownBy(() -> {
             String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION);
@@ -280,7 +267,8 @@ public class TestPolicyProvider {
                     standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
-        }).hasMessage("policy type version does not match");
+        }).hasMessageContaining(
+                "policy type onap.policies.monitoring.cdap.tca.hi.lo.app:2.0.0 referenced in policy not found");
 
         assertThatThrownBy(() -> {
             String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_POLICY_VERSION);
@@ -288,15 +276,7 @@ public class TestPolicyProvider {
                     standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
-        }).hasMessage("mandatory 'version' field is missing in policies: onap.restart.tca");
-
-        assertThatThrownBy(() -> {
-            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION);
-            ToscaServiceTemplate badPolicyServiceTemplate =
-                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
-                    badPolicyServiceTemplate);
-        }).hasMessage("the same version of policies 'onap.restart.tca:1.0.0' appear multiple times in the payload");
+        }).hasMessageContaining("key version is a null version");
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
@@ -305,12 +285,12 @@ public class TestPolicyProvider {
         assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
         assertThatThrownBy(() -> {
-            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DIFFERENT_FIELDS);
             ToscaServiceTemplate badPolicyServiceTemplate =
                     standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
-        }).hasMessage("policy onap.restart.tca:1.0.0 already exists; its latest version is 1.0.0");
+        }).hasMessageContaining("entity in incoming fragment does not equal existing entity");
     }
 
     @Test
@@ -329,34 +309,82 @@ public class TestPolicyProvider {
     @Test
     public void testSimpleCreatePolicy() throws Exception {
 
-        String errorMessage = "policy type onap.policies.optimization.resource.AffinityPolicy:1.0.0 for "
-            + "policy OSDF_CASABLANCA.Affinity_Default:1.0.0 does not exist";
         assertThatThrownBy(() -> {
             String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
             ToscaServiceTemplate multiPoliciesServiceTemplate =
                     standardCoder.decode(multiPoliciesString, ToscaServiceTemplate.class);
             policyProvider.createPolicies(multiPoliciesServiceTemplate);
-        }).hasMessage(errorMessage);
+        }).hasMessageContaining(
+                "no policy types are defined on the service template for the policies in the topology template");
 
         // Create required policy types
-        for (String policyTypeName : toscaPolicyTypeResourceNames) {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(policyTypeName), ToscaServiceTemplate.class);
-            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        }
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.Optimization.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.Resource.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils
+                        .getResourceAsString("policytypes/onap.policies.optimization.resource.AffinityPolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils
+                        .getResourceAsString("policytypes/onap.policies.optimization.resource.DistancePolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.resource.Vim_fit.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.resource.HpaPolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.resource.VnfPolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.Service.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils
+                        .getResourceAsString("policytypes/onap.policies.optimization.service.SubscriberPolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.optimization.service.QueryPolicy.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+
+        policyTypeServiceTemplate = standardYamlCoder.decode(
+                ResourceUtils.getResourceAsString("policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml"),
+                ToscaServiceTemplate.class);
+        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         // Create multiple policies in one call
         String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
         ToscaServiceTemplate multiPoliciesServiceTemplate =
                 standardCoder.decode(multiPoliciesString, ToscaServiceTemplate.class);
-        policyProvider.createPolicies(multiPoliciesServiceTemplate);
 
-        assertThatThrownBy(() -> {
-            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DUPLICATE_POLICY_VERSION);
-            ToscaServiceTemplate badPolicyServiceTemplate =
-                    standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            policyProvider.createPolicies(badPolicyServiceTemplate);
-        }).hasMessage("the same version of policies 'onap.restart.tca:1.0.0' appear multiple times in the payload");
+        assertThatCode(() -> {
+            policyProvider.createPolicies(multiPoliciesServiceTemplate);
+            policyProvider.createPolicies(multiPoliciesServiceTemplate);
+        }).doesNotThrowAnyException();
     }
 
     @Test
@@ -364,11 +392,11 @@ public class TestPolicyProvider {
 
         assertThatThrownBy(() -> {
             policyProvider.deletePolicy("dummy", "1.0.0", "dummy", "1.0.0");
-        }).hasMessage("policy with ID dummy:1.0.0 and type dummy:1.0.0 does not exist");
+        }).hasMessage("service template not found in database");
 
         assertThatCode(() -> {
-            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                    ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                    .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         }).doesNotThrowAnyException();
 
@@ -386,12 +414,9 @@ public class TestPolicyProvider {
             assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         }).doesNotThrowAnyException();
 
-        String exceptionMessage = "policy with ID onap.restart.tca:1.0.0 and type "
-                + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist";
         assertThatThrownBy(() -> {
             policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
                     "1.0.0");
-        }).hasMessage(exceptionMessage);
+        }).hasMessageContaining("policies for onap.restart.tca:1.0.0 do not exist");
     }
-
 }

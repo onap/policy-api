@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 package org.onap.policy.api.main.startstop;
 
 import java.util.LinkedHashMap;
+
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -32,6 +33,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -64,12 +66,12 @@ public class ApiDatabaseInitializer {
      * @param apiParameterGroup the apiParameterGroup parameters
      * @throws PolicyApiException in case of errors.
      */
-    public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup)
-            throws PolicyApiException {
+    public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup) throws PolicyApiException {
 
         try (PolicyModelsProvider databaseProvider =
                 factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
             ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+            serviceTemplate.setDataTypes(new LinkedHashMap<String, ToscaDataType>());
             serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
             for (String pt : apiParameterGroup.getPreloadPolicyTypes()) {
@@ -86,7 +88,10 @@ public class ApiDatabaseInitializer {
                 if (singlePolicyType == null) {
                     throw new PolicyApiException("Error deserializing policy type from file: " + pt);
                 }
-                // Consolidate policy types
+                // Consolidate data types and policy types
+                if (singlePolicyType.getDataTypes() != null) {
+                    serviceTemplate.getDataTypes().putAll(singlePolicyType.getDataTypes());
+                }
                 serviceTemplate.getPolicyTypes().putAll(singlePolicyType.getPolicyTypes());
             }
             ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(serviceTemplate);
