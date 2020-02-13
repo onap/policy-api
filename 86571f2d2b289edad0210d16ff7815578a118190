@@ -39,6 +39,23 @@
       "revId": "86571f2d2b289edad0210d16ff7815578a118190",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49b9b69a_9dd3b2ec",
+        "filename": "main/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-13T14:56:40Z",
+      "side": 1,
+      "message": "DEBUG? (same comment as Jorge\u0027s in the other review)",
+      "revId": "86571f2d2b289edad0210d16ff7815578a118190",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
