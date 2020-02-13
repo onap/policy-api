@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f447fd8_b04c4339",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-13T17:11:34Z",
+      "side": 1,
+      "message": "Also some help here - not sure how to stop this from failing.",
+      "range": {
+        "startLine": 410,
+        "startChar": 8,
+        "endLine": 412,
+        "endChar": 10
+      },
+      "revId": "6b2cbd56a35ceacbc9ee49ab777b5873cb4d5684",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9720bb5_6d6b2867",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-13T17:11:34Z",
+      "side": 1,
+      "message": "I will need some help here. Not sure what to do.",
+      "range": {
+        "startLine": 302,
+        "startChar": 8,
+        "endLine": 304,
+        "endChar": 10
+      },
+      "revId": "6b2cbd56a35ceacbc9ee49ab777b5873cb4d5684",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
