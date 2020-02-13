@@ -190,6 +190,7 @@ public class TestApiRestServer {
         "policytypes/onap.policies.Optimization.yaml",
         LEGACY_POLICYTYPE_OP_RESOURCE,
         TOSCA_POLICYTYPE_OP_RESOURCE,
+        "policytypes/onap.policies.controlloop.operational.common.Drools.yaml",
         "policytypes/onap.policies.controlloop.guard.Blacklist.yaml",
         "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
         "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
@@ -217,9 +218,9 @@ public class TestApiRestServer {
     };
 
     private static final String[] LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES = {
-        "policies/vCPE.policy.operational.input.json",
-        "policies/vDNS.policy.operational.input.json",
-        "policies/vFirewall.policy.operational.input.json"
+        "policies/vCPE.policy.operational.legacy.input.json",
+        "policies/vDNS.policy.operational.legacy.input.json",
+        "policies/vFirewall.policy.operational.legacy.input.json"
     };
 
     private static PolicyModelsProviderParameters providerParams;
@@ -406,6 +407,9 @@ public class TestApiRestServer {
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = readResource(POLICYTYPES_DROOLS_VERSION, APP_JSON);
+        //
+        // PLD not sure how to fix this? How do I merge 2 policy types?
+        //
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = createResource(POLICIES, TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_JSON);

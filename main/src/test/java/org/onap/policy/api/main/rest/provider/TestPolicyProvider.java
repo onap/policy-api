@@ -82,8 +82,10 @@ public class TestPolicyProvider {
             "policies/vCPE.policy.different.policy.fields.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
 
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
+    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
+            "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
     public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
 
@@ -296,7 +298,10 @@ public class TestPolicyProvider {
     @Test
     public void testCreateOperationalDroolsPolicy() throws CoderException, PfModelException {
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
+                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS), ToscaServiceTemplate.class);
+        //
+        // PLD not sure how to fix this? How do I merge 2 policy types?
+        //
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_OPERATIONAL);
