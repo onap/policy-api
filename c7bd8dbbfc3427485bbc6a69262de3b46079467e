@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b0f6f8a_cd4c95bf",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-13T13:54:53Z",
+      "side": 0,
+      "message": "This check is done in the TOSCA handling now.",
+      "range": {
+        "startLine": 196,
+        "startChar": 17,
+        "endLine": 196,
+        "endChar": 40
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84cc87df_af6bc8e9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-13T13:54:53Z",
+      "side": 0,
+      "message": "We shouldn\u0027t need this check. @Chenfei, shouldn\u0027t we only be specifying the policy type body, why do we need to specify it in the path as well?",
+      "range": {
+        "startLine": 214,
+        "startChar": 17,
+        "endLine": 214,
+        "endChar": 40
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8284a3ca_64e46e7a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-13T13:54:53Z",
+      "side": 0,
+      "message": "This is not an error, you can \"recreate\" the policy in the DB, this often happens when a parent policy is specified in a child policy.",
+      "range": {
+        "startLine": 307,
+        "startChar": 17,
+        "endLine": 307,
+        "endChar": 47
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f83b6c69_156739ac",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-13T13:54:53Z",
+      "side": 0,
+      "message": "Again, this is not an error, if two identical policies are specified, then it\u0027s only created once in the TOSCA handling and if it already exists, then the create is ignored.",
+      "range": {
+        "startLine": 344,
+        "startChar": 17,
+        "endLine": 344,
+        "endChar": 47
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
