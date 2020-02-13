@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "9c9542bf_7f1c59c8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T18:07:08Z",
+      "side": 0,
+      "message": "We just wanted to have a hierarchical rest resource as policies are created on top of policy types",
+      "parentUuid": "84cc87df_af6bc8e9",
+      "range": {
+        "startLine": 214,
+        "startChar": 17,
+        "endLine": 214,
+        "endChar": 40
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8284a3ca_64e46e7a",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2020-02-13T13:54:53Z",
       "side": 0,
       "message": "This is not an error, you can \"recreate\" the policy in the DB, this often happens when a parent policy is specified in a child policy.",
+      "range": {
+        "startLine": 307,
+        "startChar": 17,
+        "endLine": 307,
+        "endChar": 47
+      },
+      "revId": "c7bd8dbbfc3427485bbc6a69262de3b46079467e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b48d1b8f_f7c27e75",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-13T18:07:08Z",
+      "side": 0,
+      "message": "It was used to resolve the potential inconsistency between the policies in the db and those deployed in the pdp. If we allow to override the version, then it could be possible that the overridden version has been deployed in pdp group but it does not exist in the db. How do we handle this?",
+      "parentUuid": "8284a3ca_64e46e7a",
       "range": {
         "startLine": 307,
         "startChar": 17,
