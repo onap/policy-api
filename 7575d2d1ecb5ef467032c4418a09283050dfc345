@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e732e0f9_0cb4afa3",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-17T16:12:11Z",
+      "side": 1,
+      "message": "Just for my information, the way it works, for a \"terminal\" policy type (with no derivations), one should create the \"policyType\"s for the base types, recursively.  Asking because here it first creates the common, and then the drools.",
+      "revId": "7575d2d1ecb5ef467032c4418a09283050dfc345",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
