@@ -16,6 +16,24 @@
       "revId": "7575d2d1ecb5ef467032c4418a09283050dfc345",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29e7f05f_a21149fd",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-17T16:21:47Z",
+      "side": 1,
+      "message": "Yes, but you can put it all in the same service template.",
+      "parentUuid": "e732e0f9_0cb4afa3",
+      "revId": "7575d2d1ecb5ef467032c4418a09283050dfc345",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
