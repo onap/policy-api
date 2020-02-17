@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "38cba25e_be8224f6",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-17T15:17:44Z",
+      "side": 1,
+      "message": "Yes, probably just need to check the OK response.",
+      "parentUuid": "9c130d5f_7094bef7",
+      "range": {
+        "startLine": 409,
+        "startChar": 8,
+        "endLine": 413,
+        "endChar": 60
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0fa31465_e73c0c5b",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
         "patchSetId": 2
@@ -41,6 +65,76 @@
         "startChar": 8,
         "endLine": 315,
         "endChar": 10
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9eac360_3e84d742",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-17T15:17:44Z",
+      "side": 1,
+      "message": "OK",
+      "parentUuid": "0fa31465_e73c0c5b",
+      "range": {
+        "startLine": 313,
+        "startChar": 8,
+        "endLine": 315,
+        "endChar": 10
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7064b4b3_a5deccae",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-17T15:17:44Z",
+      "side": 1,
+      "message": "It would be better to load operational, the operational-common, then drools, this current code only works because operational.common has the incorrect root.\n\n    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL \u003d\n\t\n            \"policytypes/onap.policies.controlloop.Operational.yaml\";\n\t\n    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON \u003d\n            \"policytypes/onap.policies.controlloop.operational.Common.yaml\";\n\t\n    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS \u003d\n\t\n            \"policytypes/onap.policies.controlloop.operational.common.Drools.yaml\";",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 83
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55ff05d5_a4bdc0bd",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-17T15:17:44Z",
+      "side": 1,
+      "message": "It would be better to load operational, then operational-common, then drools",
+      "range": {
+        "startLine": 168,
+        "startChar": 1,
+        "endLine": 170,
+        "endChar": 110
       },
       "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
