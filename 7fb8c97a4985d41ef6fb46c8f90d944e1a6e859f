@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c130d5f_7094bef7",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-17T15:08:41Z",
+      "side": 1,
+      "message": "Oops - Liam I think I should remove all of this?",
+      "range": {
+        "startLine": 409,
+        "startChar": 8,
+        "endLine": 413,
+        "endChar": 60
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
