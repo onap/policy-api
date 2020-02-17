@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a45ed797_308d1baf",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-17T16:03:32Z",
+      "side": 1,
+      "message": "Ok so I think via rocketchat we cleared this up. \nPOLICY_TYPE_RESOURCE_OPERATIONAL - legacy YAML. Nobody derives from this. Should inherit from root.\n\nPOLICY_TYPE_RESOURCE_OPERATIONAL_COMMON - new tosca compliant. Apex Drools derive from this. Should inherit from root.\n\nPOLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS - inherit from POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON\n\nI\u0027m going to rename the above constants.",
+      "parentUuid": "7064b4b3_a5deccae",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 83
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "55ff05d5_a4bdc0bd",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
         "patchSetId": 2
@@ -130,6 +154,30 @@
       "writtenOn": "2020-02-17T15:17:44Z",
       "side": 1,
       "message": "It would be better to load operational, then operational-common, then drools",
+      "range": {
+        "startLine": 168,
+        "startChar": 1,
+        "endLine": 170,
+        "endChar": 110
+      },
+      "revId": "7fb8c97a4985d41ef6fb46c8f90d944e1a6e859f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1af33128_e83aa5f3",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyTypeProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-02-17T16:03:32Z",
+      "side": 1,
+      "message": "Ok so I think we are fine here. The legacy operational is covered in a separate test.",
+      "parentUuid": "55ff05d5_a4bdc0bd",
       "range": {
         "startLine": 168,
         "startChar": 1,
