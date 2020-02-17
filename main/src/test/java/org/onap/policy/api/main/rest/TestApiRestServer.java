@@ -245,6 +245,7 @@ public class TestApiRestServer {
     @BeforeClass
     public static void setupParameters() throws PfModelException, IOException {
         providerParams = new PolicyModelsProviderParameters();
+        // H2, use "org.mariadb.jdbc.Driver" and "jdbc:mariadb://localhost:3306/policy" for locally installed MariaDB
         providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
         providerParams.setDatabaseUser("policy");
@@ -338,7 +339,7 @@ public class TestApiRestServer {
 
         Response rawResponse2 =
                 createResource(POLICYTYPES_TCA_POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse2.getStatus());
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertThat(errorResponse.getErrorMessage())
                 .contains("entity in incoming fragment does not equal existing entity");
@@ -346,8 +347,6 @@ public class TestApiRestServer {
 
     @Test
     public void testSimpleCreatePolicies() throws Exception {
-        testCreatePolicyTypes();
-
         for (String resrcName : TOSCA_POLICIES_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICIES, resrcName);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -363,8 +362,8 @@ public class TestApiRestServer {
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 = createResource(POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage()).contains("policy type NULL:1.0.0 referenced in policy not found");
     }
 
