@@ -236,8 +236,7 @@ public class TestPolicyProvider {
             assertThatThrownBy(() -> {
                 policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
                         "1.0.0");
-            }).hasMessageContaining("policy with ID " + policyId + ":" + policyVersion
-                    + " cannot be deleted as it is deployed in pdp groups");
+            }).hasMessageContaining("policy is in use, it is deployed in PDP group group subgroup type");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
@@ -430,6 +429,6 @@ public class TestPolicyProvider {
         assertThatThrownBy(() -> {
             policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
                     "1.0.0");
-        }).hasMessageContaining("policies for onap.restart.tca:1.0.0 do not exist");
+        }).hasMessageContaining("no policies found");
     }
 }

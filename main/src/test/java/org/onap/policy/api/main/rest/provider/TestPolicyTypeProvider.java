@@ -158,7 +158,7 @@ public class TestPolicyTypeProvider {
                     standardYamlCoder.decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_WITH_NO_VERSION),
                             ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(badPolicyType);
-        }).hasMessage("mandatory 'version' field is missing in policy types: onap.policies.optimization.Resource");
+        }).hasMessageContaining("INVALID:key version is a null version");
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_NAME_MONITORING, POLICY_TYPE_VERSION);
     }
@@ -204,8 +204,8 @@ public class TestPolicyTypeProvider {
                 .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
 
-        String exceptionMessage = "policy type with ID onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 "
-                + "cannot be deleted as it is parameterized by policies onap.restart.tca:1.0.0";
+        String exceptionMessage = "policy type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 is in use, "
+                + "it is referenced in policy onap.restart.tca:1.0.0";
         assertThatThrownBy(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
         }).hasMessage(exceptionMessage);
@@ -219,6 +219,6 @@ public class TestPolicyTypeProvider {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
-        }).hasMessage("policy types for onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 do not exist");
+        }).hasMessage("policy type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 not found");
     }
 }

@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +23,18 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.pdp.concepts.PdpGroup;
-import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to provide all kinds of legacy guard policy operations.
@@ -49,17 +43,12 @@ import org.slf4j.LoggerFactory;
  */
 public class LegacyGuardPolicyProvider extends CommonModelProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyGuardPolicyProvider.class);
-
-    private static final String INVALID_POLICY_VERSION = "legacy policy version is not an integer";
-    private static final String LEGACY_MINOR_PATCH_SUFFIX = ".0.0";
     private static final Map<String, PfConceptKey> GUARD_POLICY_TYPE_MAP = new LinkedHashMap<>();
 
     static {
         GUARD_POLICY_TYPE_MAP.put("guard.frequency.",
                 new PfConceptKey("onap.policies.controlloop.guard.FrequencyLimiter:1.0.0"));
-        GUARD_POLICY_TYPE_MAP.put("guard.minmax.",
-                new PfConceptKey("onap.policies.controlloop.guard.MinMax:1.0.0"));
+        GUARD_POLICY_TYPE_MAP.put("guard.minmax.", new PfConceptKey("onap.policies.controlloop.guard.MinMax:1.0.0"));
         GUARD_POLICY_TYPE_MAP.put("guard.blacklist.",
                 new PfConceptKey("onap.policies.controlloop.guard.Blacklist:1.0.0"));
     }
@@ -82,9 +71,6 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
     public Map<String, LegacyGuardPolicyOutput> fetchGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        if (policyVersion != null) {
-            validNumber(policyVersion, INVALID_POLICY_VERSION);
-        }
         return modelsProvider.getGuardPolicy(policyId, policyVersion);
     }
 
@@ -100,8 +86,8 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
     public Map<Pair<String, String>, Map<String, LegacyGuardPolicyOutput>> fetchDeployedGuardPolicies(String policyId)
             throws PfModelException {
 
-        return collectDeployedPolicies(
-                policyId, getGuardPolicyType(policyId), modelsProvider::getGuardPolicy, Map::putAll, new HashMap<>());
+        return collectDeployedPolicies(policyId, getGuardPolicyType(policyId), modelsProvider::getGuardPolicy,
+                Map::putAll, new HashMap<>());
     }
 
     /**
@@ -111,10 +97,8 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
      *
      * @return the map of LegacyGuardPolicyOutput objectst
      */
-    public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body)
-            throws PfModelException {
+    public Map<String, LegacyGuardPolicyOutput> createGuardPolicy(LegacyGuardPolicyInput body) throws PfModelException {
 
-        validateGuardPolicyVersion(body);
         return modelsProvider.createGuardPolicy(body);
     }
 
@@ -129,105 +113,7 @@ public class LegacyGuardPolicyProvider extends CommonModelProvider {
     public Map<String, LegacyGuardPolicyOutput> deleteGuardPolicy(String policyId, String policyVersion)
             throws PfModelException {
 
-        validNumber(policyVersion, INVALID_POLICY_VERSION);
-        validateDeleteEligibility(policyId, policyVersion);
-
         return modelsProvider.deleteGuardPolicy(policyId, policyVersion);
-    }
-
-    /**
-     * Validates whether specified policy can be deleted based on the rule that deployed policy cannot be deleted.
-     *
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateDeleteEligibility(String policyId, String policyVersion) throws PfModelException {
-
-        List<ToscaPolicyIdentifier> policies = new ArrayList<>();
-        policies.add(new ToscaPolicyIdentifier(policyId, policyVersion + LEGACY_MINOR_PATCH_SUFFIX));
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyList(policies).build();
-
-        List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
-
-        if (!pdpGroups.isEmpty()) {
-            throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
-        }
-    }
-
-    /**
-     * Validates the provided guard policy version in the payload.
-     *
-     * @param body the guard policy payload
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateGuardPolicyVersion(LegacyGuardPolicyInput body) throws PfModelException {
-
-        validateGuardPolicyVersionExist(body);
-        validateNoDuplicateVersionInDb(body);
-    }
-
-    /**
-     * Validates that the guard policy has version specified.
-     *
-     * @param body the guard policy payload
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateGuardPolicyVersionExist(LegacyGuardPolicyInput body) throws PfModelException {
-
-        if (body.getPolicyVersion() == null) {
-            String errMsg = "mandatory field 'policy-version' is missing in the policy: " + body.getPolicyId();
-            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
-        }
-    }
-
-    /**
-     * Validates that there is no duplicate version already stored in the database.
-     *
-     * @param body the guard policy payload
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateNoDuplicateVersionInDb(LegacyGuardPolicyInput body) throws PfModelException {
-
-        try {
-            modelsProvider.getGuardPolicy(body.getPolicyId(), body.getPolicyVersion());
-        } catch (PfModelRuntimeException exc) {
-            if (!hasSameGuardPolicyFound(body, exc)) {
-                return;
-            }
-            throw new PfModelException(exc.getErrorResponse().getResponseCode(), "unexpected runtime error", exc);
-        }
-
-        // If it gets here, there is one duplicate version stored in the DB.
-        // Try to get the latest version and return it to the user.
-        Map<String, LegacyGuardPolicyOutput> latest = modelsProvider.getGuardPolicy(body.getPolicyId(), null);
-        final String[] versionArray = latest.values().iterator().next().getVersion().split("\\.");
-        String errMsg = "guard policy " + body.getPolicyId() + ":" + body.getPolicyVersion()
-            + " already exists; its latest version is " + versionArray[0];
-        throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errMsg);
-    }
-
-    /**
-     * Checks if the same guard policy found in the database.
-     *
-     * @param body the legacy guard policy payload
-     * @param exc the thrown runtime exception from policy model provider
-     *
-     * @return a boolean flag indicating the check result
-     */
-    private boolean hasSameGuardPolicyFound(LegacyGuardPolicyInput body, PfModelRuntimeException exc) {
-
-        if (exc.getErrorResponse().getResponseCode() == Response.Status.BAD_REQUEST
-                && exc.getErrorResponse().getErrorMessage().contains("no policy found")) {
-            LOGGER.debug("no duplicate policy {}:{} found in the DB", body.getPolicyId(), body.getPolicyVersion());
-            return false;
-        }
-        return true;
     }
 
     /**

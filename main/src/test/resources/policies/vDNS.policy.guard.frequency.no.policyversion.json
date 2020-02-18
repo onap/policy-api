@@ -1,5 +1,5 @@
 {
-  "policy-id" : "guard.frequency.scaleout",
+  "policy-id" : "guard.frequency.scaleout.noversion",
   "content" : {
             "actor": "SO",
             "recipe": "VF Module Create",

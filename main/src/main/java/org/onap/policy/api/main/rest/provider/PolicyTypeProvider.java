@@ -23,16 +23,9 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
 import javax.ws.rs.core.Response;
 
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -107,7 +100,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
             throw new PfModelException(Response.Status.BAD_REQUEST,
                     "no policy types specified in the service template");
         }
-        validatePolicyTypeVersionExist(body);
+
         return modelsProvider.createPolicyTypes(body);
     }
 
@@ -124,8 +117,6 @@ public class PolicyTypeProvider extends CommonModelProvider {
     public ToscaServiceTemplate deletePolicyType(String policyTypeId, String policyTypeVersion)
             throws PfModelException {
 
-        validateDeleteEligibility(policyTypeId, policyTypeVersion);
-
         ToscaServiceTemplate serviceTemplate = modelsProvider.deletePolicyType(policyTypeId, policyTypeVersion);
 
         if (!hasPolicyType(serviceTemplate)) {
@@ -134,50 +125,6 @@ public class PolicyTypeProvider extends CommonModelProvider {
         }
 
         return serviceTemplate;
-    }
-
-    /**
-     * Validates whether specified policy type can be deleted based on the rule that policy type parameterized by at
-     * least one policies cannot be deleted.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateDeleteEligibility(String policyTypeId, String policyTypeVersion) throws PfModelException {
-
-        ToscaPolicyFilter policyFilter =
-                ToscaPolicyFilter.builder().type(policyTypeId).typeVersion(policyTypeVersion).build();
-        List<ToscaPolicy> policies = modelsProvider.getFilteredPolicyList(policyFilter);
-        if (!policies.isEmpty()) {
-            throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeletePolicyTypeViolationMessage(policyTypeId, policyTypeVersion, policies));
-        }
-    }
-
-    /**
-     * Validates that each policy type has a version specified in the payload.
-     *
-     * @param body the TOSCA service template payload to check against
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validatePolicyTypeVersionExist(ToscaServiceTemplate body) throws PfModelException {
-
-        List<String> invalidPolicyTypeNames = new ArrayList<>();
-        for (Entry<String, ToscaPolicyType> policyType : body.getPolicyTypes().entrySet()) {
-            if (!"tosca.policies.Root".equals(policyType.getValue().getDerivedFrom())
-                    && policyType.getValue().getVersion() == null) {
-                invalidPolicyTypeNames.add(policyType.getKey());
-            }
-        }
-
-        if (!invalidPolicyTypeNames.isEmpty()) {
-            String errorMsg = "mandatory 'version' field is missing in policy types: "
-                    + String.join(", ", invalidPolicyTypeNames);
-            throw new PfModelException(Response.Status.NOT_ACCEPTABLE, errorMsg);
-        }
     }
 
     /**

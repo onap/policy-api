@@ -32,12 +32,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.pdp.concepts.PdpGroup;
-import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -168,8 +164,6 @@ public class PolicyProvider extends CommonModelProvider {
     public ToscaServiceTemplate deletePolicy(String policyTypeId, String policyTypeVersion, String policyId,
             String policyVersion) throws PfModelException {
 
-        validateDeleteEligibility(policyTypeId, policyTypeVersion, policyId, policyVersion);
-
         ToscaServiceTemplate serviceTemplate = modelsProvider.deletePolicy(policyId, policyVersion);
 
         if (!hasPolicy(serviceTemplate)) {
@@ -178,35 +172,6 @@ public class PolicyProvider extends CommonModelProvider {
         }
 
         return serviceTemplate;
-    }
-
-    /**
-     * Validates whether specified policy can be deleted based on the rule that deployed policy cannot be deleted.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    private void validateDeleteEligibility(String policyTypeId, String policyTypeVersion, String policyId,
-            String policyVersion) throws PfModelException {
-
-        // TODO: Remove this method when delete validation is implemented in the tosca provider
-        List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>(1);
-        policyTypes.add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
-        List<ToscaPolicyIdentifier> policies = new ArrayList<>(1);
-        policies.add(new ToscaPolicyIdentifier(policyId, policyVersion));
-        PdpGroupFilter pdpGroupFilter =
-                PdpGroupFilter.builder().policyTypeList(policyTypes).policyList(policies).build();
-
-        List<PdpGroup> pdpGroups = modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
-
-        if (!pdpGroups.isEmpty()) {
-            throw new PfModelException(Response.Status.CONFLICT,
-                    constructDeletePolicyViolationMessage(policyId, policyVersion, pdpGroups));
-        }
     }
 
     /**

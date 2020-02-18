@@ -616,7 +616,7 @@ public class TestApiRestServer {
         Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("policies for onap.restart.tca:1.0.0 do not exist", error.getErrorMessage());
+        assertEquals("no policies found", error.getErrorMessage());
     }
 
     @Test

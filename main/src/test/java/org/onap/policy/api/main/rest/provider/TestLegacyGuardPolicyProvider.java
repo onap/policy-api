@@ -58,6 +58,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyContent;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyOutput;
 
@@ -131,7 +132,7 @@ public class TestLegacyGuardPolicyProvider {
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.fetchGuardPolicy("dummy", "dummy");
-        }).hasMessage("legacy policy version is not an integer");
+        }).hasMessageContaining("parameter \"version\": value \"dummy.0.0\", does not match regular expression");
 
         assertThatCode(() -> {
             ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
@@ -165,11 +166,11 @@ public class TestLegacyGuardPolicyProvider {
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.fetchGuardPolicy("guard.frequency.scaleout", "1.0.0");
-        }).hasMessage("legacy policy version is not an integer");
+        }).hasMessageContaining("parameter \"version\": value \"1.0.0.0.0\", does not match regular expression");
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.fetchGuardPolicy("guard.frequency.scaleout", "latest");
-        }).hasMessage("legacy policy version is not an integer");
+        }).hasMessageContaining("parameter \"version\": value \"latest.0.0\", does not match regular expression");
 
         assertThatCode(() -> {
             guardPolicyProvider.deleteGuardPolicy("guard.frequency.scaleout", "1");
@@ -260,8 +261,7 @@ public class TestLegacyGuardPolicyProvider {
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
             assertThatThrownBy(() -> {
                 guardPolicyProvider.deleteGuardPolicy(POLICY_NAME, POLICY_VERSION);
-            }).hasMessageContaining("policy with ID " + POLICY_NAME + ":" + POLICY_VERSION
-                    + " cannot be deleted as it is deployed in pdp groups");
+            }).hasMessageContaining("policy is in use, it is deployed in PDP group group subgroup type");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
@@ -290,19 +290,26 @@ public class TestLegacyGuardPolicyProvider {
                 createdPolicy.get("guard.frequency.scaleout").getType());
         assertEquals("1.0.0", createdPolicy.get("guard.frequency.scaleout").getVersion());
 
-        assertThatThrownBy(() -> {
-            String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_VERSION);
-            LegacyGuardPolicyInput badPolicyToCreate =
-                    standardCoder.decode(badPolicyString, LegacyGuardPolicyInput.class);
-            guardPolicyProvider.createGuardPolicy(badPolicyToCreate);
-        }).hasMessage("mandatory field 'policy-version' is missing in the policy: guard.frequency.scaleout");
+        String defaultPolicyVersionString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_VERSION);
+        LegacyGuardPolicyInput defaultVersionPolicy =
+                standardCoder.decode(defaultPolicyVersionString, LegacyGuardPolicyInput.class);
+        createdPolicy = guardPolicyProvider.createGuardPolicy(defaultVersionPolicy);
+        assertEquals("1.0.0", createdPolicy.get("guard.frequency.scaleout.noversion").getVersion());
+
+        assertThatCode(() -> {
+            String duplicatePolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            LegacyGuardPolicyInput duplicatePolicyToCreate =
+                    standardCoder.decode(duplicatePolicyString, LegacyGuardPolicyInput.class);
+            guardPolicyProvider.createGuardPolicy(duplicatePolicyToCreate);
+        }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {
             String duplicatePolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyGuardPolicyInput duplicatePolicyToCreate =
                     standardCoder.decode(duplicatePolicyString, LegacyGuardPolicyInput.class);
+            duplicatePolicyToCreate.setContent(new LegacyGuardPolicyContent());
             guardPolicyProvider.createGuardPolicy(duplicatePolicyToCreate);
-        }).hasMessage("guard policy guard.frequency.scaleout:1 already exists; its latest version is 1");
+        }).hasMessageContaining("INVALID:entity in incoming fragment does not equal existing entity");
     }
 
     @Test
@@ -374,7 +381,7 @@ public class TestLegacyGuardPolicyProvider {
                     databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
             assertThatThrownBy(() -> {
                 guardPolicyProvider.deleteGuardPolicy("guard.frequency.scaleout", "1");
-            }).hasMessageContaining("cannot be deleted as it is deployed in pdp groups");
+            }).hasMessageContaining("policy is in use, it is deployed in PDP group group subgroup type");
         } catch (Exception exc) {
             fail("Test should not throw an exception");
         }
@@ -384,11 +391,11 @@ public class TestLegacyGuardPolicyProvider {
     public void testDeleteGuardPolicy() {
         assertThatThrownBy(() -> {
             guardPolicyProvider.deleteGuardPolicy("dummy", null);
-        }).hasMessage("legacy policy version is not an integer");
+        }).hasMessageMatching("^policyVersion is marked .*on.*ull but is null$");
 
         assertThatThrownBy(() -> {
             guardPolicyProvider.deleteGuardPolicy("dummy", "1.0.0");
-        }).hasMessage("legacy policy version is not an integer");
+        }).hasMessageContaining("parameter \"version\": value \"1.0.0.0.0\", does not match regular expression");
 
         assertThatCode(() -> {
             ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
