@@ -317,9 +317,9 @@ public class TestApiRestServer {
         String firstPolicyType = response.getPolicyTypes().keySet().iterator().next();
         response.getPolicyTypes().put(firstPolicyType, null);
         Response rawResponse2 = createResource(POLICYTYPES, standardCoder.encode(response));
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse2.getStatus());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
-        assertEquals("no policy types specified in the service template", errorResponse.getErrorMessage());
+        assertEquals("no policy types specified on service template", errorResponse.getErrorMessage());
     }
 
     @Test
@@ -504,7 +504,14 @@ public class TestApiRestServer {
     }
 
     private void testReadPolicyTypes(String mediaType) throws Exception {
-        Response rawResponse = readResource(POLICYTYPES, mediaType);
+        Response rawResponse = readResource("policytypes/onap.policies.optimization.resource.HpaPolicy", mediaType);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+        ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertNotNull(namingServiceTemplate);
+        assertEquals(3, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(5, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource(POLICYTYPES, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertFalse(response.getPolicyTypes().isEmpty());
@@ -603,6 +610,47 @@ public class TestApiRestServer {
     }
 
     @Test
+    public void testNamingPolicyGet() throws Exception {
+        Response rawResponse = createResource("policies", "policies/sdnc.policy.naming.input.tosca.yaml");
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource("policytypes/"
+                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0",
+                APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource("policytypes/"
+                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest",
+                APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource(
+                "policytypes/" + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP",
+                APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = deleteResource("policytypes/"
+                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0",
+                APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+    }
+
+    @Test
     public void testDeletePoliciesJson() throws Exception {
         testDeletePolicies(APP_JSON);
     }
@@ -648,8 +696,8 @@ public class TestApiRestServer {
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals(
-                "policy with ID onap.restart.tca:1.0.0 and type "
-                        + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 does not exist",
+                "policies for filter ToscaPolicyFilter(name=onap.restart.tca, version=1.0.0, versionPrefix=null, "
+                        + "type=onap.policies.monitoring.cdap.tca.hi.lo.app, typeVersion=1.0.0) do not exist",
                 errorResponse.getErrorMessage());
 
         rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION2, mediaType);

@@ -118,11 +118,11 @@ public class TestPolicyTypeProvider {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchPolicyTypes("dummy", null);
-        }).hasMessage("policy type with ID dummy:null does not exist");
+        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=null) do not exist");
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchPolicyTypes("dummy", "dummy");
-        }).hasMessage("policy type with ID dummy:dummy does not exist");
+        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=dummy) do not exist");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TestPolicyTypeProvider {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchLatestPolicyTypes("dummy");
-        }).hasMessage("policy type with ID dummy:null does not exist");
+        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=LATEST) do not exist");
     }
 
     @Test

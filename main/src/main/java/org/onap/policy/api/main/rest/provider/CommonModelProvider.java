@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,10 +43,8 @@ import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Super class for providers that use a model provider.
@@ -78,113 +77,6 @@ public class CommonModelProvider implements AutoCloseable {
     }
 
     /**
-     * Checks if service template contains any policy.
-     *
-     * @param serviceTemplate the service template to check against
-     *
-     * @return boolean whether service template contains any policy
-     */
-    protected boolean hasPolicy(ToscaServiceTemplate serviceTemplate) {
-
-        return hasData(serviceTemplate.getToscaTopologyTemplate().getPolicies());
-    }
-
-    /**
-     * Checks if service template contains any policy type.
-     *
-     * @param serviceTemplate the service template to check against
-     *
-     * @return boolean whether service template contains any policy type
-     */
-    protected boolean hasPolicyType(ToscaServiceTemplate serviceTemplate) {
-
-        return hasData(serviceTemplate.getPolicyTypes());
-    }
-
-    /**
-     * Checks if the first element of a list of maps contains data.
-     *
-     * @param listOfMapsToCheck list of maps to be examined
-     * @return {@code true} if the list contains data, {@code false} otherwise
-     */
-    protected <T> boolean hasData(List<Map<String, T>> listOfMapsToCheck) {
-
-        return (listOfMapsToCheck != null && !listOfMapsToCheck.isEmpty() && !listOfMapsToCheck.get(0).isEmpty());
-    }
-
-
-    /**
-     * Checks if a maps contains data.
-     *
-     * @param mapToCheck map to be examined
-     * @return {@code true} if the list contains data, {@code false} otherwise
-     */
-    protected <T> boolean hasData(Map<String, T> mapToCheck) {
-
-        // We don't allow a null or empty map as well as a map entry with a valid key but null value
-        return (mapToCheck != null && !mapToCheck.isEmpty() && !mapToCheck.containsValue(null));
-    }
-
-    /**
-     * Validates that some text represents a number.
-     *
-     * @param text text to be validated
-     * @param errorMsg error message included in the exception, if the text is not a valid
-     *        number
-     * @throws PfModelException if the text is not a valid number
-     */
-    protected void validNumber(String text, String errorMsg) throws PfModelException {
-        try {
-            Integer.parseInt(text);
-
-        } catch (NumberFormatException exc) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, errorMsg, exc);
-        }
-    }
-
-    /**
-     * Constructs returned message for policy delete rule violation.
-     *
-     * @param policyId the ID of policy
-     * @param policyVersion the version of policy
-     * @param pdpGroups the list of pdp groups
-     *
-     * @return the constructed message
-     */
-    protected String constructDeletePolicyViolationMessage(String policyId, String policyVersion,
-                    List<PdpGroup> pdpGroups) {
-
-        List<String> pdpGroupNameVersionList = new ArrayList<>(pdpGroups.size());
-        for (PdpGroup pdpGroup : pdpGroups) {
-            pdpGroupNameVersionList.add(pdpGroup.getName() + ":" + pdpGroup.getVersion());
-        }
-        String deployedPdpGroups = String.join(",", pdpGroupNameVersionList);
-        return "policy with ID " + policyId + ":" + policyVersion
-                        + " cannot be deleted as it is deployed in pdp groups " + deployedPdpGroups;
-    }
-
-    /**
-     * Constructs returned message for policy type delete rule violation.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policies the list of policies that parameterizes specified policy type
-     *
-     * @return the constructed message
-     */
-    protected String constructDeletePolicyTypeViolationMessage(String policyTypeId, String policyTypeVersion,
-                    List<ToscaPolicy> policies) {
-
-        List<String> policyNameVersionList = new ArrayList<>(policies.size());
-        for (ToscaPolicy policy : policies) {
-            policyNameVersionList.add(policy.getName() + ":" + policy.getVersion());
-        }
-        String parameterizedPolicies = String.join(",", policyNameVersionList);
-        return "policy type with ID " + policyTypeId + ":" + policyTypeVersion
-                        + " cannot be deleted as it is parameterized by policies " + parameterizedPolicies;
-    }
-
-    /**
      * Collects all deployed versions of specified policy in all pdp groups.
      *
      * @param policyId the ID of policy
@@ -206,13 +98,13 @@ public class CommonModelProvider implements AutoCloseable {
     }
 
     @FunctionalInterface
-    protected interface BiFunctionWithEx<T,U,R> {
+    protected interface BiFunctionWithEx<T, U, R> {
         public R apply(T value1, U value2) throws PfModelException;
     }
 
     /**
-     * Checks if the list of pdp groups is empty.
-     * If so, throws exception saying specified policy deployment is not found in all existing pdp groups.
+     * Checks if the list of pdp groups is empty. If so, throws exception saying specified policy deployment is not
+     * found in all existing pdp groups.
      *
      * @param pdpGroups the list of pdp groups to check against
      * @param policyType the concept key of policy type
@@ -239,13 +131,12 @@ public class CommonModelProvider implements AutoCloseable {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    private List<PdpGroup> getPolicyTypeFilteredPdpGroups(PfConceptKey policyType)
-            throws PfModelException {
+    private List<PdpGroup> getPolicyTypeFilteredPdpGroups(PfConceptKey policyType) throws PfModelException {
 
         List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
         policyTypes.add(new ToscaPolicyTypeIdentifier(policyType.getName(), policyType.getVersion()));
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes)
-                .groupState(PdpState.ACTIVE).pdpState(PdpState.ACTIVE).build();
+        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes).groupState(PdpState.ACTIVE)
+                .pdpState(PdpState.ACTIVE).build();
         return modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
     }
 
@@ -265,7 +156,7 @@ public class CommonModelProvider implements AutoCloseable {
      */
     private <T, R> Map<Pair<String, String>, T> constructDeployedPolicyMap(List<PdpGroup> pdpGroups, String policyId,
             PfConceptKey policyType, BiFunctionWithEx<String, String, R> getter, BiConsumer<T, R> consumer, T data)
-                    throws PfModelException {
+            throws PfModelException {
 
         Map<Pair<String, String>, T> deployedPolicyMap = new HashMap<>();
         for (PdpGroup pdpGroup : pdpGroups) {
@@ -338,8 +229,9 @@ public class CommonModelProvider implements AutoCloseable {
      * @return the trimmed version
      */
     private String getTrimedVersionForLegacyType(String fullVersion, PfConceptKey policyType) {
-        return (policyType.getName().contains("guard")
-                || policyType.getName().contains("Operational")) ? fullVersion.split("\\.")[0] : fullVersion;
+        return (policyType.getName().contains("guard") || policyType.getName().contains("Operational"))
+                ? fullVersion.split("\\.")[0]
+                : fullVersion;
     }
 
     /**
@@ -352,7 +244,7 @@ public class CommonModelProvider implements AutoCloseable {
      */
     private String constructDeploymentNotFoundMessage(PfConceptKey policyType, String policyId) {
 
-        return "could not find policy with ID " + policyId + " and type "
-                + policyType.getName() + ":" + policyType.getVersion() + " deployed in any pdp group";
+        return "could not find policy with ID " + policyId + " and type " + policyType.getName() + ":"
+                + policyType.getVersion() + " deployed in any pdp group";
     }
 }

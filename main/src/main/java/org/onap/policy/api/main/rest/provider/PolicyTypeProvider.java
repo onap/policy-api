@@ -23,8 +23,6 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import javax.ws.rs.core.Response;
-
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -56,14 +54,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
     public ToscaServiceTemplate fetchPolicyTypes(String policyTypeId, String policyTypeVersion)
             throws PfModelException {
 
-        ToscaServiceTemplate serviceTemplate = getFilteredPolicyTypes(policyTypeId, policyTypeVersion);
-
-        if (policyTypeId != null && !hasPolicyType(serviceTemplate)) {
-            throw new PfModelException(Response.Status.NOT_FOUND,
-                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion));
-        }
-
-        return serviceTemplate;
+        return getFilteredPolicyTypes(policyTypeId, policyTypeVersion);
     }
 
     /**
@@ -77,13 +68,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
      */
     public ToscaServiceTemplate fetchLatestPolicyTypes(String policyTypeId) throws PfModelException {
 
-        ToscaServiceTemplate serviceTemplate =
-                getFilteredPolicyTypes(policyTypeId, ToscaPolicyTypeFilter.LATEST_VERSION);
-        if (!hasPolicyType(serviceTemplate)) {
-            throw new PfModelException(Response.Status.NOT_FOUND, constructResourceNotFoundMessage(policyTypeId, null));
-        }
-
-        return serviceTemplate;
+        return getFilteredPolicyTypes(policyTypeId, ToscaPolicyTypeFilter.LATEST_VERSION);
     }
 
     /**
@@ -95,11 +80,6 @@ public class PolicyTypeProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate createPolicyType(ToscaServiceTemplate body) throws PfModelException {
-
-        if (!hasPolicyType(body)) {
-            throw new PfModelException(Response.Status.BAD_REQUEST,
-                    "no policy types specified in the service template");
-        }
 
         return modelsProvider.createPolicyTypes(body);
     }
@@ -117,14 +97,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
     public ToscaServiceTemplate deletePolicyType(String policyTypeId, String policyTypeVersion)
             throws PfModelException {
 
-        ToscaServiceTemplate serviceTemplate = modelsProvider.deletePolicyType(policyTypeId, policyTypeVersion);
-
-        if (!hasPolicyType(serviceTemplate)) {
-            throw new PfModelException(Response.Status.NOT_FOUND,
-                    constructResourceNotFoundMessage(policyTypeId, policyTypeVersion));
-        }
-
-        return serviceTemplate;
+        return modelsProvider.deletePolicyType(policyTypeId, policyTypeVersion);
     }
 
     /**
@@ -143,18 +116,5 @@ public class PolicyTypeProvider extends CommonModelProvider {
         ToscaPolicyTypeFilter policyTypeFilter =
                 ToscaPolicyTypeFilter.builder().name(policyTypeName).version(policyTypeVersion).build();
         return modelsProvider.getFilteredPolicyTypes(policyTypeFilter);
-    }
-
-    /**
-     * Constructs returned message for not found resource.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     *
-     * @return constructed message
-     */
-    private String constructResourceNotFoundMessage(String policyTypeId, String policyTypeVersion) {
-
-        return "policy type with ID " + policyTypeId + ":" + policyTypeVersion + " does not exist";
     }
 }
