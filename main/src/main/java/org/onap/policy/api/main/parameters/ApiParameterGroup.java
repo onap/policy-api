@@ -21,6 +21,7 @@
 package org.onap.policy.api.main.parameters;
 
 import java.util.List;
+import lombok.Getter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.parameters.GroupValidationResult;
 import org.onap.policy.common.parameters.ParameterGroup;
@@ -32,12 +33,14 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
  * Class to hold all parameters needed for Api component.
  *
  */
+@Getter
 public class ApiParameterGroup implements ParameterGroup {
 
     private String name;
-    private RestServerParameters restServerParameters;
-    private PolicyModelsProviderParameters databaseProviderParameters;
-    private List<String> preloadPolicyTypes;
+    private final RestServerParameters restServerParameters;
+    private final PolicyModelsProviderParameters databaseProviderParameters;
+    private final List<String> preloadPolicyTypes;
+    private final List<String> preloadPolicies;
 
     /**
      * Create the api parameter group.
@@ -46,13 +49,16 @@ public class ApiParameterGroup implements ParameterGroup {
      * @param restServerParameters the parameters for instantiating API rest server
      * @param databaseProviderParameters the parameters for instantiating database provider
      * @param preloadPolicyTypes the list of preloaded policy types
+     * @param preloadPolicies the list of preloaded policies
      */
     public ApiParameterGroup(final String name, final RestServerParameters restServerParameters,
-            final PolicyModelsProviderParameters databaseProviderParameters, final List<String> preloadPolicyTypes) {
+            final PolicyModelsProviderParameters databaseProviderParameters, final List<String> preloadPolicyTypes,
+            final List<String> preloadPolicies) {
         this.name = name;
         this.restServerParameters = restServerParameters;
         this.databaseProviderParameters = databaseProviderParameters;
         this.preloadPolicyTypes = preloadPolicyTypes;
+        this.preloadPolicies = preloadPolicies;
     }
 
     /**
@@ -73,33 +79,6 @@ public class ApiParameterGroup implements ParameterGroup {
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Return the restServerParameters of this parameter group instance.
-     *
-     * @return the restServerParameters
-     */
-    public RestServerParameters getRestServerParameters() {
-        return restServerParameters;
-    }
-
-    /**
-     * Return the databaseProviderParameters of this parameter group instance.
-     *
-     * @return the databaseProviderParameters
-     */
-    public PolicyModelsProviderParameters getDatabaseProviderParameters() {
-        return databaseProviderParameters;
-    }
-
-    /**
-     * Return the preloadPolicyTypes of this parameter group instance.
-     *
-     * @return the preloadPolicyTypes
-     */
-    public List<String> getPreloadPolicyTypes() {
-        return preloadPolicyTypes;
     }
 
     /**

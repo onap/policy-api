@@ -24,21 +24,24 @@
 package org.onap.policy.api.main.startstop;
 
 import java.util.LinkedHashMap;
-
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * This class creates initial policy types in the database.
@@ -49,7 +52,7 @@ public class ApiDatabaseInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiDatabaseInitializer.class);
 
-    private StandardCoder standardCoder;
+    private static StandardYamlCoder coder = new StandardYamlCoder();
     private PolicyModelsProviderFactory factory;
 
     /**
@@ -57,11 +60,10 @@ public class ApiDatabaseInitializer {
      */
     public ApiDatabaseInitializer() {
         factory = new PolicyModelsProviderFactory();
-        standardCoder = new StandardCoder();
     }
 
     /**
-     * Initializes database by preloading policy types.
+     * Initializes database by preloading policy types and policies.
      *
      * @param apiParameterGroup the apiParameterGroup parameters
      * @throws PolicyApiException in case of errors.
@@ -74,34 +76,65 @@ public class ApiDatabaseInitializer {
             serviceTemplate.setDataTypes(new LinkedHashMap<String, ToscaDataType>());
             serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
-            for (String pt : apiParameterGroup.getPreloadPolicyTypes()) {
-                String policyTypeAsStringYaml = ResourceUtils.getResourceAsString(pt);
-                if (policyTypeAsStringYaml == null) {
-                    throw new PolicyApiException("Preloading policy type cannot be found: " + pt);
-                }
 
-                Object yamlObject = new Yaml().load(policyTypeAsStringYaml);
-                String policyTypeAsString = new StandardCoder().encode(yamlObject);
+            ToscaServiceTemplate createdPolicyTypes =
+                    preloadPolicyTypes(serviceTemplate, apiParameterGroup.getPreloadPolicyTypes(), databaseProvider);
 
-                ToscaServiceTemplate singlePolicyType =
-                        standardCoder.decode(policyTypeAsString, ToscaServiceTemplate.class);
-                if (singlePolicyType == null) {
-                    throw new PolicyApiException("Error deserializing policy type from file: " + pt);
-                }
-                // Consolidate data types and policy types
-                if (singlePolicyType.getDataTypes() != null) {
-                    serviceTemplate.getDataTypes().putAll(singlePolicyType.getDataTypes());
-                }
-                serviceTemplate.getPolicyTypes().putAll(singlePolicyType.getPolicyTypes());
-            }
-            ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(serviceTemplate);
-            if (createdPolicyTypes == null) {
-                throw new PolicyApiException("Error preloading policy types: " + serviceTemplate);
-            } else {
-                LOGGER.debug("Created initial policy types in DB - {}", createdPolicyTypes);
-            }
-        } catch (final PfModelException | CoderException exp) {
+            createdPolicyTypes.setToscaTopologyTemplate(new ToscaTopologyTemplate());
+            createdPolicyTypes.getToscaTopologyTemplate().setPolicies(new LinkedList<Map<String, ToscaPolicy>>());
+
+            preloadPolicies(createdPolicyTypes, apiParameterGroup.getPreloadPolicies(), databaseProvider);
+        } catch (final PolicyApiException | PfModelException | CoderException exp) {
             throw new PolicyApiException(exp);
         }
+    }
+
+    private ToscaServiceTemplate preloadPolicyTypes(ToscaServiceTemplate serviceTemplate, List<String> policyTypes,
+            PolicyModelsProvider databaseProvider) throws PolicyApiException, CoderException, PfModelException {
+
+        for (String pt : policyTypes) {
+            String policyTypeAsStringYaml = ResourceUtils.getResourceAsString(pt);
+            if (policyTypeAsStringYaml == null) {
+                throw new PolicyApiException("Preloading policy type cannot be found: " + pt);
+            }
+
+            ToscaServiceTemplate singlePolicyType =
+                    coder.decode(policyTypeAsStringYaml, ToscaServiceTemplate.class);
+            if (singlePolicyType == null) {
+                throw new PolicyApiException("Error deserializing policy type from file: " + pt);
+            }
+
+            // Consolidate data types and policy types
+            if (singlePolicyType.getDataTypes() != null) {
+                serviceTemplate.getDataTypes().putAll(singlePolicyType.getDataTypes());
+            }
+            serviceTemplate.getPolicyTypes().putAll(singlePolicyType.getPolicyTypes());
+        }
+        ToscaServiceTemplate createdPolicyTypes = databaseProvider.createPolicyTypes(serviceTemplate);
+        LOGGER.debug("Created initial policy types in DB - {}", createdPolicyTypes);
+        return createdPolicyTypes;
+    }
+
+    private void preloadPolicies(ToscaServiceTemplate serviceTemplate, List<String> policies,
+            PolicyModelsProvider databaseProvider) throws PolicyApiException, CoderException, PfModelException {
+
+        for (String policy : policies) {
+            String policyAsStringYaml = ResourceUtils.getResourceAsString(policy);
+            if (policyAsStringYaml == null) {
+                throw new PolicyApiException("Preloading policy cannot be found: " + policy);
+            }
+
+            ToscaServiceTemplate singlePolicy =
+                    coder.decode(policyAsStringYaml, ToscaServiceTemplate.class);
+            if (singlePolicy == null) {
+                throw new PolicyApiException("Error deserializing policy from file: " + policy);
+            }
+
+            // Consolidate policies
+            serviceTemplate.getToscaTopologyTemplate().getPolicies()
+                .addAll(singlePolicy.getToscaTopologyTemplate().getPolicies());
+        }
+        ToscaServiceTemplate createdPolicies = databaseProvider.createPolicies(serviceTemplate);
+        LOGGER.debug("Created initial policies in DB - {}", createdPolicies);
     }
 }
