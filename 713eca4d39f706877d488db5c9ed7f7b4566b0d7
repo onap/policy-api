@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e224058_de61f96c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-02-21T22:29:46Z",
+      "side": 1,
+      "message": "You can have getter at the class level",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
