@@ -110,6 +110,9 @@ public class TestApiRestServer {
     private static final String POLICYTYPES_DROOLS_VERSION = POLICYTYPES_DROOLS + "/versions/1.0.0";
     private static final String POLICYTYPES_DROOLS_VERSION_LATEST = POLICYTYPES_DROOLS + "/versions/latest";
 
+    private static final String POLICYTYPES_NAMING_VERSION =
+            POLICYTYPES + "/onap.policies.Naming/versions/1.0.0";
+
     private static final String POLICYTYPES_TCA_POLICIES =
             "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE =
@@ -125,6 +128,14 @@ public class TestApiRestServer {
 
     private static final String POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION =
             POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
+
+    private static final String POLICYTYPES_NAMING_POLICIES =
+            POLICYTYPES_NAMING_VERSION + "/policies";
+    private static final String POLICYTYPES_NAMING_POLICIES_TIMESTAMP_VERSION1 =
+            POLICYTYPES_NAMING_VERSION + "/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0";
+
+    private static final String POLICYTYPES_NAMING_POLICIES_TIMESTAMP_LATEST =
+            POLICYTYPES_NAMING_VERSION + "/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest";
 
     private static final String GUARD_POLICIES = "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
     private static final String GUARD_POLICIES_VDNS_FL_LATEST =
@@ -252,7 +263,8 @@ public class TestApiRestServer {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
+                Collections.emptyList(), Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
 
         policyTypeProvider = new PolicyTypeProvider();
@@ -542,6 +554,9 @@ public class TestApiRestServer {
 
         rawResponse = readResource(POLICYTYPES_DROOLS_VERSION_LATEST, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = readResource(POLICYTYPES_NAMING_VERSION, mediaType);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @Test
@@ -611,12 +626,8 @@ public class TestApiRestServer {
 
     @Test
     public void testNamingPolicyGet() throws Exception {
-        Response rawResponse = createResource("policies", "policies/sdnc.policy.naming.input.tosca.yaml");
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource("policytypes/"
-                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0",
-                APP_JSON);
+        Response rawResponse = readResource(POLICYTYPES_NAMING_POLICIES_TIMESTAMP_VERSION1, APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -624,9 +635,7 @@ public class TestApiRestServer {
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
-        rawResponse = readResource("policytypes/"
-                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest",
-                APP_JSON);
+        rawResponse = readResource(POLICYTYPES_NAMING_POLICIES_TIMESTAMP_LATEST, APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -634,20 +643,13 @@ public class TestApiRestServer {
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
-        rawResponse = readResource(
-                "policytypes/" + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP",
-                APP_JSON);
+        rawResponse = readResource(POLICYTYPES_NAMING_POLICIES, APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
-
-        rawResponse = deleteResource("policytypes/"
-                + "onap.policies.Naming/versions/1.0.0/policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0",
-                APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @Test
@@ -664,7 +666,7 @@ public class TestApiRestServer {
         Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("no policies found", error.getErrorMessage());
+        assertEquals("policy onap.restart.tca:1.0.0 not found", error.getErrorMessage());
     }
 
     @Test

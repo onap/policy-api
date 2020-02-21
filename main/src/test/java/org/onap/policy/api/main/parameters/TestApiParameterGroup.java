@@ -48,7 +48,7 @@ public class TestApiParameterGroup {
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                restServerParameters, databaseProviderParameters, Collections.emptyList());
+                restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), apiParameters.getRestServerParameters().getHost());
@@ -68,8 +68,8 @@ public class TestApiParameterGroup {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
-        final ApiParameterGroup apiParameters = new ApiParameterGroup(null,
-                        restServerParameters, databaseProviderParameters, Collections.emptyList());
+        final ApiParameterGroup apiParameters = new ApiParameterGroup(null, restServerParameters,
+                databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, apiParameters.getName());
@@ -83,8 +83,8 @@ public class TestApiParameterGroup {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
-        final ApiParameterGroup apiParameters = new ApiParameterGroup("",
-                        restServerParameters, databaseProviderParameters, Collections.emptyList());
+        final ApiParameterGroup apiParameters = new ApiParameterGroup("", restServerParameters,
+                databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", apiParameters.getName());
@@ -98,7 +98,7 @@ public class TestApiParameterGroup {
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                restServerParameters, databaseProviderParameters, Collections.emptyList());
+                restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
@@ -112,7 +112,7 @@ public class TestApiParameterGroup {
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                restServerParameters, databaseProviderParameters, Collections.emptyList());
+                restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
@@ -126,7 +126,7 @@ public class TestApiParameterGroup {
         final PolicyModelsProviderParameters databaseProviderParameters =
                 commonTestData.getDatabaseProviderParameters(true);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                restServerParameters, databaseProviderParameters, Collections.emptyList());
+                restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
@@ -139,7 +139,7 @@ public class TestApiParameterGroup {
         final RestServerParameters restServerParameters = commonTestData.getRestServerParameters(false, PORT);
         final PolicyModelsProviderParameters databaseProviderParameters = null;
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                restServerParameters, databaseProviderParameters, Collections.emptyList());
+                restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
         final GroupValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertTrue(validationResult.getResult()
@@ -149,7 +149,7 @@ public class TestApiParameterGroup {
     @Test
     public void testApiParameterGroup_SetName() {
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
-                null, null, Collections.emptyList());
+                null, null, Collections.emptyList(), Collections.emptyList());
         assertEquals(CommonTestData.API_GROUP_NAME, apiParameters.getName());
         apiParameters.setName("SampleName");
         assertEquals("SampleName", apiParameters.getName());
