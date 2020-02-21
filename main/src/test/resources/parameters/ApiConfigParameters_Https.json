@@ -44,5 +44,8 @@
         "policytypes/onap.policies.controlloop.operational.Common.yaml",
         "policytypes/onap.policies.controlloop.operational.common.Apex.yaml",
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml"
+    ],
+    "preloadPolicies" : [
+        "policies/sdnc.policy.naming.input.tosca.yaml"
     ]
 }

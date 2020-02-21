@@ -252,7 +252,8 @@ public class TestApiRestServer {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList());
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
+                Collections.emptyList(), Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
 
         policyTypeProvider = new PolicyTypeProvider();
