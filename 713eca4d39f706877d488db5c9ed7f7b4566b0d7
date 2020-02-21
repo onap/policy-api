@@ -22,6 +22,91 @@
       "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4a53780_6784a2d7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-21T22:30:21Z",
+      "side": 1,
+      "message": "could just put @Getter on the class instead of on every field",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42f6e773_9babafff",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-21T22:30:21Z",
+      "side": 1,
+      "message": "use a StandardYamlCoder instead, then lines 103-107 become a single call to decode()\n\nFYI: we\u0027ve decided to make the StandardXxxCoders thread-safe, so you can create a static one and just reuse it through-out the class file",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b4e7390_6b9ee816",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-21T22:30:21Z",
+      "side": 1,
+      "message": "I don\u0027t think this can be null\n\nsame comment below",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70969e2c_ddd1419e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-21T22:30:21Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5247a3ae_441129f1",
+        "filename": "main/src/test/resources/parameters/ApiConfigParameters_InvalidRestServerParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-21T22:30:21Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
