@@ -42,6 +42,23 @@
     },
     {
       "key": {
+        "uuid": "1ea0d8f2_10f5b09f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-02-24T14:39:03Z",
+      "side": 1,
+      "message": "mark final and all below fields ?",
+      "revId": "713eca4d39f706877d488db5c9ed7f7b4566b0d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "42f6e773_9babafff",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
         "patchSetId": 1
