@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f344642c_f852b4bb",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-24T18:56:55Z",
+      "side": 1,
+      "message": "not needed",
+      "revId": "f3d81c1cc72645435f17bd4847833fe2b921ed2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af0ebb27_2a8d4be8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/parameters/ApiParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-24T18:56:55Z",
+      "side": 1,
+      "message": "use @Setter instead",
+      "revId": "f3d81c1cc72645435f17bd4847833fe2b921ed2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a73a45f_230f65ab",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-02-24T18:56:55Z",
+      "side": 1,
+      "message": "\"final\"",
+      "revId": "f3d81c1cc72645435f17bd4847833fe2b921ed2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
