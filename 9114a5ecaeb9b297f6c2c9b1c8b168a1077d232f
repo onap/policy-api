@@ -22,6 +22,30 @@
       "revId": "9114a5ecaeb9b297f6c2c9b1c8b168a1077d232f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6679e01_fef38bf7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-02-25T18:10:29Z",
+      "side": 1,
+      "message": "Done. Good catch. thx",
+      "parentUuid": "deed7681_24f1c125",
+      "range": {
+        "startLine": 92,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 5
+      },
+      "revId": "9114a5ecaeb9b297f6c2c9b1c8b168a1077d232f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
