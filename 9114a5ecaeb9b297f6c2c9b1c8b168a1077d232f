@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "deed7681_24f1c125",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-25T11:34:04Z",
+      "side": 1,
+      "message": "These methods are very similar, especially the loop part, I think you could reduce the code duplication by passing a function that stores the policy types/policies as a parameter to a single function.",
+      "range": {
+        "startLine": 92,
+        "startChar": 1,
+        "endLine": 139,
+        "endChar": 5
+      },
+      "revId": "9114a5ecaeb9b297f6c2c9b1c8b168a1077d232f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

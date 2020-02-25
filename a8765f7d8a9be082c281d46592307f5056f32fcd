@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eef725f9_e6991bde",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-25T11:34:04Z",
+      "side": 0,
+      "message": "For test cases, I prefer to leave the explicit file names in the code because I think it makes the test cases easier to debug and follow.",
+      "range": {
+        "startLine": 614,
+        "startChar": 0,
+        "endLine": 650,
+        "endChar": 82
+      },
+      "revId": "a8765f7d8a9be082c281d46592307f5056f32fcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
