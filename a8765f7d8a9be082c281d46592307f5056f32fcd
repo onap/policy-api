@@ -46,6 +46,30 @@
       "revId": "a8765f7d8a9be082c281d46592307f5056f32fcd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9f3438e_df874188",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/TestApiRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-02-26T12:48:05Z",
+      "side": 0,
+      "message": "Yes, It\u0027s only my opinion but I think the string constants reduce the readability of the tests. I\u0027m not hung up on it though.",
+      "parentUuid": "b1e85399_a4769ccf",
+      "range": {
+        "startLine": 614,
+        "startChar": 0,
+        "endLine": 650,
+        "endChar": 82
+      },
+      "revId": "a8765f7d8a9be082c281d46592307f5056f32fcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
