@@ -36,11 +36,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
-
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -50,8 +46,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
@@ -62,7 +56,6 @@ import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -690,62 +683,6 @@ public class ApiRestController extends CommonRestController {
         } catch (PfModelException | PfModelRuntimeException pfme) {
             LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
                     policyId, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
-        }
-    }
-
-    /**
-     * Retrieves deployed versions of a particular policy in PDP groups.
-     *
-     * @param policyTypeId the ID of specified policy type
-     * @param policyTypeVersion the version of specified policy type
-     * @param policyId the ID of specified policy
-     *
-     * @return the Response object containing the results of the API operation
-     */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/deployed")
-    @ApiOperation(value = "Retrieve deployed versions of a particular policy in pdp groups",
-            notes = "Returns deployed versions of specified policy in pdp groups", response = ToscaPolicy.class,
-            responseContainer = "List",
-            responseHeaders = {
-                @ResponseHeader(name = "X-MinorVersion",
-                        description = "Used to request or communicate a MINOR version back from the client"
-                                + " to the server, and from the server back to the client",
-                        response = String.class),
-                @ResponseHeader(name = "X-PatchVersion",
-                        description = "Used only to communicate a PATCH version in a response for"
-                                + " troubleshooting purposes only, and will not be provided by"
-                                + " the client on request",
-                        response = String.class),
-                @ResponseHeader(name = "X-LatestVersion",
-                        description = "Used only to communicate an API's latest version", response = String.class),
-                @ResponseHeader(name = "X-ONAP-RequestID",
-                        description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",},
-            extensions = {@Extension(name = "interface info",
-                    properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                        @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response getDeployedVersionsOfPolicy(
-            @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-            @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
-                    required = true) String policyTypeVersion,
-            @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-            @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
-
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
-            Map<Pair<String, String>, List<ToscaPolicy>> deployedPolicies =
-                    policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
-            return makeOkResponse(requestId, deployedPolicies);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/deployed", policyTypeId,
-                    policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
