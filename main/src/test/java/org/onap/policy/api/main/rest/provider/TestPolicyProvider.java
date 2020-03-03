@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -158,11 +157,6 @@ public class TestPolicyProvider {
         String policyTypeVersion = "1.0.0";
         String policyTypeId = "onap.policies.monitoring.cdap.tca.hi.lo.app";
 
-        // Basic Exception Throw
-        assertThatThrownBy(() -> {
-            policyProvider.fetchDeployedPolicies("dummy", "1.0.0", "dummy");
-        }).hasMessage("could not find policy with ID dummy and type dummy:1.0.0 deployed in any pdp group");
-
         try (PolicyModelsProvider databaseProvider =
                 new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
             assertEquals(0, databaseProvider.getPdpGroups("name").size());
@@ -216,22 +210,11 @@ public class TestPolicyProvider {
                 assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
             }).doesNotThrowAnyException();
 
-            // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true
-            assertThatThrownBy(() -> {
-                policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
-            }).hasMessage("could not find policy with ID " + policyId + " and type " + policyTypeId + ":"
-                    + policyTypeVersion + " deployed in any pdp group");
-
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion));
             assertEquals(1,
                     databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
-
-            // Test fetchDeployedPolicies
-            assertThatCode(() -> {
-                policyProvider.fetchDeployedPolicies(policyTypeId, policyTypeVersion, policyId);
-            }).doesNotThrowAnyException();
 
             // Test validateDeleteEligibility exception path(!pdpGroups.isEmpty())
             assertThatThrownBy(() -> {

@@ -23,14 +23,7 @@
 
 package org.onap.policy.api.main.rest.provider;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -81,24 +74,6 @@ public class PolicyProvider extends CommonModelProvider {
             throws PfModelException {
 
         return getFilteredPolicies(policyTypeId, policyTypeVersion, policyId, ToscaPolicyFilter.LATEST_VERSION);
-    }
-
-    /**
-     * Retrieves a list of deployed policies in each pdp group.
-     *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policyId the ID of the policy
-     *
-     * @return a list of deployed policies in each pdp group
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    public Map<Pair<String, String>, List<ToscaPolicy>> fetchDeployedPolicies(String policyTypeId,
-            String policyTypeVersion, String policyId) throws PfModelException {
-
-        return collectDeployedPolicies(policyId, new PfConceptKey(policyTypeId, policyTypeVersion),
-                modelsProvider::getPolicyList, List::addAll, new ArrayList<>(5));
     }
 
     /**

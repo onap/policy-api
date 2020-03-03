@@ -38,7 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
@@ -47,7 +46,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
@@ -879,26 +877,6 @@ public class TestApiRestServer {
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfPolicyJson() throws Exception {
-        testGetDeployedVersionsOfPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfPolicyYaml() throws Exception {
-        testGetDeployedVersionsOfPolicy(APP_YAML);
-    }
-
-    private void testGetDeployedVersionsOfPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals(
-                "could not find policy with ID onap.restart.tca and type "
-                        + "onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 deployed in any pdp group",
-                errorResponse.getErrorMessage());
     }
 
     @Test
