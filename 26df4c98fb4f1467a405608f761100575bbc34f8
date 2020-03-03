@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de618a9d_e936bb8d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 743,
+      "author": {
+        "id": 1441
+      },
+      "writtenOn": "2020-03-03T21:29:57Z",
+      "side": 0,
+      "message": "this also needs to be removed",
+      "range": {
+        "startLine": 743,
+        "startChar": 20,
+        "endLine": 743,
+        "endChar": 56
+      },
+      "revId": "26df4c98fb4f1467a405608f761100575bbc34f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
