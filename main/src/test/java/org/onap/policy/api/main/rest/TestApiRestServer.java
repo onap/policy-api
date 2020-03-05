@@ -213,11 +213,6 @@ public class TestApiRestServer {
     private static final String TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML =
         "policies/vCPE.policy.operational.input.tosca.yaml";
 
-    private static final String[] LEGACY_GUARD_POLICY_RESOURCE_NAMES = {
-        "policies/vDNS.policy.guard.frequency.input.json",
-        "policies/vDNS.policy.guard.minmax.input.json"
-    };
-
     private static final String[] LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES = {
         "policies/vCPE.policy.operational.legacy.input.json",
         "policies/vDNS.policy.operational.legacy.input.json",
@@ -368,20 +363,6 @@ public class TestApiRestServer {
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage()).contains("policy type NULL:1.0.0 referenced in policy not found");
-    }
-
-    @Test
-    public void testCreateGuardPolicies() throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @Test
@@ -740,41 +721,6 @@ public class TestApiRestServer {
     }
 
     @Test
-    public void testReadGuardPoliciesJson() throws Exception {
-        testReadGuardPolicies(APP_JSON);
-    }
-
-    @Test
-    public void testReadGuardPoliciesYaml() throws Exception {
-        testReadGuardPolicies(APP_YAML);
-    }
-
-    private void testReadGuardPolicies(String mediaType) throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-    }
-
-    @Test
     public void testReadOperationalPoliciesJson() throws Exception {
         testReadOperationalPolicies(APP_JSON);
     }
@@ -817,49 +763,6 @@ public class TestApiRestServer {
         rawResponse = deleteResource(OPS_POLICIES + "/operational.modifyconfig/versions/1", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-    }
-
-    @Test
-    public void testDeleteGuardPolicyJson() throws Exception {
-        testDeleteGuardPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testDeleteGuardPolicyYaml() throws Exception {
-        testDeleteGuardPolicy(APP_YAML);
-    }
-
-    private void testDeleteGuardPolicy(String mediaType) throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfGuardPolicyJson() throws Exception {
-        testGetDeployedVersionsOfGuardPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfGuardPolicyYaml() throws Exception {
-        testGetDeployedVersionsOfGuardPolicy(APP_YAML);
-    }
-
-    private void testGetDeployedVersionsOfGuardPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_DEPLOYED, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals(
-                "could not find policy with ID guard.frequency.scaleout and type "
-                        + "onap.policies.controlloop.guard.FrequencyLimiter:1.0.0 deployed in any pdp group",
-                errorResponse.getErrorMessage());
     }
 
     @Test
