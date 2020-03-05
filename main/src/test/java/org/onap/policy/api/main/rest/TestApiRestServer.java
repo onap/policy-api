@@ -69,7 +69,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.legacy.concepts.LegacyGuardPolicyInput;
 import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
@@ -121,26 +120,9 @@ public class TestApiRestServer {
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/2.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
             + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
-    private static final String POLICYTYPES_TCA_POLICIES_VCPE_DEPLOYED = "policytypes/"
-            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/deployed";
 
     private static final String POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION =
             POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
-
-    private static final String GUARD_POLICIES = "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies";
-    private static final String GUARD_POLICIES_VDNS_FL_LATEST =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
-                    + "/versions/latest";
-    private static final String GUARD_POLICIES_VDNS_FL_DEPLOYED =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout"
-                    + "/versions/deployed";
-    private static final String GUARD_POLICIES_VDNS_MINMAX_LATEST =
-            "policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout"
-                    + "/versions/latest";
-    private static final String GUARD_POLICIES_VDNS_FL_VERSION = "policytypes/"
-            + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.frequency.scaleout/versions/1";
-    private static final String GUARD_POLICIES_VDNS_MINMAX_VERSION =
-            "policytypes/" + "onap.policies.controlloop.Guard/versions/1.0.0/policies/guard.minmax.scaleout/versions/1";
 
     private static final String OPS_POLICIES =
             "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
@@ -192,9 +174,10 @@ public class TestApiRestServer {
         LEGACY_POLICYTYPE_OP_RESOURCE,
         TOSCA_POLICYTYPE_OP_RESOURCE,
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml",
-        "policytypes/onap.policies.controlloop.guard.Blacklist.yaml",
-        "policytypes/onap.policies.controlloop.guard.FrequencyLimiter.yaml",
-        "policytypes/onap.policies.controlloop.guard.MinMax.yaml",
+        "policytypes/onap.policies.controlloop.guard.Common.yaml",
+        "policytypes/onap.policies.controlloop.guard.common.Blacklist.yaml",
+        "policytypes/onap.policies.controlloop.guard.common.FrequencyLimiter.yaml",
+        "policytypes/onap.policies.controlloop.guard.common.MinMax.yaml",
         "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
         "policytypes/onap.policies.optimization.resource.AffinityPolicy.yaml",
         "policytypes/onap.policies.optimization.resource.DistancePolicy.yaml",
@@ -212,11 +195,6 @@ public class TestApiRestServer {
 
     private static final String TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML =
         "policies/vCPE.policy.operational.input.tosca.yaml";
-
-    private static final String[] LEGACY_GUARD_POLICY_RESOURCE_NAMES = {
-        "policies/vDNS.policy.guard.frequency.input.json",
-        "policies/vDNS.policy.guard.minmax.input.json"
-    };
 
     private static final String[] LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES = {
         "policies/vCPE.policy.operational.legacy.input.json",
@@ -368,20 +346,6 @@ public class TestApiRestServer {
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage()).contains("policy type NULL:1.0.0 referenced in policy not found");
-    }
-
-    @Test
-    public void testCreateGuardPolicies() throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @Test
@@ -740,41 +704,6 @@ public class TestApiRestServer {
     }
 
     @Test
-    public void testReadGuardPoliciesJson() throws Exception {
-        testReadGuardPolicies(APP_JSON);
-    }
-
-    @Test
-    public void testReadGuardPoliciesYaml() throws Exception {
-        testReadGuardPolicies(APP_YAML);
-    }
-
-    private void testReadGuardPolicies(String mediaType) throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-    }
-
-    @Test
     public void testReadOperationalPoliciesJson() throws Exception {
         testReadOperationalPolicies(APP_JSON);
     }
@@ -817,49 +746,6 @@ public class TestApiRestServer {
         rawResponse = deleteResource(OPS_POLICIES + "/operational.modifyconfig/versions/1", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-    }
-
-    @Test
-    public void testDeleteGuardPolicyJson() throws Exception {
-        testDeleteGuardPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testDeleteGuardPolicyYaml() throws Exception {
-        testDeleteGuardPolicy(APP_YAML);
-    }
-
-    private void testDeleteGuardPolicy(String mediaType) throws Exception {
-        for (String resrcName : LEGACY_GUARD_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createGuardPolicy(GUARD_POLICIES, resrcName);
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(GUARD_POLICIES_VDNS_FL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(GUARD_POLICIES_VDNS_MINMAX_VERSION, APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfGuardPolicyJson() throws Exception {
-        testGetDeployedVersionsOfGuardPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfGuardPolicyYaml() throws Exception {
-        testGetDeployedVersionsOfGuardPolicy(APP_YAML);
-    }
-
-    private void testGetDeployedVersionsOfGuardPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(GUARD_POLICIES_VDNS_FL_DEPLOYED, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals(
-                "could not find policy with ID guard.frequency.scaleout and type "
-                        + "onap.policies.controlloop.guard.FrequencyLimiter:1.0.0 deployed in any pdp group",
-                errorResponse.getErrorMessage());
     }
 
     @Test
@@ -959,27 +845,6 @@ public class TestApiRestServer {
         invocationBuilder = sendHttpsRequest(endpoint, mediaType);
 
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
-        return invocationBuilder.post(entity);
-    }
-
-    private Response createGuardPolicy(String endpoint, String resourceName) throws Exception {
-
-        String mediaType = APP_JSON; // default media type
-        LegacyGuardPolicyInput rawGuardPolicy = new LegacyGuardPolicyInput();
-        if (resourceName.endsWith(".json")) {
-            rawGuardPolicy =
-                    standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyGuardPolicyInput.class);
-        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
-            mediaType = APP_YAML;
-            rawGuardPolicy = standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName),
-                    LegacyGuardPolicyInput.class);
-        }
-
-        final Invocation.Builder invocationBuilder;
-
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType);
-
-        Entity<LegacyGuardPolicyInput> entity = Entity.entity(rawGuardPolicy, mediaType);
         return invocationBuilder.post(entity);
     }
 
