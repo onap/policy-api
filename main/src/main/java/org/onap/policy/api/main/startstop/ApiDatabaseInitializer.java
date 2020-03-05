@@ -73,7 +73,7 @@ public class ApiDatabaseInitializer {
             ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
             serviceTemplate.setDataTypes(new LinkedHashMap<String, ToscaDataType>());
             serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
-            serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_0_0");
+            serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_1_0");
 
             ToscaServiceTemplate createdPolicyTypes = preloadServiceTemplate(serviceTemplate,
                     apiParameterGroup.getPreloadPolicyTypes(), databaseProvider::createPolicyTypes);
