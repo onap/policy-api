@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f74fe866_bbd29526",
+        "filename": "main/src/test/resources/policies/vDNS.policy.guard.frequency.input.ver1.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-06T14:17:19Z",
+      "side": 1,
+      "message": "Maybe I shouldn\u0027t have deleted this?",
+      "revId": "3c8dfff4981e738d71ce427ad30ba7c79ed38bcf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
