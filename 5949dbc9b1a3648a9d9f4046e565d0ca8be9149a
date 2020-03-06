@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca41c00f_af0197e2",
+        "filename": "main/src/test/resources/parameters/ApiConfigParameters_Https.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-03-06T15:39:48Z",
+      "side": 0,
+      "message": "I think you\u0027ll get a merge conflict when you rebase, this change was merged in my last api review.",
+      "revId": "5949dbc9b1a3648a9d9f4046e565d0ca8be9149a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
