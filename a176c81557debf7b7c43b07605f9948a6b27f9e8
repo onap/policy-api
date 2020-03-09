@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa587c54_876121c5",
+        "filename": "packages/policy-api-docker/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-09T12:54:40Z",
+      "side": 1,
+      "message": "if version was null (i.e., failed the test on line 67), then then versionArray will be null",
+      "revId": "a176c81557debf7b7c43b07605f9948a6b27f9e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
