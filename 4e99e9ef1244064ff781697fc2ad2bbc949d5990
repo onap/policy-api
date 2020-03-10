@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "579552a0_1c002ceb",
+        "filename": "packages/policy-api-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-03-10T12:43:09Z",
+      "side": 1,
+      "message": "versionArray may be null here",
+      "revId": "4e99e9ef1244064ff781697fc2ad2bbc949d5990",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
