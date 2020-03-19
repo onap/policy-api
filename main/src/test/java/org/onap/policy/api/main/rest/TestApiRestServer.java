@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
@@ -46,6 +47,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
@@ -93,57 +95,56 @@ public class TestApiRestServer {
     private static final String POLICYTYPES = "policytypes";
     private static final String POLICYTYPES_TCA = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app";
     private static final String POLICYTYPES_COLLECTOR =
-            "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
     private static final String POLICYTYPES_TCA_VERSION =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0";
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0";
     private static final String POLICYTYPES_TCA_LATEST =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/latest";
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/latest";
     private static final String POLICYTYPES_COLLECTOR_VERSION =
-            "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server/versions/1.0.0";
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server/versions/1.0.0";
     private static final String POLICYTYPES_COLLECTOR_LATEST =
-            "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server/versions/latest";
+        "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server/versions/latest";
 
     private static final String POLICYTYPES_DROOLS = "policytypes/onap.policies.controlloop.operational.common.Drools";
     private static final String POLICYTYPES_DROOLS_VERSION = POLICYTYPES_DROOLS + "/versions/1.0.0";
     private static final String POLICYTYPES_DROOLS_VERSION_LATEST = POLICYTYPES_DROOLS + "/versions/latest";
 
-    private static final String POLICYTYPES_NAMING_VERSION =
-            POLICYTYPES + "/onap.policies.Naming/versions/1.0.0";
+    private static final String POLICYTYPES_NAMING_VERSION = POLICYTYPES + "/onap.policies.Naming/versions/1.0.0";
 
     private static final String POLICYTYPES_TCA_POLICIES =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies";
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca";
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION1 = "policytypes/"
-            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
+        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION2 = "policytypes/"
-            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/2.0.0";
+        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/2.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
-            + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
+        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
 
     private static final String POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION =
-            POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
+        POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
 
     private static final String OPS_POLICIES =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
+        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
     private static final String OPS_POLICIES_VCPE_LATEST =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-                    + "/versions/latest";
+        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
+            + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_DEPLOYED =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-                    + "/versions/deployed";
+        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
+            + "/versions/deployed";
     private static final String OPS_POLICIES_VDNS_LATEST =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS
-                    + "/versions/latest";
+        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS
+            + "/versions/latest";
     private static final String OPS_POLICIES_VFIREWALL_LATEST =
-            "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW
-                    + "/versions/latest";
+        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW
+            + "/versions/latest";
     private static final String OPS_POLICIES_VCPE_VERSION = "policytypes/"
-            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE + "/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE + "/versions/1";
     private static final String OPS_POLICIES_VDNS_VERSION = "policytypes/"
-            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS + "/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS + "/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
-            + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW + "/versions/1";
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW + "/versions/1";
     private static final String POLICIES = "policies";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
@@ -231,8 +232,8 @@ public class TestApiRestServer {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
-                Collections.emptyList(), Collections.emptyList());
+        apiParamGroup =
+            new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(), Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
 
         policyTypeProvider = new PolicyTypeProvider();
@@ -246,7 +247,7 @@ public class TestApiRestServer {
         systemProps.put("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
         System.setProperties(systemProps);
         new CommonTestData().makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
-                "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", apiPort);
+            "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", apiPort);
         apiConfigParameters[0] = "-c";
         apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json";
 
@@ -312,18 +313,18 @@ public class TestApiRestServer {
         new File("src/test/resources/policies/BadTestPolicy.yaml").deleteOnExit();
 
         // Send a policy with no policy type trigger an error
-        String toscaPolicy = ResourceUtils
-                .getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
+        String toscaPolicy =
+            ResourceUtils.getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
         toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 =
-                createResource(POLICYTYPES_TCA_POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
+            createResource(POLICYTYPES_TCA_POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertThat(errorResponse.getErrorMessage())
-                .contains("entity in incoming fragment does not equal existing entity");
+            .contains("entity in incoming fragment does not equal existing entity");
     }
 
     @Test
@@ -336,8 +337,8 @@ public class TestApiRestServer {
         new File("src/test/resources/policies/BadTestPolicy.yaml").deleteOnExit();
 
         // Send a policy with no policy type trigger an error
-        String toscaPolicy = ResourceUtils
-                .getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
+        String toscaPolicy =
+            ResourceUtils.getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
         toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
@@ -403,10 +404,10 @@ public class TestApiRestServer {
         ToscaServiceTemplate toscaVcpeSt = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, toscaVcpeSt.getToscaTopologyTemplate().getPolicies().size());
         assertEquals(OP_POLICY_NAME_VCPE,
-                toscaVcpeSt.getToscaTopologyTemplate().getPolicies().get(0).get(OP_POLICY_NAME_VCPE).getName());
+            toscaVcpeSt.getToscaTopologyTemplate().getPolicies().get(0).get(OP_POLICY_NAME_VCPE).getName());
 
         Map<String, Object> props =
-                toscaVcpeSt.getToscaTopologyTemplate().getPolicies().get(0).get(OP_POLICY_NAME_VCPE).getProperties();
+            toscaVcpeSt.getToscaTopologyTemplate().getPolicies().get(0).get(OP_POLICY_NAME_VCPE).getProperties();
         assertNotNull(props);
 
         List<Object> operations = (List<Object>) props.get("operations");
@@ -414,7 +415,7 @@ public class TestApiRestServer {
         assertEquals(props.get("trigger"), ((Map<String, Object>) operations.get(0)).get("id"));
 
         Map<String, Object> operation =
-                (Map<String, Object>) ((Map<String, Object>) operations.get(0)).get("operation");
+            (Map<String, Object>) ((Map<String, Object>) operations.get(0)).get("operation");
         assertEquals("APPC", operation.get("actor"));
         assertEquals("Restart", operation.get("operation"));
 
@@ -582,7 +583,7 @@ public class TestApiRestServer {
     public void testNamingPolicyGet() throws Exception {
 
         Response rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -591,7 +592,7 @@ public class TestApiRestServer {
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -653,10 +654,7 @@ public class TestApiRestServer {
         rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals(
-                "policies for filter ToscaPolicyFilter(name=onap.restart.tca, version=1.0.0, versionPrefix=null, "
-                        + "type=onap.policies.monitoring.cdap.tca.hi.lo.app, typeVersion=1.0.0) do not exist",
-                errorResponse.getErrorMessage());
+        assertEquals("policies for onap.restart.tca:1.0.0 do not exist", errorResponse.getErrorMessage());
 
         rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION2, mediaType);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -814,9 +812,9 @@ public class TestApiRestServer {
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals(
-                "could not find policy with ID " + OP_POLICY_NAME_VCPE + " and type "
-                        + "onap.policies.controlloop.Operational:1.0.0 deployed in any pdp group",
-                errorResponse.getErrorMessage());
+            "could not find policy with ID " + OP_POLICY_NAME_VCPE + " and type "
+                + "onap.policies.controlloop.Operational:1.0.0 deployed in any pdp group",
+            errorResponse.getErrorMessage());
     }
 
     @Test
@@ -833,11 +831,11 @@ public class TestApiRestServer {
         ToscaServiceTemplate rawServiceTemplate = new ToscaServiceTemplate();
         if (resourceName.endsWith(".json")) {
             rawServiceTemplate =
-                    standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
+                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
         } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
             mediaType = APP_YAML;
-            rawServiceTemplate = standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName),
-                    ToscaServiceTemplate.class);
+            rawServiceTemplate =
+                standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
         }
 
         final Invocation.Builder invocationBuilder;
@@ -853,12 +851,12 @@ public class TestApiRestServer {
         String mediaType = APP_JSON; // default media type
         LegacyOperationalPolicy rawOpsPolicy = new LegacyOperationalPolicy();
         if (resourceName.endsWith(".json")) {
-            rawOpsPolicy = standardCoder.decode(ResourceUtils.getResourceAsString(resourceName),
-                    LegacyOperationalPolicy.class);
+            rawOpsPolicy =
+                standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
         } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
             mediaType = APP_YAML;
             rawOpsPolicy = standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName),
-                    LegacyOperationalPolicy.class);
+                LegacyOperationalPolicy.class);
         }
 
         final Invocation.Builder invocationBuilder;
@@ -895,7 +893,7 @@ public class TestApiRestServer {
         final SSLContext sc = SSLContext.getInstance("TLSv1.2");
         sc.init(null, noopTrustManager, new SecureRandom());
         final ClientBuilder clientBuilder =
-                ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
+            ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
         final Client client = clientBuilder.build();
         final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
         client.register(feature);
@@ -942,7 +940,7 @@ public class TestApiRestServer {
     }
 
     private void validateHealthCheckReport(final String name, final String url, final boolean healthy, final int code,
-            final String message, final HealthCheckReport report) {
+        final String message, final HealthCheckReport report) {
 
         assertEquals(name, report.getName());
         assertEquals(url, report.getUrl());
