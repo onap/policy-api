@@ -16,6 +16,24 @@
       "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba3c5621_272e3982",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-03-30T15:42:30Z",
+      "side": 1,
+      "message": "Yes, that would be nice. Let\u0027s see what Pam says.",
+      "parentUuid": "752533eb_c13b080c",
+      "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
