@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -586,10 +587,42 @@ public class TestApiRestServer {
             + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
+        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
+            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0?mode=referenced", APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
+            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest?mode=referenced", APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse =
+            readResource("policytypes/onap.policies.Naming/versions/1.0.0/policies?mode=referenced", APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
+            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertNull(namingServiceTemplate.getPolicyTypes());
+        assertNull(namingServiceTemplate.getDataTypes());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
             + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
@@ -597,16 +630,16 @@ public class TestApiRestServer {
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
-        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
-        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+        assertNull(namingServiceTemplate.getPolicyTypes());
+        assertNull(namingServiceTemplate.getDataTypes());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/policies", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
-        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
-        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+        assertNull(namingServiceTemplate.getPolicyTypes());
+        assertNull(namingServiceTemplate.getDataTypes());
     }
 
     @Test
