@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "752533eb_c13b080c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-03-30T15:40:12Z",
+      "side": 1,
+      "message": "It could set a default value to terse (@DefaultValue annotation with @QueryParam), that way, there would be backwards compatibility with previous releases when this query param is not present (although there\u0027s the addition of the query param to override the default behavior which may break the m3 rules).",
+      "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
