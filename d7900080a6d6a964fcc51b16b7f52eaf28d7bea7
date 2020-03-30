@@ -34,6 +34,24 @@
       "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d14d5cc_5e1f2e2b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-03-30T17:04:15Z",
+      "side": 1,
+      "message": "As long as by default, the param does not have to be specified at all and the result is no policy types being returned.",
+      "parentUuid": "ba3c5621_272e3982",
+      "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
