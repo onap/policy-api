@@ -52,6 +52,24 @@
       "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5179dfb_4c46813f",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-03-30T18:29:24Z",
+      "side": 1,
+      "message": "The default behaviour is as Pam requested above.",
+      "parentUuid": "1d14d5cc_5e1f2e2b",
+      "revId": "d7900080a6d6a964fcc51b16b7f52eaf28d7bea7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
