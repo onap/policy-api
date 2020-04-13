@@ -46,6 +46,6 @@
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml"
     ],
     "preloadPolicies" : [
-        "policies/sdnc.policy.naming.input.tosca.yaml"
+        "policies/sdnc.policy.naming.input.tosca.json"
     ]
 }
