@@ -22,6 +22,30 @@
       "revId": "76a55e031b319caa4f5c0cbc47cb983f9eee3176",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2943fd17_3fea6a09",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-04-22T18:24:32Z",
+      "side": 1,
+      "message": "Also, we are not checking if Policy is preloaded or not.",
+      "parentUuid": "74d322c3_d1d3d708",
+      "range": {
+        "startLine": 99,
+        "startChar": 12,
+        "endLine": 99,
+        "endChar": 62
+      },
+      "revId": "76a55e031b319caa4f5c0cbc47cb983f9eee3176",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
