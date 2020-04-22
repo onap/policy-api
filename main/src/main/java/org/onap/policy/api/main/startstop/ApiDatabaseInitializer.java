@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2020 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,10 +32,12 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
@@ -70,6 +72,12 @@ public class ApiDatabaseInitializer {
 
         try (PolicyModelsProvider databaseProvider =
                 factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
+
+            if(alreadyExists(databaseProvider)) {
+                LOGGER.warn("DB already contains policy data - skipping preload");
+                return;
+            }
+
             ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
             serviceTemplate.setDataTypes(new LinkedHashMap<String, ToscaDataType>());
             serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
@@ -82,6 +90,21 @@ public class ApiDatabaseInitializer {
         } catch (final PolicyApiException | PfModelException | CoderException exp) {
             throw new PolicyApiException(exp);
         }
+    }
+
+    private boolean alreadyExists(PolicyModelsProvider databaseProvider) throws PfModelException {
+        try {
+            ToscaServiceTemplate serviceTemplate =
+                            databaseProvider.getFilteredPolicyTypes(ToscaPolicyTypeFilter.builder().build());
+            if (!serviceTemplate.getPolicyTypes().isEmpty()) {
+                return true;
+            }
+
+        } catch (PfModelRuntimeException e) {
+            LOGGER.trace("DB does not yet contain policy types", e);
+        }
+
+        return false;
     }
 
     private ToscaServiceTemplate preloadServiceTemplate(ToscaServiceTemplate serviceTemplate,
