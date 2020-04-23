@@ -94,6 +94,30 @@
       "revId": "76a55e031b319caa4f5c0cbc47cb983f9eee3176",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33a35055_2fa2de89",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2020-04-23T07:12:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a7dae560_37ce9fec",
+      "range": {
+        "startLine": 99,
+        "startChar": 12,
+        "endLine": 99,
+        "endChar": 62
+      },
+      "revId": "76a55e031b319caa4f5c0cbc47cb983f9eee3176",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
