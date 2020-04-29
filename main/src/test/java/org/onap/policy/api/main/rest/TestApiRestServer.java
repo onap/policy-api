@@ -584,11 +584,11 @@ public class TestApiRestServer {
     public void testNamingPolicyGet() throws Exception {
 
         Response rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0?mode=referenced", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0?mode=referenced", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -597,7 +597,7 @@ public class TestApiRestServer {
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest?mode=referenced", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest?mode=referenced", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -615,7 +615,7 @@ public class TestApiRestServer {
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -625,7 +625,7 @@ public class TestApiRestServer {
         assertNull(namingServiceTemplate.getDataTypes());
 
         rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-            + "policies/SDNC_Policy.ONAP_VNF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
