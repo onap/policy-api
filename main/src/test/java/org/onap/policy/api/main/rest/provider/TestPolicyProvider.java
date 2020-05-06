@@ -246,8 +246,9 @@ public class TestPolicyProvider {
                 standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                 badPolicyServiceTemplate);
-        }).hasMessageContaining(
-            "policy type onap.policies.monitoring.cdap.tca.hi.lo.appxxx:0.0.0 referenced in policy not found");
+        }).hasMessage(
+            "PolicyType version not specified, the version of the PolicyType for this policy must be specified in the "
+                + "type_version field");
 
         assertThatThrownBy(() -> {
             String badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION);

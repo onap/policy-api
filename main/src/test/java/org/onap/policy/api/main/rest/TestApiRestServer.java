@@ -317,7 +317,7 @@ public class TestApiRestServer {
         String toscaPolicy =
             ResourceUtils.getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
-        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "");
+        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 =
@@ -341,13 +341,14 @@ public class TestApiRestServer {
         String toscaPolicy =
             ResourceUtils.getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
-        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "");
+        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 = createResource(POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
-        assertThat(errorResponse.getErrorMessage()).contains("policy type NULL:1.0.0 referenced in policy not found");
+        assertThat(errorResponse.getErrorMessage())
+            .contains("policy type IDontExist:1.0.0 referenced in policy not found");
     }
 
     @Test
