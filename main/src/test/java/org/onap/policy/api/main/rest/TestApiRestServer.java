@@ -146,6 +146,8 @@ public class TestApiRestServer {
         + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS + "/versions/1";
     private static final String OPS_POLICIES_VFIREWALL_VERSION = "policytypes/"
         + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW + "/versions/1";
+    private static final String OPS_POLICIES_VCPE_VERSION_NOEX = "policytypes/"
+        + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE + "/versions/99";
     private static final String POLICIES = "policies";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
@@ -355,6 +357,8 @@ public class TestApiRestServer {
     public void testCreateOperationalPolicies() throws Exception {
         for (String resrcName : LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES) {
             Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName);
+            ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(null, errorResponse.getErrorDetails());
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
 
@@ -375,11 +379,6 @@ public class TestApiRestServer {
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = readResource(POLICYTYPES_DROOLS_VERSION, APP_JSON);
-        //
-        // PLD not sure how to fix this? How do I merge 2 policy types?
-        //
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        System.err.println(errorResponse.getErrorMessage());
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         rawResponse = createResource(POLICIES, TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_JSON);
@@ -748,6 +747,8 @@ public class TestApiRestServer {
     private void testReadOperationalPolicies(String mediaType) throws Exception {
         for (String resrcName : LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES) {
             Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName);
+            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
+            assertEquals(null, error.getErrorDetails());
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
 
@@ -791,10 +792,10 @@ public class TestApiRestServer {
     }
 
     private void testDeleteOperationalPolicy(String mediaType) throws Exception {
-        Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION, mediaType);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION_NOEX, mediaType);
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("no policy found for policy: operational.restart:1", error.getErrorMessage());
+        assertEquals("policy operational.restart:99.0.0 not found", error.getErrorMessage());
     }
 
     @Test
@@ -809,9 +810,9 @@ public class TestApiRestServer {
 
     private void testGetLatestVersionOfOperationalPolicy(String mediaType) throws Exception {
         Response rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, mediaType);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("no policy found for policy: " + OP_POLICY_NAME_VDNS + ":null", errorResponse.getErrorMessage());
+        assertEquals("policies for operational.scaleout:null do not exist", errorResponse.getErrorMessage());
     }
 
     @Test
@@ -826,9 +827,9 @@ public class TestApiRestServer {
 
     private void testGetSpecificVersionOfOperationalPolicy(String mediaType) throws Exception {
         Response rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, mediaType);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("no policy found for policy: " + OP_POLICY_NAME_VDNS + ":1", errorResponse.getErrorMessage());
+        assertEquals("policies for operational.scaleout:1.0.0 do not exist", errorResponse.getErrorMessage());
     }
 
     @Test
@@ -854,9 +855,9 @@ public class TestApiRestServer {
     @Test
     public void testDeleteSpecificVersionOfOperationalPolicy() throws Exception {
         Response rawResponse = deleteResource(OPS_POLICIES_VDNS_VERSION, APP_YAML);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), rawResponse.getStatus());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("no policy found for policy: " + OP_POLICY_NAME_VDNS + ":1", errorResponse.getErrorMessage());
+        assertEquals("policy operational.scaleout:1.0.0 not found", errorResponse.getErrorMessage());
     }
 
     private Response createResource(String endpoint, String resourceName) throws Exception {

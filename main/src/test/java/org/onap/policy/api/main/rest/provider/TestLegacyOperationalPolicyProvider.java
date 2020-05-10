@@ -75,7 +75,7 @@ public class TestLegacyOperationalPolicyProvider {
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.operational.legacy.input.json";
     private static final String POLICY_RESOURCE_WITH_NO_VERSION =
-            "policies/vDNS.policy.operational.no.policyversion.json";
+        "policies/vDNS.policy.operational.no.policyversion.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.controlloop.Operational.yaml";
     private static final String POLICY_TYPE_ID = "onap.policies.controlloop.Operational:1.0.0";
     private static final String POLICY_NAME = "operational.restart";
@@ -100,8 +100,8 @@ public class TestLegacyOperationalPolicyProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
-                Collections.emptyList(), Collections.emptyList());
+        apiParamGroup =
+            new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(), Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         operationalPolicyProvider = new LegacyOperationalPolicyProvider();
         policyTypeProvider = new PolicyTypeProvider();
@@ -125,14 +125,14 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", null);
-        }).hasMessage("no policy found for policy: dummy:null");
+        }).hasMessage("service template not found in database");
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.fetchOperationalPolicy("dummy", "dummy");
-        }).hasMessageContaining("parameter \"version\": value \"dummy.0.0\", does not match regular expression");
+        }).hasMessageContaining("service template not found in database");
 
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -141,12 +141,12 @@ public class TestLegacyOperationalPolicyProvider {
         assertNotNull(createdPolicy);
 
         LegacyOperationalPolicy firstVersion =
-                operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
+            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", "1");
         assertNotNull(firstVersion);
         assertEquals("1", firstVersion.getPolicyVersion());
 
         LegacyOperationalPolicy latestVersion =
-                operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
+            operationalPolicyProvider.fetchOperationalPolicy("operational.restart", null);
         assertNotNull(latestVersion);
         assertEquals("1", latestVersion.getPolicyVersion());
 
@@ -171,7 +171,7 @@ public class TestLegacyOperationalPolicyProvider {
         }).hasMessage("could not find policy with ID dummy and type " + POLICY_TYPE_ID + " deployed in any pdp group");
 
         try (PolicyModelsProvider databaseProvider =
-                new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
+            new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
             assertEquals(0, databaseProvider.getPdpGroups("name").size());
             assertEquals(0, databaseProvider.getFilteredPdpGroups(PdpGroupFilter.builder().build()).size());
 
@@ -191,7 +191,7 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
             pdpSubGroup.getSupportedPolicyTypes()
-                    .add(new ToscaPolicyTypeIdentifier(POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
+                .add(new ToscaPolicyTypeIdentifier(POLICY_TYPE_NAME, POLICY_TYPE_VERSION));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -203,14 +203,14 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.getPdpInstances().add(pdp);
 
             // Create Pdp Groups
-            assertEquals(123, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                    .getDesiredInstanceCount());
+            assertEquals(123,
+                databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getDesiredInstanceCount());
             assertEquals(1, databaseProvider.getPdpGroups("group").size());
 
             // Create Policy Type
             assertThatCode(() -> {
                 ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-                        .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                    .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -218,9 +218,9 @@ public class TestLegacyOperationalPolicyProvider {
             assertThatCode(() -> {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
                 LegacyOperationalPolicy policyToCreate =
-                        standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+                    standardCoder.decode(policyString, LegacyOperationalPolicy.class);
                 LegacyOperationalPolicy policyCreated =
-                        operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+                    operationalPolicyProvider.createOperationalPolicy(policyToCreate);
                 assertEquals("operational.restart", policyCreated.getPolicyId());
                 assertEquals("1", policyCreated.getPolicyVersion());
                 assertFalse(policyCreated.getContent() == null);
@@ -230,14 +230,14 @@ public class TestLegacyOperationalPolicyProvider {
             assertThatThrownBy(() -> {
                 operationalPolicyProvider.fetchDeployedOperationalPolicies(POLICY_NAME);
             }).hasMessage("could not find policy with ID " + POLICY_NAME + " and type " + POLICY_TYPE_ID
-                    + " deployed in any pdp group");
+                + " deployed in any pdp group");
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies()
-                    .add(new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
+                .add(new ToscaPolicyIdentifier(POLICY_NAME, POLICY_VERSION + LEGACY_MINOR_PATCH_SUFFIX));
             assertEquals(1,
-                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
+                databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
 
             // Test fetchDeployedPolicies
             assertThatCode(() -> {
@@ -261,10 +261,10 @@ public class TestLegacyOperationalPolicyProvider {
             LegacyOperationalPolicy policyToCreate = standardCoder.decode(policyString, LegacyOperationalPolicy.class);
             operationalPolicyProvider.createOperationalPolicy(policyToCreate);
         }).hasMessageContaining(
-                "no policy types are defined on the service template for the policies in the topology template");
+            "no policy types are defined on the service template for the policies in the topology template");
 
         ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -276,21 +276,21 @@ public class TestLegacyOperationalPolicyProvider {
 
         String defaultPolicyVersionString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_VERSION);
         LegacyOperationalPolicy defaultPolicyVersionPolicy =
-                standardCoder.decode(defaultPolicyVersionString, LegacyOperationalPolicy.class);
+            standardCoder.decode(defaultPolicyVersionString, LegacyOperationalPolicy.class);
         createdPolicy = operationalPolicyProvider.createOperationalPolicy(defaultPolicyVersionPolicy);
         assertEquals("1", createdPolicy.getPolicyVersion());
 
         assertThatCode(() -> {
             String duplicatePolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy duplicatePolicyToCreate =
-                    standardCoder.decode(duplicatePolicyString, LegacyOperationalPolicy.class);
+                standardCoder.decode(duplicatePolicyString, LegacyOperationalPolicy.class);
             operationalPolicyProvider.createOperationalPolicy(duplicatePolicyToCreate);
         }).doesNotThrowAnyException();
 
         assertThatThrownBy(() -> {
             String duplicatePolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
             LegacyOperationalPolicy duplicatePolicyToCreate =
-                    standardCoder.decode(duplicatePolicyString, LegacyOperationalPolicy.class);
+                standardCoder.decode(duplicatePolicyString, LegacyOperationalPolicy.class);
             duplicatePolicyToCreate.setContent("some other content");
             operationalPolicyProvider.createOperationalPolicy(duplicatePolicyToCreate);
         }).hasMessageContaining("INVALID:entity in incoming fragment does not equal existing entity");
@@ -305,7 +305,7 @@ public class TestLegacyOperationalPolicyProvider {
         String legacyMinorPatchSuffix = ".0.0";
 
         try (PolicyModelsProvider databaseProvider =
-                new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
+            new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
             assertEquals(0, databaseProvider.getPdpGroups("name").size());
             assertEquals(0, databaseProvider.getFilteredPdpGroups(PdpGroupFilter.builder().build()).size());
 
@@ -336,14 +336,14 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.getPdpInstances().add(pdp);
 
             // Create Pdp Groups
-            assertEquals(123, databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0)
-                    .getDesiredInstanceCount());
+            assertEquals(123,
+                databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getDesiredInstanceCount());
             assertEquals(1, databaseProvider.getPdpGroups("group").size());
 
             // Create Policy Type
             assertThatCode(() -> {
                 ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-                        .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                    .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
                 policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
             }).doesNotThrowAnyException();
 
@@ -351,9 +351,9 @@ public class TestLegacyOperationalPolicyProvider {
             assertThatCode(() -> {
                 String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
                 LegacyOperationalPolicy policyToCreate =
-                        standardCoder.decode(policyString, LegacyOperationalPolicy.class);
+                    standardCoder.decode(policyString, LegacyOperationalPolicy.class);
                 LegacyOperationalPolicy createdPolicy =
-                        operationalPolicyProvider.createOperationalPolicy(policyToCreate);
+                    operationalPolicyProvider.createOperationalPolicy(policyToCreate);
                 assertNotNull(createdPolicy);
             }).doesNotThrowAnyException();
 
@@ -361,7 +361,7 @@ public class TestLegacyOperationalPolicyProvider {
             pdpSubGroup.setPolicies(new ArrayList<>());
             pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion + legacyMinorPatchSuffix));
             assertEquals(1,
-                    databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
+                databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
             assertThatThrownBy(() -> {
                 operationalPolicyProvider.deleteOperationalPolicy(policyId, policyVersion);
             }).hasMessageContaining("policy is in use, it is deployed in PDP group group subgroup type");
@@ -383,7 +383,7 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatCode(() -> {
             ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-                    .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
             String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
@@ -392,7 +392,7 @@ public class TestLegacyOperationalPolicyProvider {
             assertNotNull(createdPolicy);
 
             LegacyOperationalPolicy deletedPolicy =
-                    operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
+                operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
             assertNotNull(deletedPolicy);
             assertEquals("operational.restart", deletedPolicy.getPolicyId());
             assertTrue(deletedPolicy.getContent().startsWith("controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20"));
@@ -400,7 +400,7 @@ public class TestLegacyOperationalPolicyProvider {
 
         assertThatThrownBy(() -> {
             operationalPolicyProvider.deleteOperationalPolicy("operational.restart", "1");
-        }).hasMessage("no policy found for policy: operational.restart:1");
+        }).hasMessage("no policies found");
 
         assertThatCode(() -> {
             policyTypeProvider.deletePolicyType("onap.policies.controlloop.Operational", "1.0.0");
