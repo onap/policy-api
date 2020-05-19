@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "762ede11_4038b1ef",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/etc/defaultConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-05-19T18:20:01Z",
+      "side": 1,
+      "message": "trailing space",
+      "revId": "ea7568bd7d81dd712914cf54a52089773111a9f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
