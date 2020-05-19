@@ -31,4 +31,4 @@ else
     echo "MariaDB IP: ${MARIADB}"
 fi
 
-docker run -p 9090:9090 -p 6969:6969 -e "API_HOST=${API}" -v ${DIR}/config/api/bin/policy-api.sh:/opt/app/policy/api/bin/policy-api.sh -v ${DIR}/config/api/etc/defaultConfig.json:/opt/app/policy/api/etc/defaultConfig.json --add-host mariadb:${MARIADB} --name policy-api -d --rm nexus3.onap.org:10001/onap/policy-api:2.1.1-SNAPSHOT
+docker run -p 9090:9090 -p 6969:6969 -e "API_HOST=${API}" -v ${DIR}/config/api/bin/policy-api.sh:/opt/app/policy/api/bin/policy-api.sh -v ${DIR}/config/api/etc/defaultConfig.json:/opt/app/policy/api/etc/defaultConfig.json --add-host mariadb:${MARIADB} --name policy-api -d --rm nexus3.onap.org:10001/onap/policy-api:2.2-SNAPSHOT-latest
