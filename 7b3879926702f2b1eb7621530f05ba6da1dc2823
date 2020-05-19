@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cdcef0a_df309609",
+        "filename": "releases/2.2.4.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-05-19T18:05:13Z",
+      "side": 1,
+      "message": "add this line (the tagging will happen in the docker container release)\ntag_release: false",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "7b3879926702f2b1eb7621530f05ba6da1dc2823",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
