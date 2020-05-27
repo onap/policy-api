@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.1.3'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-elalto/8'
+ref: 79804d86d71a710a2140f2330a65f15536f6a04a
+containers:
+    - name: 'policy-api'
+      version: '2.1.3-20200527T1303'
