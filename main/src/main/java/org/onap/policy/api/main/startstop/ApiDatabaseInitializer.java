@@ -114,7 +114,8 @@ public class ApiDatabaseInitializer {
         for (String entity : entities) {
             String entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
             if (entityAsStringYaml == null) {
-                throw new PolicyApiException("Preloading entity cannot be found: " + entity);
+                LOGGER.warn("Preloading entity cannot be found: " + entity);
+                continue;
             }
 
             ToscaServiceTemplate singleEntity =
