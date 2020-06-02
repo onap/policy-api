@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "368cda6b_85e69c05",
+        "filename": "postman/lifecycle-api-collection.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-06-02T21:51:52Z",
+      "side": 1,
+      "message": "Removed tabs manually, they are added by postman export.\nYes, the file will be linked in .rst file.",
+      "parentUuid": "6c4d357e_105c59c0",
+      "revId": "94b6ce1f8c917d8fe7888416455a649ea07e0adf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bed83086_a61636e5",
         "filename": "postman/lifecycle-api-collection.json",
         "patchSetId": 1
@@ -48,6 +66,24 @@
       "writtenOn": "2020-06-02T12:00:00Z",
       "side": 1,
       "message": "Could we have a parameter here to avoid a clear password ?",
+      "revId": "94b6ce1f8c917d8fe7888416455a649ea07e0adf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffc5fbe9_b5aa2ba8",
+        "filename": "postman/lifecycle-api-collection.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-06-02T21:51:52Z",
+      "side": 1,
+      "message": "Done, moved the authorization from individual test cases to collection level. \nAlso, added variable in collection for USER \u0026 PASSWORD.",
+      "parentUuid": "bed83086_a61636e5",
       "revId": "94b6ce1f8c917d8fe7888416455a649ea07e0adf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
