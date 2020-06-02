@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74068098_c626239e",
+        "filename": "postman/lifecycle-api-collection.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-06-02T02:29:56Z",
+      "side": 1,
+      "message": "tabs ? general\nDoes it need a link in the .rst to point to this file?",
+      "revId": "94b6ce1f8c917d8fe7888416455a649ea07e0adf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
