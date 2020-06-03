@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d48a630_d8ee2ff9",
+        "filename": "postman/lifecycle-api-collection.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 5658
+      },
+      "writtenOn": "2020-06-03T02:15:20Z",
+      "side": 1,
+      "message": "Same comment as the one made for pap collection.",
+      "revId": "dd1911fec6339dc3606f47b129f482341d105a3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
