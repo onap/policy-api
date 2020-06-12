@@ -155,14 +155,14 @@ public class TestApiRestServer {
     // @formatter:off
     private static final String[] TOSCA_POLICY_RESOURCE_NAMES = {
         "policies/vCPE.policy.monitoring.input.tosca.json",
-        "policies/vCPE.policy.monitoring.input.tosca.v2.yaml",
+        "policies/vCPE.policy.monitoring.input.tosca.yaml",
         "policies/vDNS.policy.monitoring.input.tosca.json",
-        "policies/vDNS.policy.monitoring.input.tosca.v2.yaml"
+        "policies/vDNS.policy.monitoring.input.tosca.yaml"
     };
 
     private static final String[] TOSCA_POLICIES_RESOURCE_NAMES = {
         "policies/vCPE.policies.optimization.input.tosca.json",
-        "policies/vCPE.policies.optimization.input.tosca.v2.yaml"
+        "policies/vCPE.policies.optimization.input.tosca.yaml"
     };
 
     private static final String TOSCA_POLICYTYPE_OP_RESOURCE =
