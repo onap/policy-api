@@ -162,7 +162,7 @@ public class TestApiRestServer {
 
     private static final String[] TOSCA_POLICIES_RESOURCE_NAMES = {
         "policies/vCPE.policies.optimization.input.tosca.json",
-        "policies/vCPE.policies.optimization.input.tosca.v2.yaml"
+        "policies/vCPE.policies.optimization.input.tosca.yaml"
     };
 
     private static final String TOSCA_POLICYTYPE_OP_RESOURCE =
