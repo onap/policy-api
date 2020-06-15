@@ -23,10 +23,7 @@
 JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
 POLICY_API_HOME=/opt/app/policy/api
 KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
-KEYSTORE_PASSWD="Pol1cy_0nap"
 TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
-TRUSTSTORE_PASSWD="Pol1cy_0nap"
-
 
 if [ "$#" -ge 1 ]; then
     CONFIG_FILE=$1
@@ -40,4 +37,4 @@ fi
 
 echo "Policy api config file: $CONFIG_FILE"
 
-$JAVA_HOME/bin/java -cp "$POLICY_API_HOME/etc:$POLICY_API_HOME/lib/*" -Dlogback.configurationFile=$POLICY_API_HOME/etc/logback.xml -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="$KEYSTORE_PASSWD" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="$TRUSTSTORE_PASSWD" -Dcom.sun.management.jmxremote.rmi.port=9090 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9090 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=$API_HOST org.onap.policy.api.main.startstop.Main -c $CONFIG_FILE
+$JAVA_HOME/bin/java -cp "$POLICY_API_HOME/etc:$POLICY_API_HOME/lib/*" -Dlogback.configurationFile=$POLICY_API_HOME/etc/logback.xml -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD:-Pol1cy_0nap}" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}" -Dcom.sun.management.jmxremote.rmi.port=9090 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9090 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=$API_HOST org.onap.policy.api.main.startstop.Main -c $CONFIG_FILE
