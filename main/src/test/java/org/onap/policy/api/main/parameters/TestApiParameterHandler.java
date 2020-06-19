@@ -28,7 +28,6 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;

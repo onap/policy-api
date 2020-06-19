@@ -30,7 +30,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Base64;
 import java.util.Collections;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

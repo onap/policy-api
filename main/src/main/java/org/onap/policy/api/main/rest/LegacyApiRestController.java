@@ -93,7 +93,7 @@ public class LegacyApiRestController extends CommonRestController {
                         description = "Used only to communicate an API's latest version", response = String.class),
                 @ResponseHeader(name = "X-ONAP-RequestID",
                         description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                         @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -143,7 +143,7 @@ public class LegacyApiRestController extends CommonRestController {
                         description = "Used only to communicate an API's latest version", response = String.class),
                 @ResponseHeader(name = "X-ONAP-RequestID",
                         description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                         @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -193,7 +193,7 @@ public class LegacyApiRestController extends CommonRestController {
                         description = "Used only to communicate an API's latest version", response = String.class),
                 @ResponseHeader(name = "X-ONAP-RequestID",
                         description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy", },
             extensions = {@Extension(name = "interface info",
                     properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                         @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -227,7 +227,7 @@ public class LegacyApiRestController extends CommonRestController {
     @Path("/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies")
     @ApiOperation(value = "Create a new operational policy",
             notes = "Client should provide entity body of the new operational policy",
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy", },
             response = LegacyOperationalPolicy.class,
             responseHeaders = {
                     @ResponseHeader(name = "X-MinorVersion",
@@ -290,7 +290,7 @@ public class LegacyApiRestController extends CommonRestController {
             + "policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a specified operational policy",
             notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
-            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy",},
+            authorizations = @Authorization(value = "basicAuth"), tags = {"Legacy Operational Policy", },
             response = LegacyOperationalPolicy.class,
             responseHeaders = {
                 @ResponseHeader(name = "X-MinorVersion",

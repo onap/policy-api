@@ -37,9 +37,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
-
 import java.util.UUID;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -51,7 +49,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
@@ -115,7 +112,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -152,7 +149,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -190,7 +187,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -236,7 +233,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -284,7 +281,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -332,7 +329,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -365,7 +362,7 @@ public class ApiRestController extends CommonRestController {
     @POST
     @Path("/policytypes")
     @ApiOperation(value = "Create a new policy type", notes = "Client should provide TOSCA body of the new policy type",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         response = ToscaServiceTemplate.class,
         responseHeaders = {
             @ResponseHeader(name = "X-MinorVersion",
@@ -421,7 +418,7 @@ public class ApiRestController extends CommonRestController {
         notes = "Rule 1: pre-defined policy types cannot be deleted;"
             + "Rule 2: policy types that are in use (parameterized by a TOSCA policy) cannot be deleted."
             + "The parameterizing TOSCA policies must be deleted first;",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
         response = ToscaServiceTemplate.class,
         responseHeaders = {
             @ResponseHeader(name = "X-MinorVersion",
@@ -549,7 +546,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
         extensions = {
             @Extension(name = "interface info", properties = {
                 @ExtensionProperty(name = "api-version", value = "1.0.0"),
@@ -614,7 +611,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
         extensions = {
             @Extension(name = "interface info", properties = {
                 @ExtensionProperty(name = "api-version", value = "1.0.0"),
@@ -678,7 +675,7 @@ public class ApiRestController extends CommonRestController {
                 response = String.class),
             @ResponseHeader(name = "X-ONAP-RequestID",
                 description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
         extensions = {
             @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
                 @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
@@ -721,7 +718,8 @@ public class ApiRestController extends CommonRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(value = "Create a new policy for a policy type version",
         notes = "Client should provide TOSCA body of the new policy",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",}, response = ToscaServiceTemplate.class,
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            response = ToscaServiceTemplate.class,
         responseHeaders = {
             @ResponseHeader(name = "X-MinorVersion",
                 description = "Used to request or communicate a MINOR version back from the client"
@@ -778,7 +776,8 @@ public class ApiRestController extends CommonRestController {
     @Path("/policies")
     @ApiOperation(value = "Create one or more new policies",
         notes = "Client should provide TOSCA body of the new polic(ies)",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",}, response = ToscaServiceTemplate.class,
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            response = ToscaServiceTemplate.class,
         responseHeaders = {
             @ResponseHeader(name = "X-MinorVersion",
                 description = "Used to request or communicate a MINOR version back from the client"
@@ -834,7 +833,8 @@ public class ApiRestController extends CommonRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a policy",
         notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy",}, response = ToscaServiceTemplate.class,
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            response = ToscaServiceTemplate.class,
         responseHeaders = {
             @ResponseHeader(name = "X-MinorVersion",
                 description = "Used to request or communicate a MINOR version back from the client"
