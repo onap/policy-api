@@ -35,8 +35,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
@@ -79,8 +77,8 @@ public class ApiDatabaseInitializer {
             }
 
             ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
-            serviceTemplate.setDataTypes(new LinkedHashMap<String, ToscaDataType>());
-            serviceTemplate.setPolicyTypes(new LinkedHashMap<String, ToscaPolicyType>());
+            serviceTemplate.setDataTypes(new LinkedHashMap<>());
+            serviceTemplate.setPolicyTypes(new LinkedHashMap<>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_1_0");
 
             ToscaServiceTemplate createdPolicyTypes = preloadServiceTemplate(serviceTemplate,
@@ -114,7 +112,7 @@ public class ApiDatabaseInitializer {
         for (String entity : entities) {
             String entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
             if (entityAsStringYaml == null) {
-                LOGGER.warn("Preloading entity cannot be found: " + entity);
+                LOGGER.warn("Preloading entity cannot be found: {}", entity);
                 continue;
             }
 

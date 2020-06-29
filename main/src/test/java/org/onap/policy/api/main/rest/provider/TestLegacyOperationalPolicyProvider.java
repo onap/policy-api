@@ -26,7 +26,6 @@ package org.onap.policy.api.main.rest.provider;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -222,7 +221,7 @@ public class TestLegacyOperationalPolicyProvider {
                     operationalPolicyProvider.createOperationalPolicy(policyToCreate);
                 assertEquals("operational.restart", policyCreated.getPolicyId());
                 assertEquals("1", policyCreated.getPolicyVersion());
-                assertFalse(policyCreated.getContent() == null);
+                assertNotNull(policyCreated.getContent());
             }).doesNotThrowAnyException();
 
             // Test fetchDeployedPolicies (deployedPolicyMap.isEmpty())==true

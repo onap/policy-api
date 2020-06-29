@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -51,14 +52,14 @@ public class TestMain {
     public void testMain_NoArguments() {
         final String[] apiConfigParameters = {};
         final Main main = new Main(apiConfigParameters);
-        assertTrue(main.getParameters() == null);
+        assertNull(main.getParameters());
     }
 
     @Test
     public void testMain_InvalidArguments() {
         final String[] apiConfigParameters = {"parameters/ApiConfigParameters.json"};
         final Main main = new Main(apiConfigParameters);
-        assertTrue(main.getParameters() == null);
+        assertNull(main.getParameters());
     }
 
     @Test
@@ -71,6 +72,6 @@ public class TestMain {
     public void testMain_InvalidParameters() {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidName.json"};
         final Main main = new Main(apiConfigParameters);
-        assertTrue(main.getParameters() == null);
+        assertNull(main.getParameters());
     }
 }
