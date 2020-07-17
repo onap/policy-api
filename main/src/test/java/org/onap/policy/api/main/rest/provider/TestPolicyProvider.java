@@ -140,6 +140,42 @@ public class TestPolicyProvider {
         assertThatThrownBy(() -> {
             policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0", null);
         }).hasMessage("service template not found in database");
+
+        assertThatThrownBy(() -> {
+            policyProvider.fetchPolicies(null, null, "dummy", "1.0.0", null);
+        }).hasMessage("service template not found in database");
+    }
+
+    @Test
+    public void testFetchSpecificVersionOfPolicy() {
+        String policyTypeVersion = "1.0.0";
+        String policyTypeId = "onap.policies.monitoring.cdap.tca.hi.lo.app";
+
+        // Create Policy Type
+        assertThatCode(() -> {
+            ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
+                .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+            policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        }).doesNotThrowAnyException();
+
+        // Create Policy
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            ToscaServiceTemplate policyServiceTemplate =
+                standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.createPolicy(policyTypeId, policyTypeVersion, policyServiceTemplate);
+            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        // Test fetch specific policy
+        assertThatCode(() -> {
+            policyProvider.fetchPolicies(null,  null, "onap.restart.tca", "1.0.0", null);
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            policyProvider.fetchPolicies(null,  null, "onap.restart.tca", "2.0.0", null);
+        }).hasMessageContaining("policies for onap.restart.tca:2.0.0 do not exist");
     }
 
     @Test
@@ -410,6 +446,25 @@ public class TestPolicyProvider {
 
         assertThatThrownBy(() -> {
             policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca",
+                "1.0.0");
+        }).hasMessageContaining("no policies found");
+
+        assertThatCode(() -> {
+            String policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+            ToscaServiceTemplate policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate = policyProvider
+                .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
+            ToscaServiceTemplate serviceTemplate = policyProvider
+                .deletePolicy(null, null, "onap.restart.tca", "1.0.0");
+            assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
+        }).doesNotThrowAnyException();
+
+        assertThatThrownBy(() -> {
+            policyProvider.deletePolicy(null, null, "onap.restart.tca",
                 "1.0.0");
         }).hasMessageContaining("no policies found");
     }
