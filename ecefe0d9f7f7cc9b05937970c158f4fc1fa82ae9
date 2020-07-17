@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0715a98b_e888e516",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-07-17T17:04:19Z",
+      "side": 1,
+      "message": "better to use assertj which has nice methods such as hasSize() \u003e 0\nyou are negating a negative",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 95
+      },
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65b9b3de_ca2c581f",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
         "patchSetId": 5
@@ -13,6 +36,24 @@
       "writtenOn": "2020-07-17T16:18:58Z",
       "side": 1,
       "message": "sonar may ask to remove the \"{\" and \"}\"",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ef8fcca_bddd3dde",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-07-17T17:04:19Z",
+      "side": 1,
+      "message": "agree",
+      "parentUuid": "65b9b3de_ca2c581f",
       "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
