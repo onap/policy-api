@@ -5,6 +5,7 @@
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +38,8 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
+import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -49,6 +52,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
@@ -90,6 +94,42 @@ public class ApiRestController extends CommonRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestController.class);
 
+    private static final String ERROR_MESSAGE_NO_POLICIES_FOUND = "No policies found";
+
+    private static final String EXTENSION_NAME = "interface info";
+
+    private static final String API_VERSION_NAME = "api-version";
+    private static final String API_VERSION = "1.0.0";
+
+    private static final String LAST_MOD_NAME = "last-mod-release";
+
+    private static final String AUTHORIZATION_TYPE = "basicAuth";
+
+    private static final String VERSION_MINOR_NAME = "X-MinorVersion";
+    private static final String VERSION_MINOR_DESCRIPTION =
+        "Used to request or communicate a MINOR version back from the client"
+            + " to the server, and from the server back to the client";
+
+    private static final String VERSION_PATCH_NAME = "X-PatchVersion";
+    private static final String VERSION_PATCH_DESCRIPTION = "Used only to communicate a PATCH version in a response for"
+        + " troubleshooting purposes only, and will not be provided by" + " the client on request";
+
+    private static final String VERSION_LATEST_NAME = "X-LatestVersion";
+    private static final String VERSION_LATEST_DESCRIPTION = "Used only to communicate an API's latest version";
+
+    private static final String REQUEST_ID_NAME = "X-ONAP-RequestID";
+    private static final String REQUEST_ID_HDR_DESCRIPTION = "Used to track REST transactions for logging purpose";
+    private static final String REQUEST_ID_PARAM_DESCRIPTION = "RequestID for http transaction";
+
+    private static final String AUTHENTICATION_ERROR_MESSAGE = "Authentication Error";
+    private static final String AUTHORIZATION_ERROR_MESSAGE = "Authorization Error";
+    private static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
+    private static final String NOT_FOUND_MESSAGE = "Resource Not Found";
+    private static final String INVALID_BODY_MESSAGE = "Invalid Body";
+    private static final String INVALID_PAYLOAD_MESSAGE = "Not Acceptable Payload";
+    private static final String HTTP_CONFLICT_MESSAGE = "Delete Conflict, Rule Violation";
+
+
     /**
      * Retrieves the healthcheck status of the API component.
      *
@@ -100,27 +140,27 @@ public class ApiRestController extends CommonRestController {
     @ApiOperation(value = "Perform a system healthcheck", notes = "Returns healthy status of the Policy API component",
         response = HealthCheckReport.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"HealthCheck", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"HealthCheck", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response
-        getHealthCheck(@HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        getHealthCheck(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
         return makeOkResponse(requestId, new HealthCheckProvider().performHealthCheck());
@@ -137,27 +177,27 @@ public class ApiRestController extends CommonRestController {
         notes = "Returns current statistics including the counters of API invocation",
         response = StatisticsReport.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Statistics", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Statistics", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response
-        getStatistics(@HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        getStatistics(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
 
@@ -175,34 +215,34 @@ public class ApiRestController extends CommonRestController {
         notes = "Returns a list of existing policy types stored in Policy Framework",
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response
-        getAllPolicyTypes(@HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        getAllPolicyTypes(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes", pfme);
+            LOGGER.warn("GET /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -221,36 +261,36 @@ public class ApiRestController extends CommonRestController {
         notes = "Returns a list of all available versions for the specified policy type",
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response getAllVersionsOfPolicyType(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}", policyTypeId, pfme);
+            LOGGER.warn("GET /policytypes/{}", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -269,37 +309,37 @@ public class ApiRestController extends CommonRestController {
     @ApiOperation(value = "Retrieve one particular version of a policy type",
         notes = "Returns a particular version for the specified policy type", response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response getSpecificVersionOfPolicyType(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
+            LOGGER.warn("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -317,36 +357,36 @@ public class ApiRestController extends CommonRestController {
     @ApiOperation(value = "Retrieve latest version of a policy type",
         notes = "Returns latest version for the specified policy type", response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response getLatestVersionOfPolicyType(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
+            LOGGER.warn("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -362,32 +402,32 @@ public class ApiRestController extends CommonRestController {
     @POST
     @Path("/policytypes")
     @ApiOperation(value = "Create a new policy type", notes = "Client should provide TOSCA body of the new policy type",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid Body"),
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 406, message = "Not Acceptable Payload"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response createPolicyType(
         @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
@@ -398,7 +438,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policytypes", pfme);
+            LOGGER.warn("POST /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.POST);
             return makeErrorResponse(requestId, pfme);
         }
@@ -418,39 +458,41 @@ public class ApiRestController extends CommonRestController {
         notes = "Rule 1: pre-defined policy types cannot be deleted;"
             + "Rule 2: policy types that are in use (parameterized by a TOSCA policy) cannot be deleted."
             + "The parameterizing TOSCA policies must be deleted first;",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"PolicyType", },
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 409, message = "Delete Conflict, Rule Violation"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response deleteSpecificVersionOfPolicyType(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
+            LOGGER.warn("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.DELETE);
             return makeErrorResponse(requestId, pfme);
         }
     }
@@ -463,7 +505,6 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    // @formatter:off
     @GET
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(
@@ -471,37 +512,35 @@ public class ApiRestController extends CommonRestController {
         notes = "Returns a list of all versions of specified policy created for the specified policy type version",
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy,"},
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy,"},
         extensions = {
-            @Extension(name = "interface info", properties = {
-                @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")
             })
         }
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
     public Response getAllPolicies(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
@@ -512,12 +551,11 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
+            LOGGER.warn("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
     }
-    // @formatter:on
 
     /**
      * Retrieves all versions of a particular policy.
@@ -528,44 +566,41 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    // @formatter:off
     @GET
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}")
     @ApiOperation(value = "Retrieve all version details of a policy created for a particular policy type version",
         notes = "Returns a list of all version details of the specified policy", response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
         extensions = {
-            @Extension(name = "interface info", properties = {
-                @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")
             })
         }
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
     public Response getAllVersionsOfPolicy(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
         @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
@@ -575,12 +610,11 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId, pfme);
+            LOGGER.warn("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
     }
-    // @formatter:on
 
     /**
      * Retrieves the specified version of a particular policy.
@@ -592,38 +626,35 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    // @formatter:off
     @GET
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a policy created for a particular policy type version",
         notes = "Returns a particular version of specified policy created for the specified policy type version",
         response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
         extensions = {
-            @Extension(name = "interface info", properties = {
-                @ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")
             })
         }
     )
     @ApiResponses(value = {
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
     public Response getSpecificVersionOfPolicy(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
@@ -631,7 +662,7 @@ public class ApiRestController extends CommonRestController {
             required = true) String policyTypeVersion,
         @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
         @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
@@ -641,13 +672,12 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
+            LOGGER.warn("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
                 policyId, policyVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
     }
-    // @formatter:on
 
     /**
      * Retrieves the latest version of a particular policy.
@@ -663,32 +693,32 @@ public class ApiRestController extends CommonRestController {
     @ApiOperation(value = "Retrieve the latest version of a particular policy",
         notes = "Returns the latest version of specified policy", response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response getLatestVersionOfPolicy(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
         @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @QueryParam("mode") @ApiParam("Fetch mode for policies, TERSE for bare policies (default), "
             + "REFERENCED for fully referenced policies") PolicyFetchMode mode) {
 
@@ -698,7 +728,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
+            LOGGER.warn("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
                 policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
@@ -718,35 +748,35 @@ public class ApiRestController extends CommonRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(value = "Create a new policy for a policy type version",
         notes = "Client should provide TOSCA body of the new policy",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
             response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid Body"),
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 406, message = "Not Acceptable Payload"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response createPolicy(
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
 
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
@@ -759,61 +789,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
-            return makeErrorResponse(requestId, pfme);
-        }
-    }
-
-    /**
-     * Creates one or more new policies in one call.
-     *
-     * @param body the body of policy following TOSCA definition
-     *
-     * @return the Response object containing the results of the API operation
-     */
-    @POST
-    @Path("/policies")
-    @ApiOperation(value = "Create one or more new policies",
-        notes = "Client should provide TOSCA body of the new polic(ies)",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
-            response = ToscaServiceTemplate.class,
-        responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
-                response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
-                response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
-                response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
-        extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "El Alto")})})
-    @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid Body"),
-        @ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 406, message = "Not Acceptable Payload"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
-    public Response createPolicies(
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
-        @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
-
-        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
-            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
-        }
-
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
-            ToscaServiceTemplate serviceTemplate = policyProvider.createPolicies(body);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
-            return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policies", pfme);
+            LOGGER.warn("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
             return makeErrorResponse(requestId, pfme);
         }
@@ -833,47 +809,270 @@ public class ApiRestController extends CommonRestController {
     @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a policy",
         notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
-        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
-            response = ToscaServiceTemplate.class,
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
+        response = ToscaServiceTemplate.class,
         responseHeaders = {
-            @ResponseHeader(name = "X-MinorVersion",
-                description = "Used to request or communicate a MINOR version back from the client"
-                    + " to the server, and from the server back to the client",
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-PatchVersion",
-                description = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
                 response = String.class),
-            @ResponseHeader(name = "X-ONAP-RequestID",
-                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
         extensions = {
-            @Extension(name = "interface info", properties = {@ExtensionProperty(name = "api-version", value = "1.0.0"),
-                @ExtensionProperty(name = "last-mod-release", value = "Dublin")})})
-    @ApiResponses(value = {@ApiResponse(code = 401, message = "Authentication Error"),
-        @ApiResponse(code = 403, message = "Authorization Error"),
-        @ApiResponse(code = 404, message = "Resource Not Found"),
-        @ApiResponse(code = 409, message = "Delete Conflict, Rule Violation"),
-        @ApiResponse(code = 500, message = "Internal Server Error")})
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Dublin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
     public Response deleteSpecificVersionOfPolicy(
         @PathParam("policyTypeId") @ApiParam(value = "PolicyType ID", required = true) String policyTypeId,
         @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
         @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
         @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId) {
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
         try (PolicyProvider policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
+            LOGGER.warn("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
                 policyId, policyVersion, pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.DELETE);
             return makeErrorResponse(requestId, pfme);
         }
     }
+
+    /**
+     * Retrieves all the available policies.
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    @GET
+    @Path("/policies")
+    @ApiOperation(value = "Retrieve all versions of available policies",
+        notes = "Returns all version of available policies",
+        response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
+        extensions = {
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Guilin")
+            })
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
+    })
+    public Response getPolicies(
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
+            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
+    ) {
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.fetchPolicies(null, null, null, null, mode);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.warn("GET /policies/ --", pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
+            if (pfme.getErrorResponse().getResponseCode().equals(Status.NOT_FOUND)) {
+                pfme.getErrorResponse().setErrorMessage(ERROR_MESSAGE_NO_POLICIES_FOUND);
+                pfme.getErrorResponse().setErrorDetails(List.of(ERROR_MESSAGE_NO_POLICIES_FOUND));
+            }
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+
+    /**
+     * Retrieves the specified version of a particular policy.
+     *
+     * @param policyId the Name of specified policy
+     * @param policyVersion the version of specified policy
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    @GET
+    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @ApiOperation(value = "Retrieve specific version of a specified policy",
+        notes = "Returns a particular version of specified policy",
+        response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
+        extensions = {
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Guilin")
+            })
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
+    })
+    public Response getSpecificPolicy(
+        @PathParam("policyId") @ApiParam(value = "Name of policy", required = true) String policyId,
+        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
+            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
+    ) {
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.warn("GET /policies/{}/versions/{}", policyId, policyVersion, pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+
+    /**
+     * Creates one or more new policies in one call.
+     *
+     * @param body the body of policy following TOSCA definition
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    @POST
+    @Path("/policies")
+    @ApiOperation(value = "Create one or more new policies",
+        notes = "Client should provide TOSCA body of the new polic(ies)",
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
+            response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        extensions = {
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "El Alto")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
+    public Response createPolicies(
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
+
+        if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
+            NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
+        }
+
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate = policyProvider.createPolicies(body);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.warn("POST /policies", pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+
+    /**
+     * Deletes the specified version of a particular policy.
+     *
+     * @param policyId the ID of specified policy
+     * @param policyVersion the version of specified policy
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    @DELETE
+    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @ApiOperation(value = "Delete a particular version of a policy",
+        notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
+        response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
+        extensions = {
+            @Extension(name = EXTENSION_NAME, properties = {
+                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                @ExtensionProperty(name = LAST_MOD_NAME, value = "Guilin")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
+        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
+    public Response deleteSpecificPolicy(
+        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.deletePolicy(null, null, policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.warn("DELETE /policies/{}/versions/{}", policyId, policyVersion, pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.DELETE);
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+
+
 
     private enum Target {
         POLICY,
@@ -888,7 +1087,8 @@ public class ApiRestController extends CommonRestController {
 
     private enum HttpMethod {
         POST,
-        GET
+        GET,
+        DELETE
     }
 
     private void updateApiStatisticsCounter(Target target, Result result, HttpMethod http) {
@@ -910,48 +1110,92 @@ public class ApiRestController extends CommonRestController {
 
     private void updatePolicyStats(Result result, HttpMethod http) {
         if (result == Result.SUCCESS) {
-            if (http == HttpMethod.GET) {
-                ApiStatisticsManager.updateApiCallSuccessCount();
-                ApiStatisticsManager.updateTotalPolicyGetCount();
-                ApiStatisticsManager.updatePolicyGetSuccessCount();
-            } else if (http == HttpMethod.POST) {
-                ApiStatisticsManager.updateApiCallSuccessCount();
-                ApiStatisticsManager.updateTotalPolicyPostCount();
-                ApiStatisticsManager.updatePolicyPostSuccessCount();
+            switch (http) {
+                case GET:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyGetCount();
+                    ApiStatisticsManager.updatePolicyGetSuccessCount();
+                    break;
+                case POST:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyPostCount();
+                    ApiStatisticsManager.updatePolicyPostSuccessCount();
+                    break;
+                case DELETE:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyDeleteCount();
+                    ApiStatisticsManager.updatePolicyDeleteSuccessCount();
+                    break;
+                default:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    break;
             }
         } else {
-            if (http == HttpMethod.GET) {
-                ApiStatisticsManager.updateApiCallFailureCount();
-                ApiStatisticsManager.updateTotalPolicyGetCount();
-                ApiStatisticsManager.updatePolicyGetFailureCount();
-            } else {
-                ApiStatisticsManager.updateApiCallFailureCount();
-                ApiStatisticsManager.updateTotalPolicyPostCount();
-                ApiStatisticsManager.updatePolicyPostFailureCount();
+            switch (http) {
+                case GET:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyGetCount();
+                    ApiStatisticsManager.updatePolicyGetFailureCount();
+                    break;
+                case POST:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyPostCount();
+                    ApiStatisticsManager.updatePolicyPostFailureCount();
+                    break;
+                case DELETE:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyDeleteCount();
+                    ApiStatisticsManager.updatePolicyDeleteFailureCount();
+                    break;
+                default:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    break;
             }
         }
     }
 
     private void updatePolicyTypeStats(Result result, HttpMethod http) {
         if (result == Result.SUCCESS) {
-            if (http == HttpMethod.GET) {
-                ApiStatisticsManager.updateApiCallSuccessCount();
-                ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
-            } else if (http == HttpMethod.POST) {
-                ApiStatisticsManager.updateApiCallSuccessCount();
-                ApiStatisticsManager.updatePolicyTypePostSuccessCount();
-                ApiStatisticsManager.updatePolicyTypePostSuccessCount();
+            switch (http) {
+                case GET:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
+                    ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
+                    break;
+                case POST:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyTypePostCount();
+                    ApiStatisticsManager.updatePolicyTypePostSuccessCount();
+                    break;
+                case DELETE:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    ApiStatisticsManager.updateTotalPolicyTypeDeleteCount();
+                    ApiStatisticsManager.updatePolicyTypeDeleteSuccessCount();
+                    break;
+                default:
+                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    break;
             }
         } else {
-            if (http == HttpMethod.GET) {
-                ApiStatisticsManager.updateApiCallFailureCount();
-                ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                ApiStatisticsManager.updatePolicyTypeGetFailureCount();
-            } else {
-                ApiStatisticsManager.updateApiCallFailureCount();
-                ApiStatisticsManager.updateTotalPolicyTypePostCount();
-                ApiStatisticsManager.updatePolicyTypePostFailureCount();
+            switch (http) {
+                case GET:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
+                    ApiStatisticsManager.updatePolicyTypeGetFailureCount();
+                    break;
+                case POST:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyTypePostCount();
+                    ApiStatisticsManager.updatePolicyTypePostFailureCount();
+                    break;
+                case DELETE:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    ApiStatisticsManager.updateTotalPolicyTypeDeleteCount();
+                    ApiStatisticsManager.updatePolicyTypeDeleteFailureCount();
+                    break;
+                default:
+                    ApiStatisticsManager.updateApiCallFailureCount();
+                    break;
             }
         }
     }
