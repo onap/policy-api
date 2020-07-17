@@ -585,6 +585,67 @@ public class ApiRestController extends CommonRestController {
     /**
      * Retrieves the specified version of a particular policy.
      *
+     * @param policyId the ID of specified policy
+     * @param policyVersion the version of specified policy
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    // @formatter:off
+    @GET
+    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @ApiOperation(value = "Retrieve one version of a policy",
+        notes = "Returns a particular version of specified policy",
+        response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = "X-MinorVersion",
+                description = "Used to request or communicate a MINOR version back from the client"
+                    + " to the server, and from the server back to the client",
+                response = String.class),
+            @ResponseHeader(name = "X-PatchVersion",
+                description = "Used only to communicate a PATCH version in a response for"
+                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+                response = String.class),
+            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+                response = String.class),
+            @ResponseHeader(name = "X-ONAP-RequestID",
+                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+        extensions = {
+            @Extension(name = "interface info", properties = {
+                @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                @ExtensionProperty(name = "last-mod-release", value = "Guilin")
+            })
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 401, message = "Authentication Error"),
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 404, message = "Resource Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Response getSpecificVersionOfPolicy(
+        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
+            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
+    ) {
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.debug("GET /policies/{}/versions/{}", policyId, policyVersion, pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+    // @formatter:on
+
+    /**
+     * Retrieves the specified version of a particular policy.
+     *
      * @param policyTypeId the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
      * @param policyId the ID of specified policy

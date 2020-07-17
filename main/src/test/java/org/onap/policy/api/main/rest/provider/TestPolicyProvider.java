@@ -140,6 +140,10 @@ public class TestPolicyProvider {
         assertThatThrownBy(() -> {
             policyProvider.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0", null);
         }).hasMessage("service template not found in database");
+
+        assertThatThrownBy(() -> {
+            policyProvider.fetchPolicies(null, null, "dummy", "1.0.0", null);
+        }).hasMessage("service template not found in database");
     }
 
     @Test
