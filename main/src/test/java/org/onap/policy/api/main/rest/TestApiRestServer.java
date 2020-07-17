@@ -3,6 +3,7 @@
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ *  Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +48,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.AfterClass;
@@ -197,6 +199,8 @@ public class TestApiRestServer {
         "policies/vCPE.policy.operational.legacy.input.json", "policies/vDNS.policy.operational.legacy.input.json",
         "policies/vFirewall.policy.operational.legacy.input.json"};
 
+    private static final String POLICIES_VCPE_VERSION1 = "policies/onap.restart.tca/versions/1.0.0";
+
     private static PolicyModelsProviderParameters providerParams;
     private static ApiParameterGroup apiParamGroup;
     private static PolicyProvider policyProvider;
@@ -335,6 +339,7 @@ public class TestApiRestServer {
             .getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
         toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "IDontExist");
+        toscaPolicy = toscaPolicy.replaceAll("onap.restart.tca", "onap.restart.tca.IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 = createResource(POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
@@ -835,6 +840,92 @@ public class TestApiRestServer {
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("policy operational.scaleout:1.0.0 not found", errorResponse.getErrorMessage());
     }
+
+    @Test
+    public void testGetPoliciesJson() throws Exception {
+        getPolicies(APP_JSON);
+    }
+
+    @Test
+    public void testGetPoliciesYaml() throws Exception {
+        getPolicies(APP_YAML);
+    }
+
+    private void getPolicies(String mediaType) throws Exception {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertThat(response).isNotNull();
+            assertThat(response.getPolicyTypes()).isNotEmpty();
+        }
+        for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+        }
+        Response rawResponse = readResource(POLICIES, mediaType);
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+        ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertThat(response.getToscaTopologyTemplate().getPolicies()).isNotEmpty();
+    }
+
+    @Test
+    public void testGetSpecificPolicyJson() throws Exception {
+        getSpecificPolicy(APP_JSON);
+    }
+
+    @Test
+    public void testGetSpecificPolicyYaml() throws Exception {
+        getSpecificPolicy(APP_YAML);
+    }
+
+    private void getSpecificPolicy(String mediaType) throws Exception {
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
+            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertThat(response).isNotNull();
+            assertThat(response.getPolicyTypes()).isNotEmpty();
+        }
+        for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
+            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+        }
+        Response rawResponse = readResource(POLICIES_VCPE_VERSION1, mediaType);
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+        ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertThat(response.getToscaTopologyTemplate().getPolicies()).hasSize(1);
+    }
+
+    @Test
+    public void testDeleteSpecificPolicy() throws Exception {
+        Response rawResponse;
+        for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
+            rawResponse = createResource(POLICYTYPES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+            ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
+            assertThat(response).isNotNull();
+            assertThat(response.getPolicyTypes()).isNotEmpty();
+        }
+        for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
+            rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+        }
+
+        rawResponse = readResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+
+        // delete a particular policy
+        rawResponse = deleteResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(rawResponse.getStatus());
+
+        rawResponse = readResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        assertThat(Status.NOT_FOUND.getStatusCode()).isEqualTo(rawResponse.getStatus());
+
+        rawResponse = deleteResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        assertThat(Response.Status.NOT_FOUND.getStatusCode()).isEqualTo(rawResponse.getStatus());
+    }
+
 
     private Response createResource(String endpoint, String resourceName) throws Exception {
 
