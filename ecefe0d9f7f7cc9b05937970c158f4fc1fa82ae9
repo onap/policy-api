@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "f15e2eca_4489ff5e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-07-17T17:13:18Z",
+      "side": 1,
+      "message": "I think info is better, may hit this leg, when user incorrectly using the api, so not necessarily indicates an error.  General comment.",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d0ea58a_0e1571b8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-07-17T17:13:18Z",
+      "side": 1,
+      "message": "why do formatter:on/off is needed for javadocs?   If needed may be better to move it after the blank line.",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d98e0d9_5b28876c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-07-17T17:13:18Z",
+      "side": 1,
+      "message": "Should this method be moved under the policies one, \"/policies\" below, to group them together based on url? (versus being here with the policyTypes ones).",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0715a98b_e888e516",
         "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
         "patchSetId": 5
