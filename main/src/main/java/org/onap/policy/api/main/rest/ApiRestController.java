@@ -202,7 +202,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes", pfme);
+            LOGGER.error("GET /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -250,7 +250,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}", policyTypeId, pfme);
+            LOGGER.error("GET /policytypes/{}", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -299,7 +299,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
+            LOGGER.error("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -346,7 +346,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
+            LOGGER.error("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -398,7 +398,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policytypes", pfme);
+            LOGGER.error("POST /policytypes", pfme);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.POST);
             return makeErrorResponse(requestId, pfme);
         }
@@ -450,7 +450,7 @@ public class ApiRestController extends CommonRestController {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
+            LOGGER.error("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
             return makeErrorResponse(requestId, pfme);
         }
     }
@@ -512,7 +512,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -575,7 +575,68 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId, pfme);
+            LOGGER.error("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId, pfme);
+            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
+            return makeErrorResponse(requestId, pfme);
+        }
+    }
+    // @formatter:on
+
+    /**
+     * Retrieves the specified version of a particular policy.
+     *
+     * @param policyId the ID of specified policy
+     * @param policyVersion the version of specified policy
+     *
+     * @return the Response object containing the results of the API operation
+     */
+    // @formatter:off
+    @GET
+    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @ApiOperation(value = "Retrieve one version of a policy",
+        notes = "Returns a particular version of specified policy",
+        response = ToscaServiceTemplate.class,
+        responseHeaders = {
+            @ResponseHeader(name = "X-MinorVersion",
+                description = "Used to request or communicate a MINOR version back from the client"
+                    + " to the server, and from the server back to the client",
+                response = String.class),
+            @ResponseHeader(name = "X-PatchVersion",
+                description = "Used only to communicate a PATCH version in a response for"
+                    + " troubleshooting purposes only, and will not be provided by" + " the client on request",
+                response = String.class),
+            @ResponseHeader(name = "X-LatestVersion", description = "Used only to communicate an API's latest version",
+                response = String.class),
+            @ResponseHeader(name = "X-ONAP-RequestID",
+                description = "Used to track REST transactions for logging purpose", response = UUID.class)},
+        authorizations = @Authorization(value = "basicAuth"), tags = {"Policy", },
+        extensions = {
+            @Extension(name = "interface info", properties = {
+                @ExtensionProperty(name = "api-version", value = "1.0.0"),
+                @ExtensionProperty(name = "last-mod-release", value = "Guilin")
+            })
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 401, message = "Authentication Error"),
+        @ApiResponse(code = 403, message = "Authorization Error"),
+        @ApiResponse(code = 404, message = "Resource Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Response getSpecificVersionOfPolicy(
+        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @HeaderParam("X-ONAP-RequestID") @ApiParam("RequestID for http transaction") UUID requestId,
+        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
+            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
+    ) {
+        try (PolicyProvider policyProvider = new PolicyProvider()) {
+            ToscaServiceTemplate serviceTemplate =
+                policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
+            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            return makeOkResponse(requestId, serviceTemplate);
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.error("GET /policies/{}/versions/{}", policyId, policyVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
         }
@@ -641,7 +702,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
                 policyId, policyVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
@@ -698,7 +759,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
+            LOGGER.error("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
                 policyId, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
             return makeErrorResponse(requestId, pfme);
@@ -759,7 +820,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
+            LOGGER.error("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
             return makeErrorResponse(requestId, pfme);
         }
@@ -813,7 +874,7 @@ public class ApiRestController extends CommonRestController {
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("POST /policies", pfme);
+            LOGGER.error("POST /policies", pfme);
             updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
             return makeErrorResponse(requestId, pfme);
         }
@@ -869,7 +930,7 @@ public class ApiRestController extends CommonRestController {
                 policyProvider.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.debug("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
+            LOGGER.error("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
                 policyId, policyVersion, pfme);
             return makeErrorResponse(requestId, pfme);
         }
