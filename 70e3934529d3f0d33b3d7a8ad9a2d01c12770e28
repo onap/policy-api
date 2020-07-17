@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96961697_f6b5a736",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-17T14:48:39Z",
+      "side": 1,
+      "message": "interesting.  maybe in a separate review we should change all of these debugs to error",
+      "revId": "70e3934529d3f0d33b3d7a8ad9a2d01c12770e28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b457765e_2c14d766",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-17T14:48:39Z",
+      "side": 1,
+      "message": "remove the assertThat() wrapper",
+      "revId": "70e3934529d3f0d33b3d7a8ad9a2d01c12770e28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
