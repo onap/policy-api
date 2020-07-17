@@ -36,6 +36,47 @@
     },
     {
       "key": {
+        "uuid": "24da8904_22116bc9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-17T18:24:03Z",
+      "side": 1,
+      "message": "Agree, I think we should avoid formatter:om/off unless very much needed.",
+      "parentUuid": "3d0ea58a_0e1571b8",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3589cb3a_77209195",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-17T18:24:03Z",
+      "side": 1,
+      "message": "Better to call this \"policyName\"\nSame comment for all places below",
+      "range": {
+        "startLine": 588,
+        "startChar": 14,
+        "endLine": 588,
+        "endChar": 22
+      },
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6d98e0d9_5b28876c",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 5
@@ -47,6 +88,70 @@
       "writtenOn": "2020-07-17T17:13:18Z",
       "side": 1,
       "message": "Should this method be moved under the policies one, \"/policies\" below, to group them together based on url? (versus being here with the policyTypes ones).",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27a010bb_41334fe8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-17T18:24:03Z",
+      "side": 1,
+      "message": "Agree, better to move it.",
+      "parentUuid": "6d98e0d9_5b28876c",
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e38242d_932b4f28",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-17T18:24:03Z",
+      "side": 1,
+      "message": "Test for the REST API is missing. pls add",
+      "range": {
+        "startLine": 595,
+        "startChar": 4,
+        "endLine": 595,
+        "endChar": 58
+      },
+      "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96882060_f2e81c64",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-07-17T18:24:03Z",
+      "side": 1,
+      "message": "\"one\" -\u003e \"specific\"",
+      "range": {
+        "startLine": 596,
+        "startChar": 36,
+        "endLine": 596,
+        "endChar": 39
+      },
       "revId": "ecefe0d9f7f7cc9b05937970c158f4fc1fa82ae9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
