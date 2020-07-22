@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4998235d_a7a68c5a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-22T15:09:01Z",
+      "side": 1,
+      "message": "that would be the preference",
+      "parentUuid": "510e69b8_eea2796c",
+      "revId": "ff113046203b2d395dc3f168a528d99126bbe75b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2d950e6_cdf19b06",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 9
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "In none of the existing Delete API, updateApiStatisticsCounter is invoked. I also noted that in ApiStatisticsManager class, no counter for Delete operations are set. I suspect this must be some design level decision which was taken.\n\nPlease suggest, if this needs to be added only in the newly added Delete API or all the existing APIs.\nAlso if this has to be implemented, then is it only the \u0027apiCallSuccessCount\u0027 or \u0027apiCallFailureCount\u0027 which needs to be updated or we need to introduce new counters to handle the Delete APIs.",
       "parentUuid": "b2d950e6_cdf19b06",
+      "revId": "ff113046203b2d395dc3f168a528d99126bbe75b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f59380c_ecb98eef",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-22T15:09:01Z",
+      "side": 1,
+      "message": "Seems like they should at least update the call counts, even if we don\u0027t add specific counters.  Nevertheless, I\u0027ll defer to Ram on this one.",
+      "parentUuid": "8c28f4df_df1cd3ed",
       "revId": "ff113046203b2d395dc3f168a528d99126bbe75b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
