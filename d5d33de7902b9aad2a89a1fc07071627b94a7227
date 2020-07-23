@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57599fd2_a0ce74eb",
+        "filename": "postman/lifecycle-api-collection.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-07-23T22:44:16Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "d5d33de7902b9aad2a89a1fc07071627b94a7227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
