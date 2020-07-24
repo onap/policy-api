@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b98f0ad_4c6dbc4c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2020-07-24T15:28:04Z",
+      "side": 1,
+      "message": "I noticed that there are some methods with this logging, but others without it, should it be consistent all across?",
+      "revId": "478ac7c72dba1c26e7a79a08d50b6fd14441bf2a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
