@@ -16,6 +16,24 @@
       "revId": "478ac7c72dba1c26e7a79a08d50b6fd14441bf2a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74dde0e1_35485bb5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 6738
+      },
+      "writtenOn": "2020-07-24T15:51:18Z",
+      "side": 1,
+      "message": "This logging is only present in all the POST requests, probably with the primary intention to print the request body. That could be the reason it is missing in other APIs as no request body is available.",
+      "parentUuid": "5b98f0ad_4c6dbc4c",
+      "revId": "478ac7c72dba1c26e7a79a08d50b6fd14441bf2a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
