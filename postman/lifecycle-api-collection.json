@@ -1,818 +1,818 @@
 {
-  "info": {
-    "_postman_id": "50c9900b-7fbc-42f6-8d84-f3761824b96b",
-    "name": "Policy Framework Lifecycle API",
-    "description": "This collection lists all the Lifecycle API's supported by ONAP Policy Framework. These API's are used to perform CRUD operations for Policy, Policy Type & Data Type for all supported PDP engines.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Lifecycle Api Healthcheck",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/healthcheck",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "healthcheck"
-          ]
-        },
-        "description": "This is an API to fetch current healthcheck information for the policy-api component."
-      },
-      "response": []
+    "info": {
+        "_postman_id": "5921af97-1b03-4a47-bc8e-cfbbb9d04859",
+        "name": "Policy Framework Lifecycle API",
+        "description": "This collection lists all the Lifecycle API's supported by ONAP Policy Framework. These API's are used to perform CRUD operations for Policy, Policy Type & Data Type for all supported PDP engines.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "name": "Lifecycle Api Statistics",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/statistics",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "statistics"
-          ]
+    "item": [
+        {
+            "name": "Lifecycle Api Healthcheck",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/healthcheck",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "healthcheck"
+                    ]
+                },
+                "description": "This is an API to fetch current healthcheck information for the policy-api component."
+            },
+            "response": []
         },
-        "description": "This is an API to fetch current statistics information for the policy-api component."
-      },
-      "response": []
-    },
-    {
-      "name": "Create Policy Type",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/yaml"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/yaml"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "tosca_definitions_version: tosca_simple_yaml_1_1_0\npolicy_types:\n    onap.policies.controlloop.operational.Common:\n        derived_from: tosca.policies.Root\n        version: 1.0.0\n        description: |\n            Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant\n            Policy Types. This does NOT support the legacy Policy YAML policy type.\n        properties:\n            id:\n                type: string\n                description: The unique control loop id.\n                required: true\n            timeout:\n                type: integer\n                description: |\n                    Overall timeout for executing all the operations. This timeout should equal or exceed the total\n                    timeout for each operation listed.\n                required: true\n            abatement:\n                type: boolean\n                description: Whether an abatement event message will be expected for the control loop from DCAE.\n                required: true\n                default: false\n            trigger:\n                type: string\n                description: Initial operation to execute upon receiving an Onset event message for the Control Loop.\n                required: true\n            operations:\n                type: list\n                description: List of operations to be performed when Control Loop is triggered.\n                required: true\n                entry_schema:\n                    type: onap.datatype.controlloop.Operation\n\n    onap.policies.controlloop.operational.common.Drools:\n        derived_from: onap.policies.controlloop.operational.Common\n        type_version: 1.0.0\n        version: 1.0.0\n        description: Operational policies for Drools PDP\n        properties:\n            controllerName:\n                type: string\n                description: Drools controller properties\n                required: false\n\ndata_types:\n    onap.datatype.controlloop.Target:\n        derived_from: tosca.datatypes.Root\n        description: Definition for a entity in A&AI to perform a control loop operation on\n        properties:\n            targetType:\n                type: string\n                description: Category for the target type\n                required: true\n                constraints:\n                - valid_values: [VNF, VM, VFMODULE, PNF]\n            entityIds:\n                type: map\n                description: |\n                    Map of values that identify the resource. If none are provided, it is assumed that the\n                    entity that generated the ONSET event will be the target.\n                required: false\n                metadata:\n                    clamp_possible_values: ClampExecution:CSAR_RESOURCES\n                entry_schema:\n                    type: string\n\n    onap.datatype.controlloop.Actor:\n        derived_from: tosca.datatypes.Root\n        description: An actor/operation/target definition\n        properties:\n            actor:\n                type: string\n                description: The actor performing the operation.\n                required: true\n                metadata:\n                    clamp_possible_values: Dictionary:DefaultActors,ClampExecution:CDS/actor\n            operation:\n                type: string\n                description: The operation the actor is performing.\n                metadata:\n                    clamp_possible_values: Dictionary:DefaultOperations,ClampExecution:CDS/operation\n                required: true\n            target:\n                type: onap.datatype.controlloop.Target\n                description: The resource the operation should be performed on.\n                required: true\n            payload:\n                type: map\n                description: Name/value pairs of payload information passed by Policy to the actor\n                required: false\n                metadata:\n                    clamp_possible_values: ClampExecution:CDS/payload\n                entry_schema:\n                    type: string\n\n    onap.datatype.controlloop.Operation:\n        derived_from: tosca.datatypes.Root\n        description: An operation supported by an actor\n        properties:\n            id:\n                type: string\n                description: Unique identifier for the operation\n                required: true\n            description:\n                type: string\n                description: A user-friendly description of the intent for the operation\n                required: false\n            operation:\n                type: onap.datatype.controlloop.Actor\n                description: The definition of the operation to be performed.\n                required: true\n            timeout:\n                type: integer\n                description: The amount of time for the actor to perform the operation.\n                required: true\n            retries:\n                type: integer\n                description: The number of retries the actor should attempt to perform the operation.\n                required: true\n                default: 0\n            success:\n                type: string\n                description: Points to the operation to invoke on success. A value of \"final_success\" indicates and end to the operation.\n                required: false\n                default: final_success\n            failure:\n                type: string\n                description: Points to the operation to invoke on Actor operation failure.\n                required: false\n                default: final_failure\n            failure_timeout:\n                type: string\n                description: Points to the operation to invoke when the time out for the operation occurs.\n                required: false\n                default: final_failure_timeout\n            failure_retries:\n                type: string\n                description: Points to the operation to invoke when the current operation has exceeded its max retries.\n                required: false\n                default: final_failure_retries\n            failure_exception:\n                type: string\n                description: Points to the operation to invoke when the current operation causes an exception.\n                required: false\n                default: final_failure_exception\n            failure_guard:\n                type: string\n                description: Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.\n                required: false\n                default: final_failure_guard"
+        {
+            "name": "Lifecycle Api Statistics",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/statistics",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "statistics"
+                    ]
+                },
+                "description": "This is an API to fetch current statistics information for the policy-api component."
+            },
+            "response": []
         },
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes"
-          ]
+        {
+            "name": "Create Policy Type",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/yaml"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/yaml"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "tosca_definitions_version: tosca_simple_yaml_1_1_0\npolicy_types:\n    onap.policies.controlloop.operational.Common:\n        derived_from: tosca.policies.Root\n        version: 1.0.0\n        description: |\n            Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant\n            Policy Types. This does NOT support the legacy Policy YAML policy type.\n        properties:\n            id:\n                type: string\n                description: The unique control loop id.\n                required: true\n            timeout:\n                type: integer\n                description: |\n                    Overall timeout for executing all the operations. This timeout should equal or exceed the total\n                    timeout for each operation listed.\n                required: true\n            abatement:\n                type: boolean\n                description: Whether an abatement event message will be expected for the control loop from DCAE.\n                required: true\n                default: false\n            trigger:\n                type: string\n                description: Initial operation to execute upon receiving an Onset event message for the Control Loop.\n                required: true\n            operations:\n                type: list\n                description: List of operations to be performed when Control Loop is triggered.\n                required: true\n                entry_schema:\n                    type: onap.datatype.controlloop.Operation\n\n    onap.policies.controlloop.operational.common.Drools:\n        derived_from: onap.policies.controlloop.operational.Common\n        type_version: 1.0.0\n        version: 1.0.0\n        description: Operational policies for Drools PDP\n        properties:\n            controllerName:\n                type: string\n                description: Drools controller properties\n                required: false\n\ndata_types:\n    onap.datatype.controlloop.Target:\n        derived_from: tosca.datatypes.Root\n        description: Definition for a entity in A&AI to perform a control loop operation on\n        properties:\n            targetType:\n                type: string\n                description: Category for the target type\n                required: true\n                constraints:\n                - valid_values: [VNF, VM, VFMODULE, PNF]\n            entityIds:\n                type: map\n                description: |\n                    Map of values that identify the resource. If none are provided, it is assumed that the\n                    entity that generated the ONSET event will be the target.\n                required: false\n                metadata:\n                    clamp_possible_values: ClampExecution:CSAR_RESOURCES\n                entry_schema:\n                    type: string\n\n    onap.datatype.controlloop.Actor:\n        derived_from: tosca.datatypes.Root\n        description: An actor/operation/target definition\n        properties:\n            actor:\n                type: string\n                description: The actor performing the operation.\n                required: true\n                metadata:\n                    clamp_possible_values: Dictionary:DefaultActors,ClampExecution:CDS/actor\n            operation:\n                type: string\n                description: The operation the actor is performing.\n                metadata:\n                    clamp_possible_values: Dictionary:DefaultOperations,ClampExecution:CDS/operation\n                required: true\n            target:\n                type: onap.datatype.controlloop.Target\n                description: The resource the operation should be performed on.\n                required: true\n            payload:\n                type: map\n                description: Name/value pairs of payload information passed by Policy to the actor\n                required: false\n                metadata:\n                    clamp_possible_values: ClampExecution:CDS/payload\n                entry_schema:\n                    type: string\n\n    onap.datatype.controlloop.Operation:\n        derived_from: tosca.datatypes.Root\n        description: An operation supported by an actor\n        properties:\n            id:\n                type: string\n                description: Unique identifier for the operation\n                required: true\n            description:\n                type: string\n                description: A user-friendly description of the intent for the operation\n                required: false\n            operation:\n                type: onap.datatype.controlloop.Actor\n                description: The definition of the operation to be performed.\n                required: true\n            timeout:\n                type: integer\n                description: The amount of time for the actor to perform the operation.\n                required: true\n            retries:\n                type: integer\n                description: The number of retries the actor should attempt to perform the operation.\n                required: true\n                default: 0\n            success:\n                type: string\n                description: Points to the operation to invoke on success. A value of \"final_success\" indicates and end to the operation.\n                required: false\n                default: final_success\n            failure:\n                type: string\n                description: Points to the operation to invoke on Actor operation failure.\n                required: false\n                default: final_failure\n            failure_timeout:\n                type: string\n                description: Points to the operation to invoke when the time out for the operation occurs.\n                required: false\n                default: final_failure_timeout\n            failure_retries:\n                type: string\n                description: Points to the operation to invoke when the current operation has exceeded its max retries.\n                required: false\n                default: final_failure_retries\n            failure_exception:\n                type: string\n                description: Points to the operation to invoke when the current operation causes an exception.\n                required: false\n                default: final_failure_exception\n            failure_guard:\n                type: string\n                description: Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.\n                required: false\n                default: final_failure_guard"
+                },
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes"
+                    ]
+                },
+                "description": "This is a generic API to create one or more policy types together in a single API call."
+            },
+            "response": []
         },
-        "description": "This is a generic API to create one or more policy types together in a single API call."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Policy Type",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0"
-          ]
+        {
+            "name": "Fetch Policy Type",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is an API to fetch a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is an API to fetch a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch All Policy Types",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes"
-          ]
+        {
+            "name": "Fetch All Policy Types",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes"
+                    ]
+                },
+                "description": "This is a generic API to fetch all policy types currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a generic API to fetch all policy types currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch All Versions of Policy Type",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools"
-          ]
+        {
+            "name": "Fetch All Versions of Policy Type",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools"
+                    ]
+                },
+                "description": "This is an API to fetch all versions of a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is an API to fetch all versions of a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Latest Version of Policy Type",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/latest",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "latest"
-          ]
+        {
+            "name": "Fetch Latest Version of Policy Type",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/latest",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "latest"
+                    ]
+                },
+                "description": "This is an API to fetch latest versions of a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is an API to fetch latest versions of a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Policy Type",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0"
-          ]
+        {
+            "name": "Delete Policy Type",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is an API to delete a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is an API to delete a specific policy type (example - \"onap.policies.controlloop.operational.common.Drools\") currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Create Policy (Generic)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\n    \"topology_template\": {\n        \"policies\": [\n            {\n                \"operational.modifyconfig\": {\n                    \"type\": \"onap.policies.controlloop.operational.common.Drools\",\n                    \"type_version\": \"1.0.0\",\n                    \"version\": \"1.0.0\",\n                    \"metadata\": {\n                        \"policy-id\": \"operational.modifyconfig\"\n                    },\n                    \"properties\": {\n                        \"id\": \"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a\",\n                        \"timeout\": 1200,\n                        \"abatement\": false,\n                        \"trigger\": \"unique-policy-id-1-modifyConfig\",\n                        \"operations\": [\n                            {\n                                \"id\": \"unique-policy-id-1-modifyConfig\",\n                                \"description\": \"Modify the packet generator\",\n                                \"operation\": {\n                                    \"actor\": \"CDS\",\n                                    \"operation\": \"modify-config\",\n                                    \"target\": {\n                                        \"targetType\": \"VNF\",\n                                        \"entityIds\": {\n                                            \"resourceID\": \"37b008b9-b367-4359-93fd-74d3ce0ee1a0\"\n                                        }\n                                    },\n                                    \"payload\":{\n                                        \"artifact_name\": \"vFW-CDS\",\n                                        \"artifact_version\": \"1.0.0\",\n                                        \"data\": \"{\\\"active-streams\\\": \\\"7\\\"}\"\n                                    }\n                                },\n                                \"timeout\": 300,\n                                \"retries\": 0,\n                                \"success\": \"final_success\",\n                                \"failure\": \"final_failure\",\n                                \"failure_timeout\": \"final_failure_timeout\",\n                                \"failure_retries\": \"final_failure_retries\",\n                                \"failure_exception\": \"final_failure_exception\",\n                                \"failure_guard\": \"final_failure_guard\"\n                            }\n                        ],\n                        \"controllerName\": \"frankfurt\"\n                    }\n                }\n            }\n        ]\n    }\n}"
+        {
+            "name": "Create Policy (Generic)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\n    \"topology_template\": {\n        \"policies\": [\n            {\n                \"operational.modifyconfig\": {\n                    \"type\": \"onap.policies.controlloop.operational.common.Drools\",\n                    \"type_version\": \"1.0.0\",\n                    \"version\": \"1.0.0\",\n                    \"metadata\": {\n                        \"policy-id\": \"operational.modifyconfig\"\n                    },\n                    \"properties\": {\n                        \"id\": \"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a\",\n                        \"timeout\": 1200,\n                        \"abatement\": false,\n                        \"trigger\": \"unique-policy-id-1-modifyConfig\",\n                        \"operations\": [\n                            {\n                                \"id\": \"unique-policy-id-1-modifyConfig\",\n                                \"description\": \"Modify the packet generator\",\n                                \"operation\": {\n                                    \"actor\": \"CDS\",\n                                    \"operation\": \"modify-config\",\n                                    \"target\": {\n                                        \"targetType\": \"VNF\",\n                                        \"entityIds\": {\n                                            \"resourceID\": \"37b008b9-b367-4359-93fd-74d3ce0ee1a0\"\n                                        }\n                                    },\n                                    \"payload\":{\n                                        \"artifact_name\": \"vFW-CDS\",\n                                        \"artifact_version\": \"1.0.0\",\n                                        \"data\": \"{\\\"active-streams\\\": \\\"7\\\"}\"\n                                    }\n                                },\n                                \"timeout\": 300,\n                                \"retries\": 0,\n                                \"success\": \"final_success\",\n                                \"failure\": \"final_failure\",\n                                \"failure_timeout\": \"final_failure_timeout\",\n                                \"failure_retries\": \"final_failure_retries\",\n                                \"failure_exception\": \"final_failure_exception\",\n                                \"failure_guard\": \"final_failure_guard\"\n                            }\n                        ],\n                        \"controllerName\": \"frankfurt\"\n                    }\n                }\n            }\n        ]\n    }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policies",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policies"
+                    ]
+                },
+                "description": "This is a generic API to create multiple policies together in a single API call. The individual policies can refer to same policy type or different policy types."
+            },
+            "response": []
         },
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policies",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policies"
-          ]
+        {
+            "name": "Create Policy (Specific)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\n    \"topology_template\": {\n        \"policies\": [\n            {\n                \"operational.modifyconfig\": {\n                    \"type\": \"onap.policies.controlloop.operational.common.Drools\",\n                    \"type_version\": \"1.0.0\",\n                    \"version\": \"1.0.0\",\n                    \"metadata\": {\n                        \"policy-id\": \"operational.modifyconfig\"\n                    },\n                    \"properties\": {\n                        \"id\": \"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a\",\n                        \"timeout\": 1200,\n                        \"abatement\": false,\n                        \"trigger\": \"unique-policy-id-1-modifyConfig\",\n                        \"operations\": [\n                            {\n                                \"id\": \"unique-policy-id-1-modifyConfig\",\n                                \"description\": \"Modify the packet generator\",\n                                \"operation\": {\n                                    \"actor\": \"CDS\",\n                                    \"operation\": \"modify-config\",\n                                    \"target\": {\n                                        \"targetType\": \"VNF\",\n                                        \"entityIds\": {\n                                            \"resourceID\": \"37b008b9-b367-4359-93fd-74d3ce0ee1a0\"\n                                        }\n                                    },\n                                    \"payload\":{\n                                        \"artifact_name\": \"vFW-CDS\",\n                                        \"artifact_version\": \"1.0.0\",\n                                        \"data\": \"{\\\"active-streams\\\": \\\"7\\\"}\"\n                                    }\n                                },\n                                \"timeout\": 300,\n                                \"retries\": 0,\n                                \"success\": \"final_success\",\n                                \"failure\": \"final_failure\",\n                                \"failure_timeout\": \"final_failure_timeout\",\n                                \"failure_retries\": \"final_failure_retries\",\n                                \"failure_exception\": \"final_failure_exception\",\n                                \"failure_guard\": \"final_failure_guard\"\n                            }\n                        ],\n                        \"controllerName\": \"frankfurt\"\n                    }\n                }\n            }\n        ]\n    }\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies"
+                    ]
+                },
+                "description": "This is a specific API to create a policy referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to create policy for any policy type to be deployed in any supported PDP engine."
+            },
+            "response": []
         },
-        "description": "This is a generic API to create multiple policies together in a single API call. The individual policies can refer to same policy type or different policy types."
-      },
-      "response": []
-    },
-    {
-      "name": "Create Policy (Specific)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\n    \"topology_template\": {\n        \"policies\": [\n            {\n                \"operational.modifyconfig\": {\n                    \"type\": \"onap.policies.controlloop.operational.common.Drools\",\n                    \"type_version\": \"1.0.0\",\n                    \"version\": \"1.0.0\",\n                    \"metadata\": {\n                        \"policy-id\": \"operational.modifyconfig\"\n                    },\n                    \"properties\": {\n                        \"id\": \"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a\",\n                        \"timeout\": 1200,\n                        \"abatement\": false,\n                        \"trigger\": \"unique-policy-id-1-modifyConfig\",\n                        \"operations\": [\n                            {\n                                \"id\": \"unique-policy-id-1-modifyConfig\",\n                                \"description\": \"Modify the packet generator\",\n                                \"operation\": {\n                                    \"actor\": \"CDS\",\n                                    \"operation\": \"modify-config\",\n                                    \"target\": {\n                                        \"targetType\": \"VNF\",\n                                        \"entityIds\": {\n                                            \"resourceID\": \"37b008b9-b367-4359-93fd-74d3ce0ee1a0\"\n                                        }\n                                    },\n                                    \"payload\":{\n                                        \"artifact_name\": \"vFW-CDS\",\n                                        \"artifact_version\": \"1.0.0\",\n                                        \"data\": \"{\\\"active-streams\\\": \\\"7\\\"}\"\n                                    }\n                                },\n                                \"timeout\": 300,\n                                \"retries\": 0,\n                                \"success\": \"final_success\",\n                                \"failure\": \"final_failure\",\n                                \"failure_timeout\": \"final_failure_timeout\",\n                                \"failure_retries\": \"final_failure_retries\",\n                                \"failure_exception\": \"final_failure_exception\",\n                                \"failure_guard\": \"final_failure_guard\"\n                            }\n                        ],\n                        \"controllerName\": \"frankfurt\"\n                    }\n                }\n            }\n        ]\n    }\n}"
+        {
+            "name": "Create Policy (Legacy)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/yaml"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/yaml"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"policy-id\" : \"operational.modifyconfiglegacy\",\n  \"content\" : \"controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20controlLoopName%3A%20ControlLoop-vFirewall-7e4fbe9c-d612-4ec5-bbf8-605aeabdb677%0A%20%20trigger_policy%3A%20unique-policy-id-1-modifyConfig%0A%20%20timeout%3A%2060%0A%20%20abatement%3A%20false%0Apolicies%3A%0A%20%20-%20id%3A%20unique-policy-id-1-modifyConfig%0A%20%20%20%20name%3A%20modifyconfig-cds-actor%0A%20%20%20%20description%3A%0A%20%20%20%20actor%3A%20CDS%0A%20%20%20%20recipe%3A%20modify-config%0A%20%20%20%20target%3A%0A%20%20%20%20%20%20resourceID%3A%2037b008b9-b367-4359-93fd-74d3ce0ee1a0%0A%20%20%20%20%20%20type%3A%20VNF%0A%20%20%20%20payload%3A%0A%20%20%20%20%20%20artifact_name%3A%20vFW-CDS%0A%20%20%20%20%20%20artifact_version%3A%201.0.0%0A%20%20%20%20%20%20data%3A%20%27%7B%22active-streams%22%3A%227%22%7D%27%0A%20%20%20%20retry%3A%200%0A%20%20%20%20timeout%3A%2030%0A%20%20%20%20success%3A%20final_success%0A%20%20%20%20failure%3A%20final_failure%0A%20%20%20%20failure_timeout%3A%20final_failure_timeout%0A%20%20%20%20failure_retries%3A%20final_failure_retries%0A%20%20%20%20failure_exception%3A%20final_failure_exception%0A%20%20%20%20failure_guard%3A%20final_failure_guard\"\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.Operational",
+                        "versions",
+                        "1.0.0",
+                        "policies"
+                    ]
+                },
+                "description": "This is a specific API to create a policy of type \"onap.policies.controlloop.Operational\", used to create legacy control loop operational policy aimed to be deployed in drools-pdp engine."
+            },
+            "response": []
         },
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies"
-          ]
+        {
+            "name": "Fetch Policy (Specific)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfig",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is a specific API to fetch a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch a policy referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to create a policy referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to create policy for any policy type to be deployed in any supported PDP engine."
-      },
-      "response": []
-    },
-    {
-      "name": "Create Policy (Legacy)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/yaml"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/yaml"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"policy-id\" : \"operational.modifyconfiglegacy\",\n  \"content\" : \"controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20controlLoopName%3A%20ControlLoop-vFirewall-7e4fbe9c-d612-4ec5-bbf8-605aeabdb677%0A%20%20trigger_policy%3A%20unique-policy-id-1-modifyConfig%0A%20%20timeout%3A%2060%0A%20%20abatement%3A%20false%0Apolicies%3A%0A%20%20-%20id%3A%20unique-policy-id-1-modifyConfig%0A%20%20%20%20name%3A%20modifyconfig-cds-actor%0A%20%20%20%20description%3A%0A%20%20%20%20actor%3A%20CDS%0A%20%20%20%20recipe%3A%20modify-config%0A%20%20%20%20target%3A%0A%20%20%20%20%20%20resourceID%3A%2037b008b9-b367-4359-93fd-74d3ce0ee1a0%0A%20%20%20%20%20%20type%3A%20VNF%0A%20%20%20%20payload%3A%0A%20%20%20%20%20%20artifact_name%3A%20vFW-CDS%0A%20%20%20%20%20%20artifact_version%3A%201.0.0%0A%20%20%20%20%20%20data%3A%20%27%7B%22active-streams%22%3A%227%22%7D%27%0A%20%20%20%20retry%3A%200%0A%20%20%20%20timeout%3A%2030%0A%20%20%20%20success%3A%20final_success%0A%20%20%20%20failure%3A%20final_failure%0A%20%20%20%20failure_timeout%3A%20final_failure_timeout%0A%20%20%20%20failure_retries%3A%20final_failure_retries%0A%20%20%20%20failure_exception%3A%20final_failure_exception%0A%20%20%20%20failure_guard%3A%20final_failure_guard\"\n}"
+        {
+            "name": "Fetch Policy (Generic)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policies/operational.modifyconfig/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policies",
+                        "operational.modifyconfig",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is a specific API to fetch a policy (example - operational.modifyconfig). The same API can be used to fetch a policy without referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.Operational",
-            "versions",
-            "1.0.0",
-            "policies"
-          ]
+        {
+            "name": "Fetch Policy (Legacy)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.Operational",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfiglegacy",
+                        "versions",
+                        "1"
+                    ]
+                },
+                "description": "This is a specific API to fetch a policy (example - operational.modifyconfig) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to create a policy of type \"onap.policies.controlloop.Operational\", used to create legacy control loop operational policy aimed to be deployed in drools-pdp engine."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Policy (Specific)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfig",
-            "versions",
-            "1.0.0"
-          ]
+        {
+            "name": "Fetch All Policies (Specific)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies"
+                    ]
+                },
+                "description": "This is a specific API to fetch all policies referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch policies for any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch a policy referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch All Policies without specifying policyType",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policies",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policies"
-          ]
+        {
+            "name": "Fetch All Policies (Generic)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policies",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policies"
+                    ]
+                },
+                "description": "This is a specific API to fetch all policies currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch all policies currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Policy without specifying policyType (Specific)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policies/operational.modifyconfig/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policies",
-            "operational.modifyconfig",
-            "versions",
-            "1.0.0"
-          ]
+        {
+            "name": "Fetch All Version of a Policy (Specific)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfig"
+                    ]
+                },
+                "description": "This is a specific API to fetch all versions of a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch all versions of a policy referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch a policy (example - operational.modifyconfig). The same API can be used to fetch a policy without referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Policy (Legacy)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.Operational",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfiglegacy",
-            "versions",
-            "1"
-          ]
+        {
+            "name": "Fetch Latest Version of a Policy (Specific)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/latest",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfig",
+                        "versions",
+                        "latest"
+                    ]
+                },
+                "description": "This is a specific API to fetch latest version of a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch latest version of a policy referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch a policy (example - operational.modifyconfig) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch All Policies (Specific)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies"
-          ]
+        {
+            "name": "Delete Policy (Specific)",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.operational.common.Drools",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfig",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is a specific API to delete a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to delete a policy referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch all policies referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch policies for any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch All Version of a Policy (Specific)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfig"
-          ]
+        {
+            "name": "Delete Policy (Generic)",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policies/operational.modifyconfig/versions/1.0.0",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policies",
+                        "operational.modifyconfig",
+                        "versions",
+                        "1.0.0"
+                    ]
+                },
+                "description": "This is a specific API to delete a policy (example - operational.modifyconfig). The same API can be used to delete a policy without referring to any policy type currently available in Policy DB."
+            },
+            "response": []
         },
-        "description": "This is a specific API to fetch all versions of a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch all versions of a policy referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Fetch Latest Version of a Policy (Specific)",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/latest",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfig",
-            "versions",
-            "latest"
-          ]
-        },
-        "description": "This is a specific API to fetch latest version of a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to fetch latest version of a policy referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Policy (Specific)",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.operational.common.Drools/versions/1.0.0/policies/operational.modifyconfig/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.operational.common.Drools",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfig",
-            "versions",
-            "1.0.0"
-          ]
-        },
-        "description": "This is a specific API to delete a policy (example - operational.modifyconfig) referring to the given policy type (example - \"onap.policies.controlloop.operational.common.Drools\"). The same API can be used to delete a policy referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Policy without specifying policyType (Specific)",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "type": "text",
-            "value": "application/json"
-          },
-          {
-            "key": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policies/operational.modifyconfig/versions/1.0.0",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policies",
-            "operational.modifyconfig",
-            "versions",
-            "1.0.0"
-          ]
-        },
-        "description": "This is a specific API to delete a policy (example - operational.modifyconfig). The same API can be used to delete a policy without referring to any policy type currently available in Policy DB."
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Policy (Legacy)",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/json",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
-          "host": [
-            "{{POLICY-API-URL}}"
-          ],
-          "path": [
-            "policy",
-            "api",
-            "v1",
-            "policytypes",
-            "onap.policies.controlloop.Operational",
-            "versions",
-            "1.0.0",
-            "policies",
-            "operational.modifyconfiglegacy",
-            "versions",
-            "1"
-          ]
-        },
-        "description": "This is a specific API to delete a policy (example - operational.modifyconfiglegacy) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
-      },
-      "response": []
-    }
-  ],
-  "auth": {
-    "type": "basic",
-    "basic": [
-      {
-        "key": "password",
-        "value": "{{PASSWORD}}",
-        "type": "string"
-      },
-      {
-        "key": "username",
-        "value": "{{USER}}",
-        "type": "string"
-      }
-    ]
-  },
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "id": "baf39e37-fd26-4171-82eb-f05352acc45e",
-        "type": "text/javascript",
-        "exec": [
-          ""
+        {
+            "name": "Delete Policy (Legacy)",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
+                    "host": [
+                        "{{POLICY-API-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "api",
+                        "v1",
+                        "policytypes",
+                        "onap.policies.controlloop.Operational",
+                        "versions",
+                        "1.0.0",
+                        "policies",
+                        "operational.modifyconfiglegacy",
+                        "versions",
+                        "1"
+                    ]
+                },
+                "description": "This is a specific API to delete a policy (example - operational.modifyconfiglegacy) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "basic",
+        "basic": [
+            {
+                "key": "password",
+                "value": "{{PASSWORD}}",
+                "type": "string"
+            },
+            {
+                "key": "username",
+                "value": "{{USER}}",
+                "type": "string"
+            }
         ]
-      }
     },
-    {
-      "listen": "test",
-      "script": {
-        "id": "5ba39dc8-fe5c-48fb-a157-c7bb26641a75",
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "id": "99d48afc-d62d-48be-9f89-d7db5acf48dd",
-      "key": "USER",
-      "value": "healthcheck",
-      "type": "string"
-    },
-    {
-      "id": "a9c660a8-2bd1-4e87-aacd-aa6ff2104a60",
-      "key": "PASSWORD",
-      "value": "zb!XztG34",
-      "type": "string"
-    }
-  ],
-  "protocolProfileBehavior": {}
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "id": "f7e544f3-f8f3-471d-b9e0-950ecce8873e",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "id": "b5181de0-cf95-44e9-a6f6-5a8deeba4587",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "id": "99d48afc-d62d-48be-9f89-d7db5acf48dd",
+            "key": "USER",
+            "value": "healthcheck",
+            "type": "string"
+        },
+        {
+            "id": "a9c660a8-2bd1-4e87-aacd-aa6ff2104a60",
+            "key": "PASSWORD",
+            "value": "zb!XztG34",
+            "type": "string"
+        }
+    ],
+    "protocolProfileBehavior": {}
 }
