@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
@@ -21,8 +21,10 @@
 #
 
 JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
-KEYSTORE="${POLICY_HOME}/etc/ssl/policy-keystore"
-TRUSTSTORE="${POLICY_HOME}/etc/ssl/policy-truststore"
+KEYSTORE="${KEYSTORE:-$POLICY_HOME/etc/ssl/policy-keystore}"
+TRUSTSTORE="${TRUSTSTORE:-$POLICY_HOME/etc/ssl/policy-truststore}"
+KEYSTORE_PASSWD="${KEYSTORE_PASSWD:-Pol1cy_0nap}"
+TRUSTSTORE_PASSWD="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}"
 
 if [ "$#" -eq 1 ]; then
     CONFIG_FILE=$1
@@ -52,4 +54,4 @@ if [[ -f "${POLICY_HOME}"/etc/mounted/logback.xml ]]; then
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
 fi
 
-$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile=$POLICY_HOME/etc/logback.xml -Djavax.net.ssl.keyStore="$KEYSTORE" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD:-Pol1cy_0nap}" -Djavax.net.ssl.trustStore="$TRUSTSTORE" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}" org.onap.policy.api.main.startstop.Main -c $CONFIG_FILE
+$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile=$POLICY_HOME/etc/logback.xml -Djavax.net.ssl.keyStore="${KEYSTORE}" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" -Djavax.net.ssl.trustStore="${TRUSTSTORE}" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" org.onap.policy.api.main.startstop.Main -c "$CONFIG_FILE"
