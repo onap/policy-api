@@ -16,6 +16,24 @@
       "revId": "3181973bf8ef4c2295dbff95b276f82157396515",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eddf9f64_db6da6b3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-08-06T22:04:27Z",
+      "side": 1,
+      "message": "I already mentioned about it in the Guilin release architecture review doc \u0026 we have the epic in release planning doc too. Not sure if you are referring to any other doc ?",
+      "parentUuid": "6ef5770c_5649a0f8",
+      "revId": "3181973bf8ef4c2295dbff95b276f82157396515",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
