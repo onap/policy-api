@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ef5770c_5649a0f8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/LegacyApiRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-06T21:56:43Z",
+      "side": 1,
+      "message": "hmm.  wonder if we need to update the Guilin API to reflect this change?  If nothing else, we might need to change the version number of the API.",
+      "revId": "3181973bf8ef4c2295dbff95b276f82157396515",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
