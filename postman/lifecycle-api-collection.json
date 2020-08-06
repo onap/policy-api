@@ -353,46 +353,6 @@
             "response": []
         },
         {
-            "name": "Create Policy (Legacy)",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "type": "text",
-                        "value": "application/yaml"
-                    },
-                    {
-                        "key": "Content-Type",
-                        "type": "text",
-                        "value": "application/yaml"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n  \"policy-id\" : \"operational.modifyconfiglegacy\",\n  \"content\" : \"controlLoop%3A%0A%20%20version%3A%202.0.0%0A%20%20controlLoopName%3A%20ControlLoop-vFirewall-7e4fbe9c-d612-4ec5-bbf8-605aeabdb677%0A%20%20trigger_policy%3A%20unique-policy-id-1-modifyConfig%0A%20%20timeout%3A%2060%0A%20%20abatement%3A%20false%0Apolicies%3A%0A%20%20-%20id%3A%20unique-policy-id-1-modifyConfig%0A%20%20%20%20name%3A%20modifyconfig-cds-actor%0A%20%20%20%20description%3A%0A%20%20%20%20actor%3A%20CDS%0A%20%20%20%20recipe%3A%20modify-config%0A%20%20%20%20target%3A%0A%20%20%20%20%20%20resourceID%3A%2037b008b9-b367-4359-93fd-74d3ce0ee1a0%0A%20%20%20%20%20%20type%3A%20VNF%0A%20%20%20%20payload%3A%0A%20%20%20%20%20%20artifact_name%3A%20vFW-CDS%0A%20%20%20%20%20%20artifact_version%3A%201.0.0%0A%20%20%20%20%20%20data%3A%20%27%7B%22active-streams%22%3A%227%22%7D%27%0A%20%20%20%20retry%3A%200%0A%20%20%20%20timeout%3A%2030%0A%20%20%20%20success%3A%20final_success%0A%20%20%20%20failure%3A%20final_failure%0A%20%20%20%20failure_timeout%3A%20final_failure_timeout%0A%20%20%20%20failure_retries%3A%20final_failure_retries%0A%20%20%20%20failure_exception%3A%20final_failure_exception%0A%20%20%20%20failure_guard%3A%20final_failure_guard\"\n}"
-                },
-                "url": {
-                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies",
-                    "host": [
-                        "{{POLICY-API-URL}}"
-                    ],
-                    "path": [
-                        "policy",
-                        "api",
-                        "v1",
-                        "policytypes",
-                        "onap.policies.controlloop.Operational",
-                        "versions",
-                        "1.0.0",
-                        "policies"
-                    ]
-                },
-                "description": "This is a specific API to create a policy of type \"onap.policies.controlloop.Operational\", used to create legacy control loop operational policy aimed to be deployed in drools-pdp engine."
-            },
-            "response": []
-        },
-        {
             "name": "Fetch Policy (Specific)",
             "request": {
                 "method": "GET",
@@ -463,45 +423,6 @@
                     ]
                 },
                 "description": "This is a specific API to fetch a policy (example - operational.modifyconfig). The same API can be used to fetch a policy without referring to any policy type currently available in Policy DB."
-            },
-            "response": []
-        },
-        {
-            "name": "Fetch Policy (Legacy)",
-            "request": {
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "type": "text",
-                        "value": "application/json"
-                    },
-                    {
-                        "key": "Content-Type",
-                        "type": "text",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
-                    "host": [
-                        "{{POLICY-API-URL}}"
-                    ],
-                    "path": [
-                        "policy",
-                        "api",
-                        "v1",
-                        "policytypes",
-                        "onap.policies.controlloop.Operational",
-                        "versions",
-                        "1.0.0",
-                        "policies",
-                        "operational.modifyconfiglegacy",
-                        "versions",
-                        "1"
-                    ]
-                },
-                "description": "This is a specific API to fetch a policy (example - operational.modifyconfig) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
             },
             "response": []
         },
@@ -720,45 +641,6 @@
                     ]
                 },
                 "description": "This is a specific API to delete a policy (example - operational.modifyconfig). The same API can be used to delete a policy without referring to any policy type currently available in Policy DB."
-            },
-            "response": []
-        },
-        {
-            "name": "Delete Policy (Legacy)",
-            "request": {
-                "method": "DELETE",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json",
-                        "type": "text"
-                    },
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json",
-                        "type": "text"
-                    }
-                ],
-                "url": {
-                    "raw": "{{POLICY-API-URL}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/operational.modifyconfiglegacy/versions/1",
-                    "host": [
-                        "{{POLICY-API-URL}}"
-                    ],
-                    "path": [
-                        "policy",
-                        "api",
-                        "v1",
-                        "policytypes",
-                        "onap.policies.controlloop.Operational",
-                        "versions",
-                        "1.0.0",
-                        "policies",
-                        "operational.modifyconfiglegacy",
-                        "versions",
-                        "1"
-                    ]
-                },
-                "description": "This is a specific API to delete a policy (example - operational.modifyconfiglegacy) referring to the specific policy type \"onap.policies.controlloop.Operational\" currently available in Policy DB."
             },
             "response": []
         }

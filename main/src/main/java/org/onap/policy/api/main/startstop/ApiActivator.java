@@ -26,7 +26,6 @@ package org.onap.policy.api.main.startstop;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.rest.ApiRestController;
-import org.onap.policy.api.main.rest.LegacyApiRestController;
 import org.onap.policy.api.main.rest.aaf.AafApiFilter;
 import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.parameters.ParameterService;
@@ -77,7 +76,7 @@ public class ApiActivator {
     private void startApiRestServer() throws PolicyApiException {
         apiParameterGroup.getRestServerParameters().setName(apiParameterGroup.getName());
         restServer = new RestServer(apiParameterGroup.getRestServerParameters(), AafApiFilter.class,
-                LegacyApiRestController.class, ApiRestController.class);
+                        ApiRestController.class);
         if (!restServer.start()) {
             throw new PolicyApiException("Failed to start api rest server. Check log for more details...");
         }

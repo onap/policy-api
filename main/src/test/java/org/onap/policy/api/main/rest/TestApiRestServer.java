@@ -72,7 +72,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.legacy.concepts.LegacyOperationalPolicy;
 
 /**
  * Class to perform unit test of {@link ApiRestController}.
@@ -91,8 +90,6 @@ public class TestApiRestServer {
     private static final String STATISTICS_ENDPOINT = "statistics";
 
     private static final String OP_POLICY_NAME_VCPE = "operational.restart";
-    private static final String OP_POLICY_NAME_VDNS = "operational.scaleout";
-    private static final String OP_POLICY_NAME_VFW = "operational.modifyconfig";
 
     private static final String POLICYTYPES = "policytypes";
     private static final String POLICYTYPES_TCA = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app";
@@ -125,32 +122,6 @@ public class TestApiRestServer {
     private static final String POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION =
         POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
 
-    private static final String OPS_POLICIES =
-        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies";
-    private static final String OPS_POLICIES_VCPE_LATEST =
-        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-            + "/versions/latest";
-    private static final String OPS_POLICIES_VCPE_DEPLOYED =
-        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-            + "/versions/deployed";
-    private static final String OPS_POLICIES_VDNS_LATEST =
-        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS
-            + "/versions/latest";
-    private static final String OPS_POLICIES_VFIREWALL_LATEST =
-        "policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW
-            + "/versions/latest";
-    private static final String OPS_POLICIES_VCPE_VERSION =
-        "policytypes/" + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-            + "/versions/1";
-    private static final String OPS_POLICIES_VDNS_VERSION =
-        "policytypes/" + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VDNS
-            + "/versions/1";
-    private static final String OPS_POLICIES_VFIREWALL_VERSION =
-        "policytypes/" + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VFW
-            + "/versions/1";
-    private static final String OPS_POLICIES_VCPE_VERSION_NOEX =
-        "policytypes/" + "onap.policies.controlloop.Operational/versions/1.0.0/policies/" + OP_POLICY_NAME_VCPE
-            + "/versions/99";
     private static final String POLICIES = "policies";
 
     private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
@@ -166,13 +137,9 @@ public class TestApiRestServer {
     private static final String TOSCA_POLICYTYPE_OP_RESOURCE =
         "policytypes/onap.policies.controlloop.operational.Common.yaml";
 
-    private static final String LEGACY_POLICYTYPE_OP_RESOURCE =
-        "policytypes/onap.policies.controlloop.Operational.yaml";
-
     private static final String[] TOSCA_POLICYTYPE_RESOURCE_NAMES = {
         "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
-        "policytypes/onap.policies.Optimization.yaml", LEGACY_POLICYTYPE_OP_RESOURCE, TOSCA_POLICYTYPE_OP_RESOURCE,
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml",
         "policytypes/onap.policies.controlloop.guard.Common.yaml",
         "policytypes/onap.policies.controlloop.guard.common.Blacklist.yaml",
@@ -194,10 +161,6 @@ public class TestApiRestServer {
 
     private static final String TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML =
         "policies/vCPE.policy.operational.input.tosca.yaml";
-
-    private static final String[] LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES = {
-        "policies/vCPE.policy.operational.legacy.input.json", "policies/vDNS.policy.operational.legacy.input.json",
-        "policies/vFirewall.policy.operational.legacy.input.json"};
 
     private static final String POLICIES_VCPE_VERSION1 = "policies/onap.restart.tca/versions/1.0.0";
 
@@ -347,25 +310,6 @@ public class TestApiRestServer {
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage())
             .contains("policy type IDontExist:1.0.0 referenced in policy not found");
-    }
-
-    @Test
-    public void testCreateOperationalPolicies() throws Exception {
-        for (String resrcName : LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName);
-            ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(null, errorResponse.getErrorDetails());
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = deleteResource(OPS_POLICIES + "/operational.restart/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(OPS_POLICIES + "/operational.scaleout/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(OPS_POLICIES + "/operational.modifyconfig/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @SuppressWarnings("unchecked")
@@ -718,130 +662,6 @@ public class TestApiRestServer {
     }
 
     @Test
-    public void testReadOperationalPoliciesJson() throws Exception {
-        testReadOperationalPolicies(APP_JSON);
-    }
-
-    @Test
-    public void testReadOperationalPoliciesYaml() throws Exception {
-        testReadOperationalPolicies(APP_YAML);
-    }
-
-    private void testReadOperationalPolicies(String mediaType) throws Exception {
-        for (String resrcName : LEGACY_OPERATIONAL_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createOperationalPolicy(OPS_POLICIES, resrcName);
-            ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-            assertEquals(null, error.getErrorDetails());
-            assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-        }
-
-        Response rawResponse = readResource(OPS_POLICIES_VCPE_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(OPS_POLICIES_VCPE_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(OPS_POLICIES_VFIREWALL_LATEST, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = readResource(OPS_POLICIES_VFIREWALL_VERSION, mediaType);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(OPS_POLICIES + "/operational.restart/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(OPS_POLICIES + "/operational.scaleout/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        rawResponse = deleteResource(OPS_POLICIES + "/operational.modifyconfig/versions/1", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-    }
-
-    @Test
-    public void testDeleteOperationalPolicyJson() throws Exception {
-        testDeleteOperationalPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testDeleteOperationalPolicyYaml() throws Exception {
-        testDeleteOperationalPolicy(APP_YAML);
-    }
-
-    private void testDeleteOperationalPolicy(String mediaType) throws Exception {
-        Response rawResponse = deleteResource(OPS_POLICIES_VCPE_VERSION_NOEX, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("policy operational.restart:99.0.0 not found", error.getErrorMessage());
-    }
-
-    @Test
-    public void testGetLatestVersionOfOperationalPolicyJson() throws Exception {
-        testGetLatestVersionOfOperationalPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetLatestVersionOfOperationalPolicyYaml() throws Exception {
-        testGetLatestVersionOfOperationalPolicy(APP_YAML);
-    }
-
-    private void testGetLatestVersionOfOperationalPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(OPS_POLICIES_VDNS_LATEST, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("policies for operational.scaleout:null do not exist", errorResponse.getErrorMessage());
-    }
-
-    @Test
-    public void testGetSpecificVersionOfOperationalPolicyJson() throws Exception {
-        testGetSpecificVersionOfOperationalPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetSpecificVersionOfOperationalPolicyYaml() throws Exception {
-        testGetSpecificVersionOfOperationalPolicy(APP_YAML);
-    }
-
-    private void testGetSpecificVersionOfOperationalPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(OPS_POLICIES_VDNS_VERSION, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("policies for operational.scaleout:1.0.0 do not exist", errorResponse.getErrorMessage());
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfOperationalPolicyJson() throws Exception {
-        testGetDeployedVersionsOfOperationalPolicy(APP_JSON);
-    }
-
-    @Test
-    public void testGetDeployedVersionsOfOperationalPolicyYaml() throws Exception {
-        testGetDeployedVersionsOfOperationalPolicy(APP_YAML);
-    }
-
-    private void testGetDeployedVersionsOfOperationalPolicy(String mediaType) throws Exception {
-        Response rawResponse = readResource(OPS_POLICIES_VCPE_DEPLOYED, mediaType);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("could not find policy with ID " + OP_POLICY_NAME_VCPE + " and type "
-            + "onap.policies.controlloop.Operational:1.0.0 deployed in any pdp group", errorResponse.getErrorMessage());
-    }
-
-    @Test
-    public void testDeleteSpecificVersionOfOperationalPolicy() throws Exception {
-        Response rawResponse = deleteResource(OPS_POLICIES_VDNS_VERSION, APP_YAML);
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
-        ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
-        assertEquals("policy operational.scaleout:1.0.0 not found", errorResponse.getErrorMessage());
-    }
-
-    @Test
     public void testGetPoliciesJson() throws Exception {
         getPolicies(APP_JSON);
     }
@@ -946,27 +766,6 @@ public class TestApiRestServer {
         invocationBuilder = sendHttpsRequest(endpoint, mediaType);
 
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
-        return invocationBuilder.post(entity);
-    }
-
-    private Response createOperationalPolicy(String endpoint, String resourceName) throws Exception {
-
-        String mediaType = APP_JSON; // default media type
-        LegacyOperationalPolicy rawOpsPolicy = new LegacyOperationalPolicy();
-        if (resourceName.endsWith(".json")) {
-            rawOpsPolicy = standardCoder
-                .decode(ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
-        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
-            mediaType = APP_YAML;
-            rawOpsPolicy = standardYamlCoder
-                .decode(ResourceUtils.getResourceAsString(resourceName), LegacyOperationalPolicy.class);
-        }
-
-        final Invocation.Builder invocationBuilder;
-
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType);
-
-        Entity<LegacyOperationalPolicy> entity = Entity.entity(rawOpsPolicy, mediaType);
         return invocationBuilder.post(entity);
     }
 
