@@ -34,6 +34,24 @@
       "revId": "251400e75443544e5cf76d285589ca91a92fb590",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fe73cd5_e92f941a",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2020-08-12T15:02:39Z",
+      "side": 1,
+      "message": "@Jim: Yes the exception information is getting printed into the logs. Tested this locally as well as in the pod\u0027s logs in a kubernetes setup.\n@Pam: We could have consistent output message (corresponding to specific errorCodes if we decided to go that route), but since we are going ahead with a generic errorCode of 1, and to know the actual error, we have to go to the logs anyway because the pod itself crashed, so is there a use in creating consistent messages!\nThe requirement I think is to \"Return non-zero (1 or anything else) exit code when the pod(main process) fail and assume that correct information has been already placed in the logs\"\nSorry Pam, maybe I am missing your point.",
+      "parentUuid": "a9e93ebe_f107fab6",
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
