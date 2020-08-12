@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +23,15 @@
 package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.onap.policy.common.utils.resources.MessageConstants;
 
 /**
  * Class to perform unit test of Main.
@@ -51,15 +54,15 @@ public class TestMain {
     @Test
     public void testMain_NoArguments() {
         final String[] apiConfigParameters = {};
-        final Main main = new Main(apiConfigParameters);
-        assertNull(main.getParameters());
+        assertThatThrownBy(() -> new Main(apiConfigParameters)).isInstanceOf(PolicyApiRuntimeException.class)
+            .hasMessage(String.format(MessageConstants.START_FAILURE_MSG, MessageConstants.POLICY_API));
     }
 
     @Test
     public void testMain_InvalidArguments() {
         final String[] apiConfigParameters = {"parameters/ApiConfigParameters.json"};
-        final Main main = new Main(apiConfigParameters);
-        assertNull(main.getParameters());
+        assertThatThrownBy(() -> new Main(apiConfigParameters)).isInstanceOf(PolicyApiRuntimeException.class)
+            .hasMessage(String.format(MessageConstants.START_FAILURE_MSG, MessageConstants.POLICY_API));
     }
 
     @Test
@@ -71,7 +74,7 @@ public class TestMain {
     @Test
     public void testMain_InvalidParameters() {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidName.json"};
-        final Main main = new Main(apiConfigParameters);
-        assertNull(main.getParameters());
+        assertThatThrownBy(() -> new Main(apiConfigParameters)).isInstanceOf(PolicyApiRuntimeException.class)
+            .hasMessage(String.format(MessageConstants.START_FAILURE_MSG, MessageConstants.POLICY_API));
     }
 }
