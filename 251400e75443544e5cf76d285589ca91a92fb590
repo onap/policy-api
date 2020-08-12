@@ -75,6 +75,30 @@
       "revId": "251400e75443544e5cf76d285589ca91a92fb590",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "620580a3_c70b75f9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-12T15:35:18Z",
+      "side": 1,
+      "message": "Isn\u0027t it sufficient, to indicate failure, that it exits with a non-zero status?\n\nSeems like we could address message consistency in a future \"Technical Debt\" epic.",
+      "parentUuid": "022da2e5_6a0cb685",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 95
+      },
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
