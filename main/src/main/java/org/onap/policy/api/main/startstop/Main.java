@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ package org.onap.policy.api.main.startstop;
 
 import java.util.Arrays;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
 import org.slf4j.Logger;
@@ -65,36 +67,21 @@ public class Main {
 
             // Validate that the arguments are sane
             arguments.validate();
-        } catch (final PolicyApiException e) {
-            LOGGER.error("start of policy api service failed", e);
-            return;
-        }
 
-        // Read the parameters
-        try {
+            // Read the parameters
             parameterGroup = new ApiParameterHandler().getParameters(arguments);
-        } catch (final Exception e) {
-            LOGGER.error("start of policy api service failed", e);
-            return;
-        }
 
-        // Initialize database
-        try {
+            // Initialize database
             new ApiDatabaseInitializer().initializeApiDatabase(parameterGroup);
-        } catch (final PolicyApiException e) {
-            LOGGER.error("Preloading policy types into DB failed", e);
-            return;
-        }
 
-        // Now, create the activator for the policy api service
-        activator = new ApiActivator(parameterGroup);
+            // Now, create the activator for the policy api service
+            activator = new ApiActivator(parameterGroup);
 
-        // Start the activator
-        try {
+            // Start the activator
             activator.initialize();
         } catch (final PolicyApiException e) {
-            LOGGER.error("start of policy api service failed, used parameters are {} ", argumentString, e);
-            return;
+            throw new PolicyApiRuntimeException(
+                "start of policy api service failed, used parameters are " + argumentString, e);
         }
 
         // Add a shutdown hook to shut everything down in an orderly manner
