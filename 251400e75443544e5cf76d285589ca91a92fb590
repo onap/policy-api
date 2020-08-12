@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdadbfe8_12757df5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-12T13:22:23Z",
+      "side": 1,
+      "message": "the only question I have is: Does the JVM print the exception information when the exception is thrown?  If not, we may need to set the Thread.UncaughtExceptionHandler for the main thread as the first thing it does.  However, if the JVM does print it, then no need to set the handler.",
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
