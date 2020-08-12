@@ -16,6 +16,24 @@
       "revId": "251400e75443544e5cf76d285589ca91a92fb590",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9e93ebe_f107fab6",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-08-12T13:43:40Z",
+      "side": 1,
+      "message": "I also think we should have a shared consistent output message for ALL the components. This can be used by docker services that scan the logs to determine if an image is up-and-running correctly before trying to move on to loading another image.",
+      "parentUuid": "cdadbfe8_12757df5",
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
