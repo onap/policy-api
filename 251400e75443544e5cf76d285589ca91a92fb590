@@ -52,6 +52,29 @@
       "revId": "251400e75443544e5cf76d285589ca91a92fb590",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "022da2e5_6a0cb685",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-08-12T15:19:12Z",
+      "side": 1,
+      "message": "What I\u0027m saying is this should be a public static final String in a common file. API, PAP and PDP components use that string to formulate its message to the logs. now we can use say fabric8 to determine if our docker image is up-and-running or failed.\nFor example, mariadb image dumps a final log message that is used to determine it is running:\n               \u003cwait\u003e\n                  \u003ctime\u003e20000\u003c/time\u003e\n                  \u003clog\u003e.*port: 3306  mariadb.org binary distribution\u003c/log\u003e\n                \u003c/wait\u003e\nPolicy components should have the same consistent message both for failure and success that can be used to synch up image startup.",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 95
+      },
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
