@@ -123,6 +123,30 @@
       "revId": "251400e75443544e5cf76d285589ca91a92fb590",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae66f748_da1e379b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-08-13T13:18:29Z",
+      "side": 1,
+      "message": "Let\u0027s leave this JIRA to address the exit status, and create another JIRA to add some consistent start-up/shutdown messages.",
+      "parentUuid": "67646959_5441d6f7",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 95
+      },
+      "revId": "251400e75443544e5cf76d285589ca91a92fb590",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
