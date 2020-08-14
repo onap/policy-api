@@ -83,8 +83,6 @@ public class TestPolicyProvider {
         "policies/vCPE.policy.different.policy.fields.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
 
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL =
-        "policytypes/onap.policies.controlloop.Operational.yaml";
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
         "policytypes/onap.policies.controlloop.operational.Common.yaml";
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
@@ -289,11 +287,7 @@ public class TestPolicyProvider {
 
     @Test
     public void testCreateOperationalDroolsPolicy() throws CoderException, PfModelException {
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder
-            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL), ToscaServiceTemplate.class);
-
-        policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        policyTypeServiceTemplate = standardYamlCoder.decode(
+        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
             ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
 
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
