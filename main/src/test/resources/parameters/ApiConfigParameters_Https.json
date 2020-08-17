@@ -35,6 +35,7 @@
         "policytypes/onap.policies.controlloop.guard.common.Blacklist.yaml",
         "policytypes/onap.policies.controlloop.guard.common.FrequencyLimiter.yaml",
         "policytypes/onap.policies.controlloop.guard.common.MinMax.yaml",
+        "policytypes/onap.policies.controlloop.guard.common.Filter.yaml",
         "policytypes/onap.policies.controlloop.guard.coordination.FirstBlocksSecond.yaml",
         "policytypes/onap.policies.controlloop.Operational.yaml",
         "policytypes/onap.policies.Naming.yaml",
