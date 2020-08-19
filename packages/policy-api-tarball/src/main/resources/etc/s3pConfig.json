@@ -18,7 +18,7 @@
         "persistenceUnit": "PolicyMariaDb"
     },
     "preloadPolicyTypes": [
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
+        "policytypes/onap.policies.monitoring.tcagen2.yaml",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
         "policytypes/onap.policies.Optimization.yaml",
         "policytypes/onap.policies.optimization.Resource.yaml",
