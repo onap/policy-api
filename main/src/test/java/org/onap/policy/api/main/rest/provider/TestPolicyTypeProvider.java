@@ -60,10 +60,10 @@ public class TestPolicyTypeProvider {
 
     private static final String POLICY_RESOURCE_MONITORING = "policies/vCPE.policy.monitoring.input.tosca.yaml";
     private static final String POLICY_TYPE_RESOURCE_MONITORING =
-            "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml";
+            "policytypes/onap.policies.monitoring.tcagen2.yaml";
     private static final String POLICY_TYPE_RESOURCE_WITH_NO_VERSION =
             "policytypes/onap.policies.optimization.Resource.no.version.yaml";
-    private static final String POLICY_TYPE_NAME_MONITORING = "onap.policies.monitoring.cdap.tca.hi.lo.app";
+    private static final String POLICY_TYPE_NAME_MONITORING = "onap.policies.monitoring.tcagen2";
 
     public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
@@ -146,7 +146,7 @@ public class TestPolicyTypeProvider {
         }).doesNotThrowAnyException();
 
         ToscaPolicyType policyType =
-                policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.cdap.tca.hi.lo.app");
+                policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.tcagen2");
         policyType.setDescription("Some other description");
 
         assertThatThrownBy(() -> {
@@ -204,21 +204,21 @@ public class TestPolicyTypeProvider {
                 .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
 
-        String exceptionMessage = "policy type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 is in use, "
+        String exceptionMessage = "policy type onap.policies.monitoring.tcagen2:1.0.0 is in use, "
                 + "it is referenced in policy onap.restart.tca:1.0.0";
         assertThatThrownBy(() -> {
-            policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+            policyTypeProvider.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
         }).hasMessage(exceptionMessage);
 
-        serviceTemplate = policyProvider.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+        serviceTemplate = policyProvider.deletePolicy("onap.policies.monitoring.tcagen2", "1.0.0",
                 "onap.restart.tca", "1.0.0");
         assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
-        serviceTemplate = policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
+        serviceTemplate = policyTypeProvider.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
         assertFalse(serviceTemplate.getPolicyTypes().isEmpty());
 
         assertThatThrownBy(() -> {
-            policyTypeProvider.deletePolicyType("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0");
-        }).hasMessage("policy type onap.policies.monitoring.cdap.tca.hi.lo.app:1.0.0 not found");
+            policyTypeProvider.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
+        }).hasMessage("policy type onap.policies.monitoring.tcagen2:1.0.0 not found");
     }
 }

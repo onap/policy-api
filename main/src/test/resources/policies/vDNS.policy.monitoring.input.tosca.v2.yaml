@@ -2,13 +2,13 @@ tosca_definitions_version: tosca_simple_yaml_1_1_0
 topology_template:
    policies:
    -  onap.scaleout.tca:
-         type: onap.policies.monitoring.cdap.tca.hi.lo.app
+         type: onap.policies.monitoring.tcagen2
          type_version: 1.0.0
          version: 2.0.0
          metadata:
             policy-id: onap.scaleout.tca
          properties:
-            tca_policy:
+            tca.policy:
                domain: measurementsForVfScaling
                metricsPerEventName:
                -  eventName: vLoadBalancer

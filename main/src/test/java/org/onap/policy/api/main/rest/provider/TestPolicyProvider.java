@@ -74,7 +74,7 @@ public class TestPolicyProvider {
     private static StandardYamlCoder standardYamlCoder;
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
-    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml";
+    private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.tcagen2.yaml";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID = "policies/vCPE.policy.bad.policytypeid.json";
     private static final String POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION =
         "policies/vCPE.policy.bad.policytypeversion.json";
@@ -366,7 +366,7 @@ public class TestPolicyProvider {
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 
         policyTypeServiceTemplate = standardYamlCoder.decode(
-            ResourceUtils.getResourceAsString("policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml"),
+            ResourceUtils.getResourceAsString("policytypes/onap.policies.monitoring.tcagen2.yaml"),
             ToscaServiceTemplate.class);
         policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
 

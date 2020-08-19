@@ -92,13 +92,13 @@ public class TestApiRestServer {
     private static final String OP_POLICY_NAME_VCPE = "operational.restart";
 
     private static final String POLICYTYPES = "policytypes";
-    private static final String POLICYTYPES_TCA = "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app";
+    private static final String POLICYTYPES_TCA = "policytypes/onap.policies.monitoring.tcagen2";
     private static final String POLICYTYPES_COLLECTOR =
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server";
     private static final String POLICYTYPES_TCA_VERSION =
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0";
+        "policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0";
     private static final String POLICYTYPES_TCA_LATEST =
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/latest";
+        "policytypes/onap.policies.monitoring.tcagen2/versions/latest";
     private static final String POLICYTYPES_COLLECTOR_VERSION =
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server/versions/1.0.0";
     private static final String POLICYTYPES_COLLECTOR_LATEST =
@@ -111,13 +111,13 @@ public class TestApiRestServer {
     private static final String POLICYTYPES_NAMING_VERSION = POLICYTYPES + "/onap.policies.Naming/versions/1.0.0";
 
     private static final String POLICYTYPES_TCA_POLICIES =
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies";
+        "policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/policies";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE =
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca";
+        "policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/policies/onap.restart.tca";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_VERSION1 = "policytypes/"
-        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
+        + "onap.policies.monitoring.tcagen2/versions/1.0.0/policies/onap.restart.tca/versions/1.0.0";
     private static final String POLICYTYPES_TCA_POLICIES_VCPE_LATEST = "policytypes/"
-        + "onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies/onap.restart.tca/versions/latest";
+        + "onap.policies.monitoring.tcagen2/versions/1.0.0/policies/onap.restart.tca/versions/latest";
 
     private static final String POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION =
         POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
@@ -138,7 +138,7 @@ public class TestApiRestServer {
         "policytypes/onap.policies.controlloop.operational.Common.yaml";
 
     private static final String[] TOSCA_POLICYTYPE_RESOURCE_NAMES = {
-        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
+        "policytypes/onap.policies.monitoring.tcagen2.yaml",
         "policytypes/onap.policies.monitoring.dcaegen2.collectors.datafile.datafile-app-server.yaml",
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml",
         "policytypes/onap.policies.controlloop.guard.Common.yaml",
@@ -277,7 +277,7 @@ public class TestApiRestServer {
         String toscaPolicy = ResourceUtils
             .getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
-        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "IDontExist");
+        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.tcagen2", "IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 = createResource(POLICYTYPES_TCA_POLICIES,
@@ -301,7 +301,7 @@ public class TestApiRestServer {
         String toscaPolicy = ResourceUtils
             .getResourceAsString(TOSCA_POLICY_RESOURCE_NAMES[TOSCA_POLICIES_RESOURCE_NAMES.length - 1]);
 
-        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.cdap.tca.hi.lo.app", "IDontExist");
+        toscaPolicy = toscaPolicy.replaceAll("onap.policies.monitoring.tcagen2", "IDontExist");
         toscaPolicy = toscaPolicy.replaceAll("onap.restart.tca", "onap.restart.tca.IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
