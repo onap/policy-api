@@ -6,7 +6,7 @@
         "userName": "healthcheck",
         "password": "zb!XztG34",
         "https": true,
-        "aaf": false 
+        "aaf": false
     },
     "databaseProviderParameters": {
         "name": "PolicyProviderParameterGroup",
@@ -14,7 +14,7 @@
         "databaseDriver": "org.mariadb.jdbc.Driver",
         "databaseUrl": "jdbc:mariadb://mariadb:3306/policyadmin",
         "databaseUser": "policy_user",
-        "databasePassword": "cG9saWN5X3VzZXI=",
+        "databasePassword": "policy_user",
         "persistenceUnit": "PolicyMariaDb"
     },
     "preloadPolicyTypes": [
