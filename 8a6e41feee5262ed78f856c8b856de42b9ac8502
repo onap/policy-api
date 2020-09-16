@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fceb58bd_9a3925d2",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-09-16T16:06:15Z",
+      "side": 1,
+      "message": "extra space - only fix if an update is required",
+      "range": {
+        "startLine": 9,
+        "startChar": 20,
+        "endLine": 9,
+        "endChar": 21
+      },
+      "revId": "8a6e41feee5262ed78f856c8b856de42b9ac8502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40b4f431_6480a8bc",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/s3pConfig.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-09-16T16:06:15Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 9,
+        "startChar": 20,
+        "endLine": 9,
+        "endChar": 21
+      },
+      "revId": "8a6e41feee5262ed78f856c8b856de42b9ac8502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
