@@ -45,6 +45,29 @@
       "revId": "8a6e41feee5262ed78f856c8b856de42b9ac8502",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "265a9efd_ceb607ea",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2020-09-16T16:41:25Z",
+      "side": 1,
+      "message": "Revert to 1.7.1",
+      "range": {
+        "startLine": 44,
+        "startChar": 31,
+        "endLine": 44,
+        "endChar": 45
+      },
+      "revId": "8a6e41feee5262ed78f856c8b856de42b9ac8502",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
