@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Base64;
 import java.util.Collections;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -88,7 +87,7 @@ public class TestPolicyTypeProvider {
         providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
         providerParams.setDatabaseUser("policy");
-        providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        providerParams.setDatabasePassword("P01icY");
         providerParams.setPersistenceUnit("ToscaConceptTest");
         apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
                 Collections.emptyList(), Collections.emptyList());
