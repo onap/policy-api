@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Base64;
 import java.util.Collections;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -88,7 +88,7 @@ public class TestPolicyTypeProvider {
         providerParams.setDatabaseDriver("org.h2.Driver");
         providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
         providerParams.setDatabaseUser("policy");
-        providerParams.setDatabasePassword(Base64.getEncoder().encodeToString("P01icY".getBytes()));
+        providerParams.setDatabasePassword("P01icY");
         providerParams.setPersistenceUnit("ToscaConceptTest");
         apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
                 Collections.emptyList(), Collections.emptyList());
