@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+2: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-by: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-at: Thu, 24 Sep 2020 20:02:35 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/api/+/113119
+Project: policy/api
+Branch: refs/heads/master
