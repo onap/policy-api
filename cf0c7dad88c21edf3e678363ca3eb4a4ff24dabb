@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ae9f2b9_7740ab9c",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-10-27T18:13:15Z",
+      "side": 1,
+      "message": "3.3.0-SNAPSHOT",
+      "range": {
+        "startLine": 31,
+        "startChar": 17,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "cf0c7dad88c21edf3e678363ca3eb4a4ff24dabb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c61bdf9_065ce78d",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-10-27T18:13:15Z",
+      "side": 1,
+      "message": "same bump to latest master",
+      "range": {
+        "startLine": 45,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 41
+      },
+      "revId": "cf0c7dad88c21edf3e678363ca3eb4a4ff24dabb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
