@@ -28,9 +28,11 @@ import java.util.LinkedList;
 import java.util.List;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
+import org.onap.policy.api.main.utils.PolicyModelsProviderRetriever;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.common.utils.time.CurrentTime;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
@@ -51,7 +53,7 @@ public class ApiDatabaseInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiDatabaseInitializer.class);
 
     private static final StandardYamlCoder coder = new StandardYamlCoder();
-    private PolicyModelsProviderFactory factory;
+    private final PolicyModelsProviderFactory factory;
 
     /**
      * Constructs the object.
@@ -68,8 +70,8 @@ public class ApiDatabaseInitializer {
      */
     public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup) throws PolicyApiException {
 
-        try (PolicyModelsProvider databaseProvider =
-                factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
+        try (PolicyModelsProvider databaseProvider = new PolicyModelsProviderRetriever()
+                .retrieve(factory, apiParameterGroup.getDatabaseProviderParameters(), new CurrentTime())) {
 
             if (alreadyExists(databaseProvider)) {
                 LOGGER.warn("DB already contains policy data - skipping preload");
@@ -93,7 +95,7 @@ public class ApiDatabaseInitializer {
     private boolean alreadyExists(PolicyModelsProvider databaseProvider) throws PfModelException {
         try {
             ToscaServiceTemplate serviceTemplate =
-                            databaseProvider.getFilteredPolicyTypes(ToscaPolicyTypeFilter.builder().build());
+                    databaseProvider.getFilteredPolicyTypes(ToscaPolicyTypeFilter.builder().build());
             if (!serviceTemplate.getPolicyTypes().isEmpty()) {
                 return true;
             }
@@ -107,7 +109,7 @@ public class ApiDatabaseInitializer {
 
     private ToscaServiceTemplate preloadServiceTemplate(ToscaServiceTemplate serviceTemplate,
             List<String> entities, FunctionWithEx<ToscaServiceTemplate, ToscaServiceTemplate> getter)
-                    throws PolicyApiException, CoderException, PfModelException {
+            throws PolicyApiException, CoderException, PfModelException {
 
         for (String entity : entities) {
             String entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
@@ -117,7 +119,7 @@ public class ApiDatabaseInitializer {
             }
 
             ToscaServiceTemplate singleEntity =
-                    coder.decode(entityAsStringYaml,  ToscaServiceTemplate.class);
+                    coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
             if (singleEntity == null) {
                 throw new PolicyApiException("Error deserializaing entity from file: " + entity);
             }
