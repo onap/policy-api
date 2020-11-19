@@ -69,7 +69,7 @@ public class ApiDatabaseInitializer {
     public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup) throws PolicyApiException {
 
         try (PolicyModelsProvider databaseProvider =
-                factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
+                factory.createPolicyModelsProviderWithRetry(apiParameterGroup.getDatabaseProviderParameters())) {
 
             if (alreadyExists(databaseProvider)) {
                 LOGGER.warn("DB already contains policy data - skipping preload");
