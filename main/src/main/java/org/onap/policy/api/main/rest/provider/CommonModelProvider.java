@@ -122,8 +122,7 @@ public class CommonModelProvider implements AutoCloseable {
     /**
      * Retrieves all pdp groups supporting specified policy type.
      *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
+     * @param policyType the concept key of policy type
      *
      * @return a list of pdp groups supporting specified policy type
      *
@@ -133,8 +132,8 @@ public class CommonModelProvider implements AutoCloseable {
 
         List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
         policyTypes.add(new ToscaPolicyTypeIdentifier(policyType.getName(), policyType.getVersion()));
-        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes).groupState(PdpState.ACTIVE)
-                .pdpState(PdpState.ACTIVE).build();
+        PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes)
+                .groupState(PdpState.ACTIVE).pdpState(PdpState.ACTIVE).build();
         return modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
     }
 
