@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e0c2c91e_729d2b54",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "change to mockito-all and remove the version",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "63a1fefd_89acedc5",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
         "patchSetId": 1
@@ -19,6 +36,120 @@
         "endLine": 53,
         "endChar": 63
       },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb451bb6_46a99930",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "This should be common code probably placed in policy/models.  However, that can wait until this has been merged.  OTOH, maybe we should just add a createWithRetry() method to the PolicyModelsProviderFactory. If we do that, then we can also add any extra config parameters (e.g., retry time) to PolicyModelsProviderParameters.",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15f2987e_62805258",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "just 2020\n\nsame comment on the next line",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4735bdf_0cf92a46",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "sorry, now I\u0027m remembering some details that I should have put in the JIRA: should only retry if it\u0027s a \"temporary\" issue, such as connectivity.  If it\u0027s a configuration issue (e.g., invalid host name, credentials), then it should not retry.  Not sure if there\u0027s a generic way to check for that; may have to include a list of retry-able connection codes in the config so they can be adjusted for the DBMS chosen by the organization.",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "422f224b_b81147ed",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "for junit tests, we need a way to shorten this sleep to just a couple of milliseconds.  Some alternatives:\n- make the retry period milliseconds instead of seconds\n- wrap the Thread.sleep() call in a method and then override the method in the junit tests\n- use CurrentTime object (from policy/common utils) to do sleep and override the object, in the junit tests, with a subclass of CurrentTime that simply returns when sleep is called",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69573454_b83d5520",
+        "filename": "main/src/test/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetrieverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "just 2020\n\nsame comment below",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "104480bf_735ff6d7",
+        "filename": "main/src/test/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetrieverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-20T14:01:43Z",
+      "side": 1,
+      "message": "also need to test the rainy day scenario where interrupt is thrown while sleeping",
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
