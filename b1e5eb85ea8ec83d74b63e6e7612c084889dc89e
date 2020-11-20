@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63a1fefd_89acedc5",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2020-11-20T13:30:35Z",
+      "side": 1,
+      "message": "These types of values should be configurable via config file.",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 63
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
