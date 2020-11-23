@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "615964c6_0d3f35e4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-23T17:33:57Z",
+      "side": 1,
+      "message": "\u003e These types of values should be configurable via config file.\n\nTrue, but where to put it? Is DatabaseProviderParameters appropriate?",
+      "parentUuid": "63a1fefd_89acedc5",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 63
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb451bb6_46a99930",
         "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
         "patchSetId": 1
