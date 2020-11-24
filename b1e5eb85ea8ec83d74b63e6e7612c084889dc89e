@@ -101,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "f63a537a_80f0226e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-24T12:07:05Z",
+      "side": 1,
+      "message": "Agreed we should look at modifying policy/models. Do we merge this (when ready) first?",
+      "parentUuid": "eb451bb6_46a99930",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15f2987e_62805258",
         "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
         "patchSetId": 1
@@ -121,6 +139,30 @@
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aa6a86f_d44d9ac6",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-24T12:07:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15f2987e_62805258",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -214,6 +256,30 @@
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a3a0f79_6f7ee9c4",
+        "filename": "main/src/test/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetrieverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-24T12:07:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69573454_b83d5520",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
