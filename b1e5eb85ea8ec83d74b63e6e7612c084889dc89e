@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "83f6fb13_3d3e662c",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-24T19:51:45Z",
+      "side": 1,
+      "message": "would prefer to use mockito-all or powermock (which is also in policy/parent and includes mockito as a dependency) rather than introducing another dependency.  We can look at upgrading mockito version in \"I\" release.\n\nthese are preferred over hamcrest:\norg.assertj.core.api.Assertions\norg.mockito.ArgumentMatchers",
+      "parentUuid": "9817709b_27b6dc13",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "63a1fefd_89acedc5",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
         "patchSetId": 1
@@ -113,6 +131,24 @@
       "side": 1,
       "message": "Agreed we should look at modifying policy/models. Do we merge this (when ready) first?",
       "parentUuid": "eb451bb6_46a99930",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c609982_7c65fc06",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-24T19:51:45Z",
+      "side": 1,
+      "message": "Depends.  Seems like this could be done as part of addressing Liam\u0027s comment about restructuring.  Up to him whether we should do it now or in a subsequent review.  Either way, it should be done before moving on to PAP.",
+      "parentUuid": "f63a537a_80f0226e",
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -201,6 +237,24 @@
     },
     {
       "key": {
+        "uuid": "1fafab47_6fdf7be2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-24T19:51:45Z",
+      "side": 1,
+      "message": "seems like JPA still provides access to the underlying exception.  Yeah, may need to check messages instead of codes, if the code is not readily accessible in a generic way - there may be a SQLException in the stacktrace that can be examined.",
+      "parentUuid": "fc5a5626_84e7c7fd",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "422f224b_b81147ed",
         "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
         "patchSetId": 1
@@ -230,6 +284,24 @@
       "side": 1,
       "message": "\u003e for junit tests, we need a way to shorten this sleep to just a couple of milliseconds.  Some alternatives:\n\u003e - make the retry period milliseconds instead of seconds\n\u003e - wrap the Thread.sleep() call in a method and then override the method in the junit tests\n\u003e - use CurrentTime object (from policy/common utils) to do sleep and override the object, in the junit tests, with a subclass of CurrentTime that simply returns when sleep is called\n\nWe can (manually) inject a mock CurrentTime object into the Retriever which will return immediately or throw InterruptedException",
       "parentUuid": "422f224b_b81147ed",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28820c5d_dd5a319e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-24T19:51:45Z",
+      "side": 1,
+      "message": "that works",
+      "parentUuid": "160235e5_ac45ee0d",
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
