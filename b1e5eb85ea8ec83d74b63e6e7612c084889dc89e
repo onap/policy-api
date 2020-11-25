@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "33979443_eff10938",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-25T12:41:26Z",
+      "side": 1,
+      "message": "Done\nFYI: hamcrest is used by openpojo in testStatisticsReport",
+      "parentUuid": "83f6fb13_3d3e662c",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63a1fefd_89acedc5",
         "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
         "patchSetId": 1
@@ -99,6 +117,30 @@
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ba933b8_70d91122",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-25T12:41:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "615964c6_0d3f35e4",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 63
+      },
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -308,6 +350,24 @@
     },
     {
       "key": {
+        "uuid": "97f85d3f_efb38526",
+        "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-25T12:41:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28820c5d_dd5a319e",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69573454_b83d5520",
         "filename": "main/src/test/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetrieverTest.java",
         "patchSetId": 1
@@ -387,6 +447,24 @@
       "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78e3a15b_3cfffa7c",
+        "filename": "main/src/test/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetrieverTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-25T12:41:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09bdb85b_26798709",
+      "revId": "b1e5eb85ea8ec83d74b63e6e7612c084889dc89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
