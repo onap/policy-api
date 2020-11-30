@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "15e0db5a_bb6b8215",
+        "filename": "packages/policy-api-docker/src/main/docker/policy-api.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2020-11-30T19:24:24Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6e619d25_09a6c195",
+      "revId": "2cbc10e1e7ce34ed7b0821317d203231e6803d65",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "580e0684_3222bec2",
         "filename": "packages/policy-api-docker/src/main/docker/policy-api.sh",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2020-11-30T19:16:46Z",
       "side": 1,
       "message": "do we know \"cp -f\" works with busybox?",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "2cbc10e1e7ce34ed7b0821317d203231e6803d65",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "511d3c12_54bf5aaf",
+        "filename": "packages/policy-api-docker/src/main/docker/policy-api.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2020-11-30T19:24:24Z",
+      "side": 1,
+      "message": "/tmp # touch f\n/tmp # cp -f f g\n/tmp # ls -la\ntotal 8\ndrwxrwxrwt    1 root     root          4096 Nov 30 19:23 .\ndrwxr-xr-x    1 root     root          4096 Nov 30 19:23 ..\n-rw-r--r--    1 root     root             0 Nov 30 19:23 f\n-rw-r--r--    1 root     root             0 Nov 30 19:23 g\n/tmp # ls -la /bin/cp\nlrwxrwxrwx    1 root     root            12 Jan 16  2020 /bin/cp -\u003e /bin/busybox",
+      "parentUuid": "580e0684_3222bec2",
       "range": {
         "startLine": 44,
         "startChar": 4,
