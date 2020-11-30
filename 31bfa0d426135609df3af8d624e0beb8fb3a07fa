@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3d7ff997_dd0e2eca",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 7010
+      },
+      "writtenOn": "2020-11-30T20:59:03Z",
+      "side": 1,
+      "message": "As Liam mentioned, this could cause problems if the DB is intermittent. Should not getProvider and preLoadPolicies() be wrapped in their own retry loop (a DIY transaction) - which means moving the retry logic back here from Policy/Models?",
+      "parentUuid": "d1f19981_46d8108c",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "31bfa0d426135609df3af8d624e0beb8fb3a07fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ce7a8c97_640f189d",
         "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
         "patchSetId": 3
