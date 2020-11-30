@@ -41,4 +41,4 @@ RUN chown -R policy:policy * && chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "bash", "./policy-api.sh" ]
+ENTRYPOINT [ "./policy-api.sh" ]
