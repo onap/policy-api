@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d1f19981_46d8108c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiDatabaseInitializer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2020-11-30T18:43:22Z",
+      "side": 1,
+      "message": "I think it will be fine once the original lines 71 \u0026 72 are restored and the connectWithRetry() method used instead.\n\nMy understanding of what the TSC said is that, on start-up:\n- for permanent errors (e.g., configuration issues), the pod should exit non-zero\n- for temporary errors (e.g., DB connectivity issues), the pod should keep retrying until the issue is resolved.  In particular, they\u0027re attempting to address the case where the DB pod comes up last.  In that case, the other pods should not exit, but should retry",
+      "parentUuid": "9f75117e_1e3fcc45",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "31bfa0d426135609df3af8d624e0beb8fb3a07fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ce7a8c97_640f189d",
         "filename": "main/src/main/java/org/onap/policy/api/main/utils/PolicyModelsProviderRetriever.java",
         "patchSetId": 3
