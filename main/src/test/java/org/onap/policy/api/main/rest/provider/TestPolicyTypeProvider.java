@@ -59,8 +59,7 @@ public class TestPolicyTypeProvider {
     private static final String POLICY_TYPE_VERSION = "1.0.0";
 
     private static final String POLICY_RESOURCE_MONITORING = "policies/vCPE.policy.monitoring.input.tosca.yaml";
-    private static final String POLICY_TYPE_RESOURCE_MONITORING =
-            "policytypes/onap.policies.monitoring.tcagen2.yaml";
+    private static final String POLICY_TYPE_RESOURCE_MONITORING = "policytypes/onap.policies.monitoring.tcagen2.yaml";
     private static final String POLICY_TYPE_RESOURCE_WITH_NO_VERSION =
             "policytypes/onap.policies.optimization.Resource.no.version.yaml";
     private static final String POLICY_TYPE_NAME_MONITORING = "onap.policies.monitoring.tcagen2";
@@ -90,8 +89,8 @@ public class TestPolicyTypeProvider {
         providerParams.setDatabaseUser("policy");
         providerParams.setDatabasePassword("P01icY");
         providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams,
-                Collections.emptyList(), Collections.emptyList());
+        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(),
+                Collections.emptyList());
         ParameterService.register(apiParamGroup, true);
         policyTypeProvider = new PolicyTypeProvider();
         policyProvider = new PolicyProvider();
@@ -145,20 +144,20 @@ public class TestPolicyTypeProvider {
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         }).doesNotThrowAnyException();
 
-        ToscaPolicyType policyType =
-                policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.tcagen2");
+        ToscaPolicyType policyType = policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.tcagen2");
         policyType.setDescription("Some other description");
 
         assertThatThrownBy(() -> {
             policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
-        }).hasMessageContaining("entity in incoming fragment does not equal existing entity");
+        }).hasMessageContaining("item \"entity\" value \"onap.policies.monitoring.tcagen2:1.0.0\" INVALID, "
+                + "does not equal existing entity");
 
         assertThatThrownBy(() -> {
             ToscaServiceTemplate badPolicyType =
                     standardYamlCoder.decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_WITH_NO_VERSION),
                             ToscaServiceTemplate.class);
             policyTypeProvider.createPolicyType(badPolicyType);
-        }).hasMessageContaining("INVALID:key version is a null version");
+        }).hasMessageContaining("item \"version\" value \"0.0.0\" INVALID, is null");
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_NAME_MONITORING, POLICY_TYPE_VERSION);
     }
@@ -210,8 +209,8 @@ public class TestPolicyTypeProvider {
             policyTypeProvider.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
         }).hasMessage(exceptionMessage);
 
-        serviceTemplate = policyProvider.deletePolicy("onap.policies.monitoring.tcagen2", "1.0.0",
-                "onap.restart.tca", "1.0.0");
+        serviceTemplate =
+                policyProvider.deletePolicy("onap.policies.monitoring.tcagen2", "1.0.0", "onap.restart.tca", "1.0.0");
         assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
         serviceTemplate = policyTypeProvider.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
