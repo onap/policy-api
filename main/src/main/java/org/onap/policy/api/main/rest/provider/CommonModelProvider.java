@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,7 @@ import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Super class for providers that use a model provider.
@@ -131,8 +130,8 @@ public class CommonModelProvider implements AutoCloseable {
      */
     private List<PdpGroup> getPolicyTypeFilteredPdpGroups(PfConceptKey policyType) throws PfModelException {
 
-        List<ToscaPolicyTypeIdentifier> policyTypes = new ArrayList<>();
-        policyTypes.add(new ToscaPolicyTypeIdentifier(policyType.getName(), policyType.getVersion()));
+        List<ToscaConceptIdentifier> policyTypes = new ArrayList<>();
+        policyTypes.add(new ToscaConceptIdentifier(policyType.getName(), policyType.getVersion()));
         PdpGroupFilter pdpGroupFilter = PdpGroupFilter.builder().policyTypeList(policyTypes).groupState(PdpState.ACTIVE)
                 .pdpState(PdpState.ACTIVE).build();
         return modelsProvider.getFilteredPdpGroups(pdpGroupFilter);
@@ -158,7 +157,7 @@ public class CommonModelProvider implements AutoCloseable {
 
         Map<Pair<String, String>, T> deployedPolicyMap = new HashMap<>();
         for (PdpGroup pdpGroup : pdpGroups) {
-            List<ToscaPolicyIdentifier> policyIdentifiers = extractPolicyIdentifiers(policyId, pdpGroup, policyType);
+            List<ToscaConceptIdentifier> policyIdentifiers = extractPolicyIdentifiers(policyId, pdpGroup, policyType);
             T deployedPolicies = getDeployedPolicies(policyIdentifiers, policyType, getter, consumer, data);
             deployedPolicyMap.put(Pair.of(pdpGroup.getName(), pdpGroup.getVersion()), deployedPolicies);
         }
@@ -176,12 +175,12 @@ public class CommonModelProvider implements AutoCloseable {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    private List<ToscaPolicyIdentifier> extractPolicyIdentifiers(String policyId, PdpGroup pdpGroup,
+    private List<ToscaConceptIdentifier> extractPolicyIdentifiers(String policyId, PdpGroup pdpGroup,
             PfConceptKey policyType) throws PfModelException {
 
-        List<ToscaPolicyIdentifier> policyIdentifiers = new ArrayList<>();
+        List<ToscaConceptIdentifier> policyIdentifiers = new ArrayList<>();
         for (PdpSubGroup pdpSubGroup : pdpGroup.getPdpSubgroups()) {
-            for (ToscaPolicyIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
+            for (ToscaConceptIdentifier policyIdentifier : pdpSubGroup.getPolicies()) {
                 if (policyId.equalsIgnoreCase(policyIdentifier.getName())) {
                     policyIdentifiers.add(policyIdentifier);
                 }
@@ -207,10 +206,10 @@ public class CommonModelProvider implements AutoCloseable {
      *
      * @throws PfModelException the PfModel parsing exception
      */
-    private <T, R> T getDeployedPolicies(List<ToscaPolicyIdentifier> policyIdentifiers, PfConceptKey policyType,
+    private <T, R> T getDeployedPolicies(List<ToscaConceptIdentifier> policyIdentifiers, PfConceptKey policyType,
             BiFunctionWithEx<String, String, R> getter, BiConsumer<T, R> consumer, T data) throws PfModelException {
 
-        for (ToscaPolicyIdentifier policyIdentifier : policyIdentifiers) {
+        for (ToscaConceptIdentifier policyIdentifier : policyIdentifiers) {
             R result = getter.apply(policyIdentifier.getName(),
                     getTrimedVersionForLegacyType(policyIdentifier.getVersion(), policyType));
             consumer.accept(data, result);
