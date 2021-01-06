@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,8 +54,7 @@ import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -180,7 +179,7 @@ public class TestPolicyProvider {
             pdpSubGroup.setPdpType("type");
             pdpSubGroup.setDesiredInstanceCount(123);
             pdpSubGroup.setSupportedPolicyTypes(new ArrayList<>());
-            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaPolicyTypeIdentifier(policyTypeId, policyTypeVersion));
+            pdpSubGroup.getSupportedPolicyTypes().add(new ToscaConceptIdentifier(policyTypeId, policyTypeVersion));
             pdpGroup.getPdpSubgroups().add(pdpSubGroup);
 
             Pdp pdp = new Pdp();
@@ -215,7 +214,7 @@ public class TestPolicyProvider {
 
             // Update pdpSubGroup
             pdpSubGroup.setPolicies(new ArrayList<>());
-            pdpSubGroup.getPolicies().add(new ToscaPolicyIdentifier(policyId, policyVersion));
+            pdpSubGroup.getPolicies().add(new ToscaConceptIdentifier(policyId, policyVersion));
             assertEquals(1,
                     databaseProvider.createPdpGroups(groupList).get(0).getPdpSubgroups().get(0).getPolicies().size());
 
