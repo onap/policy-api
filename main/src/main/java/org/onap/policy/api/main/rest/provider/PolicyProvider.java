@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ package org.onap.policy.api.main.rest.provider;
 
 import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
 /**
  * Class to provide all kinds of policy operations.
@@ -56,7 +57,7 @@ public class PolicyProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate fetchPolicies(final String policyTypeId, final String policyTypeVersion,
-        final String policyId, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
+            final String policyId, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
 
         return getFilteredPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
     }
@@ -73,9 +74,10 @@ public class PolicyProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate fetchLatestPolicies(final String policyTypeId, final String policyTypeVersion,
-        final String policyId, final PolicyFetchMode mode) throws PfModelException {
+            final String policyId, final PolicyFetchMode mode) throws PfModelException {
 
-        return getFilteredPolicies(policyTypeId, policyTypeVersion, policyId, ToscaPolicyFilter.LATEST_VERSION, mode);
+        return getFilteredPolicies(policyTypeId, policyTypeVersion, policyId, ToscaTypedEntityFilter.LATEST_VERSION,
+                mode);
     }
 
     /**
@@ -90,7 +92,7 @@ public class PolicyProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate createPolicy(String policyTypeId, String policyTypeVersion, ToscaServiceTemplate body)
-        throws PfModelException {
+            throws PfModelException {
 
         return modelsProvider.createPolicies(body);
     }
@@ -121,7 +123,7 @@ public class PolicyProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     public ToscaServiceTemplate deletePolicy(String policyTypeId, String policyTypeVersion, String policyId,
-        String policyVersion) throws PfModelException {
+            String policyVersion) throws PfModelException {
 
         return modelsProvider.deletePolicy(policyId, policyVersion);
     }
@@ -140,10 +142,10 @@ public class PolicyProvider extends CommonModelProvider {
      * @throws PfModelException the PfModel parsing exception
      */
     private ToscaServiceTemplate getFilteredPolicies(final String policyTypeName, final String policyTypeVersion,
-        final String policyName, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
+            final String policyName, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
 
-        ToscaPolicyFilter policyFilter = ToscaPolicyFilter.builder().name(policyName).version(policyVersion)
-            .type(policyTypeName).typeVersion(policyTypeVersion).build();
+        ToscaTypedEntityFilter<ToscaPolicy> policyFilter = ToscaTypedEntityFilter.<ToscaPolicy>builder()
+                .name(policyName).version(policyVersion).type(policyTypeName).typeVersion(policyTypeVersion).build();
 
         ToscaServiceTemplate serviceTemplate = modelsProvider.getFilteredPolicies(policyFilter);
 

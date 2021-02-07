@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
@@ -83,8 +84,8 @@ public class ApiDatabaseInitializer {
 
             ToscaServiceTemplate createdPolicyTypes = preloadServiceTemplate(serviceTemplate,
                     apiParameterGroup.getPreloadPolicyTypes(), databaseProvider::createPolicyTypes);
-            preloadServiceTemplate(createdPolicyTypes,
-                    apiParameterGroup.getPreloadPolicies(), databaseProvider::createPolicies);
+            preloadServiceTemplate(createdPolicyTypes, apiParameterGroup.getPreloadPolicies(),
+                    databaseProvider::createPolicies);
         } catch (final PolicyApiException | PfModelException | CoderException exp) {
             throw new PolicyApiException(exp);
         }
@@ -93,7 +94,7 @@ public class ApiDatabaseInitializer {
     private boolean alreadyExists(PolicyModelsProvider databaseProvider) throws PfModelException {
         try {
             ToscaServiceTemplate serviceTemplate =
-                            databaseProvider.getFilteredPolicyTypes(ToscaPolicyTypeFilter.builder().build());
+                    databaseProvider.getFilteredPolicyTypes(ToscaEntityFilter.<ToscaPolicyType>builder().build());
             if (!serviceTemplate.getPolicyTypes().isEmpty()) {
                 return true;
             }
@@ -105,9 +106,9 @@ public class ApiDatabaseInitializer {
         return false;
     }
 
-    private ToscaServiceTemplate preloadServiceTemplate(ToscaServiceTemplate serviceTemplate,
-            List<String> entities, FunctionWithEx<ToscaServiceTemplate, ToscaServiceTemplate> getter)
-                    throws PolicyApiException, CoderException, PfModelException {
+    private ToscaServiceTemplate preloadServiceTemplate(ToscaServiceTemplate serviceTemplate, List<String> entities,
+            FunctionWithEx<ToscaServiceTemplate, ToscaServiceTemplate> getter)
+            throws PolicyApiException, CoderException, PfModelException {
 
         for (String entity : entities) {
             String entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
@@ -116,8 +117,7 @@ public class ApiDatabaseInitializer {
                 continue;
             }
 
-            ToscaServiceTemplate singleEntity =
-                    coder.decode(entityAsStringYaml,  ToscaServiceTemplate.class);
+            ToscaServiceTemplate singleEntity = coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
             if (singleEntity == null) {
                 throw new PolicyApiException("Error deserializaing entity from file: " + entity);
             }
@@ -136,7 +136,7 @@ public class ApiDatabaseInitializer {
                 serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
                 serviceTemplate.getToscaTopologyTemplate().setPolicies(new LinkedList<>());
                 serviceTemplate.getToscaTopologyTemplate().getPolicies()
-                    .addAll(singleEntity.getToscaTopologyTemplate().getPolicies());
+                        .addAll(singleEntity.getToscaTopologyTemplate().getPolicies());
             }
         }
         // Preload the specified entities

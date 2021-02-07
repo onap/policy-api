@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@
 package org.onap.policy.api.main.rest.provider;
 
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -68,7 +69,7 @@ public class PolicyTypeProvider extends CommonModelProvider {
      */
     public ToscaServiceTemplate fetchLatestPolicyTypes(String policyTypeId) throws PfModelException {
 
-        return getFilteredPolicyTypes(policyTypeId, ToscaPolicyTypeFilter.LATEST_VERSION);
+        return getFilteredPolicyTypes(policyTypeId, ToscaEntityFilter.LATEST_VERSION);
     }
 
     /**
@@ -113,8 +114,8 @@ public class PolicyTypeProvider extends CommonModelProvider {
     private ToscaServiceTemplate getFilteredPolicyTypes(String policyTypeName, String policyTypeVersion)
             throws PfModelException {
 
-        ToscaPolicyTypeFilter policyTypeFilter =
-                ToscaPolicyTypeFilter.builder().name(policyTypeName).version(policyTypeVersion).build();
+        ToscaEntityFilter<ToscaPolicyType> policyTypeFilter =
+                ToscaEntityFilter.<ToscaPolicyType>builder().name(policyTypeName).version(policyTypeVersion).build();
         return modelsProvider.getFilteredPolicyTypes(policyTypeFilter);
     }
 }

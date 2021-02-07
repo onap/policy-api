@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,11 +117,11 @@ public class TestPolicyTypeProvider {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchPolicyTypes("dummy", null);
-        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=null) do not exist");
+        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=null) do not exist");
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchPolicyTypes("dummy", "dummy");
-        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=dummy) do not exist");
+        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=dummy) do not exist");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class TestPolicyTypeProvider {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchLatestPolicyTypes("dummy");
-        }).hasMessage("policy types for filter ToscaPolicyTypeFilter(name=dummy, version=LATEST) do not exist");
+        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=LATEST) do not exist");
     }
 
     @Test
