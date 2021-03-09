@@ -248,7 +248,7 @@ public class TestPolicyProvider {
             policyProvider.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
                     badPolicyServiceTemplate);
         }).hasMessage(
-                "PolicyType version not specified, the version of the PolicyType for this policy must be specified in "
+                "Version not specified, the version of this TOSCA entity must be specified in "
                         + "the type_version field");
 
         assertThatThrownBy(() -> {
