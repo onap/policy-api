@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f68faff_66921399",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T22:18:02Z",
+      "side": 1,
+      "message": "I assume this change is needed to fix the test due to new models",
+      "revId": "0f092cca714b469cb09dc26f58c6a923351fb867",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
