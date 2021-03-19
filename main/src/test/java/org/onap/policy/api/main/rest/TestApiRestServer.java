@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *  Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 Nordix Foundation.
  *  Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
@@ -67,6 +67,7 @@ import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
+import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
@@ -120,8 +121,6 @@ public class TestApiRestServer {
             POLICYTYPES_DROOLS_VERSION + "/policies/" + OP_POLICY_NAME_VCPE + "/versions/1.0.0";
 
     private static final String POLICIES = "policies";
-
-    private static final String KEYSTORE = System.getProperty("user.dir") + "/src/test/resources/ssl/policy-keystore";
 
     // @formatter:off
     private static final String[] TOSCA_POLICY_RESOURCE_NAMES = {"policies/vCPE.policy.monitoring.input.tosca.json",
@@ -180,9 +179,10 @@ public class TestApiRestServer {
      *
      * @throws PfModelException the PfModel parsing exception
      * @throws IOException on I/O exceptions
+     * @throws InterruptedException if interrupted
      */
     @BeforeClass
-    public static void setupParameters() throws PfModelException, IOException {
+    public static void setupParameters() throws PfModelException, IOException, InterruptedException {
         providerParams = new PolicyModelsProviderParameters();
         // H2, use "org.mariadb.jdbc.Driver" and "jdbc:mariadb://localhost:3306/policy" for locally installed MariaDB
         providerParams.setDatabaseDriver("org.h2.Driver");
@@ -201,8 +201,8 @@ public class TestApiRestServer {
 
         final String[] apiConfigParameters = new String[2];
         final Properties systemProps = System.getProperties();
-        systemProps.put("javax.net.ssl.keyStore", KEYSTORE);
-        systemProps.put("javax.net.ssl.keyStorePassword", "Pol1cy_0nap");
+        systemProps.put("javax.net.ssl.keyStore", new SelfSignedKeyStore().getKeystoreName());
+        systemProps.put("javax.net.ssl.keyStorePassword", SelfSignedKeyStore.KEYSTORE_PASSWORD);
         System.setProperties(systemProps);
         new CommonTestData().makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
                 "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", apiPort);
