@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.4.2'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-honolulu/14'
+ref: af56dd4e79ec88d072fc67790395f6748e6fffb3
+containers:
+    - name: 'policy-api'
+      version: '2.4.2-20210323T2130'
