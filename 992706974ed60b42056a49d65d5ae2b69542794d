@@ -22,6 +22,30 @@
       "revId": "992706974ed60b42056a49d65d5ae2b69542794d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef3f40d3_9a4a8336",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-07T12:36:58Z",
+      "side": 1,
+      "message": "oh, bummer",
+      "parentUuid": "bd175671_e4330414",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "992706974ed60b42056a49d65d5ae2b69542794d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
