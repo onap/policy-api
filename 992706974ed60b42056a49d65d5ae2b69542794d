@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd175671_e4330414",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-04-07T10:04:43Z",
+      "side": 1,
+      "message": "sh instead of ash ;)",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "992706974ed60b42056a49d65d5ae2b69542794d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
