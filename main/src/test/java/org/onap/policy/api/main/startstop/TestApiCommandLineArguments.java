@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +24,9 @@
 package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 
 public class TestApiCommandLineArguments {
@@ -33,38 +34,35 @@ public class TestApiCommandLineArguments {
 
     @Test(expected = PolicyApiRuntimeException.class)
     public void testApiCommandLineArgumentsStringArray() {
-        String [] args = {"---d"};
+        String[] args = {"---d"};
         new ApiCommandLineArguments(args);
     }
 
     @Test
     public void testNonExistentFileValidateReadableFile() {
         apiCmdArgs.setConfigurationFilePath("src/test/resources/filetest/nonexist.json ");
-        assertThatThrownBy(
-                apiCmdArgs::validate
-            )
-            .isInstanceOf(PolicyApiException.class)
-            .hasMessageContaining("file \"src/test/resources/filetest/nonexist.json \" does not exist");
+        assertThatThrownBy(apiCmdArgs::validate)
+                .hasMessageContaining("file \"src/test/resources/filetest/nonexist.json \" does not exist");
     }
 
     @Test
     public void testEmptyFileNameValidateReadableFile() {
         apiCmdArgs.setConfigurationFilePath("");
-        assertThatThrownBy(
-                 apiCmdArgs::validate
-            )
-            .isInstanceOf(PolicyApiException.class)
-            .hasMessageContaining("policy api configuration file was not specified as an argument");
+        assertThatThrownBy(apiCmdArgs::validate)
+                .hasMessageContaining("policy api configuration file was not specified as an argument");
     }
 
     @Test
     public void testInvalidUrlValidateReadableFile() {
         apiCmdArgs.setConfigurationFilePath("src/test\\resources/filetest\\n");
-        assertThatThrownBy(
-                apiCmdArgs::validate
-            )
-            .isInstanceOf(PolicyApiException.class)
-            .hasMessageContaining(
-                    "policy api configuration file \"src/test\\resources/filetest\\n\" does not exist");
+        assertThatThrownBy(apiCmdArgs::validate).hasMessageContaining(
+                "policy api configuration file \"src/test\\resources/filetest\\n\" does not exist");
+    }
+
+    @Test
+    public void testVersion() {
+        String[] testArgs = {"-v"};
+        ApiCommandLineArguments cmdArgs = new ApiCommandLineArguments(testArgs);
+        assertTrue(cmdArgs.version().startsWith("ONAP Policy Framework Api Service"));
     }
 }

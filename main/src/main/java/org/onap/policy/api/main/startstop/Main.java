@@ -5,6 +5,7 @@
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.ApiParameterHandler;
+import org.onap.policy.common.utils.cmd.CommandLineException;
 import org.onap.policy.common.utils.resources.MessageConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +81,7 @@ public class Main {
 
             // Start the activator
             activator.initialize();
-        } catch (final PolicyApiException e) {
+        } catch (final PolicyApiException | CommandLineException e) {
             throw new PolicyApiRuntimeException(
                 String.format(MessageConstants.START_FAILURE_MSG, MessageConstants.POLICY_API), e);
         }
