@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +32,7 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
+import org.onap.policy.common.utils.cmd.CommandLineException;
 
 /**
  * Class to perform unit test of ApiParameterHandler.
@@ -38,7 +40,7 @@ import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
  */
 public class TestApiParameterHandler {
     @Test
-    public void testParameterHandlerNoParameterFile() throws PolicyApiException {
+    public void testParameterHandlerNoParameterFile() throws PolicyApiException, CommandLineException {
         final String[] noArgumentString = {"-c", "parameters/NoParameterFile.json"};
         final ApiCommandLineArguments noArguments = new ApiCommandLineArguments();
         noArguments.parse(noArgumentString);
@@ -52,7 +54,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testParameterHandlerEmptyParameters() throws PolicyApiException {
+    public void testParameterHandlerEmptyParameters() throws PolicyApiException, CommandLineException {
         final String[] emptyArgumentString = {"-c", "parameters/EmptyParameters.json"};
         final ApiCommandLineArguments emptyArguments = new ApiCommandLineArguments();
         emptyArguments.parse(emptyArgumentString);
@@ -66,7 +68,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testParameterHandlerBadParameters() throws PolicyApiException {
+    public void testParameterHandlerBadParameters() throws PolicyApiException, CommandLineException {
         final String[] badArgumentString = {"-c", "parameters/BadParameters.json"};
         final ApiCommandLineArguments badArguments = new ApiCommandLineArguments();
         badArguments.parse(badArgumentString);
@@ -82,7 +84,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testParameterHandlerInvalidParameters() throws PolicyApiException {
+    public void testParameterHandlerInvalidParameters() throws PolicyApiException, CommandLineException {
         final String[] invalidArgumentString = {"-c", "parameters/InvalidParameters.json"};
         final ApiCommandLineArguments invalidArguments = new ApiCommandLineArguments();
         invalidArguments.parse(invalidArgumentString);
@@ -98,7 +100,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testParameterHandlerNoParameters() throws PolicyApiException {
+    public void testParameterHandlerNoParameters() throws PolicyApiException, CommandLineException {
         final String[] noArgumentString = {"-c", "parameters/NoParameters.json"};
         final ApiCommandLineArguments noArguments = new ApiCommandLineArguments();
         noArguments.parse(noArgumentString);
@@ -116,7 +118,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testParameterHandlerMinumumParameters() throws PolicyApiException {
+    public void testParameterHandlerMinumumParameters() throws PolicyApiException, CommandLineException {
         final String[] minArgumentString = {"-c", "parameters/MinimumParameters.json"};
         final ApiCommandLineArguments minArguments = new ApiCommandLineArguments();
         minArguments.parse(minArgumentString);
@@ -125,7 +127,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiParameterGroup() throws PolicyApiException {
+    public void testApiParameterGroup() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_Https.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
@@ -135,7 +137,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiParameterGroup_InvalidName() throws PolicyApiException {
+    public void testApiParameterGroup_InvalidName() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidName.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
@@ -150,7 +152,8 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiParameterGroup_InvalidRestServerParameters() throws PolicyApiException, IOException {
+    public void testApiParameterGroup_InvalidRestServerParameters()
+            throws PolicyApiException, IOException, CommandLineException {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidRestServerParameters.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
@@ -167,7 +170,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiVersion() throws PolicyApiException {
+    public void testApiVersion() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-v"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         final String version = arguments.parse(apiConfigParameters);
@@ -175,7 +178,7 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiHelp() throws PolicyApiException {
+    public void testApiHelp() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-h"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         final String help = arguments.parse(apiConfigParameters);
