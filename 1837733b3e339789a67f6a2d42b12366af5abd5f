@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "67867fd8_f8a86a2b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-04-15T09:39:15Z",
+      "side": 1,
+      "message": "Better to use standard names everywhere, which are already available in MessageConstants class.",
+      "range": {
+        "startLine": 32,
+        "startChar": 25,
+        "endLine": 32,
+        "endChar": 61
+      },
+      "revId": "1837733b3e339789a67f6a2d42b12366af5abd5f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d48f23e_ceba1106",
         "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
         "patchSetId": 1
