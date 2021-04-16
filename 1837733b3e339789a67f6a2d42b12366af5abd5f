@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b138f92f_5af0863c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/startstop/ApiCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2021-04-16T10:21:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c36552ff_235bebcc",
+      "range": {
+        "startLine": 32,
+        "startChar": 25,
+        "endLine": 32,
+        "endChar": 61
+      },
+      "revId": "1837733b3e339789a67f6a2d42b12366af5abd5f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d48f23e_ceba1106",
         "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
         "patchSetId": 1
@@ -69,6 +93,30 @@
       "revId": "1837733b3e339789a67f6a2d42b12366af5abd5f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de4dc2e5_2e04233b",
+        "filename": "main/src/test/java/org/onap/policy/api/main/startstop/TestApiCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2021-04-16T10:21:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d48f23e_ceba1106",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 47
+      },
+      "revId": "1837733b3e339789a67f6a2d42b12366af5abd5f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
