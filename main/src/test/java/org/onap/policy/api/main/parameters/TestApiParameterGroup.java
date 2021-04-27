@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 package org.onap.policy.api.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
@@ -48,7 +49,7 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
                 restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertTrue(validationResult.isValid());
         assertEquals(restServerParameters.getHost(), apiParameters.getRestServerParameters().getHost());
         assertEquals(restServerParameters.getPort(), apiParameters.getRestServerParameters().getPort());
@@ -69,12 +70,10 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(null, restServerParameters,
                 databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, apiParameters.getName());
-        assertTrue(validationResult.getResult()
-                        .contains("field \"name\" type \"java.lang.String\" value \"null\" INVALID, "
-                                        + "must be a non-blank string"));
+        assertThat(validationResult.getResult()).contains("\"name\" value \"null\" INVALID, is null");
     }
 
     @Test
@@ -84,11 +83,10 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup("", restServerParameters,
                 databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", apiParameters.getName());
-        assertTrue(validationResult.getResult().contains("field \"name\" type \"java.lang.String\" value \"\" INVALID, "
-                        + "must be a non-blank string"));
+        assertThat(validationResult.getResult()).contains("\"name\" value \"\" INVALID, is blank");
     }
 
     @Test
@@ -98,11 +96,10 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
                 restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
-        assertTrue(validationResult.getResult()
-                        .contains("\"org.onap.policy.common.endpoints.parameters.RestServerParameters\" INVALID, "
-                                        + "parameter group has status INVALID"));
+        assertThat(validationResult.getResult())
+                        .contains("\"RestServerParameters\" INVALID, item has status INVALID");
     }
 
     @Test
@@ -112,10 +109,10 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(false);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
                 restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
-        assertTrue(validationResult.getResult()
-                        .contains("must have restServerParameters to configure api rest server"));
+        assertThat(validationResult.getResult())
+                        .contains("item \"restServerParameters\" value \"null\" INVALID, is null");
     }
 
 
@@ -126,11 +123,10 @@ public class TestApiParameterGroup {
                 commonTestData.getDatabaseProviderParameters(true);
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
                 restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
-        assertTrue(validationResult.getResult()
-                        .contains("\"org.onap.policy.models.provider.PolicyModelsProviderParameters\" INVALID, "
-                                        + "parameter group has status INVALID"));
+        assertThat(validationResult.getResult())
+                        .contains("\"PolicyModelsProviderParameters\" INVALID, item has status INVALID");
     }
 
     @Test
@@ -139,10 +135,10 @@ public class TestApiParameterGroup {
         final PolicyModelsProviderParameters databaseProviderParameters = null;
         final ApiParameterGroup apiParameters = new ApiParameterGroup(CommonTestData.API_GROUP_NAME,
                 restServerParameters, databaseProviderParameters, Collections.emptyList(), Collections.emptyList());
-        final GroupValidationResult validationResult = apiParameters.validate();
+        final ValidationResult validationResult = apiParameters.validate();
         assertFalse(validationResult.isValid());
-        assertTrue(validationResult.getResult()
-                        .contains("must have databaseProviderParameters to configure api rest server"));
+        assertThat(validationResult.getResult())
+            .contains("item \"databaseProviderParameters\" value \"null\" INVALID, is null");
     }
 
     @Test

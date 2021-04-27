@@ -1,9 +1,9 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API 
- * ================================================================================ 
+ * ONAP Policy API
+ * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
 import java.io.FileReader;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class ApiParameterHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiParameterHandler.class);
-    
+
     /**
      * Read the parameters from the parameter file.
      *
@@ -70,7 +70,7 @@ public class ApiParameterHandler {
         }
 
         // validate the parameters
-        final GroupValidationResult validationResult = apiParameterGroup.validate();
+        final ValidationResult validationResult = apiParameterGroup.validate();
         if (!validationResult.isValid()) {
             String returnMessage =
                     "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";

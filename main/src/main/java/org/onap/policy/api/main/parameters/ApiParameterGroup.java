@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +23,11 @@ package org.onap.policy.api.main.parameters;
 
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.parameters.GroupValidationResult;
-import org.onap.policy.common.parameters.ParameterGroup;
-import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.common.utils.validation.ParameterValidationUtils;
+import org.onap.policy.common.parameters.ParameterGroupImpl;
+import org.onap.policy.common.parameters.annotations.NotBlank;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
@@ -35,14 +35,14 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
  *
  */
 @Getter
-public class ApiParameterGroup implements ParameterGroup {
+public class ApiParameterGroup extends ParameterGroupImpl {
 
-    @Setter
-    private String name;
+    @NotNull @Valid
     private final RestServerParameters restServerParameters;
+    @NotNull @Valid
     private final PolicyModelsProviderParameters databaseProviderParameters;
-    private final List<String> preloadPolicyTypes;
-    private final List<String> preloadPolicies;
+    private final List<@NotNull @NotBlank String> preloadPolicyTypes;
+    private final List<@NotNull @NotBlank String> preloadPolicies;
 
     /**
      * Create the api parameter group.
@@ -56,36 +56,10 @@ public class ApiParameterGroup implements ParameterGroup {
     public ApiParameterGroup(final String name, final RestServerParameters restServerParameters,
             final PolicyModelsProviderParameters databaseProviderParameters, final List<String> preloadPolicyTypes,
             final List<String> preloadPolicies) {
-        this.name = name;
+        super(name);
         this.restServerParameters = restServerParameters;
         this.databaseProviderParameters = databaseProviderParameters;
         this.preloadPolicyTypes = preloadPolicyTypes;
         this.preloadPolicies = preloadPolicies;
-    }
-
-    /**
-     * Validate the parameter group.
-     *
-     * @return the result of the validation
-     */
-    @Override
-    public GroupValidationResult validate() {
-        final GroupValidationResult validationResult = new GroupValidationResult(this);
-        if (!ParameterValidationUtils.validateStringParameter(name)) {
-            validationResult.setResult("name", ValidationStatus.INVALID, "must be a non-blank string");
-        }
-        if (restServerParameters == null) {
-            validationResult.setResult("restServerParameters", ValidationStatus.INVALID,
-                    "must have restServerParameters to configure api rest server");
-        } else {
-            validationResult.setResult("restServerParameters", restServerParameters.validate());
-        }
-        if (databaseProviderParameters == null) {
-            validationResult.setResult("databaseProviderParameters", ValidationStatus.INVALID,
-                    "must have databaseProviderParameters to configure api rest server");
-        } else {
-            validationResult.setResult("databaseProviderParameters", databaseProviderParameters.validate());
-        }
-        return validationResult;
     }
 }

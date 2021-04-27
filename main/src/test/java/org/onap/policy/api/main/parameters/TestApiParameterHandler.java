@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,13 +22,11 @@
 
 package org.onap.policy.api.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.startstop.ApiCommandLineArguments;
@@ -105,16 +103,8 @@ public class TestApiParameterHandler {
         final ApiCommandLineArguments noArguments = new ApiCommandLineArguments();
         noArguments.parse(noArgumentString);
 
-        try {
-            new ApiParameterHandler().getParameters(noArguments);
-            fail("test should throw an exception here");
-        } catch (final Exception e) {
-            String expMsg = "validation error(s) on parameters from \"parameters/NoParameters.json\"\nparameter group "
-                    + "\"null\" type \"org.onap.policy.api.main.parameters.ApiParameterGroup\" INVALID, parameter "
-                    + "group has status INVALID\n"
-                    + "  field \"name\" type \"java.lang.String\" value \"null\" INVALID, must be a non-blank string\n";
-            assertEquals(expMsg, e.getMessage());
-        }
+        assertThatThrownBy(() -> new ApiParameterHandler().getParameters(noArguments))
+            .hasMessageContaining("\"name\"", "is null");
     }
 
     @Test
@@ -137,36 +127,13 @@ public class TestApiParameterHandler {
     }
 
     @Test
-    public void testApiParameterGroup_InvalidName() throws PolicyApiException, CommandLineException {
+    public void testApiParameterGroup_Invalid() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidName.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
 
-        try {
-            new ApiParameterHandler().getParameters(arguments);
-            fail("test should throw an exception here");
-        } catch (final Exception e) {
-            assertTrue(e.getMessage().contains(
-                    "field \"name\" type \"java.lang.String\" value \" \" INVALID, must be a non-blank string"));
-        }
-    }
-
-    @Test
-    public void testApiParameterGroup_InvalidRestServerParameters()
-            throws PolicyApiException, IOException, CommandLineException {
-        final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_InvalidRestServerParameters.json"};
-        final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
-        arguments.parse(apiConfigParameters);
-
-        try {
-            new ApiParameterHandler().getParameters(arguments);
-            fail("test should throw an exception here");
-        } catch (final Exception e) {
-            final String expectedResult = new String(Files.readAllBytes(
-                    Paths.get("src/test/resources/expectedValidationResults/InvalidRestServerParameters.txt")))
-                            .replaceAll("\\s+", "");
-            assertEquals(expectedResult, e.getMessage().replaceAll("\\s+", ""));
-        }
+        assertThatThrownBy(() -> new ApiParameterHandler().getParameters(arguments)).hasMessageContaining("\"name\"",
+                        "is null");
     }
 
     @Test
