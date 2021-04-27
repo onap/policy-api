@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.parameters.CommonTestData;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
@@ -49,7 +49,7 @@ public class ApiDatabaseInitializerTest {
         COMMON_TEST_DATA.makeParameters(PARAM_FILE, "src/test/resources/parameters/ApiConfigParametersXXX.json", 6969);
 
         params = new StandardCoder().decode(new File(PARAM_FILE), ApiParameterGroup.class);
-        GroupValidationResult result = params.validate();
+        ValidationResult result = params.validate();
         if (!result.isValid()) {
             fail(result.getResult());
         }
