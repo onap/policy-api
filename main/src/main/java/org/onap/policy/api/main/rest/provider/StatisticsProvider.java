@@ -3,7 +3,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class StatisticsProvider {
      * @return Report containing API statistics
      */
     public StatisticsReport fetchCurrentStatistics() {
-        final StatisticsReport report = new StatisticsReport();
+        final var report = new StatisticsReport();
         report.setCode(ApiActivator.isAlive() ? 200 : 500);
         report.setTotalApiCallCount(ApiStatisticsManager.getTotalApiCallCount());
         report.setApiCallSuccessCount(ApiStatisticsManager.getApiCallSuccessCount());

@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
@@ -237,7 +237,7 @@ public class ApiRestController extends CommonRestController {
     public Response
         getAllPolicyTypes(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
@@ -285,7 +285,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
@@ -334,7 +334,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
@@ -381,7 +381,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
@@ -433,7 +433,7 @@ public class ApiRestController extends CommonRestController {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
         }
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
@@ -486,7 +486,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyTypeProvider policyTypeProvider = new PolicyTypeProvider()) {
+        try (var policyTypeProvider = new PolicyTypeProvider()) {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
@@ -545,7 +545,7 @@ public class ApiRestController extends CommonRestController {
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, null, null, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -604,7 +604,7 @@ public class ApiRestController extends CommonRestController {
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, null, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -666,7 +666,7 @@ public class ApiRestController extends CommonRestController {
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -722,7 +722,7 @@ public class ApiRestController extends CommonRestController {
         @QueryParam("mode") @ApiParam("Fetch mode for policies, TERSE for bare policies (default), "
             + "REFERENCED for fully referenced policies") PolicyFetchMode mode) {
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -784,7 +784,7 @@ public class ApiRestController extends CommonRestController {
                 "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies", toJson(body));
         }
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate = policyProvider.createPolicy(policyTypeId, policyTypeVersion, body);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
@@ -840,7 +840,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);
@@ -893,7 +893,7 @@ public class ApiRestController extends CommonRestController {
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(null, null, null, null, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -954,7 +954,7 @@ public class ApiRestController extends CommonRestController {
         @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode
     ) {
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
@@ -1009,7 +1009,7 @@ public class ApiRestController extends CommonRestController {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
         }
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate = policyProvider.createPolicies(body);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
@@ -1060,7 +1060,7 @@ public class ApiRestController extends CommonRestController {
         @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
         @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
 
-        try (PolicyProvider policyProvider = new PolicyProvider()) {
+        try (var policyProvider = new PolicyProvider()) {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.deletePolicy(null, null, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);

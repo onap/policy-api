@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ public class ApiDatabaseInitializer {
      */
     public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup) throws PolicyApiException {
 
-        try (PolicyModelsProvider databaseProvider =
+        try (var databaseProvider =
                 factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
 
             if (alreadyExists(databaseProvider)) {
@@ -77,7 +77,7 @@ public class ApiDatabaseInitializer {
                 return;
             }
 
-            ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+            var serviceTemplate = new ToscaServiceTemplate();
             serviceTemplate.setDataTypes(new LinkedHashMap<>());
             serviceTemplate.setPolicyTypes(new LinkedHashMap<>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_1_0");
@@ -111,7 +111,7 @@ public class ApiDatabaseInitializer {
             throws PolicyApiException, CoderException, PfModelException {
 
         for (String entity : entities) {
-            String entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
+            var entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
             if (entityAsStringYaml == null) {
                 LOGGER.warn("Preloading entity cannot be found: {}", entity);
                 continue;
@@ -131,7 +131,7 @@ public class ApiDatabaseInitializer {
             }
 
             // Consolidate policies
-            ToscaTopologyTemplate topologyTemplate = singleEntity.getToscaTopologyTemplate();
+            var topologyTemplate = singleEntity.getToscaTopologyTemplate();
             if (topologyTemplate != null && topologyTemplate.getPolicies() != null) {
                 serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
                 serviceTemplate.getToscaTopologyTemplate().setPolicies(new LinkedList<>());

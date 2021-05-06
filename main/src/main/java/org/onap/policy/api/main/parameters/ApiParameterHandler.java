@@ -23,7 +23,6 @@
 
 package org.onap.policy.api.main.parameters;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileReader;
 import org.onap.policy.api.main.exception.PolicyApiException;
@@ -53,7 +52,7 @@ public class ApiParameterHandler {
         // Read the parameters
         try {
             // Read the parameters from JSON using Gson
-            final Gson gson = new GsonBuilder().create();
+            final var gson = new GsonBuilder().create();
             apiParameterGroup = gson.fromJson(new FileReader(arguments.getFullConfigurationFilePath()),
                     ApiParameterGroup.class);
         } catch (final Exception e) {
