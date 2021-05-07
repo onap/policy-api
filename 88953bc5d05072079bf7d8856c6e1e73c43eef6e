@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "26666721_7fa9137e",
+        "filename": "csit/tests/api-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-05-07T13:09:41Z",
+      "side": 1,
+      "message": "thnx, I liked it too 😊",
+      "parentUuid": "74e032f6_b07e0f9b",
+      "range": {
+        "startLine": 81,
+        "startChar": 5,
+        "endLine": 81,
+        "endChar": 43
+      },
+      "revId": "88953bc5d05072079bf7d8856c6e1e73c43eef6e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a76ba741_2740da76",
         "filename": "csit/tests/api-test.robot",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2021-05-07T00:04:37Z",
       "side": 1,
       "message": "newline",
+      "revId": "88953bc5d05072079bf7d8856c6e1e73c43eef6e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1290aa1_8fa6181a",
+        "filename": "csit/tests/api-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-05-07T13:09:41Z",
+      "side": 1,
+      "message": "sorry Jim I am missing it, you want a newline at the end?",
+      "parentUuid": "a76ba741_2740da76",
       "revId": "88953bc5d05072079bf7d8856c6e1e73c43eef6e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
