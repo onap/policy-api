@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a76ba741_2740da76",
+        "filename": "csit/tests/api-test.robot",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-07T00:04:37Z",
+      "side": 1,
+      "message": "newline",
+      "revId": "88953bc5d05072079bf7d8856c6e1e73c43eef6e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
