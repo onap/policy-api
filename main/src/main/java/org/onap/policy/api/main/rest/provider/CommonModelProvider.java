@@ -121,8 +121,7 @@ public class CommonModelProvider implements AutoCloseable {
     /**
      * Retrieves all pdp groups supporting specified policy type.
      *
-     * @param policyTypeId the ID of policy type
-     * @param policyTypeVersion the version of policy type
+     * @param policyType the policy type
      *
      * @return a list of pdp groups supporting specified policy type
      *
