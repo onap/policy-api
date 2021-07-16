@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2021 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,7 @@
 package org.onap.policy.api.main.startstop;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
@@ -39,27 +40,19 @@ import org.slf4j.LoggerFactory;
  * This class wraps a distributor so that it can be activated as a complete service together with all its api and
  * forwarding handlers.
  */
+@RequiredArgsConstructor
 public class ApiActivator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiActivator.class);
 
     @Getter
-    private final ApiParameterGroup apiParameterGroup;
-
-    @Getter
     @Setter
     private static boolean alive = false;
 
-    private RestServer restServer;
+    @Getter
+    private final ApiParameterGroup parameterGroup;
 
-    /**
-     * Instantiate the activator for policy api as a complete service.
-     *
-     * @param apiParameterGroup the parameters for the api service
-     */
-    public ApiActivator(final ApiParameterGroup apiParameterGroup) {
-        this.apiParameterGroup = apiParameterGroup;
-    }
+    private RestServer restServer;
 
     /**
      * Initialize api as a complete service.
@@ -69,7 +62,7 @@ public class ApiActivator {
     public void initialize() throws PolicyApiException {
         LOGGER.debug("Policy api starting as a service . . .");
         startApiRestServer();
-        registerToParameterService(apiParameterGroup);
+        registerToParameterService(parameterGroup);
         ApiActivator.setAlive(true);
         LOGGER.debug("Policy api started as a service");
     }
@@ -80,8 +73,8 @@ public class ApiActivator {
      * @throws PolicyApiException if server start fails
      */
     private void startApiRestServer() throws PolicyApiException {
-        apiParameterGroup.getRestServerParameters().setName(apiParameterGroup.getName());
-        restServer = new RestServer(apiParameterGroup.getRestServerParameters(), AafApiFilter.class,
+        parameterGroup.getRestServerParameters().setName(parameterGroup.getName());
+        restServer = new RestServer(parameterGroup.getRestServerParameters(), AafApiFilter.class,
                         ApiRestController.class);
         if (!restServer.start()) {
             throw new PolicyApiException("Failed to start api rest server. Check log for more details...");
@@ -95,7 +88,7 @@ public class ApiActivator {
      */
     public void terminate() throws PolicyApiException {
         try {
-            deregisterToParameterService(apiParameterGroup);
+            deregisterToParameterService(parameterGroup);
 
             if (ApiActivator.isAlive()) {
                 ApiActivator.setAlive(false);

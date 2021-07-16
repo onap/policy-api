@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *  Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2021 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,8 +47,8 @@ public class TestApiActivator {
         final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);
         final ApiActivator activator = new ApiActivator(parGroup);
         activator.initialize();
-        assertTrue(activator.getApiParameterGroup().isValid());
-        assertEquals(CommonTestData.API_GROUP_NAME, activator.getApiParameterGroup().getName());
+        assertTrue(activator.getParameterGroup().isValid());
+        assertEquals(CommonTestData.API_GROUP_NAME, activator.getParameterGroup().getName());
         activator.terminate();
     }
 }

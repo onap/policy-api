@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
  * ================================================================================
@@ -64,15 +64,15 @@ public class TestPolicyTypeProvider {
             "policytypes/onap.policies.optimization.Resource.no.version.yaml";
     private static final String POLICY_TYPE_NAME_MONITORING = "onap.policies.monitoring.tcagen2";
 
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
+    private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
+    private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
             "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
+    private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_APEX =
             "policytypes/onap.policies.controlloop.operational.common.Apex.yaml";
-    public static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
-    public static final String POLICY_TYPE_OPERATIONAL_APEX = "onap.policies.controlloop.operational.common.Apex";
-    public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
+    private static final String POLICY_TYPE_OPERATIONAL_COMMON = "onap.policies.controlloop.operational.Common";
+    private static final String POLICY_TYPE_OPERATIONAL_APEX = "onap.policies.controlloop.operational.common.Apex";
+    private static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
 
     /**
      * Initializes parameters.

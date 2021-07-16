@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020-2021 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@
 
 package org.onap.policy.api.main.rest;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,78 +31,40 @@ import lombok.NoArgsConstructor;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ApiStatisticsManager {
-
+@Getter
+@NoArgsConstructor
+public class ApiStatisticsManager {
     @Getter
-    private static long totalApiCallCount;
+    private static ApiStatisticsManager instance = new ApiStatisticsManager();
 
-    @Getter
-    private static long apiCallSuccessCount;
-
-    @Getter
-    private static long apiCallFailureCount;
-
-    @Getter
-    private static long totalPolicyGetCount;
-
-    @Getter
-    private static long totalPolicyPostCount;
-
-    @Getter
-    private static long totalPolicyDeleteCount;
-
-    @Getter
-    private static long totalPolicyTypeGetCount;
-
-    @Getter
-    private static long totalPolicyTypePostCount;
-
-    @Getter
-    private static long totalPolicyTypeDeleteCount;
-
-    @Getter
-    private static long policyGetSuccessCount;
-
-    @Getter
-    private static long policyGetFailureCount;
-
-    @Getter
-    private static long policyPostSuccessCount;
-
-    @Getter
-    private static long policyPostFailureCount;
-
-    @Getter
-    private static long policyDeleteSuccessCount;
-
-    @Getter
-    private static long policyDeleteFailureCount;
-
-    @Getter
-    private static long policyTypeGetSuccessCount;
-
-    @Getter
-    private static long policyTypeGetFailureCount;
-
-    @Getter
-    private static long policyTypePostSuccessCount;
-
-    @Getter
-    private static long policyTypePostFailureCount;
-
-    @Getter
-    private static long policyTypeDeleteSuccessCount;
-
-    @Getter
-    private static long policyTypeDeleteFailureCount;
+    private long totalApiCallCount;
+    private long apiCallSuccessCount;
+    private long apiCallFailureCount;
+    private long totalPolicyGetCount;
+    private long totalPolicyPostCount;
+    private long totalPolicyDeleteCount;
+    private long totalPolicyTypeGetCount;
+    private long totalPolicyTypePostCount;
+    private long totalPolicyTypeDeleteCount;
+    private long policyGetSuccessCount;
+    private long policyGetFailureCount;
+    private long policyPostSuccessCount;
+    private long policyPostFailureCount;
+    private long policyDeleteSuccessCount;
+    private long policyDeleteFailureCount;
+    private long policyTypeGetSuccessCount;
+    private long policyTypeGetFailureCount;
+    private long policyTypePostSuccessCount;
+    private long policyTypePostFailureCount;
+    private long policyTypeDeleteSuccessCount;
+    private long policyTypeDeleteFailureCount;
 
     /**
      * Method to update the total api call count.
      *
      * @return the updated value of totalApiCallCount
      */
-    public static long updateTotalApiCallCount() {
+    public long updateTotalApiCallCount() {
         return ++totalApiCallCount;
     }
 
@@ -112,7 +73,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of apiCallSuccessCount
      */
-    public static long updateApiCallSuccessCount() {
+    public long updateApiCallSuccessCount() {
         return ++apiCallSuccessCount;
     }
 
@@ -121,7 +82,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of apiCallFailureCount
      */
-    public static long updateApiCallFailureCount() {
+    public long updateApiCallFailureCount() {
         return ++apiCallFailureCount;
     }
 
@@ -130,7 +91,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of totalPolicyGetCount
      */
-    public static long updateTotalPolicyGetCount() {
+    public long updateTotalPolicyGetCount() {
         return ++totalPolicyGetCount;
     }
 
@@ -139,7 +100,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of totalPolicyPostCount
      */
-    public static long updateTotalPolicyPostCount() {
+    public long updateTotalPolicyPostCount() {
         return ++totalPolicyPostCount;
     }
 
@@ -148,7 +109,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of  totalPolicyDeleteCount
      */
-    public static long updateTotalPolicyDeleteCount() {
+    public long updateTotalPolicyDeleteCount() {
         return ++totalPolicyDeleteCount;
     }
 
@@ -157,7 +118,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of totalPolicyTypeGetCount
      */
-    public static long updateTotalPolicyTypeGetCount() {
+    public long updateTotalPolicyTypeGetCount() {
         return ++totalPolicyTypeGetCount;
     }
 
@@ -166,7 +127,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of totalPolicyTypePostCount
      */
-    public static long updateTotalPolicyTypePostCount() {
+    public long updateTotalPolicyTypePostCount() {
         return ++totalPolicyTypePostCount;
     }
 
@@ -175,7 +136,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of totalPolicyTypeDeleteCount
      */
-    public static long updateTotalPolicyTypeDeleteCount() {
+    public long updateTotalPolicyTypeDeleteCount() {
         return ++totalPolicyTypeDeleteCount;
     }
 
@@ -184,7 +145,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyGetSuccessCount
      */
-    public static long updatePolicyGetSuccessCount() {
+    public long updatePolicyGetSuccessCount() {
         return ++policyGetSuccessCount;
     }
 
@@ -193,7 +154,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyGetFailureCount
      */
-    public static long updatePolicyGetFailureCount() {
+    public long updatePolicyGetFailureCount() {
         return ++policyGetFailureCount;
     }
 
@@ -202,7 +163,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyPostSuccessCount
      */
-    public static long updatePolicyPostSuccessCount() {
+    public long updatePolicyPostSuccessCount() {
         return ++policyPostSuccessCount;
     }
 
@@ -211,7 +172,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyPostFailureCount
      */
-    public static long updatePolicyPostFailureCount() {
+    public long updatePolicyPostFailureCount() {
         return ++policyPostFailureCount;
     }
 
@@ -220,7 +181,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyDeleteSuccessCount
      */
-    public static long updatePolicyDeleteSuccessCount() {
+    public long updatePolicyDeleteSuccessCount() {
         return ++policyDeleteSuccessCount;
     }
 
@@ -229,7 +190,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyDeleteFailureCount
      */
-    public static long updatePolicyDeleteFailureCount() {
+    public long updatePolicyDeleteFailureCount() {
         return ++policyDeleteFailureCount;
     }
 
@@ -238,7 +199,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypeGetSuccessCount
      */
-    public static long updatePolicyTypeGetSuccessCount() {
+    public long updatePolicyTypeGetSuccessCount() {
         return ++policyTypeGetSuccessCount;
     }
 
@@ -247,7 +208,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypeGetFailureCount
      */
-    public static long updatePolicyTypeGetFailureCount() {
+    public long updatePolicyTypeGetFailureCount() {
         return ++policyTypeGetFailureCount;
     }
 
@@ -256,7 +217,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypePostSuccessCount
      */
-    public static long updatePolicyTypePostSuccessCount() {
+    public long updatePolicyTypePostSuccessCount() {
         return ++policyTypePostSuccessCount;
     }
 
@@ -265,7 +226,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypePostFailureCount
      */
-    public static long updatePolicyTypePostFailureCount() {
+    public long updatePolicyTypePostFailureCount() {
         return ++policyTypePostFailureCount;
     }
 
@@ -274,7 +235,7 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypeDeleteSuccessCount
      */
-    public static long updatePolicyTypeDeleteSuccessCount() {
+    public long updatePolicyTypeDeleteSuccessCount() {
         return ++policyTypeDeleteSuccessCount;
     }
 
@@ -283,36 +244,14 @@ public final class ApiStatisticsManager {
      *
      * @return the updated value of policyTypePostFailureCount
      */
-    public static long updatePolicyTypeDeleteFailureCount() {
+    public long updatePolicyTypeDeleteFailureCount() {
         return ++policyTypeDeleteFailureCount;
     }
 
     /**
-     * Reset all the statistics counts to 0.
+     * Resets the statistics.
      */
-    public static void resetAllStatistics() {
-        totalApiCallCount = 0L;
-        apiCallSuccessCount = 0L;
-        apiCallFailureCount = 0L;
-        totalPolicyGetCount = 0L;
-        totalPolicyPostCount = 0L;
-        totalPolicyDeleteCount = 0L;
-        totalPolicyTypeGetCount = 0L;
-        totalPolicyTypePostCount = 0L;
-        totalPolicyTypeDeleteCount = 0L;
-        policyGetSuccessCount = 0L;
-        policyGetFailureCount = 0L;
-        policyPostSuccessCount = 0L;
-        policyPostFailureCount = 0L;
-        policyDeleteSuccessCount = 0L;
-        policyDeleteFailureCount = 0L;
-        policyTypeGetSuccessCount = 0L;
-        policyTypeGetFailureCount = 0L;
-        policyTypePostSuccessCount = 0L;
-        policyTypePostFailureCount = 0L;
-        policyTypeDeleteSuccessCount = 0L;
-        policyTypeDeleteFailureCount = 0L;
-
+    protected static void resetAllStatistics() {
+        instance = new ApiStatisticsManager();
     }
-
 }

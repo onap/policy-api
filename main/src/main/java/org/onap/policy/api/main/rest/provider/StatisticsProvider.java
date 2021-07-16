@@ -40,23 +40,24 @@ public class StatisticsProvider {
      * @return Report containing API statistics
      */
     public StatisticsReport fetchCurrentStatistics() {
+        final var mgr = ApiStatisticsManager.getInstance();
         final var report = new StatisticsReport();
         report.setCode(ApiActivator.isAlive() ? 200 : 500);
-        report.setTotalApiCallCount(ApiStatisticsManager.getTotalApiCallCount());
-        report.setApiCallSuccessCount(ApiStatisticsManager.getApiCallSuccessCount());
-        report.setApiCallFailureCount(ApiStatisticsManager.getApiCallFailureCount());
-        report.setTotalPolicyGetCount(ApiStatisticsManager.getTotalPolicyGetCount());
-        report.setTotalPolicyPostCount(ApiStatisticsManager.getTotalPolicyPostCount());
-        report.setTotalPolicyTypeGetCount(ApiStatisticsManager.getTotalPolicyTypeGetCount());
-        report.setTotalPolicyTypePostCount(ApiStatisticsManager.getTotalPolicyTypePostCount());
-        report.setPolicyGetSuccessCount(ApiStatisticsManager.getPolicyGetSuccessCount());
-        report.setPolicyGetFailureCount(ApiStatisticsManager.getPolicyGetFailureCount());
-        report.setPolicyPostSuccessCount(ApiStatisticsManager.getPolicyPostSuccessCount());
-        report.setPolicyPostFailureCount(ApiStatisticsManager.getPolicyPostFailureCount());
-        report.setPolicyTypeGetSuccessCount(ApiStatisticsManager.getPolicyTypeGetSuccessCount());
-        report.setPolicyTypeGetFailureCount(ApiStatisticsManager.getPolicyTypeGetFailureCount());
-        report.setPolicyTypePostSuccessCount(ApiStatisticsManager.getPolicyTypePostSuccessCount());
-        report.setPolicyTypePostFailureCount(ApiStatisticsManager.getPolicyTypePostFailureCount());
+        report.setTotalApiCallCount(mgr.getTotalApiCallCount());
+        report.setApiCallSuccessCount(mgr.getApiCallSuccessCount());
+        report.setApiCallFailureCount(mgr.getApiCallFailureCount());
+        report.setTotalPolicyGetCount(mgr.getTotalPolicyGetCount());
+        report.setTotalPolicyPostCount(mgr.getTotalPolicyPostCount());
+        report.setTotalPolicyTypeGetCount(mgr.getTotalPolicyTypeGetCount());
+        report.setTotalPolicyTypePostCount(mgr.getTotalPolicyTypePostCount());
+        report.setPolicyGetSuccessCount(mgr.getPolicyGetSuccessCount());
+        report.setPolicyGetFailureCount(mgr.getPolicyGetFailureCount());
+        report.setPolicyPostSuccessCount(mgr.getPolicyPostSuccessCount());
+        report.setPolicyPostFailureCount(mgr.getPolicyPostFailureCount());
+        report.setPolicyTypeGetSuccessCount(mgr.getPolicyTypeGetSuccessCount());
+        report.setPolicyTypeGetFailureCount(mgr.getPolicyTypeGetFailureCount());
+        report.setPolicyTypePostSuccessCount(mgr.getPolicyTypePostSuccessCount());
+        report.setPolicyTypePostFailureCount(mgr.getPolicyTypePostFailureCount());
         return report;
     }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * Modifications Copyright (C) 2020 Bell Canada.
  * ================================================================================
@@ -81,12 +81,12 @@ public class TestPolicyProvider {
             "policies/vCPE.policy.different.policy.fields.json";
     private static final String MULTIPLE_POLICIES_RESOURCE = "policies/vCPE.policies.optimization.input.tosca.json";
 
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
+    private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON =
             "policytypes/onap.policies.controlloop.operational.Common.yaml";
-    public static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
+    private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
             "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
-    public static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
+    private static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
 
     /**
      * Initializes parameters.
