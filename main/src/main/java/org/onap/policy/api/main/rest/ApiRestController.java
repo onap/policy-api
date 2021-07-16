@@ -1093,7 +1093,8 @@ public class ApiRestController extends CommonRestController {
 
     private void updateApiStatisticsCounter(Target target, Result result, HttpMethod http) {
 
-        ApiStatisticsManager.updateTotalApiCallCount();
+        var mgr = ApiStatisticsManager.getInstance();
+        mgr.updateTotalApiCallCount();
 
         switch (target) {
             case POLICY:
@@ -1103,98 +1104,102 @@ public class ApiRestController extends CommonRestController {
                 updatePolicyTypeStats(result, http);
                 break;
             default:
-                ApiStatisticsManager.updateApiCallSuccessCount();
+                mgr.updateApiCallSuccessCount();
                 break;
         }
     }
 
     private void updatePolicyStats(Result result, HttpMethod http) {
+        var mgr = ApiStatisticsManager.getInstance();
+
         if (result == Result.SUCCESS) {
             switch (http) {
                 case GET:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyGetCount();
-                    ApiStatisticsManager.updatePolicyGetSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyGetCount();
+                    mgr.updatePolicyGetSuccessCount();
                     break;
                 case POST:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyPostCount();
-                    ApiStatisticsManager.updatePolicyPostSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyPostCount();
+                    mgr.updatePolicyPostSuccessCount();
                     break;
                 case DELETE:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyDeleteCount();
-                    ApiStatisticsManager.updatePolicyDeleteSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyDeleteCount();
+                    mgr.updatePolicyDeleteSuccessCount();
                     break;
                 default:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    mgr.updateApiCallSuccessCount();
                     break;
             }
         } else {
             switch (http) {
                 case GET:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyGetCount();
-                    ApiStatisticsManager.updatePolicyGetFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyGetCount();
+                    mgr.updatePolicyGetFailureCount();
                     break;
                 case POST:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyPostCount();
-                    ApiStatisticsManager.updatePolicyPostFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyPostCount();
+                    mgr.updatePolicyPostFailureCount();
                     break;
                 case DELETE:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyDeleteCount();
-                    ApiStatisticsManager.updatePolicyDeleteFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyDeleteCount();
+                    mgr.updatePolicyDeleteFailureCount();
                     break;
                 default:
-                    ApiStatisticsManager.updateApiCallFailureCount();
+                    mgr.updateApiCallFailureCount();
                     break;
             }
         }
     }
 
     private void updatePolicyTypeStats(Result result, HttpMethod http) {
+        var mgr = ApiStatisticsManager.getInstance();
+
         if (result == Result.SUCCESS) {
             switch (http) {
                 case GET:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                    ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyTypeGetCount();
+                    mgr.updatePolicyTypeGetSuccessCount();
                     break;
                 case POST:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyTypePostCount();
-                    ApiStatisticsManager.updatePolicyTypePostSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyTypePostCount();
+                    mgr.updatePolicyTypePostSuccessCount();
                     break;
                 case DELETE:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeDeleteCount();
-                    ApiStatisticsManager.updatePolicyTypeDeleteSuccessCount();
+                    mgr.updateApiCallSuccessCount();
+                    mgr.updateTotalPolicyTypeDeleteCount();
+                    mgr.updatePolicyTypeDeleteSuccessCount();
                     break;
                 default:
-                    ApiStatisticsManager.updateApiCallSuccessCount();
+                    mgr.updateApiCallSuccessCount();
                     break;
             }
         } else {
             switch (http) {
                 case GET:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-                    ApiStatisticsManager.updatePolicyTypeGetFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyTypeGetCount();
+                    mgr.updatePolicyTypeGetFailureCount();
                     break;
                 case POST:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyTypePostCount();
-                    ApiStatisticsManager.updatePolicyTypePostFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyTypePostCount();
+                    mgr.updatePolicyTypePostFailureCount();
                     break;
                 case DELETE:
-                    ApiStatisticsManager.updateApiCallFailureCount();
-                    ApiStatisticsManager.updateTotalPolicyTypeDeleteCount();
-                    ApiStatisticsManager.updatePolicyTypeDeleteFailureCount();
+                    mgr.updateApiCallFailureCount();
+                    mgr.updateTotalPolicyTypeDeleteCount();
+                    mgr.updatePolicyTypeDeleteFailureCount();
                     break;
                 default:
-                    ApiStatisticsManager.updateApiCallFailureCount();
+                    mgr.updateApiCallFailureCount();
                     break;
             }
         }

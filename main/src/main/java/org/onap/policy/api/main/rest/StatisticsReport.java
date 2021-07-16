@@ -37,19 +37,19 @@ import lombok.ToString;
 @Setter
 public class StatisticsReport {
     private int code;
-    private long totalApiCallCount;
-    private long apiCallSuccessCount;
-    private long apiCallFailureCount;
-    private long totalPolicyGetCount;
-    private long totalPolicyPostCount;
-    private long totalPolicyTypeGetCount;
-    private long totalPolicyTypePostCount;
-    private long policyGetSuccessCount;
-    private long policyGetFailureCount;
-    private long policyPostSuccessCount;
-    private long policyPostFailureCount;
-    private long policyTypeGetSuccessCount;
-    private long policyTypeGetFailureCount;
-    private long policyTypePostSuccessCount;
-    private long policyTypePostFailureCount;
+    protected long totalApiCallCount;
+    protected long apiCallSuccessCount;
+    protected long apiCallFailureCount;
+    protected long totalPolicyGetCount;
+    protected long totalPolicyPostCount;
+    protected long totalPolicyTypeGetCount;
+    protected long totalPolicyTypePostCount;
+    protected long policyGetSuccessCount;
+    protected long policyGetFailureCount;
+    protected long policyPostSuccessCount;
+    protected long policyPostFailureCount;
+    protected long policyTypeGetSuccessCount;
+    protected long policyTypeGetFailureCount;
+    protected long policyTypePostSuccessCount;
+    protected long policyTypePostFailureCount;
 }

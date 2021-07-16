@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019 IBM.
  * Modifications Copyright (C) 2020 Bell Canada.
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,38 +26,34 @@ package org.onap.policy.api.main.rest;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class TestApiStatisticsManager {
 
-    @Before
-    public void setUp() {
-        ApiStatisticsManager.resetAllStatistics();
-    }
-
     @Test
     public void testUpdateMethods() {
-        assertEquals(1, ApiStatisticsManager.updateTotalApiCallCount());
-        assertEquals(1, ApiStatisticsManager.updateApiCallSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updateApiCallFailureCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyGetCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyPostCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyDeleteCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyTypeGetCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyTypePostCount());
-        assertEquals(1, ApiStatisticsManager.updateTotalPolicyTypeDeleteCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyGetSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyGetFailureCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyPostSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyPostFailureCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyDeleteSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyDeleteFailureCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypeGetSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypeGetFailureCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypePostSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypePostFailureCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypeDeleteSuccessCount());
-        assertEquals(1, ApiStatisticsManager.updatePolicyTypeDeleteFailureCount());
+        var mgr = new ApiStatisticsManager();
+
+        assertEquals(1, mgr.updateTotalApiCallCount());
+        assertEquals(1, mgr.updateApiCallSuccessCount());
+        assertEquals(1, mgr.updateApiCallFailureCount());
+        assertEquals(1, mgr.updateTotalPolicyGetCount());
+        assertEquals(1, mgr.updateTotalPolicyPostCount());
+        assertEquals(1, mgr.updateTotalPolicyDeleteCount());
+        assertEquals(1, mgr.updateTotalPolicyTypeGetCount());
+        assertEquals(1, mgr.updateTotalPolicyTypePostCount());
+        assertEquals(1, mgr.updateTotalPolicyTypeDeleteCount());
+        assertEquals(1, mgr.updatePolicyGetSuccessCount());
+        assertEquals(1, mgr.updatePolicyGetFailureCount());
+        assertEquals(1, mgr.updatePolicyPostSuccessCount());
+        assertEquals(1, mgr.updatePolicyPostFailureCount());
+        assertEquals(1, mgr.updatePolicyDeleteSuccessCount());
+        assertEquals(1, mgr.updatePolicyDeleteFailureCount());
+        assertEquals(1, mgr.updatePolicyTypeGetSuccessCount());
+        assertEquals(1, mgr.updatePolicyTypeGetFailureCount());
+        assertEquals(1, mgr.updatePolicyTypePostSuccessCount());
+        assertEquals(1, mgr.updatePolicyTypePostFailureCount());
+        assertEquals(1, mgr.updatePolicyTypeDeleteSuccessCount());
+        assertEquals(1, mgr.updatePolicyTypeDeleteFailureCount());
     }
 }

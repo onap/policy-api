@@ -40,23 +40,8 @@ public class StatisticsProvider {
      * @return Report containing API statistics
      */
     public StatisticsReport fetchCurrentStatistics() {
-        final var report = new StatisticsReport();
+        final var report = ApiStatisticsManager.getInstance().getReport();
         report.setCode(ApiActivator.isAlive() ? 200 : 500);
-        report.setTotalApiCallCount(ApiStatisticsManager.getTotalApiCallCount());
-        report.setApiCallSuccessCount(ApiStatisticsManager.getApiCallSuccessCount());
-        report.setApiCallFailureCount(ApiStatisticsManager.getApiCallFailureCount());
-        report.setTotalPolicyGetCount(ApiStatisticsManager.getTotalPolicyGetCount());
-        report.setTotalPolicyPostCount(ApiStatisticsManager.getTotalPolicyPostCount());
-        report.setTotalPolicyTypeGetCount(ApiStatisticsManager.getTotalPolicyTypeGetCount());
-        report.setTotalPolicyTypePostCount(ApiStatisticsManager.getTotalPolicyTypePostCount());
-        report.setPolicyGetSuccessCount(ApiStatisticsManager.getPolicyGetSuccessCount());
-        report.setPolicyGetFailureCount(ApiStatisticsManager.getPolicyGetFailureCount());
-        report.setPolicyPostSuccessCount(ApiStatisticsManager.getPolicyPostSuccessCount());
-        report.setPolicyPostFailureCount(ApiStatisticsManager.getPolicyPostFailureCount());
-        report.setPolicyTypeGetSuccessCount(ApiStatisticsManager.getPolicyTypeGetSuccessCount());
-        report.setPolicyTypeGetFailureCount(ApiStatisticsManager.getPolicyTypeGetFailureCount());
-        report.setPolicyTypePostSuccessCount(ApiStatisticsManager.getPolicyTypePostSuccessCount());
-        report.setPolicyTypePostFailureCount(ApiStatisticsManager.getPolicyTypePostFailureCount());
         return report;
     }
 }

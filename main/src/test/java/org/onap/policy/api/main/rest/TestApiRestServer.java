@@ -28,12 +28,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
@@ -222,20 +219,6 @@ public class TestApiRestServer {
 
         if (apiMain != null) {
             apiMain.shutdown();
-        }
-    }
-
-    @Test
-    public void testApiStatisticsConstructorIsPrivate() {
-
-        try {
-            final Constructor<ApiStatisticsManager> constructor = ApiStatisticsManager.class.getDeclaredConstructor();
-            assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-            constructor.setAccessible(true);
-            constructor.newInstance();
-
-        } catch (final Exception exp) {
-            assertTrue(exp.getCause().toString().contains("Instantiation of the class is not allowed"));
         }
     }
 
@@ -815,22 +798,23 @@ public class TestApiRestServer {
     }
 
     private void updateApiStatistics() {
+        var mgr = ApiStatisticsManager.getInstance();
 
-        ApiStatisticsManager.updateTotalApiCallCount();
-        ApiStatisticsManager.updateApiCallSuccessCount();
-        ApiStatisticsManager.updateApiCallFailureCount();
-        ApiStatisticsManager.updateTotalPolicyGetCount();
-        ApiStatisticsManager.updateTotalPolicyPostCount();
-        ApiStatisticsManager.updateTotalPolicyTypeGetCount();
-        ApiStatisticsManager.updateTotalPolicyTypePostCount();
-        ApiStatisticsManager.updatePolicyGetSuccessCount();
-        ApiStatisticsManager.updatePolicyGetFailureCount();
-        ApiStatisticsManager.updatePolicyPostSuccessCount();
-        ApiStatisticsManager.updatePolicyPostFailureCount();
-        ApiStatisticsManager.updatePolicyTypeGetSuccessCount();
-        ApiStatisticsManager.updatePolicyTypeGetFailureCount();
-        ApiStatisticsManager.updatePolicyTypePostSuccessCount();
-        ApiStatisticsManager.updatePolicyTypePostFailureCount();
+        mgr.updateTotalApiCallCount();
+        mgr.updateApiCallSuccessCount();
+        mgr.updateApiCallFailureCount();
+        mgr.updateTotalPolicyGetCount();
+        mgr.updateTotalPolicyPostCount();
+        mgr.updateTotalPolicyTypeGetCount();
+        mgr.updateTotalPolicyTypePostCount();
+        mgr.updatePolicyGetSuccessCount();
+        mgr.updatePolicyGetFailureCount();
+        mgr.updatePolicyPostSuccessCount();
+        mgr.updatePolicyPostFailureCount();
+        mgr.updatePolicyTypeGetSuccessCount();
+        mgr.updatePolicyTypeGetFailureCount();
+        mgr.updatePolicyTypePostSuccessCount();
+        mgr.updatePolicyTypePostFailureCount();
     }
 
     private void validateStatisticsReport(final StatisticsReport report, final int code) {
