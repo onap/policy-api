@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2020-2021 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public class TestMain {
                 "src/test/resources/parameters/ApiConfigParametersXXX.json", NetworkUtil.allocPort());
         final String[] apiConfigParameters = {"-c", "src/test/resources/parameters/ApiConfigParametersXXX.json"};
         final Main main = new Main(apiConfigParameters);
-        assertTrue(main.getParameters().isValid());
-        assertEquals(CommonTestData.API_GROUP_NAME, main.getParameters().getName());
+        assertTrue(main.getParameterGroup().isValid());
+        assertEquals(CommonTestData.API_GROUP_NAME, main.getParameterGroup().getName());
         main.shutdown();
     }
 

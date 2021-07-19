@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Bell Canada.
+ * Modifications Copyright (C) 2020-2021 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,17 @@
 
 package org.onap.policy.api.main.rest;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Class to hold statistical data for API access.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-public class ApiStatisticsManager {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ApiStatisticsManager {
 
     @Getter
     private static long totalApiCallCount;
@@ -94,10 +97,6 @@ public class ApiStatisticsManager {
 
     @Getter
     private static long policyTypeDeleteFailureCount;
-
-    private ApiStatisticsManager() {
-        throw new IllegalStateException("Instantiation of the class is not allowed");
-    }
 
     /**
      * Method to update the total api call count.

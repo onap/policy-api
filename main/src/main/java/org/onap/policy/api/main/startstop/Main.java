@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2020-2021 Bell Canada. All rights reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@
 package org.onap.policy.api.main.startstop;
 
 import java.util.Arrays;
+import lombok.Getter;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
@@ -47,6 +48,7 @@ public class Main {
     private ApiActivator activator;
 
     // The parameters read in from JSON
+    @Getter
     private ApiParameterGroup parameterGroup;
 
     /**
@@ -90,15 +92,6 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new PolicyApiShutdownHookClass());
         var successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_API);
         LOGGER.info(successMsg);
-    }
-
-    /**
-     * Get the parameters specified in JSON.
-     *
-     * @return the parameters
-     */
-    public ApiParameterGroup getParameters() {
-        return parameterGroup;
     }
 
     /**

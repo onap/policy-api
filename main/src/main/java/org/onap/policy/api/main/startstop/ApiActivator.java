@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,8 @@
 
 package org.onap.policy.api.main.startstop;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.api.main.exception.PolicyApiException;
 import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.api.main.rest.ApiRestController;
@@ -40,8 +43,11 @@ public class ApiActivator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiActivator.class);
 
+    @Getter
     private final ApiParameterGroup apiParameterGroup;
 
+    @Getter
+    @Setter
     private static boolean alive = false;
 
     private RestServer restServer;
@@ -105,15 +111,6 @@ public class ApiActivator {
     }
 
     /**
-     * Get the parameters used by the activator.
-     *
-     * @return the parameters of the activator
-     */
-    public ApiParameterGroup getParameterGroup() {
-        return apiParameterGroup;
-    }
-
-    /**
      * Method to register the parameters to Common Parameter Service.
      *
      * @param apiParameterGroup the api parameter group
@@ -131,23 +128,5 @@ public class ApiActivator {
         if (ParameterService.contains(apiParameterGroup.getName())) {
             ParameterService.deregister(apiParameterGroup.getName());
         }
-    }
-
-    /**
-     * Returns the alive status of api service.
-     *
-     * @return the alive
-     */
-    public static boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Change the alive status of api service.
-     *
-     * @param status the status
-     */
-    public static void setAlive(final boolean status) {
-        alive = status;
     }
 }

@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2021 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,69 +33,23 @@ import lombok.ToString;
  * @author Chenfei Gao (cgao@research.att.com)
  */
 @ToString
+@Getter
+@Setter
 public class StatisticsReport {
-
-    @Getter
-    @Setter
     private int code;
-
-    @Getter
-    @Setter
     private long totalApiCallCount;
-
-    @Getter
-    @Setter
     private long apiCallSuccessCount;
-
-    @Getter
-    @Setter
     private long apiCallFailureCount;
-
-    @Getter
-    @Setter
     private long totalPolicyGetCount;
-
-    @Getter
-    @Setter
     private long totalPolicyPostCount;
-
-    @Getter
-    @Setter
     private long totalPolicyTypeGetCount;
-
-    @Getter
-    @Setter
     private long totalPolicyTypePostCount;
-
-    @Getter
-    @Setter
     private long policyGetSuccessCount;
-
-    @Getter
-    @Setter
     private long policyGetFailureCount;
-
-    @Getter
-    @Setter
     private long policyPostSuccessCount;
-
-    @Getter
-    @Setter
     private long policyPostFailureCount;
-
-    @Getter
-    @Setter
     private long policyTypeGetSuccessCount;
-
-    @Getter
-    @Setter
     private long policyTypeGetFailureCount;
-
-    @Getter
-    @Setter
     private long policyTypePostSuccessCount;
-
-    @Getter
-    @Setter
     private long policyTypePostFailureCount;
 }
