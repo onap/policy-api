@@ -317,6 +317,24 @@
     },
     {
       "key": {
+        "uuid": "92dfb971_3c43def4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T20:05:59Z",
+      "side": 1,
+      "message": "perhaps I was thinking of the Root policy TYPE.  In any event, there must be some query we can make that use an index to retrieve a single record",
+      "parentUuid": "66fe2890_8bd048c7",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
