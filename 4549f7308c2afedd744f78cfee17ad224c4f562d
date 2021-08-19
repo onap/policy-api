@@ -75,6 +75,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68036f4b_462339cf",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-19T15:30:01Z",
+      "side": 1,
+      "message": "Yeah, I can do that. Will require adding a method in policy/models db related classes.\n\nSeems we are fetching the stored service template from db every time and performing filters on top of it at application level. And then generating the return service template. So, fetching all policies should be okay.\n\nLet me know the preference and I can change if needed.",
+      "parentUuid": "0e40b4d6_eb19fb7d",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
