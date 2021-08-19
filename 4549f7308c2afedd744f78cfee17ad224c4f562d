@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "21ca5a84_a7f54fc2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T17:48:04Z",
+      "side": 1,
+      "message": "hmm, yeah that transitory thing is an issue - don\u0027t want kubernetes shutting the pod down just because the DB isn\u0027t available",
+      "parentUuid": "2d3336b6_666bc970",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c5ebd403_bbb8b086",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
@@ -161,6 +179,24 @@
       "side": 1,
       "message": "I think these would be executed in ONAP every couple minutes if I recall correctly,  any concerns about the load in the DB, we know from previous tests that there is a large number of dips from the models framework?",
       "parentUuid": "d8de83f7_b013404f",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96353130_5d23e4b6",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T17:48:04Z",
+      "side": 1,
+      "message": "I was thinking you could query for a particular policy, which should be fast.  To avoid the likelihood of it generating a not-found error, could query for a policy that\u0027s almost always there, such as the \"Root\" policy.",
+      "parentUuid": "7e3dcedb_4a722ae4",
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
