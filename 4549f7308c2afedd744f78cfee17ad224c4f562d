@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "98f252f9_3f2b29bc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-19T19:59:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31762aea_395897fd",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 85
+      },
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d3336b6_666bc970",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
@@ -93,6 +117,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a845c5f_db9d2566",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-19T19:59:13Z",
+      "side": 1,
+      "message": "Done, changed the code to 503 in case of db connectivity failure. And the message too.",
+      "parentUuid": "66d7527e_f800d436",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
