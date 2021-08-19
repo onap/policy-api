@@ -78,6 +78,24 @@
     },
     {
       "key": {
+        "uuid": "66d7527e_f800d436",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T19:29:09Z",
+      "side": 1,
+      "message": "Not sure may be if analogous to the http codes, 503 (service unavailable) may make some sense ?",
+      "parentUuid": "07ed6531_205d5d96",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c5ebd403_bbb8b086",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
@@ -239,6 +257,24 @@
     },
     {
       "key": {
+        "uuid": "66fe2890_8bd048c7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T19:29:09Z",
+      "side": 1,
+      "message": "It was the consult component, and it only does the periodic healthchecks against drools for what I see now.  It seems outdated though.  I\u0027ll check in a lab if still does the pinging.",
+      "parentUuid": "62fdc08b_4976811a",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
@@ -271,6 +307,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "333844f9_506beff3",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T19:29:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7dee8c5f_d1f6e822",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
