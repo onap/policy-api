@@ -57,6 +57,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53b5b9dc_bbf89485",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-08-19T15:21:10Z",
+      "side": 1,
+      "message": "maybe just get a DESC of the table?? May need to add a method to the provider. But those are pretty quick.",
+      "parentUuid": "0e40b4d6_eb19fb7d",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
