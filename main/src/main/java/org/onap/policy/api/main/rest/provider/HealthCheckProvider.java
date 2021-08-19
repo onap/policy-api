@@ -24,15 +24,22 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.api.main.startstop.ApiActivator;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to fetch health check of api service.
  *
  */
 public class HealthCheckProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HealthCheckProvider.class);
 
     private static final String NOT_ALIVE = "not alive";
     private static final String ALIVE = "alive";
@@ -46,11 +53,27 @@ public class HealthCheckProvider {
      */
     public HealthCheckReport performHealthCheck() {
         final var report = new HealthCheckReport();
+        boolean heathStatus = ApiActivator.isAlive() && verifyApiDatabase();
         report.setName(NAME);
         report.setUrl(URL);
-        report.setHealthy(ApiActivator.isAlive());
-        report.setCode(ApiActivator.isAlive() ? 200 : 500);
-        report.setMessage(ApiActivator.isAlive() ? ALIVE : NOT_ALIVE);
+        report.setHealthy(heathStatus);
+        report.setCode(heathStatus ? 200 : 500);
+        report.setMessage(heathStatus ? ALIVE : NOT_ALIVE);
         return report;
+    }
+
+    /**
+     * Verifies the connectivity between api component & policy database.
+     *
+     * @return boolean signaling the verification result
+     */
+    private boolean verifyApiDatabase() {
+        try (var policyProvider = new PolicyProvider()) {
+            policyProvider.fetchPolicies(null, null, null, null, PolicyFetchMode.BARE);
+            return true;
+        } catch (PfModelException | PfModelRuntimeException pfme) {
+            LOGGER.warn("Api to database connection check failed. Details - ", pfme);
+            return false;
+        }
     }
 }
