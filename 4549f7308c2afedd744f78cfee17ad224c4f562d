@@ -93,6 +93,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0346b0f2_7495f278",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T15:47:48Z",
+      "side": 1,
+      "message": "maybe just query for the root policy by name and version? (could also trreat any not-found exception as \"true\")",
+      "parentUuid": "68036f4b_462339cf",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
