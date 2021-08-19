@@ -39,6 +39,24 @@
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e40b4d6_eb19fb7d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-19T15:15:05Z",
+      "side": 1,
+      "message": "It will try to fetch all the policies from db. I thought the filtered one\u0027s will consume more resources. Let me see if I can find any other.\nAny suggestions?",
+      "parentUuid": "c5ebd403_bbb8b086",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
