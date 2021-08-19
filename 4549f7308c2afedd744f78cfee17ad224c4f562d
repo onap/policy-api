@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "2d3336b6_666bc970",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T17:28:54Z",
+      "side": 1,
+      "message": "I think we should distinguish with different error codes between \"alive\" and \"cannot connect to the db at present\".   \"cannot connect to db\" may be transitory which we see at times.",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c5ebd403_bbb8b086",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
@@ -126,6 +143,41 @@
       "side": 1,
       "message": "sorry I didn\u0027t understood Jim, root policy?",
       "parentUuid": "0346b0f2_7495f278",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e3dcedb_4a722ae4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T17:28:54Z",
+      "side": 1,
+      "message": "I think these would be executed in ONAP every couple minutes if I recall correctly,  any concerns about the load in the DB, we know from previous tests that there is a large number of dips from the models framework?",
+      "parentUuid": "d8de83f7_b013404f",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed05e528_829c1021",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-19T17:28:54Z",
+      "side": 1,
+      "message": "is this connection or perhaps can also be errors in the PfModel* layers?   If so, can they be distinguished, and is the \"connection check failed\" message accurate?",
       "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
