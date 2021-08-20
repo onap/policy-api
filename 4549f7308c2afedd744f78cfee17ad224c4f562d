@@ -371,6 +371,24 @@
     },
     {
       "key": {
+        "uuid": "f88b8138_081ff001",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-08-20T15:40:39Z",
+      "side": 1,
+      "message": "If a situation can exist where db connectivity is there, but the data(ToscaServiceTemplate for e.g.) is corrupted somehow, then I think this check makes more sense.",
+      "parentUuid": "31e7ee3d_b3e5e1f8",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
