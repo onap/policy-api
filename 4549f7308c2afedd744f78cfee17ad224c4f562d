@@ -353,6 +353,24 @@
     },
     {
       "key": {
+        "uuid": "31e7ee3d_b3e5e1f8",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T15:05:39Z",
+      "side": 1,
+      "message": "oh, puke.  Well, we could just query the policy deployment or statistics table, but those aren\u0027t really relevant to API, so I guess we can just leave it this way for now.  Wonder if there\u0027s a way to just ask it to check the connection?  (Could add a method to the provider and the PfDao)?",
+      "parentUuid": "1b8b220a_062e555b",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
