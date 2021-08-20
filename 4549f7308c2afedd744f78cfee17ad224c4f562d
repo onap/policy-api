@@ -335,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "1b8b220a_062e555b",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-20T14:51:06Z",
+      "side": 1,
+      "message": "Got it, yeah we have root policy type. \nBut it really doesn\u0027t make the query quicker as the entire ToscaServiceTemplate will be fetched and parsed even for this.\n\nTake a look at line 320 or 504 here - https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/simple/provider/SimpleToscaProvider.java\n\nRegarding api\u0027s we only have below choices:\n1) Fetch policy types (all, all versions of a policy type, latest version of a policy type)\n2) Fetch policy (all, all versions of a policy, specific version of a policy, latest version of a policy)\n\nI can go for a query with specific name \u0026 version of policy type (which is expected to be there always), but that will add more processing time at the application level with no benefits at db level.",
+      "parentUuid": "92dfb971_3c43def4",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
