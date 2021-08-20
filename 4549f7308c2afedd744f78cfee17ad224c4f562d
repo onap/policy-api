@@ -407,6 +407,24 @@
     },
     {
       "key": {
+        "uuid": "2f338c42_0dc362f7",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-20T16:36:09Z",
+      "side": 1,
+      "message": "Agree, and that\u0027s why I was looking to verify end to end for an api call.\nThank you everyone for the feedback \u0026 discussions!",
+      "parentUuid": "0eefa624_b0ca9bc0",
+      "revId": "4549f7308c2afedd744f78cfee17ad224c4f562d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed05e528_829c1021",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/HealthCheckProvider.java",
         "patchSetId": 1
