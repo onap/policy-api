@@ -777,7 +777,7 @@ public class TestApiRestServer {
         final ClientBuilder clientBuilder =
                 ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
         final Client client = clientBuilder.build();
-        final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("healthcheck", "zb!XztG34");
+        final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("policyadmin", "zb!XztG34");
         client.register(feature);
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");

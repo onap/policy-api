@@ -27,7 +27,7 @@
         <collectionProp name="AuthManager.auth_list">
           <elementProp name="" elementType="Authorization">
             <stringProp name="Authorization.url">https://${API_HOST}:${API_PORT}/</stringProp>
-            <stringProp name="Authorization.username">healthcheck</stringProp>
+            <stringProp name="Authorization.username">policyadmin</stringProp>
             <stringProp name="Authorization.password">zb!XztG34</stringProp>
             <stringProp name="Authorization.domain"></stringProp>
             <stringProp name="Authorization.realm"></stringProp>

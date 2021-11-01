@@ -686,7 +686,7 @@
         {
             "id": "99d48afc-d62d-48be-9f89-d7db5acf48dd",
             "key": "USER",
-            "value": "healthcheck",
+            "value": "policyadmin",
             "type": "string"
         },
         {
