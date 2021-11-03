@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "891db04a_62f5e8b1",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/defaultConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-03T11:06:44Z",
+      "side": 1,
+      "message": "Once this is merged, the CSITs are probably gonna fail. Please check those.",
+      "range": {
+        "startLine": 6,
+        "startChar": 8,
+        "endLine": 6,
+        "endChar": 34
+      },
+      "revId": "453d83062b099291a04fd76bd851b68670a7a599",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
