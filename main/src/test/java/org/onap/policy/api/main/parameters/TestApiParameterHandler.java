@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,6 +119,16 @@ public class TestApiParameterHandler {
     @Test
     public void testApiParameterGroup() throws PolicyApiException, CommandLineException {
         final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_Https.json"};
+        final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
+        arguments.parse(apiConfigParameters);
+        final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);
+        assertTrue(arguments.checkSetConfigurationFilePath());
+        assertEquals(CommonTestData.API_GROUP_NAME, parGroup.getName());
+    }
+
+    @Test
+    public void testApiParameterGroup_Postgres() throws PolicyApiException, CommandLineException {
+        final String[] apiConfigParameters = {"-c", "parameters/ApiConfigParameters_Postgres.json"};
         final ApiCommandLineArguments arguments = new ApiCommandLineArguments();
         arguments.parse(apiConfigParameters);
         final ApiParameterGroup parGroup = new ApiParameterHandler().getParameters(arguments);

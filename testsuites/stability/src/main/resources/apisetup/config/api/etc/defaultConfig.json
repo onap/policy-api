@@ -15,7 +15,7 @@
         "databaseUrl": "jdbc:mariadb://mariadb:3306/policyadmin",
         "databaseUser": "policy_user",
         "databasePassword": "policy_user",
-        "persistenceUnit": "PolicyMariaDb"
+        "persistenceUnit": "PolicyDb"
     },
     "preloadPolicyTypes": [
         "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.yaml",
