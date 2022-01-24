@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d7cee99a_fc9e1b34",
+        "filename": "main/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-01-24T14:44:09Z",
+      "side": 1,
+      "message": "Yes, Wayne, please move the version number up to policy parent.",
+      "parentUuid": "1352315f_bad9394a",
+      "revId": "8df4f441d196c3d658731f357699990c8bd7650a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fcad8624_7c19467e",
         "filename": "main/src/test/resources/parameters/ApiConfigParameters_Postgres.json",
         "patchSetId": 1
