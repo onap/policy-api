@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +25,27 @@
 package org.onap.policy.api.main.rest.provider;
 
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Class to provide all kinds of policy type operations.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
+@Component
 public class PolicyTypeProvider extends CommonModelProvider {
 
     /**
      * Default constructor.
      */
-    public PolicyTypeProvider() throws PfModelException {
-        super();
+    @Autowired
+    public PolicyTypeProvider(PolicyModelsProvider modelsProvider) throws PfModelException {
+        super(modelsProvider);
     }
 
     /**

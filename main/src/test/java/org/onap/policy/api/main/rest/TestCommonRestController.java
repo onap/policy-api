@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +24,12 @@
 
 package org.onap.policy.api.main.rest;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 import java.util.UUID;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import org.junit.Test;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Class to perform unit testing of CommonRestController.
@@ -40,9 +40,8 @@ public class TestCommonRestController {
     @Test
     public void testAddLoggingHeaders() {
         UUID requestId = UUID.randomUUID();
-        ResponseBuilder rb =
-                crc.addLoggingHeaders(crc.addVersionControlHeaders(Response.status(Response.Status.OK)), requestId);
-        assertSame(rb, rb.header("X-ONAP-RequestID", requestId));
+        ResponseEntity<Void> rb = crc.makeOkResponse(requestId, null);
+        assertEquals(requestId.toString(), rb.getHeaders().getFirst("X-ONAP-RequestID"));
     }
 
     /*

@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
- * Modifications Copyright (C) 2020 Bell Canada.
+ * Modifications Copyright (C) 2020-2022 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
+import org.junit.runner.RunWith;
+import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -52,24 +49,35 @@ import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpHealthStatus;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * This class performs unit test of {@link PolicyProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = PolicyApiApplication.class, properties = {"database.initialize=false"})
+@ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestPolicyProvider {
 
-    private static PolicyProvider policyProvider;
-    private static PolicyTypeProvider policyTypeProvider;
-    private static PolicyModelsProviderParameters providerParams;
-    private static ApiParameterGroup apiParamGroup;
-    private static StandardCoder standardCoder;
-    private static StandardYamlCoder standardYamlCoder;
+    private static StandardCoder standardCoder = new StandardCoder();
+    private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
+
+    @Autowired
+    private PolicyProvider policyProvider;
+    @Autowired
+    private PolicyTypeProvider policyTypeProvider;
+    @Autowired
+    private PolicyModelsProvider databaseProvider;
+
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.tcagen2.yaml";
@@ -87,42 +95,6 @@ public class TestPolicyProvider {
             "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
     private static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
-
-    /**
-     * Initializes parameters.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @Before
-    public void setupParameters() throws PfModelException {
-
-        standardCoder = new StandardCoder();
-        standardYamlCoder = new StandardYamlCoder();
-        providerParams = new PolicyModelsProviderParameters();
-        providerParams.setDatabaseDriver("org.h2.Driver");
-        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
-        providerParams.setDatabaseUser("policy");
-        providerParams.setDatabasePassword("P01icY");
-        providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(),
-                Collections.emptyList());
-        ParameterService.register(apiParamGroup, true);
-        policyTypeProvider = new PolicyTypeProvider();
-        policyProvider = new PolicyProvider();
-    }
-
-    /**
-     * Closes up DB connections and deregisters API parameter group.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @After
-    public void tearDown() throws PfModelException {
-
-        policyTypeProvider.close();
-        policyProvider.close();
-        ParameterService.deregister(apiParamGroup);
-    }
 
     @Test
     public void testFetchPolicies() {
@@ -159,8 +131,7 @@ public class TestPolicyProvider {
         String policyTypeVersion = "1.0.0";
         String policyTypeId = "onap.policies.monitoring.cdap.tca.hi.lo.app";
 
-        try (PolicyModelsProvider databaseProvider =
-                new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParams)) {
+        try {
             assertEquals(0, databaseProvider.getPdpGroups("name").size());
             assertEquals(0, databaseProvider.getFilteredPdpGroups(PdpGroupFilter.builder().build()).size());
 

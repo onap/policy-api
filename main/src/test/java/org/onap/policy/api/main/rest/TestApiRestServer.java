@@ -3,7 +3,7 @@
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2019-2020 Nordix Foundation.
- *  Modifications Copyright (C) 2020 Bell Canada.
+ *  Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,8 @@ import static org.junit.Assert.assertNull;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
@@ -47,34 +45,40 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.api.main.parameters.CommonTestData;
-import org.onap.policy.api.main.rest.provider.PolicyProvider;
-import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
-import org.onap.policy.api.main.startstop.Main;
+import org.junit.runner.RunWith;
+import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.common.utils.security.SelfSignedKeyStore;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Class to perform unit test of {@link ApiRestController}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TestApiRestServer {
 
     private static final String ALIVE = "alive";
@@ -156,70 +160,37 @@ public class TestApiRestServer {
         "policies/vCPE.policy.operational.input.tosca.yaml";
 
     private static final String POLICIES_VCPE_VERSION1 = "policies/onap.restart.tca/versions/1.0.0";
-
-    private static PolicyModelsProviderParameters providerParams;
-    private static ApiParameterGroup apiParamGroup;
-    private static PolicyProvider policyProvider;
-    private static PolicyTypeProvider policyTypeProvider;
-
     // @formatter:on
 
     private static final StandardCoder standardCoder = new StandardCoder();
-
-    private static int apiPort;
-    private static Main apiMain;
-
     private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
+    private static SelfSignedKeyStore keystore;
+
+    @LocalServerPort
+    private int apiPort;
+
+    @Autowired
+    private ApiStatisticsManager mgr;
 
     /**
      * Initializes parameters and set up test environment.
      *
-     * @throws PfModelException the PfModel parsing exception
      * @throws IOException on I/O exceptions
      * @throws InterruptedException if interrupted
      */
     @BeforeClass
-    public static void setupParameters() throws PfModelException, IOException, InterruptedException {
-        providerParams = new PolicyModelsProviderParameters();
-        // H2, use "org.mariadb.jdbc.Driver" and "jdbc:mariadb://localhost:3306/policy" for locally installed MariaDB
-        providerParams.setDatabaseDriver("org.h2.Driver");
-        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
-        providerParams.setDatabaseUser("policy");
-        providerParams.setDatabasePassword("P01icY");
-        providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(),
-                Collections.emptyList());
-        ParameterService.register(apiParamGroup, true);
-
-        policyTypeProvider = new PolicyTypeProvider();
-        policyProvider = new PolicyProvider();
-
-        apiPort = NetworkUtil.allocPort();
-
-        final String[] apiConfigParameters = new String[2];
-        final Properties systemProps = System.getProperties();
-        systemProps.put("javax.net.ssl.keyStore", new SelfSignedKeyStore().getKeystoreName());
-        systemProps.put("javax.net.ssl.keyStorePassword", SelfSignedKeyStore.KEYSTORE_PASSWORD);
-        System.setProperties(systemProps);
-        new CommonTestData().makeParameters("src/test/resources/parameters/ApiConfigParameters_Https.json",
-                "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json", apiPort);
-        apiConfigParameters[0] = "-c";
-        apiConfigParameters[1] = "src/test/resources/parameters/ApiConfigParameters_HttpsXXX.json";
-
-        apiMain = new Main(apiConfigParameters);
+    public static void setupParameters() throws IOException, InterruptedException {
+        keystore = new SelfSignedKeyStore();
     }
 
-    /**
-     * Method for cleanup after each test.
-     */
-    @AfterClass
-    public static void teardown() throws Exception {
-        policyTypeProvider.close();
-        policyProvider.close();
-
-        if (apiMain != null) {
-            apiMain.shutdown();
-        }
+    @DynamicPropertySource
+    static void registerPgProperties(DynamicPropertyRegistry registry) {
+        registry.add("server.ssl.enabled", () -> "true");
+        registry.add("server.ssl.key-store", () -> keystore.getKeystoreName());
+        registry.add("server.ssl.key-store-password", () -> SelfSignedKeyStore.KEYSTORE_PASSWORD);
+        registry.add("server.ssl.key-store-type", () -> "PKCS12");
+        registry.add("server.ssl.key-alias", () -> "policy@policy.onap.org");
+        registry.add("server.ssl.key-password", () -> SelfSignedKeyStore.PRIVATE_KEY_PASSWORD);
     }
 
     @Test
@@ -378,7 +349,7 @@ public class TestApiRestServer {
         invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType);
         report = invocationBuilder.get(StatisticsReport.class);
         validateStatisticsReport(report, 200);
-        ApiStatisticsManager.resetAllStatistics();
+        // ApiStatisticsManager.resetAllStatistics();
     }
 
     @Test
@@ -798,8 +769,6 @@ public class TestApiRestServer {
     }
 
     private void updateApiStatistics() {
-        var mgr = ApiStatisticsManager.getInstance();
-
         mgr.updateTotalApiCallCount();
         mgr.updateApiCallSuccessCount();
         mgr.updateApiCallFailureCount();

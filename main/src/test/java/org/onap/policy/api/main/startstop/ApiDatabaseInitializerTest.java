@@ -3,6 +3,7 @@
  * ONAP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,54 +22,36 @@
 package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.fail;
 
-import java.io.File;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.api.main.exception.PolicyApiException;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.api.main.parameters.CommonTestData;
-import org.onap.policy.common.parameters.ValidationResult;
-import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.junit.runner.RunWith;
+import org.onap.policy.api.main.PolicyApiApplication;
+import org.onap.policy.api.main.config.PolicyPreloadConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = PolicyApiApplication.class)
+@ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ApiDatabaseInitializerTest {
-    private static final String PARAM_FILE = "src/test/resources/parameters/ApiConfigParameters_Https.json";
-    private static final CommonTestData COMMON_TEST_DATA = new CommonTestData();
-    private static ApiParameterGroup params;
-    private static PolicyModelsProvider provider;
 
-    /**
-     * Creates the DB and keeps it open.
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        COMMON_TEST_DATA.makeParameters(PARAM_FILE, "src/test/resources/parameters/ApiConfigParametersXXX.json", 6969);
+    @Autowired
+    private PolicyPreloadConfig params;
 
-        params = new StandardCoder().decode(new File(PARAM_FILE), ApiParameterGroup.class);
-        ValidationResult result = params.validate();
-        if (!result.isValid()) {
-            fail(result.getResult());
-        }
-
-        // keep the DB open until the test completes
-        provider = new PolicyModelsProviderFactory().createPolicyModelsProvider(params.getDatabaseProviderParameters());
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        provider.close();
-    }
+    @Autowired
+    private ApiDatabaseInitializer adi;
 
     @Test
-    public void testInitializeApiDatabase() throws PolicyApiException {
-        ApiDatabaseInitializer adi = new ApiDatabaseInitializer();
-        assertThatCode(() -> adi.initializeApiDatabase(params)).doesNotThrowAnyException();
+    public void testInitializeApiDatabase() {
+        assertThatCode(() -> adi.initializeApiDatabase(params.getPolicyTypes(),
+                params.getPolicies())).doesNotThrowAnyException();
 
         // invoke it again - should still be OK
-        assertThatCode(() -> adi.initializeApiDatabase(params)).doesNotThrowAnyException();
+        assertThatCode(() -> adi.initializeApiDatabase(params.getPolicyTypes(),
+                params.getPolicies())).doesNotThrowAnyException();
     }
 }
