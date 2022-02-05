@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2021 Bell Canada.
+ * Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,20 @@
 
 package org.onap.policy.api.main.rest;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Class to hold statistical data for API access.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-@Getter
-@NoArgsConstructor
+@Component
 public class ApiStatisticsManager {
-    @Getter
-    private static ApiStatisticsManager instance = new ApiStatisticsManager();
 
-    private StatisticsReport report = new StatisticsReport();
+    @Autowired
+    private StatisticsReport report;
+
     private long totalPolicyDeleteCount;
     private long totalPolicyTypeDeleteCount;
     private long policyDeleteSuccessCount;
@@ -232,12 +231,5 @@ public class ApiStatisticsManager {
      */
     public long updatePolicyTypeDeleteFailureCount() {
         return ++policyTypeDeleteFailureCount;
-    }
-
-    /**
-     * Resets the statistics.
-     */
-    protected static void resetAllStatistics() {
-        instance = new ApiStatisticsManager();
     }
 }

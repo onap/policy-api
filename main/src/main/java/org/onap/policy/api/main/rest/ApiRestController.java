@@ -5,7 +5,7 @@
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020 Nordix Foundation.
- * Modifications Copyright (C) 2020 Bell Canada.
+ * Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,18 +41,8 @@ import io.swagger.annotations.SwaggerDefinition;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
 import org.onap.policy.api.main.rest.provider.PolicyProvider;
 import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
@@ -66,16 +56,29 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Class to provide REST API services.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-@Path("/policy/api/v1")
+@RestController
+@RequestMapping(path = "/policy/api/v1", produces = { "application/json", "application/yaml" })
 @Api(value = "Policy Design API")
-@Produces({"application/json", "application/yaml"})
-@Consumes({"application/json", "application/yaml"})
 @SwaggerDefinition(
     info = @Info(
         description = "Policy Design API is publicly exposed for clients to Create/Read/Update/Delete"
@@ -129,14 +132,33 @@ public class ApiRestController extends CommonRestController {
     private static final String INVALID_PAYLOAD_MESSAGE = "Not Acceptable Payload";
     private static final String HTTP_CONFLICT_MESSAGE = "Delete Conflict, Rule Violation";
 
+    private enum Target {
+        POLICY,
+        POLICY_TYPE,
+        OTHER
+    }
+
+    @Autowired
+    private PolicyProvider policyProvider;
+
+    @Autowired
+    private HealthCheckProvider healthCheckProvider;
+
+    @Autowired
+    private PolicyTypeProvider policyTypeProvider;
+
+    @Autowired
+    private ApiStatisticsManager mgr;
+
+    @Autowired
+    private StatisticsProvider statisticsProvider;
 
     /**
      * Retrieves the healthcheck status of the API component.
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/healthcheck")
+    @GetMapping("/healthcheck")
     @ApiOperation(value = "Perform a system healthcheck", notes = "Returns healthy status of the Policy API component",
         response = HealthCheckReport.class,
         responseHeaders = {
@@ -159,11 +181,11 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response
-        getHealthCheck(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
-        return makeOkResponse(requestId, new HealthCheckProvider().performHealthCheck());
+    public ResponseEntity<HealthCheckReport> getHealthCheck(
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        updateApiStatisticsCounter(Target.OTHER, HttpStatus.OK, HttpMethod.GET);
+        return makeOkResponse(requestId, healthCheckProvider.performHealthCheck());
     }
 
     /**
@@ -171,8 +193,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/statistics")
+    @GetMapping("/statistics")
     @ApiOperation(value = "Retrieve current statistics",
         notes = "Returns current statistics including the counters of API invocation",
         response = StatisticsReport.class,
@@ -196,12 +217,11 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response
-        getStatistics(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        updateApiStatisticsCounter(Target.OTHER, Result.SUCCESS, HttpMethod.GET);
-
-        return makeOkResponse(requestId, new StatisticsProvider().fetchCurrentStatistics());
+    public ResponseEntity<StatisticsReport> getStatistics(
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        updateApiStatisticsCounter(Target.OTHER, HttpStatus.OK, HttpMethod.GET);
+        return makeOkResponse(requestId, statisticsProvider.fetchCurrentStatistics());
     }
 
     /**
@@ -209,8 +229,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes")
+    @GetMapping("/policytypes")
     @ApiOperation(value = "Retrieve existing policy types",
         notes = "Returns a list of existing policy types stored in Policy Framework",
         response = ToscaServiceTemplate.class,
@@ -234,17 +253,18 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response
-        getAllPolicyTypes(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getAllPolicyTypes(
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes", pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            final var msg = "GET /policytypes";
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -255,8 +275,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}")
+    @GetMapping("/policytypes/{policyTypeId}")
     @ApiOperation(value = "Retrieve all available versions of a policy type",
         notes = "Returns a list of all available versions for the specified policy type",
         response = ToscaServiceTemplate.class,
@@ -281,18 +300,19 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response getAllVersionsOfPolicyType(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getAllVersionsOfPolicyType(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}", policyTypeId, pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s", policyTypeId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -304,8 +324,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{versionId}")
+    @GetMapping("/policytypes/{policyTypeId}/versions/{versionId}")
     @ApiOperation(value = "Retrieve one particular version of a policy type",
         notes = "Returns a particular version for the specified policy type", response = ToscaServiceTemplate.class,
         responseHeaders = {
@@ -329,19 +348,20 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response getSpecificVersionOfPolicyType(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getSpecificVersionOfPolicyType(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s/versions/%s", policyTypeId, versionId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -352,8 +372,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/latest")
+    @GetMapping("/policytypes/{policyTypeId}/versions/latest")
     @ApiOperation(value = "Retrieve latest version of a policy type",
         notes = "Returns latest version for the specified policy type", response = ToscaServiceTemplate.class,
         responseHeaders = {
@@ -377,18 +396,19 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response getLatestVersionOfPolicyType(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getLatestVersionOfPolicyType(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}/versions/latest", policyTypeId, pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s/versions/latest", policyTypeId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -399,8 +419,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @POST
-    @Path("/policytypes")
+    @PostMapping("/policytypes")
     @ApiOperation(value = "Create a new policy type", notes = "Client should provide TOSCA body of the new policy type",
         authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"PolicyType", },
         response = ToscaServiceTemplate.class,
@@ -425,22 +444,22 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response createPolicyType(
-        @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
+    public ResponseEntity<ToscaServiceTemplate> createPolicyType(
+        @RequestBody @ApiParam(value = "Entity body of policy type", required = true) ToscaServiceTemplate body,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
         }
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.POST);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("POST /policytypes", pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.POST);
-            return makeErrorResponse(requestId, pfme);
+            final var msg = "POST /policytypes";
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.POST);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -452,8 +471,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @DELETE
-    @Path("/policytypes/{policyTypeId}/versions/{versionId}")
+    @DeleteMapping("/policytypes/{policyTypeId}/versions/{versionId}")
     @ApiOperation(value = "Delete one version of a policy type",
         notes = "Rule 1: pre-defined policy types cannot be deleted;"
             + "Rule 2: policy types that are in use (parameterized by a TOSCA policy) cannot be deleted."
@@ -481,19 +499,20 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response deleteSpecificVersionOfPolicyType(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyTypeProvider = new PolicyTypeProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> deleteSpecificVersionOfPolicyType(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("versionId") @ApiParam(value = "Version of policy type", required = true) String versionId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.SUCCESS, HttpMethod.DELETE);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("DELETE /policytypes/{}/versions/{}", policyTypeId, versionId, pfme);
-            updateApiStatisticsCounter(Target.POLICY_TYPE, Result.FAILURE, HttpMethod.DELETE);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("DELETE /policytypes/%s/versions/%s", policyTypeId, versionId);
+            updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.DELETE);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -505,8 +524,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
+    @GetMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(
         value = "Retrieve all versions of a policy created for a particular policy type version",
         notes = "Returns a list of all versions of specified policy created for the specified policy type version",
@@ -536,24 +554,24 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
-    public Response getAllPolicies(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> getAllPolicies(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
-            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
-    ) {
-
-        try (var policyProvider = new PolicyProvider()) {
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, BARE for bare"
+            + " policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, null, null, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s/versions/%s/policies", policyTypeId, policyTypeVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -566,8 +584,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}")
+    @GetMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}")
     @ApiOperation(value = "Retrieve all version details of a policy created for a particular policy type version",
         notes = "Returns a list of all version details of the specified policy", response = ToscaServiceTemplate.class,
         responseHeaders = {
@@ -595,24 +612,26 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
-    public Response getAllVersionsOfPolicy(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> getAllVersionsOfPolicy(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
-            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
-    ) {
-        try (var policyProvider = new PolicyProvider()) {
+        @PathVariable("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare")
+        @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
+            + " REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, null, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("/policytypes/{}/versions/{}/policies/{}", policyTypeId, policyTypeVersion, policyId, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("/policytypes/%s/versions/$s/policies/%s",
+                policyTypeId, policyTypeVersion, policyId);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -626,8 +645,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
+    @GetMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve one version of a policy created for a particular policy type version",
         notes = "Returns a particular version of specified policy created for the specified policy type version",
         response = ToscaServiceTemplate.class,
@@ -656,26 +674,27 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
-    public Response getSpecificVersionOfPolicy(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> getSpecificVersionOfPolicy(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
-            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
-    ) {
-        try (var policyProvider = new PolicyProvider()) {
+        @PathVariable("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathVariable("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, BARE for bare policies"
+            + "  (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
-                policyId, policyVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s/versions/%s/policies/%s/versions/%s",
+                policyTypeId, policyTypeVersion, policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -688,8 +707,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest")
+    @GetMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest")
     @ApiOperation(value = "Retrieve the latest version of a particular policy",
         notes = "Returns the latest version of specified policy", response = ToscaServiceTemplate.class,
         responseHeaders = {
@@ -713,25 +731,26 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response getLatestVersionOfPolicy(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> getLatestVersionOfPolicy(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @ApiParam("Fetch mode for policies, TERSE for bare policies (default), "
-            + "REFERENCED for fully referenced policies") PolicyFetchMode mode) {
-
-        try (var policyProvider = new PolicyProvider()) {
+        @PathVariable("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, TERSE for bare "
+            + "policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policytypes/{}/versions/{}/policies/{}/versions/latest", policyTypeId, policyTypeVersion,
-                policyId, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policytypes/%s/versions/%s/policies/%s/versions/latest",
+                policyTypeId, policyTypeVersion, policyId);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -744,8 +763,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @POST
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
+    @PostMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies")
     @ApiOperation(value = "Create a new policy for a policy type version",
         notes = "Client should provide TOSCA body of the new policy",
         authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
@@ -772,26 +790,26 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response createPolicy(
-        @PathParam("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> createPolicy(
+        @PathVariable("policyTypeId") @ApiParam(value = "ID of policy type", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
-
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestBody @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST,
                 "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies", toJson(body));
         }
-
-        try (var policyProvider = new PolicyProvider()) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyProvider.createPolicy(policyTypeId, policyTypeVersion, body);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("POST /policytypes/{}/versions/{}/policies", policyTypeId, policyTypeVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("POST /policytypes/%s/versions/%s/policies", policyTypeId, policyTypeVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.POST);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -805,8 +823,8 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @DELETE
-    @Path("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}")
+    @DeleteMapping("/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/"
+        + "versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a policy",
         notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
         authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
@@ -832,24 +850,25 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response deleteSpecificVersionOfPolicy(
-        @PathParam("policyTypeId") @ApiParam(value = "PolicyType ID", required = true) String policyTypeId,
-        @PathParam("policyTypeVersion") @ApiParam(value = "Version of policy type",
+    public ResponseEntity<ToscaServiceTemplate> deleteSpecificVersionOfPolicy(
+        @PathVariable("policyTypeId") @ApiParam(value = "PolicyType ID", required = true) String policyTypeId,
+        @PathVariable("policyTypeVersion") @ApiParam(value = "Version of policy type",
             required = true) String policyTypeVersion,
-        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyProvider = new PolicyProvider()) {
+        @PathVariable("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathVariable("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("DELETE /policytypes/{}/versions/{}/policies/{}/versions/{}", policyTypeId, policyTypeVersion,
-                policyId, policyVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.DELETE);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("DELETE /policytypes/%s/versions/%s/policies/%s/versions/%s",
+                policyTypeId, policyTypeVersion, policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.DELETE);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -858,8 +877,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policies")
+    @GetMapping("/policies")
     @ApiOperation(value = "Retrieve all versions of available policies",
         notes = "Returns all version of available policies",
         response = ToscaServiceTemplate.class,
@@ -888,24 +906,25 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
-    public Response getPolicies(
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
-            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
-    ) {
-        try (var policyProvider = new PolicyProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getPolicies(
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, BARE for bare"
+            + "  policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(null, null, null, null, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policies/ --", pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
+            final var msg = "GET /policies/ --";
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
             if (pfme.getErrorResponse().getResponseCode().equals(Status.NOT_FOUND)) {
                 pfme.getErrorResponse().setErrorMessage(ERROR_MESSAGE_NO_POLICIES_FOUND);
                 pfme.getErrorResponse().setErrorDetails(List.of(ERROR_MESSAGE_NO_POLICIES_FOUND));
             }
-            return makeErrorResponse(requestId, pfme);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -917,8 +936,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GET
-    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @GetMapping("/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Retrieve specific version of a specified policy",
         notes = "Returns a particular version of specified policy",
         response = ToscaServiceTemplate.class,
@@ -947,22 +965,23 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
     })
-    public Response getSpecificPolicy(
-        @PathParam("policyId") @ApiParam(value = "Name of policy", required = true) String policyId,
-        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @QueryParam("mode") @DefaultValue("bare") @ApiParam("Fetch mode for policies, BARE for bare policies (default),"
-            + " REFERENCED for fully referenced policies") PolicyFetchMode mode
-    ) {
-        try (var policyProvider = new PolicyProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> getSpecificPolicy(
+        @PathVariable("policyId") @ApiParam(value = "Name of policy", required = true) String policyId,
+        @PathVariable("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, BARE for bare"
+            + "  policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.GET);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("GET /policies/{}/versions/{}", policyId, policyVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.GET);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("GET /policies/%s/versions/%s", policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.GET);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -973,8 +992,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @POST
-    @Path("/policies")
+    @PostMapping("/policies")
     @ApiOperation(value = "Create one or more new policies",
         notes = "Client should provide TOSCA body of the new polic(ies)",
         authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
@@ -1001,22 +1019,22 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response createPolicies(
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
-
+    public ResponseEntity<ToscaServiceTemplate> createPolicies(
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @RequestBody @ApiParam(value = "Entity body of policy", required = true) ToscaServiceTemplate body) {
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
         }
-
-        try (var policyProvider = new PolicyProvider()) {
+        try {
             ToscaServiceTemplate serviceTemplate = policyProvider.createPolicies(body);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.POST);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("POST /policies", pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.POST);
-            return makeErrorResponse(requestId, pfme);
+            final var msg = "POST /policies";
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.POST);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
@@ -1028,8 +1046,7 @@ public class ApiRestController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @DELETE
-    @Path("/policies/{policyId}/versions/{policyVersion}")
+    @DeleteMapping("/policies/{policyId}/versions/{policyVersion}")
     @ApiOperation(value = "Delete a particular version of a policy",
         notes = "Rule: the version that has been deployed in PDP group(s) cannot be deleted",
         authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"Policy", },
@@ -1055,47 +1072,33 @@ public class ApiRestController extends CommonRestController {
         @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_CONFLICT, message = HTTP_CONFLICT_MESSAGE),
         @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public Response deleteSpecificPolicy(
-        @PathParam("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
-        @PathParam("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
-        try (var policyProvider = new PolicyProvider()) {
+    public ResponseEntity<ToscaServiceTemplate> deleteSpecificPolicy(
+        @PathVariable("policyId") @ApiParam(value = "ID of policy", required = true) String policyId,
+        @PathVariable("policyVersion") @ApiParam(value = "Version of policy", required = true) String policyVersion,
+        @RequestHeader(name = REQUEST_ID_NAME, required = false)
+        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+        try {
             ToscaServiceTemplate serviceTemplate =
                 policyProvider.deletePolicy(null, null, policyId, policyVersion);
-            updateApiStatisticsCounter(Target.POLICY, Result.SUCCESS, HttpMethod.DELETE);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            LOGGER.warn("DELETE /policies/{}/versions/{}", policyId, policyVersion, pfme);
-            updateApiStatisticsCounter(Target.POLICY, Result.FAILURE, HttpMethod.DELETE);
-            return makeErrorResponse(requestId, pfme);
+            var msg = String.format("DELETE /policies/%s/versions/%s", policyId, policyVersion);
+            updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
+                .getStatusCode()), HttpMethod.DELETE);
+            throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
 
-
-
-    private enum Target {
-        POLICY,
-        POLICY_TYPE,
-        OTHER
+    @ExceptionHandler(value = {PolicyApiRuntimeException.class})
+    protected ResponseEntity<Object> handleException(PolicyApiRuntimeException ex) {
+        LOGGER.warn(ex.getMessage(), ex.getCause());
+        return makeErrorResponse(ex.getRequestId(), ex.getErrorResponse(),
+            ex.getErrorResponse().getResponseCode().getStatusCode());
     }
 
-    private enum Result {
-        SUCCESS,
-        FAILURE
-    }
-
-    private enum HttpMethod {
-        POST,
-        GET,
-        DELETE
-    }
-
-    private void updateApiStatisticsCounter(Target target, Result result, HttpMethod http) {
-
-        var mgr = ApiStatisticsManager.getInstance();
+    private void updateApiStatisticsCounter(Target target, HttpStatus result, HttpMethod http) {
         mgr.updateTotalApiCallCount();
-
         switch (target) {
             case POLICY:
                 updatePolicyStats(result, http);
@@ -1109,10 +1112,8 @@ public class ApiRestController extends CommonRestController {
         }
     }
 
-    private void updatePolicyStats(Result result, HttpMethod http) {
-        var mgr = ApiStatisticsManager.getInstance();
-
-        if (result == Result.SUCCESS) {
+    private void updatePolicyStats(HttpStatus result, HttpMethod http) {
+        if (result.equals(HttpStatus.OK)) {
             switch (http) {
                 case GET:
                     mgr.updateApiCallSuccessCount();
@@ -1157,10 +1158,8 @@ public class ApiRestController extends CommonRestController {
         }
     }
 
-    private void updatePolicyTypeStats(Result result, HttpMethod http) {
-        var mgr = ApiStatisticsManager.getInstance();
-
-        if (result == Result.SUCCESS) {
+    private void updatePolicyTypeStats(HttpStatus result, HttpMethod http) {
+        if (result.equals(HttpStatus.OK)) {
             switch (http) {
                 case GET:
                     mgr.updateApiCallSuccessCount();
