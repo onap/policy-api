@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 IBM.
- * Modifications Copyright (C) 2020 Bell Canada.
+ * Modifications Copyright (C) 2020-2022 Bell Canada.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,13 +27,23 @@ package org.onap.policy.api.main.rest;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.onap.policy.api.main.PolicyApiApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = PolicyApiApplication.class)
+@ActiveProfiles("test")
 public class TestApiStatisticsManager {
+
+    @Autowired
+    private ApiStatisticsManager mgr = new ApiStatisticsManager();
 
     @Test
     public void testUpdateMethods() {
-        var mgr = new ApiStatisticsManager();
-
         assertEquals(1, mgr.updateTotalApiCallCount());
         assertEquals(1, mgr.updateApiCallSuccessCount());
         assertEquals(1, mgr.updateApiCallFailureCount());
