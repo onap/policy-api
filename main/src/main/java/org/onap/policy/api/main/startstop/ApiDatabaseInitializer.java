@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,53 +27,60 @@ package org.onap.policy.api.main.startstop;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import org.onap.policy.api.main.config.PolicyPreloadConfig;
 import org.onap.policy.api.main.exception.PolicyApiException;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 /**
  * This class creates initial policy types in the database.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
+@Component
+@ConditionalOnProperty(value = "database.initialize", havingValue = "true", matchIfMissing = true)
 public class ApiDatabaseInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiDatabaseInitializer.class);
 
     private static final StandardYamlCoder coder = new StandardYamlCoder();
-    private PolicyModelsProviderFactory factory;
 
-    /**
-     * Constructs the object.
-     */
-    public ApiDatabaseInitializer() {
-        factory = new PolicyModelsProviderFactory();
+    @Autowired
+    PolicyModelsProvider policyModelsProvider;
+
+    @Autowired
+    PolicyPreloadConfig policyPreloadConfig;
+
+    @PostConstruct
+    public void loadData() throws PolicyApiException {
+        initializeApiDatabase(policyPreloadConfig.getPolicyTypes(), policyPreloadConfig.getPolicies());
     }
 
     /**
      * Initializes database by preloading policy types and policies.
      *
-     * @param apiParameterGroup the apiParameterGroup parameters
+     * @param policyTypes List of policy types to preload.
+     * @param policies List of policies to preload.
      * @throws PolicyApiException in case of errors.
      */
-    public void initializeApiDatabase(final ApiParameterGroup apiParameterGroup) throws PolicyApiException {
-
-        try (var databaseProvider =
-                factory.createPolicyModelsProvider(apiParameterGroup.getDatabaseProviderParameters())) {
-
-            if (alreadyExists(databaseProvider)) {
+    public void initializeApiDatabase(final List<String> policyTypes, final List<String> policies)
+        throws PolicyApiException {
+        try {
+            if (alreadyExists()) {
                 LOGGER.warn("DB already contains policy data - skipping preload");
                 return;
             }
@@ -82,27 +90,24 @@ public class ApiDatabaseInitializer {
             serviceTemplate.setPolicyTypes(new LinkedHashMap<>());
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_1_0");
 
-            ToscaServiceTemplate createdPolicyTypes = preloadServiceTemplate(serviceTemplate,
-                    apiParameterGroup.getPreloadPolicyTypes(), databaseProvider::createPolicyTypes);
-            preloadServiceTemplate(createdPolicyTypes, apiParameterGroup.getPreloadPolicies(),
-                    databaseProvider::createPolicies);
+            ToscaServiceTemplate createdPolicyTypes =
+                    preloadServiceTemplate(serviceTemplate, policyTypes, policyModelsProvider::createPolicyTypes);
+            preloadServiceTemplate(createdPolicyTypes, policies, policyModelsProvider::createPolicies);
         } catch (final PolicyApiException | PfModelException | CoderException exp) {
             throw new PolicyApiException(exp);
         }
     }
 
-    private boolean alreadyExists(PolicyModelsProvider databaseProvider) throws PfModelException {
+    private boolean alreadyExists() throws PfModelException {
         try {
             ToscaServiceTemplate serviceTemplate =
-                    databaseProvider.getFilteredPolicyTypes(ToscaEntityFilter.<ToscaPolicyType>builder().build());
+                    policyModelsProvider.getFilteredPolicyTypes(ToscaEntityFilter.<ToscaPolicyType>builder().build());
             if (!serviceTemplate.getPolicyTypes().isEmpty()) {
                 return true;
             }
-
         } catch (PfModelRuntimeException e) {
             LOGGER.trace("DB does not yet contain policy types", e);
         }
-
         return false;
     }
 
@@ -119,7 +124,7 @@ public class ApiDatabaseInitializer {
 
             ToscaServiceTemplate singleEntity = coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
             if (singleEntity == null) {
-                throw new PolicyApiException("Error deserializaing entity from file: " + entity);
+                throw new PolicyApiException("Error deserializing entity from file: " + entity);
             }
 
             // Consolidate data types and policy types

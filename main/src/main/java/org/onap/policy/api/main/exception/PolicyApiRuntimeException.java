@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ *  Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +21,21 @@
 
 package org.onap.policy.api.main.exception;
 
+import java.util.UUID;
+import lombok.Getter;
+import org.onap.policy.models.errors.concepts.ErrorResponse;
+
 /**
  * This runtime exception will be called if a runtime error occurs when using policy api.
  */
 public class PolicyApiRuntimeException extends RuntimeException {
+
     private static final long serialVersionUID = -8507246953751956974L;
+
+    @Getter
+    private final UUID requestId;
+    @Getter
+    private final ErrorResponse errorResponse;
 
     /**
      * Instantiates a new policy api runtime exception with a message.
@@ -33,6 +44,8 @@ public class PolicyApiRuntimeException extends RuntimeException {
      */
     public PolicyApiRuntimeException(final String message) {
         super(message);
+        this.requestId = null;
+        this.errorResponse = null;
     }
 
     /**
@@ -43,5 +56,23 @@ public class PolicyApiRuntimeException extends RuntimeException {
      */
     public PolicyApiRuntimeException(final String message, final Exception exp) {
         super(message, exp);
+        this.requestId = null;
+        this.errorResponse = null;
+    }
+
+    /**
+     * Instantiates a new policy api runtime exception with requestId, errorResponse object
+     * along with message and a caused by exception.
+     *
+     * @param message the message
+     * @param cause the exception that caused this exception to be thrown
+     * @param requestId request identifier
+     * @param errorResponse error response object
+     */
+    public PolicyApiRuntimeException(final String message, final Throwable cause,
+                                     final ErrorResponse errorResponse, final UUID requestId) {
+        super(message, cause);
+        this.requestId = requestId;
+        this.errorResponse = errorResponse;
     }
 }

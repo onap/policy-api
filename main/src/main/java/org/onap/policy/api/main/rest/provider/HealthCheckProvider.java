@@ -5,6 +5,7 @@
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,27 +26,31 @@
 package org.onap.policy.api.main.rest.provider;
 
 import org.onap.policy.api.main.rest.PolicyFetchMode;
-import org.onap.policy.api.main.startstop.ApiActivator;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Class to fetch health check of api service.
  *
  */
+@Service
 public class HealthCheckProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HealthCheckProvider.class);
 
-    private static final String NOT_ALIVE = "not alive";
     private static final String ALIVE = "alive";
     private static final String URL = NetworkUtil.getHostname();
     private static final String NAME = "Policy API";
     private static final String DB_CONN_FAILURE = "unable to connect with database";
+
+    @Autowired
+    private PolicyProvider policyProvider;
 
     /**
      * Performs the health check of api service.
@@ -54,19 +59,12 @@ public class HealthCheckProvider {
      */
     public HealthCheckReport performHealthCheck() {
         final var report = new HealthCheckReport();
+        final var dbConnectionStatus = verifyApiDatabase();
         report.setName(NAME);
         report.setUrl(URL);
-        boolean heathStatus = ApiActivator.isAlive();
-        if (heathStatus) {
-            boolean dbConnectionStatus = verifyApiDatabase();
-            report.setHealthy(dbConnectionStatus);
-            report.setCode(dbConnectionStatus ? 200 : 503);
-            report.setMessage(dbConnectionStatus ? ALIVE : DB_CONN_FAILURE);
-        } else {
-            report.setHealthy(heathStatus);
-            report.setCode(500);
-            report.setMessage(NOT_ALIVE);
-        }
+        report.setHealthy(dbConnectionStatus);
+        report.setCode(dbConnectionStatus ? 200 : 503);
+        report.setMessage(dbConnectionStatus ? ALIVE : DB_CONN_FAILURE);
         return report;
     }
 
@@ -76,7 +74,7 @@ public class HealthCheckProvider {
      * @return boolean signaling the verification result
      */
     private boolean verifyApiDatabase() {
-        try (var policyProvider = new PolicyProvider()) {
+        try {
             policyProvider.fetchPolicies(null, null, null, null, PolicyFetchMode.BARE);
             return true;
         } catch (PfModelException | PfModelRuntimeException pfme) {
