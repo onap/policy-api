@@ -1,11 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
- * ================================================================================
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,30 +18,22 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest.provider;
+package org.onap.policy.api.main.config.converter;
 
-import org.onap.policy.api.main.rest.StatisticsReport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.onap.policy.api.main.rest.PolicyFetchMode;
+import org.springframework.core.convert.converter.Converter;
 
 /**
- * Class to fetch API statistics.
- *
- * @author Chenfei Gao (cgao@research.att.com)
+ * Custom converter to support lowercase request parameters for policy fetch mode enumeration.
  */
-@Component
-public class StatisticsProvider {
+public class StringToEnumConverter implements Converter<String, PolicyFetchMode> {
 
-    @Autowired
-    private StatisticsReport report;
-
-    /**
-     * Return the current API statistics.
-     *
-     * @return Report containing API statistics
-     */
-    public StatisticsReport fetchCurrentStatistics() {
-        report.setCode(200);
-        return report;
+    @Override
+    public PolicyFetchMode convert(String source) {
+        try {
+            return PolicyFetchMode.valueOf(source.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
