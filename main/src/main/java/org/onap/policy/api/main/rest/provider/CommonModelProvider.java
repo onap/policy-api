@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +31,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
@@ -39,38 +38,21 @@ import org.onap.policy.models.pdp.concepts.PdpGroupFilter;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Super class for providers that use a model provider.
  */
-public class CommonModelProvider implements AutoCloseable {
+public class CommonModelProvider {
 
     protected final PolicyModelsProvider modelsProvider;
 
     /**
      * Constructs the object, populating {@link #modelsProvider}.
      *
-     * @throws PfModelException if an error occurs
      */
-    public CommonModelProvider() throws PfModelException {
-
-        ApiParameterGroup parameterGroup = ParameterService.get("ApiGroup");
-        PolicyModelsProviderParameters providerParameters = parameterGroup.getDatabaseProviderParameters();
-        modelsProvider = new PolicyModelsProviderFactory().createPolicyModelsProvider(providerParameters);
-    }
-
-    /**
-     * Closes the connection to database.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @Override
-    public void close() throws PfModelException {
-
-        modelsProvider.close();
+    public CommonModelProvider(PolicyModelsProvider modelsProvider) {
+        this.modelsProvider = modelsProvider;
     }
 
     /**

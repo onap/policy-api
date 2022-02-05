@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
- * Modifications Copyright (C) 2020 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,32 +29,40 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Collections;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.api.main.parameters.ApiParameterGroup;
-import org.onap.policy.common.parameters.ParameterService;
+import org.junit.runner.RunWith;
+import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * This class performs unit test of {@link PolicyTypeProvider}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = PolicyApiApplication.class, properties = {"database.initialize=false"})
+@ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TestPolicyTypeProvider {
 
-    private static PolicyTypeProvider policyTypeProvider;
-    private static PolicyProvider policyProvider;
-    private static PolicyModelsProviderParameters providerParams;
-    private static ApiParameterGroup apiParamGroup;
-    private static StandardYamlCoder standardYamlCoder;
+    private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
+
+    @Autowired
+    private PolicyProvider policyProvider;
+
+    @Autowired
+    private PolicyTypeProvider policyTypeProvider;
 
     private static final String POLICY_TYPE_VERSION = "1.0.0";
 
@@ -74,41 +82,6 @@ public class TestPolicyTypeProvider {
     private static final String POLICY_TYPE_OPERATIONAL_APEX = "onap.policies.controlloop.operational.common.Apex";
     private static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
 
-    /**
-     * Initializes parameters.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @BeforeClass
-    public static void setupParameters() throws PfModelException {
-
-        standardYamlCoder = new StandardYamlCoder();
-        providerParams = new PolicyModelsProviderParameters();
-        providerParams.setDatabaseDriver("org.h2.Driver");
-        providerParams.setDatabaseUrl("jdbc:h2:mem:testdb");
-        providerParams.setDatabaseUser("policy");
-        providerParams.setDatabasePassword("P01icY");
-        providerParams.setPersistenceUnit("ToscaConceptTest");
-        apiParamGroup = new ApiParameterGroup("ApiGroup", null, providerParams, Collections.emptyList(),
-                Collections.emptyList());
-        ParameterService.register(apiParamGroup, true);
-        policyTypeProvider = new PolicyTypeProvider();
-        policyProvider = new PolicyProvider();
-    }
-
-    /**
-     * Closes up DB connections and deregisters API parameter group.
-     *
-     * @throws PfModelException the PfModel parsing exception
-     */
-    @AfterClass
-    public static void tearDown() throws PfModelException {
-
-        policyTypeProvider.close();
-        policyProvider.close();
-        ParameterService.deregister(apiParamGroup);
-    }
-
     @Test
     public void testFetchPolicyTypes() throws Exception {
 
@@ -122,10 +95,6 @@ public class TestPolicyTypeProvider {
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchPolicyTypes("dummy", "dummy");
         }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=dummy) do not exist");
-    }
-
-    @Test
-    public void testFetchLatestPolicyTypes() {
 
         assertThatThrownBy(() -> {
             policyTypeProvider.fetchLatestPolicyTypes("dummy");
@@ -170,25 +139,22 @@ public class TestPolicyTypeProvider {
 
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_COMMON));
 
+        // Drools operational policy type
         policyTypeServiceTemplate = standardYamlCoder.decode(
                 ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS), ToscaServiceTemplate.class);
         serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_DROOLS));
 
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_DROOLS, POLICY_TYPE_VERSION);
-        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_COMMON, POLICY_TYPE_VERSION);
-    }
 
-    @Test
-    public void testCreateApexOperationalPolicyTypes() throws CoderException, PfModelException {
-        ToscaServiceTemplate policyTypeServiceTemplate = standardYamlCoder.decode(
-                ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
-        ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
+        // APEX operational Policy Type
         policyTypeServiceTemplate = standardYamlCoder.decode(
                 ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_APEX), ToscaServiceTemplate.class);
         serviceTemplate = policyTypeProvider.createPolicyType(policyTypeServiceTemplate);
         assertNotNull(serviceTemplate.getPolicyTypes().get(POLICY_TYPE_OPERATIONAL_APEX));
         policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_APEX, POLICY_TYPE_VERSION);
+
+        policyTypeProvider.deletePolicyType(POLICY_TYPE_OPERATIONAL_COMMON, POLICY_TYPE_VERSION);
     }
 
     @Test

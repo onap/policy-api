@@ -3,6 +3,7 @@
 # ============LICENSE_START=======================================================
 #  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
 #  Modifications Copyright (C) 2019-2020 Nordix Foundation.
+#  Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +34,7 @@ else
 fi
 
 if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/defaultConfig.json"
+    CONFIG_FILE="${POLICY_HOME}/etc/apiParameters.yaml"
 fi
 
 echo "Policy api config file: $CONFIG_FILE"
@@ -53,4 +54,11 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
 fi
 
-$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" -Djavax.net.ssl.keyStore="${KEYSTORE}" -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" -Djavax.net.ssl.trustStore="${TRUSTSTORE}" -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" org.onap.policy.api.main.startstop.Main -c "${CONFIG_FILE}"
+$JAVA_HOME/bin/java \
+    -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" \
+    -Dserver.ssl.key-store="${KEYSTORE}" \
+    -Dserver.ssl.key-store-password="${KEYSTORE_PASSWD}" \
+    -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
+    -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
+    -jar /app/api.jar \
+    --spring.config.location="${CONFIG_FILE}"

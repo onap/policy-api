@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +24,13 @@
 package org.onap.policy.api.main.rest;
 
 import java.util.UUID;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Super class from which REST controllers are derived.
@@ -41,27 +41,33 @@ public class CommonRestController {
 
     private final Coder coder = new StandardCoder();
 
-
-    protected Response makeOkResponse(UUID requestId, Object respEntity) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                        .entity(respEntity).build();
+    protected <T> ResponseEntity<T> makeOkResponse(UUID requestId, T respEntity) {
+        HttpHeaders headers = new HttpHeaders();
+        addVersionControlHeaders(headers);
+        addLoggingHeaders(headers, requestId);
+        return ResponseEntity.ok().headers(headers).body(respEntity);
     }
 
-    protected <T extends ErrorResponseInfo> Response makeErrorResponse(UUID requestId, T pfme) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(pfme.getErrorResponse().getResponseCode())),
-                        requestId).entity(pfme.getErrorResponse()).build();
+    protected <T> ResponseEntity<T> makeErrorResponse(UUID requestId, T respEntity, int status) {
+        HttpHeaders headers = new HttpHeaders();
+        addVersionControlHeaders(headers);
+        addLoggingHeaders(headers, requestId);
+        return ResponseEntity.status(status).headers(headers).body(respEntity);
     }
 
-    protected ResponseBuilder addVersionControlHeaders(ResponseBuilder rb) {
-        return rb.header("X-MinorVersion", "0").header("X-PatchVersion", "0").header("X-LatestVersion", "1.0.0");
+    private void addVersionControlHeaders(HttpHeaders headers) {
+        headers.add("X-MinorVersion", "0");
+        headers.add("X-PatchVersion", "0");
+        headers.add("X-LatestVersion", "1.0.0");
     }
 
-    protected ResponseBuilder addLoggingHeaders(ResponseBuilder rb, UUID requestId) {
+    private void addLoggingHeaders(HttpHeaders headers, UUID requestId) {
         if (requestId == null) {
             // Generate a random uuid if client does not embed requestId in rest request
-            return rb.header("X-ONAP-RequestID", UUID.randomUUID());
+            headers.add("X-ONAP-RequestID", UUID.randomUUID().toString());
+        } else {
+            headers.add("X-ONAP-RequestID", requestId.toString());
         }
-        return rb.header("X-ONAP-RequestID", requestId);
     }
 
     /**
