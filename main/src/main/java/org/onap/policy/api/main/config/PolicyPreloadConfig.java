@@ -1,11 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP Policy API
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
- * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
- * ================================================================================
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,30 +18,23 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest.provider;
+package org.onap.policy.api.main.config;
 
-import org.onap.policy.api.main.rest.StatisticsReport;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * Class to fetch API statistics.
- *
- * @author Chenfei Gao (cgao@research.att.com)
- */
 @Component
-public class StatisticsProvider {
+@ConfigurationProperties("policy-preload")
+public class PolicyPreloadConfig {
 
-    @Autowired
-    private StatisticsReport report;
+    @Getter
+    @Setter
+    List<String> policyTypes;
 
-    /**
-     * Return the current API statistics.
-     *
-     * @return Report containing API statistics
-     */
-    public StatisticsReport fetchCurrentStatistics() {
-        report.setCode(200);
-        return report;
-    }
+    @Getter
+    @Setter
+    List<String> policies;
 }

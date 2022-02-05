@@ -1,6 +1,7 @@
 <!--
   ============LICENSE_START=======================================================
    Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+   Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -40,8 +41,8 @@
             <directory>${project.basedir}/src/main/resources/etc
             </directory>
             <includes>
-                <include>*.json</include>
                 <include>*.xml</include>
+                <include>*.yaml</include>
             </includes>
             <outputDirectory>${file.separator}etc</outputDirectory>
             <lineEnding>unix</lineEnding>
