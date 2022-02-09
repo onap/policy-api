@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a163f26_e8d1f4c5",
+        "filename": "main/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-09T16:25:35Z",
+      "side": 1,
+      "message": "This bug will be introduced only when you add the spring-data dependency to the classpath. So, you can make this change as part of the work to move from policy-models-provider to spring boot repository layer.",
+      "parentUuid": "ae1182ed_df4b4d47",
+      "range": {
+        "startLine": 91,
+        "startChar": 20,
+        "endLine": 91,
+        "endChar": 42
+      },
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcad4a80_74b533ba",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 6
