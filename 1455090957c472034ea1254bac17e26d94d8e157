@@ -63,6 +63,30 @@
       "revId": "1455090957c472034ea1254bac17e26d94d8e157",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5c10c40_10e15c33",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-02-09T14:21:25Z",
+      "side": 1,
+      "message": "Or a random ordering problem - if I recall policy/engine had these issues because they were built on a developers machine that ran them in a specific order. Running on someone else\u0027s machine (usually my MAC!) would show random failures. Some best practice is to either require ordering, or have shutdown/start methods to assure a clean environment is there for each test.",
+      "parentUuid": "379735e8_7d8d0542",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 68,
+        "endChar": 7
+      },
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
