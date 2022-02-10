@@ -16,6 +16,24 @@
       "revId": "5f919673b13d8fd40a6a90b97f4e662ade068304",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "099323d6_b8bf06ff",
+        "filename": "main/src/main/resources/application.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-10T15:04:39Z",
+      "side": 1,
+      "message": "Thats right. The move from policy-models-provider to spring boot repository layer will be captured in a separate JIRA and commit since the existing commit is already big. Presntly we are still using the eclipselink, and hence the policy-models-provider which is why the DB config looks different from pap etc.",
+      "parentUuid": "299b3b10_a10183af",
+      "revId": "5f919673b13d8fd40a6a90b97f4e662ade068304",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
