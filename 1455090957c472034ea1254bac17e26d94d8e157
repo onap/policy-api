@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e562382a_fcc08edb",
+        "filename": "main/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-10T06:36:34Z",
+      "side": 1,
+      "message": "Fixed this, thanks",
+      "parentUuid": "6a163f26_e8d1f4c5",
+      "range": {
+        "startLine": 91,
+        "startChar": 20,
+        "endLine": 91,
+        "endChar": 42
+      },
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcad4a80_74b533ba",
         "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
         "patchSetId": 6
@@ -60,6 +84,24 @@
       "writtenOn": "2022-02-09T11:19:52Z",
       "side": 1,
       "message": "Do we not need the Swagger annotations any more? Does  Spring generate the Swagger?",
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7694674a_7ba57874",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/ApiRestController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-10T06:36:34Z",
+      "side": 1,
+      "message": "Good point. It did generate but I noticed the format was incorrect due to serialization issues, the next patchset should fix this.",
+      "parentUuid": "fcad4a80_74b533ba",
       "revId": "1455090957c472034ea1254bac17e26d94d8e157",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -125,6 +167,30 @@
       "side": 1,
       "message": "Or a random ordering problem - if I recall policy/engine had these issues because they were built on a developers machine that ran them in a specific order. Running on someone else\u0027s machine (usually my MAC!) would show random failures. Some best practice is to either require ordering, or have shutdown/start methods to assure a clean environment is there for each test.",
       "parentUuid": "379735e8_7d8d0542",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 68,
+        "endChar": 7
+      },
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b102a8d_a0877608",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-10T06:36:34Z",
+      "side": 1,
+      "message": "Thanks for those inputs, I will retain the ignore tests for now.",
+      "parentUuid": "d5c10c40_10e15c33",
       "range": {
         "startLine": 68,
         "startChar": 1,
