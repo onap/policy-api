@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "299b3b10_a10183af",
+        "filename": "main/src/main/resources/application.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-10T14:09:40Z",
+      "side": 1,
+      "message": "I noticed in Ajith and Francesco\u0027s reviews, there are jpa sections under spring.  Do you need it to work with the db?     The applications.yaml is a bit different at least in Ajith\u0027s if I recall correctly.    Is it possible to have consistent configuration?   I think that was the case before with the config.json",
+      "revId": "5f919673b13d8fd40a6a90b97f4e662ade068304",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
