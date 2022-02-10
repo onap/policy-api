@@ -236,6 +236,30 @@
       "revId": "1455090957c472034ea1254bac17e26d94d8e157",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "032e4ed1_f800806d",
+        "filename": "main/src/test/java/org/onap/policy/api/main/rest/provider/TestPolicyProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2022-02-10T20:16:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4b102a8d_a0877608",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 68,
+        "endChar": 7
+      },
+      "revId": "1455090957c472034ea1254bac17e26d94d8e157",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
