@@ -34,6 +34,24 @@
       "revId": "5f919673b13d8fd40a6a90b97f4e662ade068304",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9359fa2a_e44a2635",
+        "filename": "main/src/main/resources/application.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-10T15:08:16Z",
+      "side": 1,
+      "message": "And once I start working on migrating policy-api to SB repository layer I will ensure that the configurations are aligned.",
+      "parentUuid": "099323d6_b8bf06ff",
+      "revId": "5f919673b13d8fd40a6a90b97f4e662ade068304",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
