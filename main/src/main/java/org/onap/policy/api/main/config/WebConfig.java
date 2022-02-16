@@ -20,14 +20,13 @@
 
 package org.onap.policy.api.main.config;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializer;
 import java.util.Arrays;
 import java.util.List;
 import org.onap.policy.api.main.config.converter.StringToEnumConverter;
-import org.onap.policy.api.main.config.converter.YamlHttpMessageConverter;
+import org.onap.policy.common.spring.utils.YamlHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
@@ -48,12 +47,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        YamlHttpMessageConverter yamlConverter = new YamlHttpMessageConverter();
+        var yamlConverter = new YamlHttpMessageConverter();
         yamlConverter.setSupportedMediaTypes(Arrays.asList(MediaType.parseMediaType("application/yaml")));
         converters.add(yamlConverter);
 
         GsonHttpMessageConverter converter = buildGsonConverter();
-        converters.removeIf(c -> c instanceof GsonHttpMessageConverter);
+        converters.removeIf(GsonHttpMessageConverter.class::isInstance);
         converters.add(0, converter);
     }
 
@@ -66,7 +65,7 @@ public class WebConfig implements WebMvcConfigurer {
     private GsonHttpMessageConverter buildGsonConverter() {
         JsonSerializer<Json> serializer = (json, type, jsonSerializationContext) ->
             JsonParser.parseString(json.value());
-        Gson gson = new GsonBuilder().registerTypeAdapter(Json.class, serializer).create();
+        var gson = new GsonBuilder().registerTypeAdapter(Json.class, serializer).create();
         return new GsonHttpMessageConverter(gson);
     }
 }
