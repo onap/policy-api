@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2019-2020 Nordix Foundation.
+ *  Modifications Copyright (C) 2019-2020,2022 Nordix Foundation.
  *  Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,27 +31,17 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
-import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
+import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
-import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
@@ -79,7 +69,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class TestApiRestServer {
+public class TestApiRestServer extends CommonTestRestController {
 
     private static final String ALIVE = "alive";
     private static final String SELF = NetworkUtil.getHostname();
@@ -196,7 +186,7 @@ public class TestApiRestServer {
     @Test
     public void testCreatePolicyTypes() throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
@@ -204,12 +194,12 @@ public class TestApiRestServer {
         }
 
         // Send a policy type with a null value to trigger an error
-        Response rawResponse = readResource(POLICYTYPES, APP_JSON);
+        Response rawResponse = readResource(getUrl(POLICYTYPES), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
         String firstPolicyType = response.getPolicyTypes().keySet().iterator().next();
         response.getPolicyTypes().put(firstPolicyType, null);
-        Response rawResponse2 = createResource(POLICYTYPES, standardCoder.encode(response));
+        Response rawResponse2 = createResource(getUrl(POLICYTYPES), standardCoder.encode(response), apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertEquals("no policy types specified on service template", errorResponse.getErrorMessage());
@@ -218,7 +208,7 @@ public class TestApiRestServer {
     @Test
     public void testCreatePolicies() throws Exception {
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
 
@@ -232,7 +222,8 @@ public class TestApiRestServer {
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
         Response rawResponse2 =
-                createResource(POLICYTYPES_TCA_POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
+                createResource(getUrl(POLICYTYPES_TCA_POLICIES),
+                    "src/test/resources/policies/BadTestPolicy.yaml", apiPort);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertThat(errorResponse.getErrorMessage())
@@ -242,7 +233,7 @@ public class TestApiRestServer {
     @Test
     public void testSimpleCreatePolicies() throws Exception {
         for (String resrcName : TOSCA_POLICIES_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICIES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
 
@@ -256,7 +247,8 @@ public class TestApiRestServer {
         toscaPolicy = toscaPolicy.replaceAll("onap.restart.tca", "onap.restart.tca.IDontExist");
         TextFileUtils.putStringAsTextFile(toscaPolicy, "src/test/resources/policies/BadTestPolicy.yaml");
 
-        Response rawResponse2 = createResource(POLICIES, "src/test/resources/policies/BadTestPolicy.yaml");
+        Response rawResponse2 =
+            createResource(getUrl(POLICIES), "src/test/resources/policies/BadTestPolicy.yaml", apiPort);
         ErrorResponse errorResponse = rawResponse2.readEntity(ErrorResponse.class);
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage())
@@ -266,31 +258,31 @@ public class TestApiRestServer {
     @SuppressWarnings("unchecked")
     @Test
     public void testToscaCompliantOpDroolsPolicies() throws Exception {
-        Response rawResponse = createResource(POLICYTYPES, TOSCA_POLICYTYPE_OP_RESOURCE);
+        Response rawResponse = createResource(getUrl(POLICYTYPES), TOSCA_POLICYTYPE_OP_RESOURCE, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_VERSION, APP_JSON);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_VERSION), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = createResource(POLICIES, TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_JSON);
+        rawResponse = createResource(getUrl(POLICIES), TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = createResource(POLICIES, TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML);
+        rawResponse = createResource(getUrl(POLICIES), TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION, APP_JSON);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = deleteResource(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION, APP_JSON);
+        rawResponse = deleteResource(getUrl(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = createResource(POLICIES, TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML);
+        rawResponse = createResource(getUrl(POLICIES), TOSCA_POLICY_OP_DROOLS_VCPE_RESOURSE_YAML, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION, APP_JSON);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION, APP_YAML);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION), APP_YAML, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         ToscaServiceTemplate toscaVcpeSt = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -311,7 +303,7 @@ public class TestApiRestServer {
         assertEquals("APPC", operation.get("actor"));
         assertEquals("Restart", operation.get("operation"));
 
-        rawResponse = deleteResource(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION, APP_JSON);
+        rawResponse = deleteResource(getUrl(POLICYTYPES_DROOLS_POLICIES_VCPE_VERSION), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
@@ -326,7 +318,7 @@ public class TestApiRestServer {
     }
 
     private void testHealthCheckSuccess(String mediaType) throws Exception {
-        final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT, mediaType);
+        final Invocation.Builder invocationBuilder = sendHttpsRequest(getUrl(HEALTHCHECK_ENDPOINT), mediaType, apiPort);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
     }
@@ -342,11 +334,11 @@ public class TestApiRestServer {
     }
 
     private void testApiStatistics_200(String mediaType) throws Exception {
-        Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType);
+        Invocation.Builder invocationBuilder = sendHttpsRequest(getUrl(STATISTICS_ENDPOINT), mediaType, apiPort);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
         validateStatisticsReport(report, 200);
         updateApiStatistics();
-        invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType);
+        invocationBuilder = sendHttpsRequest(getUrl(STATISTICS_ENDPOINT), mediaType, apiPort);
         report = invocationBuilder.get(StatisticsReport.class);
         validateStatisticsReport(report, 200);
         // ApiStatisticsManager.resetAllStatistics();
@@ -363,46 +355,48 @@ public class TestApiRestServer {
     }
 
     private void testReadPolicyTypes(String mediaType) throws Exception {
-        Response rawResponse = readResource("policytypes/onap.policies.optimization.resource.HpaPolicy", mediaType);
+        Response rawResponse =
+            readResource(getUrl("policytypes/onap.policies.optimization.resource.HpaPolicy"), mediaType,
+                apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertNotNull(namingServiceTemplate);
         assertEquals(3, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(5, namingServiceTemplate.getDataTypesAsMap().size());
 
-        rawResponse = readResource(POLICYTYPES, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertFalse(response.getPolicyTypes().isEmpty());
 
-        rawResponse = readResource(POLICYTYPES_TCA, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_VERSION, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_VERSION), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_LATEST, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_LATEST), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_COLLECTOR, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_COLLECTOR), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_COLLECTOR_VERSION, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_COLLECTOR_VERSION), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_COLLECTOR_LATEST, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_COLLECTOR_LATEST), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_VERSION, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_VERSION), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_DROOLS_VERSION_LATEST, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_DROOLS_VERSION_LATEST), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_NAMING_VERSION, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_NAMING_VERSION), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
@@ -417,19 +411,23 @@ public class TestApiRestServer {
     }
 
     private void testDeletePolicyType(String mediaType) throws Exception {
-        Response rawResponse = deleteResource("policytypes/onap.policies.IDoNotExist/versions/1.0.0", mediaType);
+        Response rawResponse = deleteResource(getUrl("policytypes/onap.policies.IDoNotExist/versions/1.0.0"),
+            mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = createResource(POLICYTYPES, "policytypes/onap.policies.Test.yaml");
+        rawResponse = createResource(getUrl(POLICYTYPES), "policytypes/onap.policies.Test.yaml", apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource("policytypes/onap.policies.Test/versions/1.0.0", mediaType);
+        rawResponse =
+            readResource(getUrl("policytypes/onap.policies.Test/versions/1.0.0"), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = deleteResource("policytypes/onap.policies.Test/versions/1.0.0", mediaType);
+        rawResponse =
+            deleteResource(getUrl("policytypes/onap.policies.Test/versions/1.0.0"), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource("policytypes/onap.policies.Test/versions/1.0.0", mediaType);
+        rawResponse =
+            readResource(getUrl("policytypes/onap.policies.Test/versions/1.0.0"), mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
     }
 
@@ -445,23 +443,23 @@ public class TestApiRestServer {
 
     private void testReadPolicies(String mediaType) throws Exception {
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
 
-        Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, mediaType);
+        Response rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_LATEST), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        rawResponse = deleteResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
     }
@@ -469,12 +467,12 @@ public class TestApiRestServer {
     @Test
     public void testNamingPolicyGet() throws Exception {
 
-        Response rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
+        Response rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/"
+                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0"), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0?mode=referenced", APP_JSON);
+        rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/"
+                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0?mode=referenced"), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         ToscaServiceTemplate namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -482,44 +480,46 @@ public class TestApiRestServer {
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
 
-        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest?mode=referenced", APP_JSON);
+        rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/"
+                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest?mode=referenced"), APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
         assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
         assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/policies"
+                + "?mode=referenced"), APP_JSON, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
+        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
+
+        rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/"
+                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0"), APP_JSON, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertNull(namingServiceTemplate.getPolicyTypes());
+        assertNull(namingServiceTemplate.getDataTypes());
+
+        rawResponse = readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/"
+                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest"), APP_JSON, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
+        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertNull(namingServiceTemplate.getPolicyTypes());
+        assertNull(namingServiceTemplate.getDataTypes());
 
         rawResponse =
-                readResource("policytypes/onap.policies.Naming/versions/1.0.0/policies?mode=referenced", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
-        assertEquals(1, namingServiceTemplate.getPolicyTypesAsMap().size());
-        assertEquals(3, namingServiceTemplate.getDataTypesAsMap().size());
-
-        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
-
-        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
-        assertNull(namingServiceTemplate.getPolicyTypes());
-        assertNull(namingServiceTemplate.getDataTypes());
-
-        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
-                + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/latest", APP_JSON);
-        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
-
-        namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
-        assertEquals(1, namingServiceTemplate.getToscaTopologyTemplate().getPoliciesAsMap().size());
-        assertNull(namingServiceTemplate.getPolicyTypes());
-        assertNull(namingServiceTemplate.getDataTypes());
-
-        rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/policies", APP_JSON);
+            readResource(getUrl("policytypes/onap.policies.Naming/versions/1.0.0/policies"), APP_JSON,
+                apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
         namingServiceTemplate = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -539,7 +539,7 @@ public class TestApiRestServer {
     }
 
     private void testDeletePolicies(String mediaType) throws Exception {
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        Response rawResponse = deleteResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse error = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("policy onap.restart.tca:1.0.0 not found", error.getErrorMessage());
@@ -557,30 +557,30 @@ public class TestApiRestServer {
 
     private void testDeletePolicyVersion(String mediaType) throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
             assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
-        Response rawResponse = deleteResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        Response rawResponse = deleteResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         ErrorResponse errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("policies for onap.restart.tca:1.0.0 do not exist", errorResponse.getErrorMessage());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE), mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("policies for onap.restart.tca:null do not exist", errorResponse.getErrorMessage());
 
-        rawResponse = readResource(POLICYTYPES_TCA_POLICIES_VCPE_LATEST, mediaType);
+        rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES_VCPE_LATEST), mediaType, apiPort);
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawResponse.getStatus());
         errorResponse = rawResponse.readEntity(ErrorResponse.class);
         assertEquals("policies for onap.restart.tca:null do not exist", errorResponse.getErrorMessage());
@@ -598,17 +598,17 @@ public class TestApiRestServer {
 
     private void testGetAllVersionOfPolicy(String mediaType) throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertNotNull(response);
             assertFalse(response.getPolicyTypes().isEmpty());
         }
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         }
-        Response rawResponse = readResource(POLICYTYPES_TCA_POLICIES, mediaType);
+        Response rawResponse = readResource(getUrl(POLICYTYPES_TCA_POLICIES), mediaType, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
@@ -624,17 +624,17 @@ public class TestApiRestServer {
 
     private void getPolicies(String mediaType) throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertThat(response).isNotNull();
             assertThat(response.getPolicyTypes()).isNotEmpty();
         }
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         }
-        Response rawResponse = readResource(POLICIES, mediaType);
+        Response rawResponse = readResource(getUrl(POLICIES), mediaType, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertThat(response.getToscaTopologyTemplate().getPolicies()).isNotEmpty();
@@ -652,17 +652,17 @@ public class TestApiRestServer {
 
     private void getSpecificPolicy(String mediaType) throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertThat(response).isNotNull();
             assertThat(response.getPolicyTypes()).isNotEmpty();
         }
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            Response rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         }
-        Response rawResponse = readResource(POLICIES_VCPE_VERSION1, mediaType);
+        Response rawResponse = readResource(getUrl(POLICIES_VCPE_VERSION1), mediaType, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
         assertThat(response.getToscaTopologyTemplate().getPolicies()).hasSize(1);
@@ -672,100 +672,30 @@ public class TestApiRestServer {
     public void testDeleteSpecificPolicy() throws Exception {
         Response rawResponse;
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
-            rawResponse = createResource(POLICYTYPES, resrcName);
+            rawResponse = createResource(getUrl(POLICYTYPES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
             ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
             assertThat(response).isNotNull();
             assertThat(response.getPolicyTypes()).isNotEmpty();
         }
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
-            rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName);
+            rawResponse = createResource(getUrl(POLICYTYPES_TCA_POLICIES), resrcName, apiPort);
             assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         }
 
-        rawResponse = readResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        rawResponse = readResource(getUrl(POLICIES_VCPE_VERSION1), APP_JSON, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         // delete a particular policy
-        rawResponse = deleteResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        rawResponse = deleteResource(getUrl(POLICIES_VCPE_VERSION1), APP_JSON, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
-        rawResponse = readResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        rawResponse = readResource(getUrl(POLICIES_VCPE_VERSION1), APP_JSON, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
 
-        rawResponse = deleteResource(POLICIES_VCPE_VERSION1, APP_JSON);
+        rawResponse = deleteResource(getUrl(POLICIES_VCPE_VERSION1), APP_JSON, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
 
-    }
-
-
-    private Response createResource(String endpoint, String resourceName) throws Exception {
-
-        String mediaType = APP_JSON; // default media type
-        ToscaServiceTemplate rawServiceTemplate = new ToscaServiceTemplate();
-        if (resourceName.endsWith(".json")) {
-            rawServiceTemplate =
-                    standardCoder.decode(ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
-        } else if (resourceName.endsWith(".yaml") || resourceName.endsWith(".yml")) {
-            mediaType = APP_YAML;
-            rawServiceTemplate = standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName),
-                    ToscaServiceTemplate.class);
-        }
-
-        final Invocation.Builder invocationBuilder;
-
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType);
-
-        Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
-        return invocationBuilder.post(entity);
-    }
-
-    private Response readResource(String endpoint, String mediaType) throws Exception {
-
-        final Invocation.Builder invocationBuilder;
-
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType);
-
-        return invocationBuilder.get();
-
-    }
-
-    private Response deleteResource(String endpoint, String mediaType) throws Exception {
-
-        final Invocation.Builder invocationBuilder;
-
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType);
-
-        return invocationBuilder.delete();
-    }
-
-    private Invocation.Builder sendHttpsRequest(final String endpoint, String mediaType) throws Exception {
-
-        final TrustManager[] noopTrustManager = NetworkUtil.getAlwaysTrustingManager();
-
-        final SSLContext sc = SSLContext.getInstance("TLSv1.2");
-        sc.init(null, noopTrustManager, new SecureRandom());
-        final ClientBuilder clientBuilder =
-                ClientBuilder.newBuilder().sslContext(sc).hostnameVerifier((host, session) -> true);
-        final Client client = clientBuilder.build();
-        final HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("policyadmin", "zb!XztG34");
-        client.register(feature);
-
-        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        if (APP_JSON.equalsIgnoreCase(mediaType)) {
-            client.register(GsonMessageBodyHandler.class);
-        } else if (APP_YAML.equalsIgnoreCase(mediaType)) {
-            client.register(YamlMessageBodyHandler.class);
-        }
-
-        final WebTarget webTarget = client.target("https://localhost:" + apiPort + "/policy/api/v1/" + endpoint);
-
-        final Invocation.Builder invocationBuilder = webTarget.request(mediaType);
-
-        if (!NetworkUtil.isTcpPortOpen("localhost", apiPort, 60, 1000L)) {
-            throw new IllegalStateException("cannot connect to port " + apiPort);
-        }
-        return invocationBuilder;
     }
 
     private void updateApiStatistics() {
@@ -799,5 +729,9 @@ public class TestApiRestServer {
         assertEquals(healthy, report.isHealthy());
         assertEquals(code, report.getCode());
         assertEquals(message, report.getMessage());
+    }
+
+    private String getUrl(String endpoint) {
+        return "https://localhost:" + apiPort + "/policy/api/v1/" + endpoint;
     }
 }
