@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2020,2022 Nordix Foundation.
  * Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +61,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,43 +93,6 @@ import org.springframework.web.bind.annotation.RestController;
     schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 public class ApiRestController extends CommonRestController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiRestController.class);
-
-    private static final String ERROR_MESSAGE_NO_POLICIES_FOUND = "No policies found";
-
-    private static final String EXTENSION_NAME = "interface info";
-
-    private static final String API_VERSION_NAME = "api-version";
-    private static final String API_VERSION = "1.0.0";
-
-    private static final String LAST_MOD_NAME = "last-mod-release";
-
-    private static final String AUTHORIZATION_TYPE = "basicAuth";
-
-    private static final String VERSION_MINOR_NAME = "X-MinorVersion";
-    private static final String VERSION_MINOR_DESCRIPTION =
-        "Used to request or communicate a MINOR version back from the client"
-            + " to the server, and from the server back to the client";
-
-    private static final String VERSION_PATCH_NAME = "X-PatchVersion";
-    private static final String VERSION_PATCH_DESCRIPTION = "Used only to communicate a PATCH version in a response for"
-        + " troubleshooting purposes only, and will not be provided by" + " the client on request";
-
-    private static final String VERSION_LATEST_NAME = "X-LatestVersion";
-    private static final String VERSION_LATEST_DESCRIPTION = "Used only to communicate an API's latest version";
-
-    private static final String REQUEST_ID_NAME = "X-ONAP-RequestID";
-    private static final String REQUEST_ID_HDR_DESCRIPTION = "Used to track REST transactions for logging purpose";
-    private static final String REQUEST_ID_PARAM_DESCRIPTION = "RequestID for http transaction";
-
-    private static final String AUTHENTICATION_ERROR_MESSAGE = "Authentication Error";
-    private static final String AUTHORIZATION_ERROR_MESSAGE = "Authorization Error";
-    private static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
-    private static final String NOT_FOUND_MESSAGE = "Resource Not Found";
-    private static final String INVALID_BODY_MESSAGE = "Invalid Body";
-    private static final String INVALID_PAYLOAD_MESSAGE = "Not Acceptable Payload";
-    private static final String HTTP_CONFLICT_MESSAGE = "Delete Conflict, Rule Violation";
 
     private enum Target {
         POLICY,
@@ -1088,13 +1050,6 @@ public class ApiRestController extends CommonRestController {
                 .getStatusCode()), HttpMethod.DELETE);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
-    }
-
-    @ExceptionHandler(value = {PolicyApiRuntimeException.class})
-    protected ResponseEntity<Object> handleException(PolicyApiRuntimeException ex) {
-        LOGGER.warn(ex.getMessage(), ex.getCause());
-        return makeErrorResponse(ex.getRequestId(), ex.getErrorResponse(),
-            ex.getErrorResponse().getResponseCode().getStatusCode());
     }
 
     private void updateApiStatisticsCounter(Target target, HttpStatus result, HttpMethod http) {
