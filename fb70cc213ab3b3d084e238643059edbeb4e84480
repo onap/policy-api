@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df81bb4c_91f28078",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/NodeTemplateController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-21T10:05:39Z",
+      "side": 1,
+      "message": "This doesn\u0027t look standard. See other APIs \"policy/api/v1\"",
+      "range": {
+        "startLine": 68,
+        "startChar": 25,
+        "endLine": 68,
+        "endChar": 37
+      },
+      "revId": "fb70cc213ab3b3d084e238643059edbeb4e84480",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
