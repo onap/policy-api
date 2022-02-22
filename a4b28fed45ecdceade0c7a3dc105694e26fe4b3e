@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e8d58f1_515a972d",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/NodeTemplateController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-22T14:33:27Z",
+      "side": 1,
+      "message": "how does the underlying rest server wrap the exception being sent back, does it send a suitable error code and something a yaml / json body?    I\u0027ve seen in the past instances where when throwing an exception sends back an error html page.   Just checking that this is not the case here.",
+      "revId": "a4b28fed45ecdceade0c7a3dc105694e26fe4b3e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
