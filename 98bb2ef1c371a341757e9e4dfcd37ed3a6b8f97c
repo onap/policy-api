@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50ae0c90_b89ad19e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/PdpGroupService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-22T08:42:59Z",
+      "side": 1,
+      "message": "And here, the code is very similar to line 61 to 68, maybe it would be possible to create a common method that could be called to do either of the checks.",
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
