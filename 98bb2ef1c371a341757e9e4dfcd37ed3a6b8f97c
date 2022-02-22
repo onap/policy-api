@@ -134,6 +134,30 @@
       "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46703826_0fc66650",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-22T14:00:01Z",
+      "side": 1,
+      "message": "okay. Probably we may need to move this method to util class incase we remove the providers in future.",
+      "parentUuid": "da9a9274_bdcc6826",
+      "range": {
+        "startLine": 370,
+        "startChar": 32,
+        "endLine": 370,
+        "endChar": 51
+      },
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
