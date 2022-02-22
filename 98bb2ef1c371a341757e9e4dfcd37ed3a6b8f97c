@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "e44d471f_d0822ac9",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-22T13:48:28Z",
+      "side": 1,
+      "message": "Ah yes indeed you are right. There is no entry for that key in the ToscaServiceTemplate, same for deletePolicy. I will take a second look and fix them all. Thanks",
+      "parentUuid": "dd11ff1c_fda429ed",
+      "range": {
+        "startLine": 281,
+        "startChar": 39,
+        "endLine": 281,
+        "endChar": 49
+      },
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de14eddf_b6ce4728",
         "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
         "patchSetId": 1
