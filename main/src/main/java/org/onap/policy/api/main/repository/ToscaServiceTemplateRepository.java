@@ -18,17 +18,14 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main;
+package org.onap.policy.api.main.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@SpringBootApplication
-@EntityScan(
-    basePackages =  {"org.onap.policy.models.pdp.persistence.concepts", "org.onap.policy.models.tosca.simple.concepts"})
-public class PolicyApiApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(PolicyApiApplication.class, args);
-    }
+@Repository
+public interface ToscaServiceTemplateRepository extends JpaRepository<JpaToscaServiceTemplate, PfConceptKey> {
+
 }
