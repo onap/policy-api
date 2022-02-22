@@ -39,6 +39,30 @@
       "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd11ff1c_fda429ed",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-22T13:07:12Z",
+      "side": 1,
+      "message": "Agree with Ramesh. But, this deleteById is probably going to delete nothing as there is no entry in the toscaServicetemplate table with the policyKey as primary key.\n@Rashmi You need separate repository for JpaToscaPolicy/JpaToscaPolicyType etc. For e.g., here what we do today is, JpaToscaServiceTemplate is updated by removing the policies (single entry in the ToscaServiceTemplate table is updated this way), and the corresponding JpaToscaPolicy entryis fully removed from the ToscaPolicy table.\nSame comment in other places like deletePolicyType.",
+      "parentUuid": "87e1e6ed_7bb5e592",
+      "range": {
+        "startLine": 281,
+        "startChar": 39,
+        "endLine": 281,
+        "endChar": 49
+      },
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
