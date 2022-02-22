@@ -16,6 +16,24 @@
       "revId": "a4b28fed45ecdceade0c7a3dc105694e26fe4b3e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "022d3fa1_e161ffbc",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/NodeTemplateController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-22T14:43:13Z",
+      "side": 1,
+      "message": "Hi Jorge, This is handled by the exception handler in CommonRestController line:130. We are sending an error response with appropriate error code. The handler method was already present in the existing code, I have moved it to the common parent.",
+      "parentUuid": "4e8d58f1_515a972d",
+      "revId": "a4b28fed45ecdceade0c7a3dc105694e26fe4b3e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
