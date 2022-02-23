@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "07d162cc_e9094b74",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/PdpGroupService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-23T06:02:21Z",
+      "side": 1,
+      "message": "Hi Liam, the code is different, in one we look for policy-types and policies in the other",
+      "parentUuid": "50ae0c90_b89ad19e",
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "87e1e6ed_7bb5e592",
         "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
         "patchSetId": 1
@@ -158,6 +176,30 @@
       "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cde142dc_3d3dab64",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-23T06:02:21Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "da9a9274_bdcc6826",
+      "range": {
+        "startLine": 370,
+        "startChar": 32,
+        "endLine": 370,
+        "endChar": 51
+      },
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
