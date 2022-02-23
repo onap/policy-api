@@ -21,6 +21,7 @@
 package org.onap.policy.api.main.service;
 
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,9 @@ public class ToscaServiceTemplateService {
      */
     public ToscaServiceTemplate fetchPolicyTypes(final String policyTypeName, final String policyTypeVersion)
         throws PfModelException {
-        return getFilteredPolicyTypes(policyTypeName, policyTypeVersion);
+        final var policyTypeFilter =
+            ToscaEntityFilter.<ToscaPolicyType>builder().name(policyTypeName).version(policyTypeVersion).build();
+        return getFilteredPolicyTypes(policyTypeFilter);
     }
 
     /**
@@ -85,7 +88,9 @@ public class ToscaServiceTemplateService {
      * @return the ToscaServiceTemplate object
      */
     public ToscaServiceTemplate fetchLatestPolicyTypes(final String policyTypeName) throws PfModelException {
-        return getFilteredPolicyTypes(policyTypeName, ToscaEntityFilter.LATEST_VERSION);
+        final var policyTypeFilter = ToscaEntityFilter.<ToscaPolicyType>builder()
+            .name(policyTypeName).version(ToscaEntityFilter.LATEST_VERSION).build();
+        return getFilteredPolicyTypes(policyTypeFilter);
     }
 
     /**
@@ -104,8 +109,14 @@ public class ToscaServiceTemplateService {
         ToscaUtils.assertPolicyTypesExist(incomingServiceTemplate);
 
         // append the incoming fragment to the DB TOSCA service template
-        final var serviceTemplateToWrite =
-            ToscaServiceTemplateUtils.addFragment(getDefaultJpaToscaServiceTemplate(), incomingServiceTemplate);
+        var dbServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();
+        JpaToscaServiceTemplate serviceTemplateToWrite;
+        if (dbServiceTemplateOpt.isEmpty()) {
+            serviceTemplateToWrite = incomingServiceTemplate;
+        } else {
+            serviceTemplateToWrite =
+                ToscaServiceTemplateUtils.addFragment(dbServiceTemplateOpt.get(), incomingServiceTemplate);
+        }
 
         final var result = serviceTemplateToWrite.validate("service template");
         if (!result.isValid()) {
@@ -244,8 +255,14 @@ public class ToscaServiceTemplateService {
         ToscaUtils.assertPoliciesExist(incomingServiceTemplate);
 
         // append the incoming fragment to the DB TOSCA service template
-        final var serviceTemplateToWrite =
-            ToscaServiceTemplateUtils.addFragment(getDefaultJpaToscaServiceTemplate(), incomingServiceTemplate);
+        var dbServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();
+        JpaToscaServiceTemplate serviceTemplateToWrite;
+        if (dbServiceTemplateOpt.isEmpty()) {
+            serviceTemplateToWrite = incomingServiceTemplate;
+        } else {
+            serviceTemplateToWrite =
+                ToscaServiceTemplateUtils.addFragment(dbServiceTemplateOpt.get(), incomingServiceTemplate);
+        }
 
         final var result = serviceTemplateToWrite.validate("Policies CRUD service template.");
         if (!result.isValid()) {
@@ -254,7 +271,7 @@ public class ToscaServiceTemplateService {
 
         toscaServiceTemplateRepository.save(serviceTemplateToWrite);
 
-        LOGGER.debug("<-appendServiceTemplateFragment: returnServiceTempalate={}", serviceTemplateToWrite);
+        LOGGER.debug("<-appendServiceTemplateFragment: returnServiceTemplate={}", serviceTemplateToWrite);
         return body;
     }
 
@@ -308,16 +325,13 @@ public class ToscaServiceTemplateService {
     /**
      * Retrieves TOSCA service template with the specified version of the policy type.
      *
-     * @param policyTypeName the name of the policy type
-     * @param policyTypeVersion the version of the policy type
+     * @param policyTypeFilter the policy type filter containing name and version of the policy type
      * @return the TOSCA service template containing the specified version of the policy type
      * @throws PfModelException on errors getting the policy type
      */
-    private ToscaServiceTemplate getFilteredPolicyTypes(final String policyTypeName, final String policyTypeVersion)
+    public ToscaServiceTemplate getFilteredPolicyTypes(final ToscaEntityFilter<ToscaPolicyType> policyTypeFilter)
         throws PfModelException {
         final var dbServiceTemplate = getDefaultJpaToscaServiceTemplate();
-        final var policyTypeFilter =
-            ToscaEntityFilter.<ToscaPolicyType>builder().name(policyTypeName).version(policyTypeVersion).build();
         LOGGER.debug("->getFilteredPolicyTypes: filter={}, serviceTemplate={}", policyTypeFilter, dbServiceTemplate);
 
         // validate that policyTypes exist in db
@@ -326,9 +340,11 @@ public class ToscaServiceTemplateService {
                 "policy types for filter " + policyTypeFilter + DO_NOT_EXIST_MSG);
         }
 
+        var version = ToscaTypedEntityFilter.LATEST_VERSION
+            .equals(policyTypeFilter.getVersion()) ? null : policyTypeFilter.getVersion();
         // fetch all polices and filter by policyType, policy name and version
         final var serviceTemplate = new SimpleToscaProvider()
-            .getCascadedPolicyTypes(dbServiceTemplate, policyTypeName, policyTypeVersion);
+            .getCascadedPolicyTypes(dbServiceTemplate, policyTypeFilter.getName(), version);
         var simpleToscaProvider = new SimpleToscaProvider();
 
         List<ToscaPolicyType> filteredPolicyTypes = serviceTemplate.getPolicyTypes().toAuthorativeList();
@@ -414,15 +430,26 @@ public class ToscaServiceTemplateService {
 
     /**
      * Get Service Template.
+     *
      * @return the Service Template read from the database
+     * @throws PfModelRuntimeException if service template if not found in database.
      */
-    private JpaToscaServiceTemplate getDefaultJpaToscaServiceTemplate() {
-        final var defaultServiceTemplateOpt = toscaServiceTemplateRepository
-            .findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME, JpaToscaServiceTemplate.DEFAULT_VERSION));
+    public JpaToscaServiceTemplate getDefaultJpaToscaServiceTemplate() throws PfModelRuntimeException {
+        final var defaultServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();
         if (defaultServiceTemplateOpt.isEmpty()) {
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, SERVICE_TEMPLATE_NOT_FOUND_MSG);
         }
         LOGGER.debug("<-getDefaultJpaToscaServiceTemplate: serviceTemplate={}", defaultServiceTemplateOpt.get());
         return defaultServiceTemplateOpt.get();
+    }
+
+    /**
+     * Get Service Template Optional object.
+     *
+     * @return the Optional object for Service Template read from the database
+     */
+    private Optional<JpaToscaServiceTemplate> getDefaultJpaToscaServiceTemplateOpt() {
+        return toscaServiceTemplateRepository
+            .findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME, JpaToscaServiceTemplate.DEFAULT_VERSION));
     }
 }
