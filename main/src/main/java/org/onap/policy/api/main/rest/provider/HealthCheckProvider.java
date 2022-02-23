@@ -25,14 +25,15 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.PolicyFetchMode;
+import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,17 +41,16 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
+@RequiredArgsConstructor
 public class HealthCheckProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HealthCheckProvider.class);
-
     private static final String ALIVE = "alive";
     private static final String URL = NetworkUtil.getHostname();
     private static final String NAME = "Policy API";
     private static final String DB_CONN_FAILURE = "unable to connect with database";
 
-    @Autowired
-    private PolicyProvider policyProvider;
+    private final ToscaServiceTemplateService toscaServiceTemplateService;
 
     /**
      * Performs the health check of api service.
@@ -75,9 +75,9 @@ public class HealthCheckProvider {
      */
     private boolean verifyApiDatabase() {
         try {
-            policyProvider.fetchPolicies(null, null, null, null, PolicyFetchMode.BARE);
+            toscaServiceTemplateService.getDefaultJpaToscaServiceTemplate();
             return true;
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             LOGGER.warn("Api to database connection check failed. Details - ", pfme);
             return false;
         }

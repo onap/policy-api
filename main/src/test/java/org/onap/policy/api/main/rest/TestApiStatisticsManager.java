@@ -26,6 +26,7 @@ package org.onap.policy.api.main.rest;
 
 import static org.junit.Assert.assertEquals;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
@@ -40,7 +41,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class TestApiStatisticsManager {
 
     @Autowired
-    private ApiStatisticsManager mgr = new ApiStatisticsManager();
+    private ApiStatisticsManager mgr;
 
     @Test
     public void testUpdateMethods() {

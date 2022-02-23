@@ -28,21 +28,21 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.config.PolicyPreloadConfig;
 import org.onap.policy.api.main.exception.PolicyApiException;
+import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -53,17 +53,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnProperty(value = "database.initialize", havingValue = "true", matchIfMissing = true)
+@RequiredArgsConstructor
 public class ApiDatabaseInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiDatabaseInitializer.class);
-
     private static final StandardYamlCoder coder = new StandardYamlCoder();
 
-    @Autowired
-    PolicyModelsProvider policyModelsProvider;
-
-    @Autowired
-    PolicyPreloadConfig policyPreloadConfig;
+    private final ToscaServiceTemplateService toscaServiceTemplateService;
+    private final PolicyPreloadConfig policyPreloadConfig;
 
     @PostConstruct
     public void loadData() throws PolicyApiException {
@@ -91,8 +88,8 @@ public class ApiDatabaseInitializer {
             serviceTemplate.setToscaDefinitionsVersion("tosca_simple_yaml_1_1_0");
 
             ToscaServiceTemplate createdPolicyTypes =
-                    preloadServiceTemplate(serviceTemplate, policyTypes, policyModelsProvider::createPolicyTypes);
-            preloadServiceTemplate(createdPolicyTypes, policies, policyModelsProvider::createPolicies);
+                preloadServiceTemplate(serviceTemplate, policyTypes, toscaServiceTemplateService::createPolicyType);
+            preloadServiceTemplate(createdPolicyTypes, policies, toscaServiceTemplateService::createPolicies);
         } catch (final PolicyApiException | PfModelException | CoderException exp) {
             throw new PolicyApiException(exp);
         }
@@ -100,8 +97,8 @@ public class ApiDatabaseInitializer {
 
     private boolean alreadyExists() throws PfModelException {
         try {
-            ToscaServiceTemplate serviceTemplate =
-                    policyModelsProvider.getFilteredPolicyTypes(ToscaEntityFilter.<ToscaPolicyType>builder().build());
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService
+                .getFilteredPolicyTypes(ToscaEntityFilter.<ToscaPolicyType>builder().build());
             if (!serviceTemplate.getPolicyTypes().isEmpty()) {
                 return true;
             }

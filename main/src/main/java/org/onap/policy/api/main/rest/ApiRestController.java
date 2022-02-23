@@ -42,11 +42,11 @@ import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.rest.provider.HealthCheckProvider;
-import org.onap.policy.api.main.rest.provider.PolicyProvider;
-import org.onap.policy.api.main.rest.provider.PolicyTypeProvider;
 import org.onap.policy.api.main.rest.provider.StatisticsProvider;
+import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
@@ -54,9 +54,6 @@ import org.onap.policy.common.endpoints.utils.NetLoggerUtil.EventType;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +89,7 @@ import org.springframework.web.bind.annotation.RestController;
             @ExtensionProperty(name = "component", value = "Policy Framework")})}),
     schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
+@RequiredArgsConstructor
 public class ApiRestController extends CommonRestController {
 
     private enum Target {
@@ -100,20 +98,10 @@ public class ApiRestController extends CommonRestController {
         OTHER
     }
 
-    @Autowired
-    private PolicyProvider policyProvider;
-
-    @Autowired
-    private HealthCheckProvider healthCheckProvider;
-
-    @Autowired
-    private PolicyTypeProvider policyTypeProvider;
-
-    @Autowired
-    private ApiStatisticsManager mgr;
-
-    @Autowired
-    private StatisticsProvider statisticsProvider;
+    private final ToscaServiceTemplateService toscaServiceTemplateService;
+    private final HealthCheckProvider healthCheckProvider;
+    private final ApiStatisticsManager mgr;
+    private final StatisticsProvider statisticsProvider;
 
     /**
      * Retrieves the healthcheck status of the API component.
@@ -219,7 +207,7 @@ public class ApiRestController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(null, null);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchPolicyTypes(null, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -267,7 +255,7 @@ public class ApiRestController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, null);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchPolicyTypes(policyTypeId, null);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -316,7 +304,8 @@ public class ApiRestController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchPolicyTypes(policyTypeId, versionId);
+            ToscaServiceTemplate serviceTemplate =
+                toscaServiceTemplateService.fetchPolicyTypes(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -363,7 +352,7 @@ public class ApiRestController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.fetchLatestPolicyTypes(policyTypeId);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchLatestPolicyTypes(policyTypeId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -414,10 +403,10 @@ public class ApiRestController extends CommonRestController {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
         }
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.createPolicyType(body);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.createPolicyType(body);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             final var msg = "POST /policytypes";
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.POST);
@@ -467,10 +456,11 @@ public class ApiRestController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate serviceTemplate = policyTypeProvider.deletePolicyType(policyTypeId, versionId);
+            ToscaServiceTemplate serviceTemplate =
+                toscaServiceTemplateService.deletePolicyType(policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             var msg = String.format("DELETE /policytypes/%s/versions/%s", policyTypeId, versionId);
             updateApiStatisticsCounter(Target.POLICY_TYPE, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.DELETE);
@@ -526,7 +516,7 @@ public class ApiRestController extends CommonRestController {
             + " policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, null, null, mode);
+                toscaServiceTemplateService.fetchPolicies(policyTypeId, policyTypeVersion, null, null, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -585,11 +575,11 @@ public class ApiRestController extends CommonRestController {
             + " REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, null, mode);
+                toscaServiceTemplateService.fetchPolicies(policyTypeId, policyTypeVersion, policyId, null, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
-            var msg = String.format("/policytypes/%s/versions/$s/policies/%s",
+            var msg = String.format("/policytypes/%s/versions/%s/policies/%s",
                 policyTypeId, policyTypeVersion, policyId);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.GET);
@@ -647,8 +637,8 @@ public class ApiRestController extends CommonRestController {
         @RequestParam(name = "mode", defaultValue = "bare") @ApiParam("Fetch mode for policies, BARE for bare policies"
             + "  (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
-            ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService
+                .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -704,7 +694,7 @@ public class ApiRestController extends CommonRestController {
             + "policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId, mode);
+                toscaServiceTemplateService.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -764,10 +754,11 @@ public class ApiRestController extends CommonRestController {
                 "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies", toJson(body));
         }
         try {
-            ToscaServiceTemplate serviceTemplate = policyProvider.createPolicy(policyTypeId, policyTypeVersion, body);
+            ToscaServiceTemplate serviceTemplate =
+                toscaServiceTemplateService.createPolicy(policyTypeId, policyTypeVersion, body);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             var msg = String.format("POST /policytypes/%s/versions/%s/policies", policyTypeId, policyTypeVersion);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.POST);
@@ -822,10 +813,10 @@ public class ApiRestController extends CommonRestController {
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
+                toscaServiceTemplateService.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             var msg = String.format("DELETE /policytypes/%s/versions/%s/policies/%s/versions/%s",
                 policyTypeId, policyTypeVersion, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
@@ -875,7 +866,7 @@ public class ApiRestController extends CommonRestController {
             + "  policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchPolicies(null, null, null, null, mode);
+                toscaServiceTemplateService.fetchPolicies(null, null, null, null, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -936,7 +927,7 @@ public class ApiRestController extends CommonRestController {
             + "  policies (default), REFERENCED for fully referenced policies") PolicyFetchMode mode) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.fetchPolicies(null, null, policyId, policyVersion, mode);
+                toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.GET);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
@@ -989,10 +980,10 @@ public class ApiRestController extends CommonRestController {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
         }
         try {
-            ToscaServiceTemplate serviceTemplate = policyProvider.createPolicies(body);
+            ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.createPolicies(body);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.POST);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             final var msg = "POST /policies";
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.POST);
@@ -1041,10 +1032,10 @@ public class ApiRestController extends CommonRestController {
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                policyProvider.deletePolicy(null, null, policyId, policyVersion);
+                toscaServiceTemplateService.deletePolicy(null, null, policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.OK, HttpMethod.DELETE);
             return makeOkResponse(requestId, serviceTemplate);
-        } catch (PfModelException | PfModelRuntimeException pfme) {
+        } catch (PfModelRuntimeException pfme) {
             var msg = String.format("DELETE /policies/%s/versions/%s", policyId, policyVersion);
             updateApiStatisticsCounter(Target.POLICY, HttpStatus.resolve(pfme.getErrorResponse().getResponseCode()
                 .getStatusCode()), HttpMethod.DELETE);
