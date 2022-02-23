@@ -23,7 +23,7 @@
 
 package org.onap.policy.api.main.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,10 +32,10 @@ import org.springframework.stereotype.Component;
  * @author Chenfei Gao (cgao@research.att.com)
  */
 @Component
+@RequiredArgsConstructor
 public class ApiStatisticsManager {
 
-    @Autowired
-    private StatisticsReport report;
+    private final StatisticsReport report;
 
     private long totalPolicyDeleteCount;
     private long totalPolicyTypeDeleteCount;

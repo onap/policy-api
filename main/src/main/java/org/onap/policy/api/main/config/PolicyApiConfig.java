@@ -69,6 +69,11 @@ public class PolicyApiConfig {
         return new PolicyModelsProviderFactory().createPolicyModelsProvider(modelsProviderParameters);
     }
 
+    /**
+     * Initialize the statistics report bean.
+     *
+     * @return a new instance of StatisticsReport
+     */
     @Bean
     public StatisticsReport createStatisticsReport() {
         return new StatisticsReport();

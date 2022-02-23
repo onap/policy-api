@@ -24,8 +24,8 @@
 
 package org.onap.policy.api.main.rest.provider;
 
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.StatisticsReport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,10 +34,10 @@ import org.springframework.stereotype.Service;
  * @author Chenfei Gao (cgao@research.att.com)
  */
 @Service
+@RequiredArgsConstructor
 public class StatisticsProvider {
 
-    @Autowired
-    private StatisticsReport report;
+    private final StatisticsReport report;
 
     /**
      * Return the current API statistics.
