@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "acd4c949_5c70c214",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/PdpGroupService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-23T10:36:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "07d162cc_e9094b74",
+      "revId": "98bb2ef1c371a341757e9e4dfcd37ed3a6b8f97c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87e1e6ed_7bb5e592",
         "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
         "patchSetId": 1
