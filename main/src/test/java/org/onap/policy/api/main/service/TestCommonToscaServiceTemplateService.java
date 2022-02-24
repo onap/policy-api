@@ -1,6 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *   Copyright (C) 2022 Bell Canada. All rights reserved.
+ *   Modifications Copyright (C) 2022 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +25,8 @@ import java.util.Optional;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.onap.policy.api.main.repository.NodeTemplateRepository;
+import org.onap.policy.api.main.repository.NodeTypeRepository;
 import org.onap.policy.api.main.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -38,11 +41,16 @@ public class TestCommonToscaServiceTemplateService {
         CREATE_POLICY_TYPE,
         DELETE_POLICY_TYPE,
         CREATE_POLICY,
+        CREATE_NODE_TEMPLATE,
         DELETE_POLICY;
     }
 
     @Mock
     protected ToscaServiceTemplateRepository toscaServiceTemplateRepository;
+    @Mock
+    protected NodeTemplateRepository nodeTemplateRepository;
+    @Mock
+    protected NodeTypeRepository nodeTypeRepository;
     @Mock
     protected PolicyTypeService policyTypeService;
     @Mock
@@ -76,6 +84,10 @@ public class TestCommonToscaServiceTemplateService {
                     break;
                 case DELETE_POLICY:
                     dbSvcTemplate.getToscaTopologyTemplate().setPolicies(null);
+                    break;
+                case CREATE_NODE_TEMPLATE:
+                    dbSvcTemplate.getToscaTopologyTemplate()
+                        .setNodeTemplates(svcTemplateFragment.getToscaTopologyTemplate().getNodeTemplates());
                     break;
                 default:
                     break;
