@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a8252b1_ba3dd88f",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/apiParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2022-02-24T11:11:38Z",
+      "side": 1,
+      "message": "is this still needed?",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 27
+      },
+      "revId": "b9a8400bb36952c2cc3c706399b3863a52ab006a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
