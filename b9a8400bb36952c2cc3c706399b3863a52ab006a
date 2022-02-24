@@ -22,6 +22,30 @@
       "revId": "b9a8400bb36952c2cc3c706399b3863a52ab006a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1349e673_b925fbea",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/apiParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-24T11:13:24Z",
+      "side": 1,
+      "message": "Yes, the spring layer is added, but the usage of it is yet to be completed (it is ongoing). Only when it is complete and policy-models-provider dependency is completely gone, this can be removed.",
+      "parentUuid": "1a8252b1_ba3dd88f",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 27
+      },
+      "revId": "b9a8400bb36952c2cc3c706399b3863a52ab006a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
