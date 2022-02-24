@@ -46,6 +46,30 @@
       "revId": "b9a8400bb36952c2cc3c706399b3863a52ab006a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f440fe3b_d374bfcc",
+        "filename": "packages/policy-api-tarball/src/main/resources/etc/apiParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2022-02-24T11:15:07Z",
+      "side": 1,
+      "message": "Got it",
+      "parentUuid": "1349e673_b925fbea",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 27
+      },
+      "revId": "b9a8400bb36952c2cc3c706399b3863a52ab006a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
