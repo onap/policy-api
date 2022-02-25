@@ -92,6 +92,30 @@
       "revId": "78cbeae18390ab3c0fa1bbdb0ce89dbc729852bb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9465919d_c8c39514",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-25T16:00:54Z",
+      "side": 1,
+      "message": "Thanks Rashmi and Ajith, I will move those methods accordingly. I think this review conflicts with the other one for DB provider changes. We can merge that one first, I will also update the providers for controller classes and upload another patch for this review.",
+      "parentUuid": "347a8259_dbc39c9b",
+      "range": {
+        "startLine": 602,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 5
+      },
+      "revId": "78cbeae18390ab3c0fa1bbdb0ce89dbc729852bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
