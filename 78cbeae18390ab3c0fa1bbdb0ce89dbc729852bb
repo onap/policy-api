@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a6a2c2f_1d39023e",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-25T14:51:47Z",
+      "side": 1,
+      "message": "The business logic related to NodeType and NodeTemplate can be extracted into service layer, and instead inject the service layer in this class",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 56
+      },
+      "revId": "78cbeae18390ab3c0fa1bbdb0ce89dbc729852bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19f87445_65893a91",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-25T14:51:47Z",
+      "side": 1,
+      "message": "can be extracted into a service layer for NodeTemplate",
+      "range": {
+        "startLine": 377,
+        "startChar": 12,
+        "endLine": 384,
+        "endChar": 9
+      },
+      "revId": "78cbeae18390ab3c0fa1bbdb0ce89dbc729852bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "050e91d6_2e95be72",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-02-25T14:51:47Z",
+      "side": 1,
+      "message": "Can be extracted into a service class for NodeType.",
+      "range": {
+        "startLine": 602,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 5
+      },
+      "revId": "78cbeae18390ab3c0fa1bbdb0ce89dbc729852bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
