@@ -36,11 +36,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
-import org.onap.policy.api.main.rest.provider.NodeTemplateProvider;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
+import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.utils.security.SelfSignedKeyStore;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -86,7 +84,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
     private int apiPort;
 
     @Autowired
-    private NodeTemplateProvider provider;
+    private ToscaServiceTemplateService toscaServiceTemplateService;
 
     /**
      * Initializes parameters and set up test environment.
@@ -107,8 +105,8 @@ public class TestNodeTemplateController extends CommonTestRestController {
     public void clearDb() {
         for (String name : nodeTemplateKeys) {
             try {
-                provider.deleteToscaNodeTemplate(name, "1.0.0");
-            } catch (PfModelException | PfModelRuntimeException e) {
+                toscaServiceTemplateService.deleteToscaNodeTemplate(name, "1.0.0");
+            } catch (Exception e) {
                 //do nothing
             }
         }

@@ -38,8 +38,9 @@ import io.swagger.annotations.SwaggerDefinition;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
-import org.onap.policy.api.main.rest.provider.NodeTemplateProvider;
+import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.event.comm.Topic;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
 import org.onap.policy.models.base.PfModelException;
@@ -48,10 +49,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -79,12 +78,12 @@ import org.springframework.web.bind.annotation.RestController;
             @ExtensionProperty(name = "component", value = "Policy Framework")})}),
     schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
+@RequiredArgsConstructor
 public class NodeTemplateController extends CommonRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeTemplateController.class);
 
-    @Autowired
-    private NodeTemplateProvider provider;
+    private final ToscaServiceTemplateService toscaServiceTemplateService;
 
     /**
      * Creates one or more new tosca node templates in one call.
@@ -130,7 +129,7 @@ public class NodeTemplateController extends CommonRestController {
                 toJson(body));
         }
         try {
-            ToscaServiceTemplate nodeTemplates = provider.createNodeTemplates(body);
+            ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.createToscaNodeTemplates(body);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = "POST /nodetemplates";
@@ -183,7 +182,7 @@ public class NodeTemplateController extends CommonRestController {
                 toJson(body));
         }
         try {
-            ToscaServiceTemplate nodeTemplates = provider.updateToscaNodeTemplates(body);
+            ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.updateToscaNodeTemplates(body);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = "PUT /nodetemplates";
@@ -233,7 +232,7 @@ public class NodeTemplateController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            ToscaServiceTemplate nodeTemplates = provider.deleteToscaNodeTemplate(name, version);
+            ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.deleteToscaNodeTemplate(name, version);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = String.format("DELETE /nodetemplates/%s/versions/%s", name, version);
@@ -287,7 +286,7 @@ public class NodeTemplateController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            List<ToscaNodeTemplate> nodeTemplates = provider.fetchToscaNodeTemplates(name, version);
+            List<ToscaNodeTemplate> nodeTemplates = toscaServiceTemplateService.fetchToscaNodeTemplates(name, version);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = String.format("GET /nodetemplates/%s/versions/%s", name, version);
@@ -335,7 +334,7 @@ public class NodeTemplateController extends CommonRestController {
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
         try {
-            List<ToscaNodeTemplate> nodeTemplates = provider.fetchToscaNodeTemplates(null, null);
+            List<ToscaNodeTemplate> nodeTemplates = toscaServiceTemplateService.fetchToscaNodeTemplates(null, null);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = "GET /nodetemplates";
