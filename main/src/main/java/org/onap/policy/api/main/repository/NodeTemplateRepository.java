@@ -1,7 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Bell Canada. All rights reserved.
- *  Modifications Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +18,13 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.config;
+package org.onap.policy.api.main.repository;
 
-import org.onap.policy.api.main.rest.StatisticsReport;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Configuration
-public class PolicyApiConfig {
-
-    /**
-     * Initialize the statistics report bean.
-     *
-     * @return a new instance of StatisticsReport
-     */
-    @Bean
-    public StatisticsReport createStatisticsReport() {
-        return new StatisticsReport();
-    }
+@Repository
+public interface NodeTemplateRepository extends JpaRepository<JpaToscaNodeTemplate, PfConceptKey> {
 }

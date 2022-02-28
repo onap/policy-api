@@ -11,12 +11,3 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.onap.policy.common.spring.utils.CustomImplicitNamingStrategy
-
-database:
-  name: PolicyProviderParameterGroup
-  implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
-  driver: org.h2.Driver
-  url: jdbc:h2:mem:testdb
-  user: policy_user
-  password: policy_user
-  persistenceUnit: ToscaConceptTest
