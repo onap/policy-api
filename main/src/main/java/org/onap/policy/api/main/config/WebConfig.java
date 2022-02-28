@@ -20,6 +20,7 @@
 
 package org.onap.policy.api.main.config;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializer;
@@ -27,11 +28,11 @@ import java.util.Arrays;
 import java.util.List;
 import org.onap.policy.api.main.config.converter.StringToEnumConverter;
 import org.onap.policy.common.spring.utils.YamlHttpMessageConverter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.spring.web.json.Json;
 
@@ -50,22 +51,20 @@ public class WebConfig implements WebMvcConfigurer {
         var yamlConverter = new YamlHttpMessageConverter();
         yamlConverter.setSupportedMediaTypes(Arrays.asList(MediaType.parseMediaType("application/yaml")));
         converters.add(yamlConverter);
-
-        GsonHttpMessageConverter converter = buildGsonConverter();
-        converters.removeIf(GsonHttpMessageConverter.class::isInstance);
-        converters.add(0, converter);
     }
 
     /**
      * Swagger uses {{@link springfox.documentation.spring.web.json.Json}} which leads to Gson serialization errors.
-     * Hence, we customize a typeAdapter on the Gson bean in the Gson http message converter.
+     * Hence, we customize a typeAdapter on the Gson bean.
      *
-     * @return customised GSON HttpMessageConverter instance.
+     * @return customised GSON instance.
      */
-    private GsonHttpMessageConverter buildGsonConverter() {
-        JsonSerializer<Json> serializer = (json, type, jsonSerializationContext) ->
-            JsonParser.parseString(json.value());
-        var gson = new GsonBuilder().registerTypeAdapter(Json.class, serializer).create();
-        return new GsonHttpMessageConverter(gson);
+    @Bean
+    public Gson gson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        JsonSerializer<Json> serializer =
+            (json, type, jsonSerializationContext) -> JsonParser.parseString(json.value());
+        gsonBuilder.registerTypeAdapter(Json.class, serializer);
+        return gsonBuilder.create();
     }
 }
