@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +22,6 @@
 package org.onap.policy.api.main.config;
 
 import org.onap.policy.api.main.rest.StatisticsReport;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,25 +46,6 @@ public class PolicyApiConfig {
     @Value("${database.persistenceUnit}")
     private String databasePersistenceUnit;
 
-    /**
-     * Initialize database configuration.
-     *
-     * @return PolicyModelsProvider
-     * @throws PfModelException Policy exception
-     */
-    @Bean(destroyMethod = "close")
-    public PolicyModelsProvider policyModelsProvider() throws PfModelException {
-        PolicyModelsProviderParameters modelsProviderParameters = new PolicyModelsProviderParameters();
-        modelsProviderParameters.setName(databaseName);
-        modelsProviderParameters.setImplementation(databaseImplementation);
-        modelsProviderParameters.setDatabaseDriver(databaseDriver);
-        modelsProviderParameters.setDatabaseUrl(databaseUrl);
-        modelsProviderParameters.setDatabaseUser(databaseUser);
-        modelsProviderParameters.setDatabasePassword(databasePassword);
-        modelsProviderParameters.setPersistenceUnit(databasePersistenceUnit);
-        modelsProviderParameters.setDatabaseDriver(databaseDriver);
-        return new PolicyModelsProviderFactory().createPolicyModelsProvider(modelsProviderParameters);
-    }
 
     /**
      * Initialize the statistics report bean.

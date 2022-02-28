@@ -38,7 +38,17 @@
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.models</groupId>
-            <artifactId>policy-models-provider</artifactId>
+            <artifactId>policy-models-tosca</artifactId>
+            <version>${policy.models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-pdp</artifactId>
+            <version>${policy.models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.models</groupId>
+            <artifactId>policy-models-base</artifactId>
             <version>${policy.models.version}</version>
         </dependency>
         <dependency>

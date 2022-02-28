@@ -47,6 +47,8 @@ public class TestCommonToscaServiceTemplateService {
     protected PolicyTypeService policyTypeService;
     @Mock
     protected PolicyService policyService;
+    @Mock
+    protected NodeTemplateService nodeTemplateService;
 
     /**
      * Setup the DB TOSCA service template object post create, and delete request.
