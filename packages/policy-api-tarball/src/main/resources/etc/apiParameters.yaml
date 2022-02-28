@@ -25,15 +25,6 @@ policy-api:
   name: ApiGroup
   aaf: false
 
-database:
-  name: PolicyProviderParameterGroup
-  implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
-  driver: org.mariadb.jdbc.Driver
-  url: jdbc:mariadb://mariadb:3306/policyadmin
-  user: policy_user
-  password: policy_user
-  persistenceUnit: PolicyDb
-
 policy-preload:
   policyTypes:
     - policytypes/onap.policies.monitoring.tcagen2.yaml

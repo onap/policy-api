@@ -1,0 +1,14 @@
+---
+# Representation of apex decision maker policy with metadataSet reference in the metadata field.
+
+tosca_definitions_version: tosca_simple_yaml_1_1_0
+topology_template:
+  policies:
+    - operational.apex.decisionMaker:
+        type: onap.policies.Test
+        type_version: 1.0.0
+        name: operational.apex.decisionMaker
+        version: 1.0.0
+        metadata:
+          metadataSetName: apexMetadata_decisionMaker
+          metadataSetVersion:  1.0.0
