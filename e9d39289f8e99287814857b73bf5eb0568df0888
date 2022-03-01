@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "276f36f1_6d6466ba",
+        "filename": "main/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-03-01T14:46:15Z",
+      "side": 1,
+      "message": "nitpick: policy-models-pdp transitively brings in the other two dependencies, the others can be removed.",
+      "range": {
+        "startLine": 41,
+        "startChar": 51,
+        "endLine": 51,
+        "endChar": 53
+      },
+      "revId": "e9d39289f8e99287814857b73bf5eb0568df0888",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

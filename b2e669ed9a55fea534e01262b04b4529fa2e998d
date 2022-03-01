@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6abe3a58_faeec246",
+        "filename": "main/src/main/resources/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 159
+      },
+      "writtenOn": "2022-03-01T14:46:15Z",
+      "side": 0,
+      "message": "likely have to remove this block from the application-test.yaml file",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 29,
+        "endChar": 36
+      },
+      "revId": "b2e669ed9a55fea534e01262b04b4529fa2e998d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
