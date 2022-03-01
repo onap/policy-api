@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.5.2'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-istanbul/139'
+ref: 2d874af4b15e00905039a3968e672c779ba73a07
+containers:
+    - name: 'policy-api'
+      version: '2.5.2-20220228T2257'
