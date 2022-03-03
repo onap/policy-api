@@ -31,9 +31,9 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * Super class from which REST controllers are derived.
@@ -63,7 +63,7 @@ public class CommonRestController {
     protected static final String VERSION_LATEST_NAME = "X-LatestVersion";
     protected static final String VERSION_LATEST_DESCRIPTION = "Used only to communicate an API's latest version";
 
-    protected static final String REQUEST_ID_NAME = "X-ONAP-RequestID";
+    public static final String REQUEST_ID_NAME = "X-ONAP-RequestID";
     protected static final String REQUEST_ID_HDR_DESCRIPTION = "Used to track REST transactions for logging purpose";
     protected static final String REQUEST_ID_PARAM_DESCRIPTION = "RequestID for http transaction";
 
@@ -79,32 +79,34 @@ public class CommonRestController {
     protected final Coder coder = new StandardCoder();
 
     protected <T> ResponseEntity<T> makeOkResponse(UUID requestId, T respEntity) {
-        HttpHeaders headers = new HttpHeaders();
-        addVersionControlHeaders(headers);
-        addLoggingHeaders(headers, requestId);
-        return ResponseEntity.ok().headers(headers).body(respEntity);
+        return CommonRestController.addLoggingHeaders(addVersionControlHeaders(ResponseEntity.ok()), requestId)
+            .body(respEntity);
     }
 
-    protected <T> ResponseEntity<T> makeErrorResponse(UUID requestId, T respEntity, int status) {
-        HttpHeaders headers = new HttpHeaders();
-        addVersionControlHeaders(headers);
-        addLoggingHeaders(headers, requestId);
-        return ResponseEntity.status(status).headers(headers).body(respEntity);
+    /**
+     * Adds version headers to the response.
+     *
+     * @param respBuilder response builder
+     * @return the response builder, with version headers
+     */
+    public static ResponseEntity.BodyBuilder addVersionControlHeaders(ResponseEntity.BodyBuilder respBuilder) {
+        return respBuilder.header(VERSION_MINOR_NAME, "0").header(VERSION_PATCH_NAME, "0").header(VERSION_LATEST_NAME,
+            API_VERSION);
     }
 
-    private void addVersionControlHeaders(HttpHeaders headers) {
-        headers.add("X-MinorVersion", "0");
-        headers.add("X-PatchVersion", "0");
-        headers.add("X-LatestVersion", "1.0.0");
-    }
-
-    private void addLoggingHeaders(HttpHeaders headers, UUID requestId) {
+    /**
+     * Adds logging headers to the response.
+     *
+     * @param respBuilder response builder
+     * @return the response builder, with version logging
+     */
+    public static ResponseEntity.BodyBuilder addLoggingHeaders(ResponseEntity.BodyBuilder respBuilder, UUID requestId) {
         if (requestId == null) {
             // Generate a random uuid if client does not embed requestId in rest request
-            headers.add("X-ONAP-RequestID", UUID.randomUUID().toString());
-        } else {
-            headers.add("X-ONAP-RequestID", requestId.toString());
+            return respBuilder.header(REQUEST_ID_NAME, UUID.randomUUID().toString());
         }
+
+        return respBuilder.header(REQUEST_ID_NAME, requestId.toString());
     }
 
     /**
@@ -128,9 +130,12 @@ public class CommonRestController {
     }
 
     @ExceptionHandler(value = {PolicyApiRuntimeException.class})
-    protected ResponseEntity<Object> handleException(PolicyApiRuntimeException ex) {
+    protected ResponseEntity<Object> handleException(PolicyApiRuntimeException ex, WebRequest req) {
         LOGGER.warn(ex.getMessage(), ex.getCause());
-        return makeErrorResponse(ex.getRequestId(), ex.getErrorResponse(),
-            ex.getErrorResponse().getResponseCode().getStatusCode());
+        final var requestId = req.getHeader(CommonRestController.REQUEST_ID_NAME);
+        final var status = ex.getErrorResponse().getResponseCode().getStatusCode();
+        return CommonRestController.addLoggingHeaders(
+            CommonRestController.addVersionControlHeaders(ResponseEntity.status(status)),
+            requestId != null ? UUID.fromString(requestId) : ex.getRequestId()).body(ex.getErrorResponse());
     }
 }

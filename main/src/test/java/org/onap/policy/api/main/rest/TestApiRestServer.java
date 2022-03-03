@@ -40,6 +40,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
+import org.onap.policy.api.main.rest.provider.statistics.ApiStatisticsManager;
+import org.onap.policy.api.main.rest.provider.statistics.StatisticsReport;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.coder.StandardCoder;

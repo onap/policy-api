@@ -23,14 +23,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest.provider;
+package org.onap.policy.api.main.rest.provider.healthcheck;
 
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

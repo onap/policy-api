@@ -21,7 +21,7 @@
 
 package org.onap.policy.api.main.config;
 
-import org.onap.policy.api.main.rest.StatisticsReport;
+import org.onap.policy.api.main.rest.provider.statistics.StatisticsReport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
