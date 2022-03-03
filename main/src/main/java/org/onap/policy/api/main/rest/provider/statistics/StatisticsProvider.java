@@ -22,10 +22,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest.provider;
+package org.onap.policy.api.main.rest.provider.statistics;
 
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.api.main.rest.StatisticsReport;
 import org.springframework.stereotype.Service;
 
 /**

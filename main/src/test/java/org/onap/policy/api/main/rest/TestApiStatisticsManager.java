@@ -26,10 +26,10 @@ package org.onap.policy.api.main.rest;
 
 import static org.junit.Assert.assertEquals;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
+import org.onap.policy.api.main.rest.provider.statistics.ApiStatisticsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
