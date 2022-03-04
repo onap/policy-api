@@ -55,7 +55,7 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
 fi
 
 $JAVA_HOME/bin/java \
-    -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" \
+    -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
     -Dserver.ssl.key-store="${KEYSTORE}" \
     -Dserver.ssl.key-store-password="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
