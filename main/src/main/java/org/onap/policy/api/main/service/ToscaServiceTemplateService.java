@@ -550,14 +550,13 @@ public class ToscaServiceTemplateService {
         throws PfModelException {
         LOGGER.debug("->getNodeTemplate: name={}, version={}", name, version);
         List<ToscaNodeTemplate> nodeTemplates = new ArrayList<>();
-        var jpaNodeTemplates = new JpaToscaNodeTemplates();
 
         var dbServiceTemplate = getDefaultJpaToscaServiceTemplate();
         //Return empty if no nodeTemplates present in db
         if (!ToscaUtils.doNodeTemplatesExist(dbServiceTemplate)) {
             return nodeTemplates;
         }
-        jpaNodeTemplates = dbServiceTemplate.getTopologyTemplate().getNodeTemplates();
+        var jpaNodeTemplates = new JpaToscaNodeTemplates(dbServiceTemplate.getTopologyTemplate().getNodeTemplates());
 
         //Filter specific nodeTemplates
         if (name != null && version != null) {
