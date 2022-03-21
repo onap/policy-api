@@ -546,6 +546,7 @@ public class ToscaServiceTemplateService {
      * @return the node templates with the specified key
      * @throws PfModelException on errors getting node templates
      */
+    @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> fetchToscaNodeTemplates(final String name, final String version)
         throws PfModelException {
         LOGGER.debug("->getNodeTemplate: name={}, version={}", name, version);
