@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "981a7bf6_9fe7ab60",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-03-22T11:32:21Z",
+      "side": 1,
+      "message": "Ideally you should be creating a copy here: \njpaNodeTemplates \u003d new JpaToscaNodeTemplates(dbServiceTemplate.getTopologyTemplate().getNodeTemplates());\nand then work on this copy. Directly working on db entities will flush the changes to db.\nCurrently line 554 is creating a new object simply and then overwritten at line 561.",
+      "revId": "7b67c528ea1b03af3bf71bce518f6bb27cc54f76",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
