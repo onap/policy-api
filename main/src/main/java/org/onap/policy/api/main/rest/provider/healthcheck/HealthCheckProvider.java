@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.network.NetworkUtil;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -75,8 +74,8 @@ public class HealthCheckProvider {
         try {
             toscaServiceTemplateService.getDefaultJpaToscaServiceTemplate();
             return true;
-        } catch (PfModelRuntimeException pfme) {
-            LOGGER.warn("Api to database connection check failed. Details - ", pfme);
+        } catch (Exception ex) {
+            LOGGER.warn("Api to database connection check failed. Details: ", ex);
             return false;
         }
     }

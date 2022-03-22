@@ -136,8 +136,9 @@ public class ApiRestController extends CommonRestController {
     public ResponseEntity<HealthCheckReport> getHealthCheck(
         @RequestHeader(name = REQUEST_ID_NAME, required = false)
         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-        updateApiStatisticsCounter(Target.OTHER, HttpStatus.OK, HttpMethod.GET);
-        return makeOkResponse(requestId, healthCheckProvider.performHealthCheck());
+        final var report = healthCheckProvider.performHealthCheck();
+        updateApiStatisticsCounter(Target.OTHER, HttpStatus.resolve(report.getCode()), HttpMethod.GET);
+        return makeResponse(requestId, report, report.getCode());
     }
 
     /**
