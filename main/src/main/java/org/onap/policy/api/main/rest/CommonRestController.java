@@ -31,6 +31,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -79,7 +80,12 @@ public class CommonRestController {
     protected final Coder coder = new StandardCoder();
 
     protected <T> ResponseEntity<T> makeOkResponse(UUID requestId, T respEntity) {
-        return CommonRestController.addLoggingHeaders(addVersionControlHeaders(ResponseEntity.ok()), requestId)
+        return makeResponse(requestId, respEntity, HttpStatus.OK.value());
+    }
+
+    protected <T> ResponseEntity<T> makeResponse(UUID requestId, T respEntity, int status) {
+        return CommonRestController
+            .addLoggingHeaders(addVersionControlHeaders(ResponseEntity.status(status)), requestId)
             .body(respEntity);
     }
 

@@ -26,7 +26,6 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionException;
 
@@ -42,7 +41,7 @@ public class ServiceExceptionHandler {
      * @param exception the exception
      */
     @AfterThrowing(pointcut = "execution(* org.onap.policy.api.main.service.*.*(..))", throwing = "exception")
-    public ResponseEntity<Object> handleServiceException(JoinPoint joinPoint, RuntimeException exception) {
+    public void handleServiceException(JoinPoint joinPoint, RuntimeException exception) {
         if (exception instanceof PolicyApiRuntimeException || exception instanceof PfModelRuntimeException) {
             throw exception;
         } else {
@@ -64,7 +63,7 @@ public class ServiceExceptionHandler {
      */
     @AfterThrowing(pointcut = "execution(* org.onap.policy.api.main..*.*(..))"
         + " && !execution(* org.onap.policy.api.main.rest.provider.statistics.*.*(..))", throwing = "exception")
-    public ResponseEntity<Object> handleTransactionException(JoinPoint joinPoint, TransactionException exception) {
+    public void handleTransactionException(JoinPoint joinPoint, TransactionException exception) {
         final var errorResponse = new ErrorResponse();
         errorResponse.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR);
         errorResponse.setErrorMessage(exception.getMessage());
