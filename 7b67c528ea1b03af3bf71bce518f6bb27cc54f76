@@ -16,6 +16,24 @@
       "revId": "7b67c528ea1b03af3bf71bce518f6bb27cc54f76",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ef51020_041ee8c2",
+        "filename": "main/src/main/java/org/onap/policy/api/main/service/ToscaServiceTemplateService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-03-22T14:41:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "981a7bf6_9fe7ab60",
+      "revId": "7b67c528ea1b03af3bf71bce518f6bb27cc54f76",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
