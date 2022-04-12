@@ -1,0 +1,5 @@
+distribution_type: 'maven'
+version: '2.6.2'
+project: 'policy-api'
+tag_release: false
+log_dir: 'policy-api-maven-stage-master/1043/'
