@@ -47,8 +47,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,8 +78,6 @@ import org.springframework.web.bind.annotation.RestController;
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 @RequiredArgsConstructor
 public class NodeTemplateController extends CommonRestController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NodeTemplateController.class);
 
     private final ToscaServiceTemplateService toscaServiceTemplateService;
 

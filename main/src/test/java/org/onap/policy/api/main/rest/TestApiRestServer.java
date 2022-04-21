@@ -45,7 +45,6 @@ import org.onap.policy.api.main.rest.provider.statistics.StatisticsReport;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.common.utils.resources.TextFileUtils;
@@ -155,7 +154,6 @@ public class TestApiRestServer extends CommonTestRestController {
     // @formatter:on
 
     private static final StandardCoder standardCoder = new StandardCoder();
-    private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
     private static SelfSignedKeyStore keystore;
 
     @LocalServerPort
