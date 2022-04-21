@@ -117,7 +117,7 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
 
         assertThatThrownBy(() -> {
             toscaServiceTemplateService.updateToscaNodeTemplates(null);
-        }).hasMessageMatching("^serviceTemplate is marked non-null but is null$");
+        }).hasMessageMatching("^serviceTemplate is marked .*on.*ull but is null$");
 
         JpaToscaNodeTemplate jpaNodeTemplate = new JpaToscaNodeTemplate();
         PfConceptKey key = new PfConceptKey("apexMetadata_grpc", "1.0.0");

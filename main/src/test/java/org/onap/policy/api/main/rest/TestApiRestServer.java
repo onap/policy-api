@@ -155,7 +155,6 @@ public class TestApiRestServer extends CommonTestRestController {
     // @formatter:on
 
     private static final StandardCoder standardCoder = new StandardCoder();
-    private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
     private static SelfSignedKeyStore keystore;
 
     @LocalServerPort
