@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac4edf2e_cc240835",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/bin/policy-api.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-18T12:53:29Z",
+      "side": 0,
+      "message": "So, setting JAVA_HOME is not needed anymore, it is set in the integration/openjdk images or opensuse one (set by parent images)?   could you confirm?",
+      "revId": "be1caa4907e14c8572e9a78b2a959d50e31a117b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
