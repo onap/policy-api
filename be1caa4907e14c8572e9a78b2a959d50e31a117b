@@ -16,6 +16,24 @@
       "revId": "be1caa4907e14c8572e9a78b2a959d50e31a117b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de68676d_0650105d",
+        "filename": "testsuites/stability/src/main/resources/apisetup/config/api/bin/policy-api.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2022-05-18T13:14:26Z",
+      "side": 0,
+      "message": "Correct. JAVA_HOME is set in dockerfiles for both (but for opensuse, jvm is in /usr/lib64). I have run smoke tests and short S3P tests to verify both images after change.",
+      "parentUuid": "ac4edf2e_cc240835",
+      "revId": "be1caa4907e14c8572e9a78b2a959d50e31a117b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
