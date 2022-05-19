@@ -32,7 +32,7 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ENV JAVA_HOME=/usr/lib64/jvm/java-11-openjdk-11
 
 RUN zypper -n -q install --no-recommends gzip java-11-openjdk-headless netcat-openbsd tar && \
-    zypper -n -q update; zypper -n -q clean --all && \
+    zypper -n -q update && zypper -n -q clean --all && \
     groupadd --system policy && \
     useradd --system --shell /bin/sh -G policy policy && \
     mkdir -p /app $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
