@@ -20,6 +20,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
+
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/policy-api.tar.gz /packages/
+RUN tar xvzf /packages/policy-api.tar.gz --directory /extracted/
+
 FROM onap/policy-jre-alpine:2.4.3
 
 LABEL maintainer="Policy Team"
@@ -37,18 +43,16 @@ ARG POLICY_LOGS=/var/log/onap/policy/api
 ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/api
 
-RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
-COPY /maven/lib/policy-api.tar.gz /packages
-RUN tar xvfz /packages/policy-api.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-api.tar.gz
+RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
+
+COPY --chown=policy:policy --from=tarball /extracted/ $POLICY_HOME/
 
 WORKDIR $POLICY_HOME
-COPY policy-api.sh  bin/.
-COPY /maven/api.jar /app
+COPY --chown=policy:policy policy-api.sh bin/
+COPY --chown=policy:policy /maven/api.jar /app/
 
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chown -R policy:policy /app
+RUN chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
