@@ -38,17 +38,14 @@ ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/api
 
 RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
-COPY /maven/lib/policy-api.tar.gz /packages
-RUN tar xvfz /packages/policy-api.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-api.tar.gz
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
+ADD --chown=policy:policy /maven/lib/policy-api.tar.gz $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY policy-api.sh  bin/.
-COPY /maven/api.jar /app
+COPY --chown=policy:policy policy-api.sh bin/.
+COPY --chown=policy:policy /maven/api.jar /app
 
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chown -R policy:policy /app
+RUN chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
