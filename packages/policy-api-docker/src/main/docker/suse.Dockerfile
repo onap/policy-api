@@ -37,22 +37,19 @@ ENV POLICY_HOME=/opt/app/policy/api
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ENV JAVA_HOME=/usr/lib64/jvm/java-11-openjdk-11
 
-RUN zypper -n -q install --no-recommends gzip java-11-openjdk-headless netcat-openbsd tar && \
+RUN zypper -n -q install --no-recommends java-11-openjdk-headless netcat-openbsd && \
     zypper -n -q update && zypper -n -q clean --all && \
     groupadd --system policy && \
     useradd --system --shell /bin/sh -G policy policy && \
     mkdir -p /app $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy /app $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
-COPY /maven/lib/policy-api.tar.gz /packages
-RUN tar xvfz /packages/policy-api.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-api.tar.gz
+    chown -R policy:policy /app $POLICY_HOME $POLICY_LOGS
+ADD --chown=policy:policy /maven/lib/policy-api.tar.gz $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY policy-api.sh  bin/.
-COPY /maven/api.jar /app
+COPY --chown=policy:policy policy-api.sh bin/.
+COPY --chown=policy:policy /maven/api.jar /app
 
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && chown -R policy:policy /app
+RUN chmod 755 bin/*.sh
 
 USER policy
 WORKDIR $POLICY_HOME/bin
