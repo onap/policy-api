@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c224f521_ec45d955",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-08-03T14:36:37Z",
+      "side": 1,
+      "message": "3.2.1",
+      "revId": "bceb045f34b6d947e52b7bc695be5539e3f3b029",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7804061a_02bb677c",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/provider/CommonModelProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-08-03T14:36:37Z",
+      "side": 1,
+      "message": "license",
+      "revId": "bceb045f34b6d947e52b7bc695be5539e3f3b029",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
