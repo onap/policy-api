@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021 Nordix Foundation.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
@@ -24,9 +24,13 @@
 
 package org.onap.policy.api.main.startstop;
 
+import com.google.common.collect.Sets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.config.PolicyPreloadConfig;
@@ -37,6 +41,7 @@ import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityFilter;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -112,16 +117,27 @@ public class ApiDatabaseInitializer {
             FunctionWithEx<ToscaServiceTemplate, ToscaServiceTemplate> getter)
             throws PolicyApiException, CoderException, PfModelException {
 
+        var multiVersionTemplates = new ArrayList<ToscaServiceTemplate>();
+
         for (String entity : entities) {
             var entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
             if (entityAsStringYaml == null) {
-                LOGGER.warn("Preloading entity cannot be found: {}", entity);
-                continue;
+                throw new PolicyApiException("Preloaded entity cannot be found " + entity);
             }
 
             ToscaServiceTemplate singleEntity = coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
             if (singleEntity == null) {
                 throw new PolicyApiException("Error deserializing entity from file: " + entity);
+            }
+
+            if (isMultiVersion(serviceTemplate.getPolicyTypes(), singleEntity.getPolicyTypes())) {
+                // if this entity introduces a new policy version of an existing policy type,
+                // process it on its own as continuing here will override the existing policy type
+                // in a different version
+
+                multiVersionTemplates.add(singleEntity);
+                LOGGER.warn("Detected multi-versioned type: {}", entity);
+                continue;
             }
 
             // Consolidate data types and policy types
@@ -144,11 +160,39 @@ public class ApiDatabaseInitializer {
         // Preload the specified entities
         ToscaServiceTemplate createdServiceTemplate = getter.apply(serviceTemplate);
         LOGGER.debug("Created initial tosca service template in DB - {}", createdServiceTemplate);
+
+        multiVersionTemplates
+            .forEach(mvServiceTemplate -> {
+                try {
+                    LOGGER.info("Multi-versioned Service Template {}", mvServiceTemplate.getPolicyTypes().keySet());
+                    getter.apply(mvServiceTemplate);
+                } catch (PfModelException e) {
+                    LOGGER.warn("ToscaServiceTemple cannot be preloaded: {}", mvServiceTemplate, e);
+                }
+            });
         return createdServiceTemplate;
+    }
+
+    // This method is templated, so it can be used with other derivations of ToscaEntity in the future,
+    // if multi-version are desired.
+
+    protected <T extends ToscaEntity> boolean isMultiVersion(Map<String, T> aggEntity,
+                                                             Map<String, T> singleEntity) {
+        if (aggEntity == null || singleEntity == null) {
+            return false;
+        }
+
+        // There is a multi-version entity if both key sets have the same
+        // entity name but different version.
+
+        return
+            Sets.intersection(aggEntity.keySet(), singleEntity.keySet())
+                .stream()
+                .anyMatch(e -> !Objects.equals(aggEntity.get(e).getVersion(), singleEntity.get(e).getVersion()));
     }
 
     @FunctionalInterface
     protected interface FunctionWithEx<T, R> {
-        public R apply(T value) throws PfModelException;
+        R apply(T value) throws PfModelException;
     }
 }
