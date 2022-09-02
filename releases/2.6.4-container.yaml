@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.6.4'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-jakarta/119'
+ref: 3d3f69a238dd47b74b29ffda49fe05a0309bdb44
+containers:
+    - name: 'policy-api'
+      version: '2.6.4-20220902T1310'
