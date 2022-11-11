@@ -1,0 +1,3379 @@
+openapi: 3.0.1
+info:
+  title: Api Documentation
+  description: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+servers:
+- url: //localhost:30440/
+tags:
+- name: policy-api-rest-controller
+  description: Api Rest Controller
+paths:
+  /policy/api/v1/healthcheck:
+    get:
+      tags:
+      - HealthCheck
+      summary: Perform a system healthcheck
+      description: Returns healthy status of the Policy API component
+      operationId: getHealthCheck
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [HealthCheckReport](https://github.com/onap/policy-common/blob/master/policy-endpoints/src/main/java/org/onap/policy/common/endpoints/report/HealthCheckReport.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckReport'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/HealthCheckReport'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/nodetemplates:
+    get:
+      tags:
+      - NodeTemplates
+      summary: Retrieve all the available tosca node templates
+      description: Returns all the node templates from the service template
+      operationId: getAllNodeTemplates
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns an array of
+            [ToscaNodeTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaNodeTemplate.java)
+            objects
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+            application/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Jakarta
+    put:
+      tags:
+      - NodeTemplates
+      summary: Updates one or more new node templates
+      description: Client should provide TOSCA body of the updated node templates in an instance of
+        [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+      operationId: updateToscaNodeTemplates
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity body of tosca node templates
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ToscaNodeTemplate'
+          application/yaml:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ToscaNodeTemplate'
+        required: true
+      responses:
+        200:
+          description: OK, returns the updated Node Templates in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        201:
+          description: OK, returns the updated Node Templates in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Jakarta
+      x-codegen-request-body-name: body
+    post:
+      tags:
+      - NodeTemplates
+      summary: Create one or more new node templates
+      description: Client should provide TOSCA body of the new node templates
+      operationId: createToscaNodeTemplates
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity body of tosca node templates contained in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK, returns the created node templates in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        201:
+          description: OK, returns the created node templates in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Jakarta
+      x-codegen-request-body-name: body
+  /policy/api/v1/nodetemplates/{name}/versions/{version}:
+    get:
+      tags:
+      - NodeTemplates
+      summary: Retrieve one version of a tosca node template
+      description: Returns a particular version of a node template
+      operationId: getSpecificVersionOfNodeTemplate
+      parameters:
+      - name: name
+        in: path
+        description: Name of the node template
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: path
+        description: Version of the node template
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns an array of
+            [ToscaNodeTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaNodeTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+            application/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Jakarta
+    delete:
+      tags:
+      - NodeTemplates
+      summary: Updates one or more new node templates
+      description: Client should provide TOSCA body of the updated node templates
+      operationId: deleteToscaNodeTemplates
+      parameters:
+      - name: name
+        in: path
+        description: Name of the node template
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: path
+        description: Version of the node template
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns the delete node template in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        204:
+          description: No Content
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Jakarta
+  /policy/api/v1/policies:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve all versions of available policies
+      description: Returns all version of available policies
+      operationId: getPolicies
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, BARE for bare  policies (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Guilin
+    post:
+      tags:
+      - PolicyInstances
+      summary: Create one or more new policies
+      description: Client should provide TOSCA body of the new polic(ies)
+      operationId: createPolicies
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity body of the policies to be created contained in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK, the policies created in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        201:
+          description: OK, the policies created in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: El Alto
+      x-codegen-request-body-name: body
+  /policy/api/v1/policies/{policyId}/versions/{policyVersion}:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve specific version of a specified policy
+      description: Returns a particular version of specified policy
+      operationId: getSpecificPolicy
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, BARE for bare  policies (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: policyId
+        in: path
+        description: Name of policy
+        required: true
+        schema:
+          type: string
+      - name: policyVersion
+        in: path
+        description: Version of policy
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Guilin
+    delete:
+      tags:
+      - PolicyInstances
+      summary: Delete a particular version of a policy
+      description: 'Rule: the version that has been deployed in PDP group(s) cannot
+        be deleted'
+      operationId: deleteSpecificPolicy
+      parameters:
+      - name: policyId
+        in: path
+        description: ID of policy
+        required: true
+        schema:
+          type: string
+      - name: policyVersion
+        in: path
+        description: Version of policy
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, returns the deleted policy in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        204:
+          description: No Content
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        409:
+          description: Delete Conflict, Rule Violation
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Guilin
+  /policy/api/v1/policytypes:
+    get:
+      tags:
+      - PolicyTypes
+      summary: Retrieve existing policy types
+      description: Returns a list of existing policy types stored in Policy Framework
+      operationId: getAllPolicyTypes
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+    post:
+      tags:
+      - PolicyTypes
+      summary: Create a new policy type
+      description: Client should provide TOSCA body of the new policy type
+      operationId: createPolicyType
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity body of policy types to be created in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK, the created policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        201:
+          description: OK, the created policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+      x-codegen-request-body-name: body
+  /policy/api/v1/policytypes/{policyTypeId}:
+    get:
+      tags:
+      - PolicyTypes
+      summary: Retrieve all available versions of a policy type
+      description: Returns a list of all available versions for the specified policy
+        type
+      operationId: getAllVersionsOfPolicyType
+      parameters:
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/policytypes/{policyTypeId}/versions/latest:
+    get:
+      tags:
+      - PolicyTypes
+      summary: Retrieve latest version of a policy type
+      description: Returns latest version for the specified policy type
+      operationId: getLatestVersionOfPolicyType
+      parameters:
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve all versions of a policy created for a particular policy type
+        version
+      description: Returns a list of all versions of specified policy created for
+        the specified policy type version
+      operationId: getAllPolicies
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, BARE for bare policies (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+    post:
+      tags:
+      - PolicyInstances
+      summary: Create a new policy for a policy type version
+      description: Client should provide TOSCA body of the new policy
+      operationId: createPolicy
+      parameters:
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity body of policies to create in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK, the created policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        201:
+          description: OK, the created policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        400:
+          description: Invalid Body
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        406:
+          description: Not Acceptable Payload
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+      x-codegen-request-body-name: body
+  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve all version details of a policy created for a particular policy
+        type version
+      description: Returns a list of all version details of the specified policy
+      operationId: getAllVersionsOfPolicy
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, BARE for bare policies (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: policyId
+        in: path
+        description: ID of policy
+        required: true
+        schema:
+          type: string
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve the latest version of a particular policy
+      description: Returns the latest version of specified policy
+      operationId: getLatestVersionOfPolicy
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, TERSE for bare policies (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: policyId
+        in: path
+        description: ID of policy
+        required: true
+        schema:
+          type: string
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}:
+    get:
+      tags:
+      - PolicyInstances
+      summary: Retrieve one version of a policy created for a particular policy type
+        version
+      description: Returns a particular version of specified policy created for the
+        specified policy type version
+      operationId: getSpecificVersionOfPolicy
+      parameters:
+      - name: mode
+        in: query
+        description: Fetch mode for policies, BARE for bare policies  (default), REFERENCED
+          for fully referenced policies
+        schema:
+          type: string
+          default: BARE
+          enum:
+          - BARE
+          - REFERENCED
+      - name: policyId
+        in: path
+        description: ID of policy
+        required: true
+        schema:
+          type: string
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyVersion
+        in: path
+        description: Version of policy
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policies in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+    delete:
+      tags:
+      - PolicyInstances
+      summary: Delete a particular version of a policy
+      description: 'Rule: the version that has been deployed in PDP group(s) cannot
+        be deleted'
+      operationId: deleteSpecificVersionOfPolicy
+      parameters:
+      - name: policyId
+        in: path
+        description: ID of policy
+        required: true
+        schema:
+          type: string
+      - name: policyTypeId
+        in: path
+        description: PolicyType ID
+        required: true
+        schema:
+          type: string
+      - name: policyTypeVersion
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyVersion
+        in: path
+        description: Version of policy
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the deleted policy in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        204:
+          description: No Content
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        409:
+          description: Delete Conflict, Rule Violation
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/policytypes/{policyTypeId}/versions/{versionId}:
+    get:
+      tags:
+      - PolicyTypes
+      summary: Retrieve one particular version of a policy type
+      description: Returns a particular version for the specified policy type
+      operationId: getSpecificVersionOfPolicyType
+      parameters:
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: versionId
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the found policy types in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+    delete:
+      tags:
+      - PolicyTypes
+      summary: Delete one version of a policy type
+      description: 'Rule 1: pre-defined policy types cannot be deleted;Rule 2: policy
+        types that are in use (parameterized by a TOSCA policy) cannot be deleted.The
+        parameterizing TOSCA policies must be deleted first;'
+      operationId: deleteSpecificVersionOfPolicyType
+      parameters:
+      - name: policyTypeId
+        in: path
+        description: ID of policy type
+        required: true
+        schema:
+          type: string
+      - name: versionId
+        in: path
+        description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the deleted policy type in an instance of
+            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ToscaServiceTemplate'
+        204:
+          description: No Content
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Resource Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        409:
+          description: Delete Conflict, Rule Violation
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+  /policy/api/v1/statistics:
+    get:
+      tags:
+      - Statistics
+      summary: Retrieve current statistics
+      description: Returns current statistics including the counters of API invocation
+      operationId: getStatistics
+      parameters:
+      - name: X-ONAP-RequestID
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, the statistics report in an instance of
+            [StatisticsReport](https://github.com/onap/policy-api/blob/master/main/src/main/java/org/onap/policy/api/main/rest/provider/statistics/StatisticsReport.java)
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatisticsReport'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/StatisticsReport'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-ONAP-RequestID:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Dublin
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ToscaServiceTemplate:
+      title: ToscaServiceTemplate
+      type: object
+    ToscaNodeTemplate:
+      title: ToscaNodeTemplate
+      type: object
+    HealthCheckReport:
+      title: HealthCheckReport
+      type: object
+    StatisticsReport:
+      title: StatisticsReport
+      type: object
