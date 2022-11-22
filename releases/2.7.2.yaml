@@ -1,0 +1,5 @@
+distribution_type: 'maven'
+version: '2.7.2'
+project: 'policy-api'
+tag_release: false
+log_dir: 'policy-api-maven-stage-kohn/30/'
