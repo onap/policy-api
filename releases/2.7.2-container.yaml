@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '2.7.2'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-kohn/30'
+ref: 8fb74164ed946e7f70ec3d057140d1518947e993
+containers:
+    - name: 'policy-api'
+      version: '2.7.2-20221122T1824'
