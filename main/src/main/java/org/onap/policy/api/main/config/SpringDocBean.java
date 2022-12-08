@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,28 +20,29 @@
 
 package org.onap.policy.api.main.config;
 
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-public class SwaggerConfig {
+public class SpringDocBean {
 
     /**
-     * Create a bean of type Docket to determine the swagger configuration.
-     * @return docket bean with swagger configuration.
+     * Bean to configure Springdoc.
+     *
+     * @return the OpenAPI specification
      */
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(RequestHandlerSelectors.basePackage("org.onap.policy.api.main.rest"))
-            .paths(PathSelectors.any())
-            .build();
+    public OpenAPI policyFrameworkLifecycleOpenApi() {
+        return new OpenAPI()
+                .info(new Info().title("Policy Framework Lifecycle API")
+                .description("The Policy Framework API allows the lifecycle of policy types and policies to be managed")
+                .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0")))
+                .externalDocs(new ExternalDocumentation()
+                .description("Policy Framework Documentation")
+                .url("https://docs.onap.org/projects/onap-policy-parent/en/latest"));
     }
 }
