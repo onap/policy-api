@@ -22,24 +22,11 @@
 
 package org.onap.policy.api.main.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
-import io.swagger.annotations.BasicAuthDefinition;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.ExtensionProperty;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.ResponseHeader;
-import io.swagger.annotations.SecurityDefinition;
-import io.swagger.annotations.SwaggerDefinition;
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
+import org.onap.policy.api.main.rest.genapi.ToscaNodeTemplateDesignApi;
 import org.onap.policy.api.main.service.ToscaServiceTemplateService;
 import org.onap.policy.common.endpoints.event.comm.Topic;
 import org.onap.policy.common.endpoints.utils.NetLoggerUtil;
@@ -48,36 +35,14 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Class to provide REST API services for Tosca Node templates.
  */
 @RestController
-@RequestMapping(path = "/policy/api/v1", produces = { "application/json", "application/yaml" })
-@Api(value = "Tosca Node template Design API")
-@SwaggerDefinition(
-    info = @Info(
-        description = "Tosca Node template Design API is publicly exposed for clients to Create/Read/Update/Delete"
-            + " node templates which can be recognized"
-            + " and executable by incorporated policy engines. It is an"
-            + " independent component running rest service that takes all node templates design API calls"
-            + " from clients and then assign them to different API working functions.",
-        version = "1.0.0", title = "Tosca Node template Design",
-        extensions = {@Extension(properties = {@ExtensionProperty(name = "planned-retirement-date", value = "tbd"),
-            @ExtensionProperty(name = "component", value = "Policy Framework")})}),
-    schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-    securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 @RequiredArgsConstructor
-public class NodeTemplateController extends CommonRestController {
+public class NodeTemplateController extends CommonRestController implements ToscaNodeTemplateDesignApi {
 
     private final ToscaServiceTemplateService toscaServiceTemplateService;
 
@@ -88,37 +53,8 @@ public class NodeTemplateController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @PostMapping("/nodetemplates")
-    @ApiOperation(value = "Create one or more new node templates",
-        notes = "Client should provide TOSCA body of the new node templates",
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"nodeTemplate", },
-        response = ToscaServiceTemplate.class,
-        responseHeaders = {
-            @ResponseHeader(name = VERSION_MINOR_NAME,
-                description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME,
-                description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME,
-                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
-        extensions = {
-            @Extension(name = EXTENSION_NAME, properties = {
-                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                @ExtensionProperty(name = LAST_MOD_NAME, value = "Jakarta")})})
-    @ApiResponses(value = {
-        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public ResponseEntity<ToscaServiceTemplate> createToscaNodeTemplates(
-        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @RequestBody @ApiParam(value = "Entity body of tosca node templates", required = true)
-            ToscaServiceTemplate body) {
+    @Override
+    public ResponseEntity<ToscaServiceTemplate> createToscaNodeTemplates(ToscaServiceTemplate body, UUID requestId) {
 
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(NetLoggerUtil.EventType.IN, Topic.CommInfrastructure.REST, "/nodetemplates",
@@ -133,7 +69,6 @@ public class NodeTemplateController extends CommonRestController {
         }
     }
 
-
     /**
      * Updates one or more node templates in one call.
      *
@@ -141,37 +76,8 @@ public class NodeTemplateController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @PutMapping("/nodetemplates")
-    @ApiOperation(value = "Updates one or more new node templates",
-        notes = "Client should provide TOSCA body of the updated node templates",
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"nodeTemplate", },
-        response = ToscaServiceTemplate.class,
-        responseHeaders = {
-            @ResponseHeader(name = VERSION_MINOR_NAME,
-                description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME,
-                description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME,
-                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
-        extensions = {
-            @Extension(name = EXTENSION_NAME, properties = {
-                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                @ExtensionProperty(name = LAST_MOD_NAME, value = "Jakarta")})})
-    @ApiResponses(value = {
-        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public ResponseEntity<ToscaServiceTemplate> updateToscaNodeTemplates(
-        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @RequestBody @ApiParam(value = "Entity body of tosca node templates", required = true)
-            ToscaServiceTemplate body) {
+    @Override
+    public ResponseEntity<ToscaServiceTemplate> updateToscaNodeTemplates(ToscaServiceTemplate body, UUID requestId) {
 
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(NetLoggerUtil.EventType.IN, Topic.CommInfrastructure.REST, "/nodetemplates",
@@ -186,47 +92,15 @@ public class NodeTemplateController extends CommonRestController {
         }
     }
 
-
     /**
      * Deletes a node template with specific name and version.
      *
-     * @param name  the name of node template
+     * @param name the name of node template
      * @param version the version of node template
      * @return the Response object containing the results of the API operation
      */
-    @DeleteMapping("/nodetemplates/{name}/versions/{version}")
-    @ApiOperation(value = "Updates one or more new node templates",
-        notes = "Client should provide TOSCA body of the updated node templates",
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"nodeTemplate", },
-        response = ToscaServiceTemplate.class,
-        responseHeaders = {
-            @ResponseHeader(name = VERSION_MINOR_NAME,
-                description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME,
-                description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME,
-                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
-        extensions = {
-            @Extension(name = EXTENSION_NAME, properties = {
-                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                @ExtensionProperty(name = LAST_MOD_NAME, value = "Jakarta")})})
-    @ApiResponses(value = {
-        @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = INVALID_BODY_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_ACCEPTABLE, message = INVALID_PAYLOAD_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)})
-    public ResponseEntity<ToscaServiceTemplate> deleteToscaNodeTemplates(
-        @PathVariable("name") @ApiParam(value = "Name of the node template", required = true) String name,
-        @PathVariable("version") @ApiParam(value = "Version of the node template",
-            required = true) String version,
-        @RequestHeader(name = REQUEST_ID_NAME, required = false)
-        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+    @Override
+    public ResponseEntity<ToscaServiceTemplate> deleteToscaNodeTemplates(String name, String version, UUID requestId) {
         try {
             ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.deleteToscaNodeTemplate(name, version);
             return makeOkResponse(requestId, nodeTemplates);
@@ -236,7 +110,6 @@ public class NodeTemplateController extends CommonRestController {
         }
     }
 
-
     /**
      * Retrieves the specified version of a node template.
      *
@@ -245,42 +118,9 @@ public class NodeTemplateController extends CommonRestController {
      *
      * @return the Response object containing the results of the API operation
      */
-    @GetMapping("/nodetemplates/{name}/versions/{version}")
-    @ApiOperation(value = "Retrieve one version of a tosca node template",
-        notes = "Returns a particular version of a node template",
-        response = ToscaNodeTemplate.class,
-        responseContainer = "List",
-        responseHeaders = {
-            @ResponseHeader(name = VERSION_MINOR_NAME,
-                description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME,
-                description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME,
-                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"nodeTemplates", },
-        extensions = {
-            @Extension(name = EXTENSION_NAME, properties = {
-                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                @ExtensionProperty(name = LAST_MOD_NAME, value = "Jakarta")
-            })
-        }
-    )
-    @ApiResponses(value = {
-        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
-    })
-    public ResponseEntity<List<ToscaNodeTemplate>> getSpecificVersionOfNodeTemplate(
-        @PathVariable("name") @ApiParam(value = "Name of the node template", required = true) String name,
-        @PathVariable("version") @ApiParam(value = "Version of the node template",
-            required = true) String version,
-        @RequestHeader(name = REQUEST_ID_NAME, required = false)
-        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+    @Override
+    public ResponseEntity<List<ToscaNodeTemplate>> getSpecificVersionOfNodeTemplate(String name, String version,
+        UUID requestId) {
         try {
             List<ToscaNodeTemplate> nodeTemplates = toscaServiceTemplateService.fetchToscaNodeTemplates(name, version);
             return makeOkResponse(requestId, nodeTemplates);
@@ -290,45 +130,13 @@ public class NodeTemplateController extends CommonRestController {
         }
     }
 
-
     /**
      * Retrieves all the node templates from the tosca service template.
      *
      * @return the Response object containing the results of the API operation
      */
-    @GetMapping("/nodetemplates")
-    @ApiOperation(value = "Retrieve all the available tosca node templates",
-        notes = "Returns all the node templates from the service template",
-        response = ToscaNodeTemplate.class,
-        responseContainer = "List",
-        responseHeaders = {
-            @ResponseHeader(name = VERSION_MINOR_NAME,
-                description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME,
-                description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME,
-                description = REQUEST_ID_HDR_DESCRIPTION, response = UUID.class)},
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE), tags = {"nodeTemplates", },
-        extensions = {
-            @Extension(name = EXTENSION_NAME, properties = {
-                @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                @ExtensionProperty(name = LAST_MOD_NAME, value = "Jakarta")
-            })
-        }
-    )
-    @ApiResponses(value = {
-        @ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = AUTHENTICATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_FORBIDDEN, message = AUTHORIZATION_ERROR_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_NOT_FOUND, message = NOT_FOUND_MESSAGE),
-        @ApiResponse(code = HttpURLConnection.HTTP_INTERNAL_ERROR, message = SERVER_ERROR_MESSAGE)
-    })
-    public ResponseEntity<List<ToscaNodeTemplate>> getAllNodeTemplates(
-        @RequestHeader(name = REQUEST_ID_NAME, required = false)
-        @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+    @Override
+    public ResponseEntity<List<ToscaNodeTemplate>> getAllNodeTemplates(UUID requestId) {
         try {
             List<ToscaNodeTemplate> nodeTemplates = toscaServiceTemplateService.fetchToscaNodeTemplates(null, null);
             return makeOkResponse(requestId, nodeTemplates);
@@ -337,5 +145,4 @@ public class NodeTemplateController extends CommonRestController {
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
         }
     }
-
 }

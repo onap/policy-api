@@ -1,18 +1,27 @@
 openapi: 3.0.1
 info:
-  title: Api Documentation
-  description: Api Documentation
-  termsOfService: urn:tos
-  contact: {}
+  title: Policy Framework Lifecycle API
+  description: The Policy Fraemwork API allows the lifecycle of policy types and policyes to be managed
+  contact:
+    name: ONAP Support
+    url: https://lists.onap.org/g/onap-discuss
+    email: onap-discuss@lists.onap.org
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
-  version: "1.0"
+  version: '1.0'
+externalDocs:
+  description: Policy Framework Documentation
+  url: https://docs.onap.org/projects/onap-policy-parent/en/latest
 servers:
 - url: //localhost:30440/
 tags:
-- name: policy-api-rest-controller
-  description: Api Rest Controller
+- name: "Tosca Node Template Design"
+  description:
+    Tosca Node template Design API is publicly exposed for clients to Create/Read/Update/Delete
+    node templates which can be recognized and executable by incorporated policy engines. It is an
+    independent component running rest service that takes all node templates design API calls
+    from clients and then assign them to different API working functions.
 paths:
   /policy/api/v1/healthcheck:
     get:
@@ -129,7 +138,7 @@ paths:
   /policy/api/v1/nodetemplates:
     get:
       tags:
-      - NodeTemplates
+      - "Tosca Node Template Design"
       summary: Retrieve all the available tosca node templates
       description: Returns all the node templates from the service template
       operationId: getAllNodeTemplates
@@ -245,7 +254,7 @@ paths:
         last-mod-release: Jakarta
     put:
       tags:
-      - NodeTemplates
+      - "Tosca Node Template Design"
       summary: Updates one or more new node templates
       description: Client should provide TOSCA body of the updated node templates in an instance of
         [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
@@ -262,14 +271,10 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/ToscaNodeTemplate'
+              $ref: '#/components/schemas/ToscaServiceTemplate'
           application/yaml:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/ToscaNodeTemplate'
+              $ref: '#/components/schemas/ToscaServiceTemplate'
         required: true
       responses:
         200:
@@ -430,7 +435,7 @@ paths:
       x-codegen-request-body-name: body
     post:
       tags:
-      - NodeTemplates
+      - "Tosca Node Template Design"
       summary: Create one or more new node templates
       description: Client should provide TOSCA body of the new node templates
       operationId: createToscaNodeTemplates
@@ -612,7 +617,7 @@ paths:
   /policy/api/v1/nodetemplates/{name}/versions/{version}:
     get:
       tags:
-      - NodeTemplates
+      - "Tosca Node Template Design"
       summary: Retrieve one version of a tosca node template
       description: Returns a particular version of a node template
       operationId: getSpecificVersionOfNodeTemplate
@@ -739,7 +744,7 @@ paths:
         last-mod-release: Jakarta
     delete:
       tags:
-      - NodeTemplates
+      - "Tosca Node Template Design"
       summary: Updates one or more new node templates
       description: Client should provide TOSCA body of the updated node templates
       operationId: deleteToscaNodeTemplates

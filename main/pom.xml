@@ -132,7 +132,7 @@
             <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>3.0.27</version>
+                <version>${version.swagger.codegen.v3}</version>
                 <executions>
                     <execution>
                         <id>code-gen</id>
@@ -143,7 +143,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
                             <invokerPackage>org.onap.policy.api.main.rest</invokerPackage>
                             <modelPackage>org.onap.policy.models.tosca.authorative.concepts</modelPackage>
-                            <apiPackage>org.onap.policy.api.main.rest</apiPackage>
+                            <apiPackage>org.onap.policy.api.main.rest.genapi</apiPackage>
                             <language>spring</language>
                             <generateModels>false</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
