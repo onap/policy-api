@@ -22,6 +22,8 @@
 
 package org.onap.policy.api.main.rest.utils;
 
+import static org.junit.Assert.assertTrue;
+
 import java.security.SecureRandom;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -54,6 +56,14 @@ public class CommonTestRestController {
     protected static final StandardCoder standardCoder = new StandardCoder();
     protected static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
 
+    protected static final String HTTPS_PREFIX = "https://localhost:";
+    protected static final String CONTEXT_PATH = "/policy/api/v1/";
+
+    protected void testSwagger(final int apiPort) throws Exception {
+        final Invocation.Builder invocationBuilder = sendHttpsRequest("/", "v3/api-docs", APP_JSON, apiPort);
+        final String resp = invocationBuilder.get(String.class);
+        assertTrue((resp).contains("{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Policy Framework Lifecycle API\""));
+    }
 
     protected Response createResource(String endpoint, String resourceName, int apiPort)
         throws Exception {
@@ -63,7 +73,7 @@ public class CommonTestRestController {
         mediaType = mediaType == null ?  APP_JSON : mediaType;
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
         return invocationBuilder.post(entity);
     }
@@ -71,14 +81,14 @@ public class CommonTestRestController {
     protected Response readResource(String endpoint, String mediaType, int apiPort) throws Exception {
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
         return invocationBuilder.get();
     }
 
     protected Response deleteResource(String endpoint, String mediaType, int apiPort) throws Exception {
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
         return invocationBuilder.delete();
     }
 
@@ -88,7 +98,7 @@ public class CommonTestRestController {
         ToscaServiceTemplate rawServiceTemplate = getRawServiceTemplate(resourceName);
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
         return invocationBuilder.put(entity);
     }
@@ -101,8 +111,8 @@ public class CommonTestRestController {
         return standardYamlCoder.decode(ResourceUtils.getResourceAsString(resourceName), ToscaServiceTemplate.class);
     }
 
-    protected Invocation.Builder sendHttpsRequest(final String endpoint, String mediaType, int apiPort)
-        throws Exception {
+    protected Invocation.Builder sendHttpsRequest(
+            final String context, final String endpoint, String mediaType, int apiPort) throws Exception {
 
         final TrustManager[] noopTrustManager = NetworkUtil.getAlwaysTrustingManager();
 
@@ -121,7 +131,7 @@ public class CommonTestRestController {
             client.register(YamlMessageBodyHandler.class);
         }
 
-        final WebTarget webTarget = client.target("https://localhost:" + apiPort + "/policy/api/v1/" + endpoint);
+        final WebTarget webTarget = client.target(HTTPS_PREFIX + apiPort + context + endpoint);
 
         final Invocation.Builder invocationBuilder = webTarget.request(mediaType);
 

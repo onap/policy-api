@@ -152,6 +152,7 @@
                                 ToscaNodeTemplateArray=java.util.List,
                                 HealthCheckReport=org.onap.policy.common.endpoints.report.HealthCheckReport,
                                 StatisticsReport=org.onap.policy.api.main.rest.provider.statistics.StatisticsReport,
+                                PolicyFetchMode=org.onap.policy.api.main.rest.PolicyFetchMode
                             </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>

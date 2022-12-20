@@ -184,6 +184,11 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
+    public void testSwagger() throws Exception {
+        super.testSwagger(apiPort);
+    }
+
+    @Test
     public void testCreatePolicyTypes() throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName, apiPort);
@@ -318,7 +323,8 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     private void testHealthCheckSuccess(String mediaType) throws Exception {
-        final Invocation.Builder invocationBuilder = sendHttpsRequest(HEALTHCHECK_ENDPOINT, mediaType, apiPort);
+        final Invocation.Builder invocationBuilder = sendHttpsRequest(
+                CONTEXT_PATH, HEALTHCHECK_ENDPOINT, mediaType, apiPort);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
     }
@@ -334,11 +340,11 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     private void testApiStatistics_200(String mediaType) throws Exception {
-        Invocation.Builder invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType, apiPort);
+        Invocation.Builder invocationBuilder = sendHttpsRequest(CONTEXT_PATH, STATISTICS_ENDPOINT, mediaType, apiPort);
         StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
         validateStatisticsReport(report, 200);
         updateApiStatistics();
-        invocationBuilder = sendHttpsRequest(STATISTICS_ENDPOINT, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, STATISTICS_ENDPOINT, mediaType, apiPort);
         report = invocationBuilder.get(StatisticsReport.class);
         validateStatisticsReport(report, 200);
         // ApiStatisticsManager.resetAllStatistics();

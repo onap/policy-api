@@ -22,11 +22,20 @@ tags:
     node templates which can be recognized and executable by incorporated policy engines. It is an
     independent component running rest service that takes all node templates design API calls
     from clients and then assign them to different API working functions.
+- name: "Policy Design"
+  description:
+    Policy Design API is publicly exposed for clients to Create/Read/Update/Delete
+    policy types, policy type implementation and policies which can be recognized
+    and executable by incorporated policy engines. It is an
+    independent component running rest service that takes all policy design API calls
+    from clients and then assign them to different API working functions. Besides
+    that, API is also exposed for clients to retrieve healthcheck status of this API
+    rest service and the statistics report including the counters of API invocation.
 paths:
   /policy/api/v1/healthcheck:
     get:
       tags:
-      - HealthCheck
+      - "Policy Design"
       summary: Perform a system healthcheck
       description: Returns healthy status of the Policy API component
       operationId: getHealthCheck
@@ -919,7 +928,7 @@ paths:
   /policy/api/v1/policies:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve all versions of available policies
       description: Returns all version of available policies
       operationId: getPolicies
@@ -929,11 +938,7 @@ paths:
         description: Fetch mode for policies, BARE for bare  policies (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: X-ONAP-RequestID
         in: header
         description: RequestID for http transaction
@@ -1040,7 +1045,7 @@ paths:
         last-mod-release: Guilin
     post:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Create one or more new policies
       description: Client should provide TOSCA body of the new polic(ies)
       operationId: createPolicies
@@ -1222,7 +1227,7 @@ paths:
   /policy/api/v1/policies/{policyId}/versions/{policyVersion}:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve specific version of a specified policy
       description: Returns a particular version of specified policy
       operationId: getSpecificPolicy
@@ -1232,11 +1237,7 @@ paths:
         description: Fetch mode for policies, BARE for bare  policies (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: policyId
         in: path
         description: Name of policy
@@ -1355,7 +1356,7 @@ paths:
         last-mod-release: Guilin
     delete:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Delete a particular version of a policy
       description: 'Rule: the version that has been deployed in PDP group(s) cannot
         be deleted'
@@ -1514,7 +1515,7 @@ paths:
   /policy/api/v1/policytypes:
     get:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Retrieve existing policy types
       description: Returns a list of existing policy types stored in Policy Framework
       operationId: getAllPolicyTypes
@@ -1625,7 +1626,7 @@ paths:
         last-mod-release: Dublin
     post:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Create a new policy type
       description: Client should provide TOSCA body of the new policy type
       operationId: createPolicyType
@@ -1807,7 +1808,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}:
     get:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Retrieve all available versions of a policy type
       description: Returns a list of all available versions for the specified policy
         type
@@ -1926,7 +1927,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/latest:
     get:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Retrieve latest version of a policy type
       description: Returns latest version for the specified policy type
       operationId: getLatestVersionOfPolicyType
@@ -2044,7 +2045,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve all versions of a policy created for a particular policy type
         version
       description: Returns a list of all versions of specified policy created for
@@ -2056,11 +2057,7 @@ paths:
         description: Fetch mode for policies, BARE for bare policies (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: policyTypeId
         in: path
         description: ID of policy type
@@ -2179,7 +2176,7 @@ paths:
         last-mod-release: Dublin
     post:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Create a new policy for a policy type version
       description: Client should provide TOSCA body of the new policy
       operationId: createPolicy
@@ -2373,7 +2370,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve all version details of a policy created for a particular policy
         type version
       description: Returns a list of all version details of the specified policy
@@ -2384,11 +2381,7 @@ paths:
         description: Fetch mode for policies, BARE for bare policies (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: policyId
         in: path
         description: ID of policy
@@ -2514,7 +2507,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve the latest version of a particular policy
       description: Returns the latest version of specified policy
       operationId: getLatestVersionOfPolicy
@@ -2524,11 +2517,7 @@ paths:
         description: Fetch mode for policies, TERSE for bare policies (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: policyId
         in: path
         description: ID of policy
@@ -2654,7 +2643,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}:
     get:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Retrieve one version of a policy created for a particular policy type
         version
       description: Returns a particular version of specified policy created for the
@@ -2666,11 +2655,7 @@ paths:
         description: Fetch mode for policies, BARE for bare policies  (default), REFERENCED
           for fully referenced policies
         schema:
-          type: string
-          default: BARE
-          enum:
-          - BARE
-          - REFERENCED
+          $ref: '#/components/schemas/PolicyFetchMode'
       - name: policyId
         in: path
         description: ID of policy
@@ -2801,18 +2786,12 @@ paths:
         last-mod-release: Dublin
     delete:
       tags:
-      - PolicyInstances
+      - "Policy Design"
       summary: Delete a particular version of a policy
       description: 'Rule: the version that has been deployed in PDP group(s) cannot
         be deleted'
       operationId: deleteSpecificVersionOfPolicy
       parameters:
-      - name: policyId
-        in: path
-        description: ID of policy
-        required: true
-        schema:
-          type: string
       - name: policyTypeId
         in: path
         description: PolicyType ID
@@ -2822,6 +2801,12 @@ paths:
       - name: policyTypeVersion
         in: path
         description: Version of policy type
+        required: true
+        schema:
+          type: string
+      - name: policyId
+        in: path
+        description: ID of policy
         required: true
         schema:
           type: string
@@ -2972,7 +2957,7 @@ paths:
   /policy/api/v1/policytypes/{policyTypeId}/versions/{versionId}:
     get:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Retrieve one particular version of a policy type
       description: Returns a particular version for the specified policy type
       operationId: getSpecificVersionOfPolicyType
@@ -3095,7 +3080,7 @@ paths:
         last-mod-release: Dublin
     delete:
       tags:
-      - PolicyTypes
+      - "Policy Design"
       summary: Delete one version of a policy type
       description: 'Rule 1: pre-defined policy types cannot be deleted;Rule 2: policy
         types that are in use (parameterized by a TOSCA policy) cannot be deleted.The
@@ -3255,7 +3240,7 @@ paths:
   /policy/api/v1/statistics:
     get:
       tags:
-      - Statistics
+      - "Policy Design"
       summary: Retrieve current statistics
       description: Returns current statistics including the counters of API invocation
       operationId: getStatistics
@@ -3381,4 +3366,7 @@ components:
       type: object
     StatisticsReport:
       title: StatisticsReport
+      type: object
+    PolicyFetchMode:
+      title: PolicyFetchMode
       type: object
