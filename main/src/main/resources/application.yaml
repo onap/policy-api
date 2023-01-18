@@ -1,7 +1,6 @@
-server:
-  port: 6969
-
 spring:
+  profiles:
+    active: default
   security.user:
     name: policyadmin
     password: zb!XztG34
@@ -20,6 +19,11 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.onap.policy.common.spring.utils.CustomImplicitNamingStrategy
+
+server:
+  port: 6969
+  servlet:
+    context-path: /policy/api/v1
 
 policy-api:
   name: ApiGroup

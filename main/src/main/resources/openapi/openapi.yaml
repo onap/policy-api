@@ -32,7 +32,7 @@ tags:
     that, API is also exposed for clients to retrieve healthcheck status of this API
     rest service and the statistics report including the counters of API invocation.
 paths:
-  /policy/api/v1/healthcheck:
+  /healthcheck:
     get:
       tags:
       - "Policy Design"
@@ -144,7 +144,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/nodetemplates:
+  /nodetemplates:
     get:
       tags:
       - "Tosca Node Template Design"
@@ -623,7 +623,7 @@ paths:
         api-version: 1.0.0
         last-mod-release: Jakarta
       x-codegen-request-body-name: body
-  /policy/api/v1/nodetemplates/{name}/versions/{version}:
+  /nodetemplates/{name}/versions/{version}:
     get:
       tags:
       - "Tosca Node Template Design"
@@ -925,7 +925,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Jakarta
-  /policy/api/v1/policies:
+  /policies:
     get:
       tags:
       - "Policy Design"
@@ -1224,7 +1224,7 @@ paths:
         api-version: 1.0.0
         last-mod-release: El Alto
       x-codegen-request-body-name: body
-  /policy/api/v1/policies/{policyId}/versions/{policyVersion}:
+  /policies/{policyId}/versions/{policyVersion}:
     get:
       tags:
       - "Policy Design"
@@ -1512,7 +1512,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Guilin
-  /policy/api/v1/policytypes:
+  /policytypes:
     get:
       tags:
       - "Policy Design"
@@ -1805,7 +1805,7 @@ paths:
         api-version: 1.0.0
         last-mod-release: Dublin
       x-codegen-request-body-name: body
-  /policy/api/v1/policytypes/{policyTypeId}:
+  /policytypes/{policyTypeId}:
     get:
       tags:
       - "Policy Design"
@@ -1924,7 +1924,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/policytypes/{policyTypeId}/versions/latest:
+  /policytypes/{policyTypeId}/versions/latest:
     get:
       tags:
       - "Policy Design"
@@ -2042,7 +2042,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies:
+  /policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies:
     get:
       tags:
       - "Policy Design"
@@ -2367,7 +2367,7 @@ paths:
         api-version: 1.0.0
         last-mod-release: Dublin
       x-codegen-request-body-name: body
-  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}:
+  /policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}:
     get:
       tags:
       - "Policy Design"
@@ -2504,7 +2504,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest:
+  /policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/latest:
     get:
       tags:
       - "Policy Design"
@@ -2640,7 +2640,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}:
+  /policytypes/{policyTypeId}/versions/{policyTypeVersion}/policies/{policyId}/versions/{policyVersion}:
     get:
       tags:
       - "Policy Design"
@@ -2954,7 +2954,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/policytypes/{policyTypeId}/versions/{versionId}:
+  /policytypes/{policyTypeId}/versions/{versionId}:
     get:
       tags:
       - "Policy Design"
@@ -3237,7 +3237,7 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /policy/api/v1/statistics:
+  /statistics:
     get:
       tags:
       - "Policy Design"

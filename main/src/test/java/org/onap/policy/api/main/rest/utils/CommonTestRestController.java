@@ -60,7 +60,7 @@ public class CommonTestRestController {
     protected static final String CONTEXT_PATH = "/policy/api/v1/";
 
     protected void testSwagger(final int apiPort) throws Exception {
-        final Invocation.Builder invocationBuilder = sendHttpsRequest("/", "v3/api-docs", APP_JSON, apiPort);
+        final Invocation.Builder invocationBuilder = sendHttpsRequest(CONTEXT_PATH, "v3/api-docs", APP_JSON, apiPort);
         final String resp = invocationBuilder.get(String.class);
         assertTrue((resp).contains("{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Policy Framework Lifecycle API\""));
     }

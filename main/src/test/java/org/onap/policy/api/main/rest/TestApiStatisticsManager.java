@@ -37,7 +37,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PolicyApiApplication.class)
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "default" })
 public class TestApiStatisticsManager {
 
     @Autowired

@@ -68,7 +68,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "default" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class TestApiRestServer extends CommonTestRestController {
 
