@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+1: Pamela Dragosh <pd1248@att.com>
+Submitted-by: Pamela Dragosh <pd1248@att.com>
+Submitted-at: Fri, 20 Jan 2023 19:56:53 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/api/+/132940
+Project: policy/api
+Branch: refs/heads/master
