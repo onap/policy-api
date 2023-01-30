@@ -18,10 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.api.main.rest.stub;
+package org.onap.policy.api.contract;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import javax.ws.rs.core.Response;
@@ -32,7 +31,7 @@ import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -44,9 +43,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "stub" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class ApisRestControllerStubTest extends CommonTestRestController {
+public class ApiContractTest extends CommonTestRestController {
     protected static final String APP_JSON = "application/json";
     protected static final String APP_YAML = "application/yaml";
+    private static final String TOSCA_NODE_TEMPLATE_RESOURCE =
+            "nodetemplates/nodetemplates.metadatasets.input.tosca.json";
 
     @LocalServerPort
     private int apiPort;
@@ -70,23 +71,62 @@ public class ApisRestControllerStubTest extends CommonTestRestController {
     }
 
     @Test
-    public void testStubbedGet() throws Exception {
-        checkStubJson("policies");
-        checkStubJson("policies/policyname/versions/1.0.2");
-        checkStubJson("nodetemplates");
-        checkStubJson("nodetemplates/k8stemplate/versions/1.0.0");
-        checkStubJson("policytypes");
-        checkStubJson("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/latest");
-        checkStubJson("statistics");
-        checkStubJson("healthcheck");
+    public void testStubPolicyDesign() throws Exception {
+        checkStubJsonGet("policies");
+        checkStubJsonGet("policies/policyname/versions/1.0.2");
+        checkStubJsonGet("policytypes");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/latest");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+            + "9c65fa1f-2833-4076-a64d-5b62e35cd09b");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+                + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/latest");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+                + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/1.2.3");
+        checkStubJsonGet("statistics");
+        checkStubJsonGet("healthcheck");
+
+        checkStubJsonPost("policies");
+        checkStubJsonPost("policytypes");
+        checkStubJsonPost("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.2.3/policies");
+
+        checkStubJsonDelete("policies/policyname/versions/1.0.2");
+        checkStubJsonDelete("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
+        checkStubJsonDelete("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+                + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/1.2.3");
     }
 
-    private void checkStubJson(String url) throws Exception {
+    @Test
+    public void testStubNodeTemplateDesign() throws Exception {
+        checkStubJsonGet("nodetemplates");
+        checkStubJsonGet("nodetemplates/k8stemplate/versions/1.0.0");
+
+        checkStubJsonPost("nodetemplates");
+
+        checkStubJsonPut("nodetemplates");
+
+        checkStubJsonDelete("nodetemplates/k8stemplate/versions/1.0.0");
+    }
+
+    private void checkStubJsonGet(String url) throws Exception {
         var response = super.readResource(url, APP_JSON, apiPort);
-        assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        var responseYaml = super.readResource(url, APP_YAML, apiPort);
-        assertEquals(Response.Status.NOT_IMPLEMENTED.getStatusCode(), responseYaml.getStatus());
+    }
+
+    private void checkStubJsonPost(String url) throws Exception {
+        var response = super.createResource(url, TOSCA_NODE_TEMPLATE_RESOURCE, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    private void checkStubJsonPut(String url) throws Exception {
+        var response = super.updateResource(url, TOSCA_NODE_TEMPLATE_RESOURCE, APP_JSON, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    private void checkStubJsonDelete(String url) throws Exception {
+        var response = super.deleteResource(url, APP_JSON, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
 }
