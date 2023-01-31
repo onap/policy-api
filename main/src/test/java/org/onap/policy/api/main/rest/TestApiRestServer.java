@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2019-2020,2022 Nordix Foundation.
+ *  Modifications Copyright (C) 2019-2020,2022-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +53,7 @@ import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
