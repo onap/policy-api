@@ -120,15 +120,7 @@ public class ApiDatabaseInitializer {
         var multiVersionTemplates = new ArrayList<ToscaServiceTemplate>();
 
         for (String entity : entities) {
-            var entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
-            if (entityAsStringYaml == null) {
-                throw new PolicyApiException("Preloaded entity cannot be found " + entity);
-            }
-
-            ToscaServiceTemplate singleEntity = coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
-            if (singleEntity == null) {
-                throw new PolicyApiException("Error deserializing entity from file: " + entity);
-            }
+            ToscaServiceTemplate singleEntity = deserializeServiceTemplate(entity);
 
             if (isMultiVersion(serviceTemplate.getPolicyTypes(), singleEntity.getPolicyTypes())) {
                 // if this entity introduces a new policy version of an existing policy type,
@@ -171,6 +163,19 @@ public class ApiDatabaseInitializer {
                 }
             });
         return createdServiceTemplate;
+    }
+
+    private ToscaServiceTemplate deserializeServiceTemplate(String entity) throws PolicyApiException, CoderException {
+        var entityAsStringYaml = ResourceUtils.getResourceAsString(entity);
+        if (entityAsStringYaml == null) {
+            throw new PolicyApiException("Preloaded entity cannot be found " + entity);
+        }
+
+        ToscaServiceTemplate singleEntity = coder.decode(entityAsStringYaml, ToscaServiceTemplate.class);
+        if (singleEntity == null) {
+            throw new PolicyApiException("Error deserializing entity from file: " + entity);
+        }
+        return singleEntity;
     }
 
     // This method is templated, so it can be used with other derivations of ToscaEntity in the future,
