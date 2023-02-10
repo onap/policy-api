@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+2: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-by: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-at: Fri, 10 Feb 2023 18:50:23 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/api/+/133220
+Project: policy/api
+Branch: refs/heads/master
