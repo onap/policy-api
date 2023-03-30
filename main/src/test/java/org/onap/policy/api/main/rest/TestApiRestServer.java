@@ -3,7 +3,7 @@
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  *  Modifications Copyright (C) 2019-2020,2022-2023 Nordix Foundation.
- *  Modifications Copyright (C) 2020-2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2020-2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
-import org.onap.policy.api.main.rest.provider.statistics.ApiStatisticsManager;
-import org.onap.policy.api.main.rest.provider.statistics.StatisticsReport;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -51,7 +49,6 @@ import org.onap.policy.common.utils.resources.TextFileUtils;
 import org.onap.policy.common.utils.security.SelfSignedKeyStore;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
@@ -79,7 +76,6 @@ public class TestApiRestServer extends CommonTestRestController {
     private static final String APP_YAML = "application/yaml";
 
     private static final String HEALTHCHECK_ENDPOINT = "healthcheck";
-    private static final String STATISTICS_ENDPOINT = "statistics";
 
     private static final String OP_POLICY_NAME_VCPE = "operational.restart";
 
@@ -158,9 +154,6 @@ public class TestApiRestServer extends CommonTestRestController {
 
     @LocalServerPort
     private int apiPort;
-
-    @Autowired
-    private ApiStatisticsManager mgr;
 
     /**
      * Initializes parameters and set up test environment.
@@ -327,27 +320,6 @@ public class TestApiRestServer extends CommonTestRestController {
                 CONTEXT_PATH, HEALTHCHECK_ENDPOINT, mediaType, apiPort);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
-    }
-
-    @Test
-    public void testApiStatistics_200_Json() throws Exception {
-        testApiStatistics_200(APP_JSON);
-    }
-
-    @Test
-    public void testApiStatistics_200_Yaml() throws Exception {
-        testApiStatistics_200(APP_YAML);
-    }
-
-    private void testApiStatistics_200(String mediaType) throws Exception {
-        Invocation.Builder invocationBuilder = sendHttpsRequest(CONTEXT_PATH, STATISTICS_ENDPOINT, mediaType, apiPort);
-        StatisticsReport report = invocationBuilder.get(StatisticsReport.class);
-        validateStatisticsReport(report, 200);
-        updateApiStatistics();
-        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, STATISTICS_ENDPOINT, mediaType, apiPort);
-        report = invocationBuilder.get(StatisticsReport.class);
-        validateStatisticsReport(report, 200);
-        // ApiStatisticsManager.resetAllStatistics();
     }
 
     @Test
@@ -702,29 +674,6 @@ public class TestApiRestServer extends CommonTestRestController {
         rawResponse = deleteResource(POLICIES_VCPE_VERSION1, APP_JSON, apiPort);
         assertThat(rawResponse.getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
 
-    }
-
-    private void updateApiStatistics() {
-        mgr.updateTotalApiCallCount();
-        mgr.updateApiCallSuccessCount();
-        mgr.updateApiCallFailureCount();
-        mgr.updateTotalPolicyGetCount();
-        mgr.updateTotalPolicyPostCount();
-        mgr.updateTotalPolicyTypeGetCount();
-        mgr.updateTotalPolicyTypePostCount();
-        mgr.updatePolicyGetSuccessCount();
-        mgr.updatePolicyGetFailureCount();
-        mgr.updatePolicyPostSuccessCount();
-        mgr.updatePolicyPostFailureCount();
-        mgr.updatePolicyTypeGetSuccessCount();
-        mgr.updatePolicyTypeGetFailureCount();
-        mgr.updatePolicyTypePostSuccessCount();
-        mgr.updatePolicyTypePostFailureCount();
-    }
-
-    private void validateStatisticsReport(final StatisticsReport report, final int code) {
-
-        assertEquals(code, report.getCode());
     }
 
     private void validateHealthCheckReport(final String name, final String url, final boolean healthy, final int code,

@@ -70,38 +70,6 @@
             "response": []
         },
         {
-            "name": "API Statistics",
-            "request": {
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "type": "text",
-                        "value": "application/json"
-                    },
-                    {
-                        "key": "Accept",
-                        "type": "text",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{POLICY-API-URL}}/policy/api/v1/statistics",
-                    "host": [
-                        "{{POLICY-API-URL}}"
-                    ],
-                    "path": [
-                        "policy",
-                        "api",
-                        "v1",
-                        "statistics"
-                    ]
-                },
-                "description": "This is an API to fetch current statistics information for the policy-api component."
-            },
-            "response": []
-        },
-        {
             "name": "Create Policy Type",
             "request": {
                 "method": "POST",

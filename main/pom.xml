@@ -3,7 +3,7 @@
    Copyright (C) 2018 Ericsson. All rights reserved.
    Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
    Copyright (C) 2019,2021 AT&T Intellectual Property. All rights reserved.
-   Modifications Copyright (C) 2020-2022 Bell Canada.
+   Modifications Copyright (C) 2020-2023 Bell Canada.
    Modifications Copyright (C) 2022-2023 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -149,7 +149,6 @@
                                 ToscaServiceTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate,
                                 ToscaNodeTemplateArray=java.util.List,
                                 HealthCheckReport=org.onap.policy.common.endpoints.report.HealthCheckReport,
-                                StatisticsReport=org.onap.policy.api.main.rest.provider.statistics.StatisticsReport,
                                 PolicyFetchMode=org.onap.policy.api.main.rest.PolicyFetchMode
                             </importMappings>
                             <configOptions>

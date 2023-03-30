@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2022-2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,8 +61,7 @@ public class ServiceExceptionHandler {
      * @param joinPoint the point of execution
      * @param exception the exception
      */
-    @AfterThrowing(pointcut = "execution(* org.onap.policy.api.main..*.*(..))"
-        + " && !execution(* org.onap.policy.api.main.rest.provider.statistics.*.*(..))", throwing = "exception")
+    @AfterThrowing(pointcut = "execution(* org.onap.policy.api.main..*.*(..))", throwing = "exception")
     public void handleTransactionException(JoinPoint joinPoint, TransactionException exception) {
         final var errorResponse = new ErrorResponse();
         errorResponse.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR);
