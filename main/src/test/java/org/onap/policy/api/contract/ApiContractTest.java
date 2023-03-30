@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +86,6 @@ public class ApiContractTest extends CommonTestRestController {
                 + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/latest");
         checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
                 + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/1.2.3");
-        checkStubJsonGet("statistics");
         checkStubJsonGet("healthcheck");
 
         checkStubJsonPost("policies");
