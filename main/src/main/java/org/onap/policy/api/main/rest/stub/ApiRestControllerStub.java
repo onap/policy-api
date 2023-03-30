@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.CommonRestController;
 import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.api.main.rest.genapi.PolicyDesignApi;
-import org.onap.policy.api.main.rest.provider.statistics.StatisticsReport;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.context.annotation.Profile;
@@ -172,12 +172,6 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String versionId,
         UUID requestID) {
         return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
-    }
-
-    @Override
-    public ResponseEntity<StatisticsReport> getStatistics(
-        UUID requestID) {
-        return stubUtils.getStubbedResponse(StatisticsReport.class);
     }
 
 }

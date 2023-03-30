@@ -30,7 +30,7 @@ tags:
     independent component running rest service that takes all policy design API calls
     from clients and then assign them to different API working functions. Besides
     that, API is also exposed for clients to retrieve healthcheck status of this API
-    rest service and the statistics report including the counters of API invocation.
+    rest service.
 paths:
   /healthcheck:
     get:
@@ -3237,118 +3237,6 @@ paths:
       x-interface info:
         api-version: 1.0.0
         last-mod-release: Dublin
-  /statistics:
-    get:
-      tags:
-      - "Policy Design"
-      summary: Retrieve current statistics
-      description: Returns current statistics including the counters of API invocation
-      operationId: getStatistics
-      parameters:
-      - name: X-ONAP-RequestID
-        in: header
-        description: RequestID for http transaction
-        schema:
-          type: string
-          format: uuid
-      responses:
-        200:
-          description: OK, the statistics report in an instance of
-            [StatisticsReport](https://github.com/onap/policy-api/blob/master/main/src/main/java/org/onap/policy/api/main/rest/provider/statistics/StatisticsReport.java)
-          headers:
-            X-LatestVersion:
-              schema:
-                type: string
-            X-PatchVersion:
-              schema:
-                type: string
-            X-MinorVersion:
-              schema:
-                type: string
-            X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatisticsReport'
-            application/yaml:
-              schema:
-                $ref: '#/components/schemas/StatisticsReport'
-        401:
-          description: Authentication Error
-          headers:
-            X-LatestVersion:
-              schema:
-                type: string
-            X-PatchVersion:
-              schema:
-                type: string
-            X-MinorVersion:
-              schema:
-                type: string
-            X-ONAP-RequestID:
-              schema:
-                type: string
-                format: uuid
-          content: {}
-        403:
-          description: Authorization Error
-          headers:
-            X-LatestVersion:
-              schema:
-                type: string
-            X-PatchVersion:
-              schema:
-                type: string
-            X-MinorVersion:
-              schema:
-                type: string
-            X-ONAP-RequestID:
-              schema:
-                type: string
-                format: uuid
-          content: {}
-        404:
-          description: Not Found
-          headers:
-            X-LatestVersion:
-              schema:
-                type: string
-            X-PatchVersion:
-              schema:
-                type: string
-            X-MinorVersion:
-              schema:
-                type: string
-            X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-          content: {}
-        500:
-          description: Internal Server Error
-          headers:
-            X-LatestVersion:
-              schema:
-                type: string
-            X-PatchVersion:
-              schema:
-                type: string
-            X-MinorVersion:
-              schema:
-                type: string
-            X-ONAP-RequestID:
-              schema:
-                type: string
-                format: uuid
-          content: {}
-      security:
-      - basicAuth: []
-      x-interface info:
-        api-version: 1.0.0
-        last-mod-release: Dublin
 components:
   securitySchemes:
     basicAuth:
@@ -3364,9 +3252,7 @@ components:
     HealthCheckReport:
       title: HealthCheckReport
       type: object
-    StatisticsReport:
-      title: StatisticsReport
-      type: object
     PolicyFetchMode:
       title: PolicyFetchMode
       type: object
+
