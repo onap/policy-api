@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021, 2023 Nordix Foundation.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,13 +25,13 @@
 package org.onap.policy.api.main.startstop;
 
 import com.google.common.collect.Sets;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.config.PolicyPreloadConfig;
 import org.onap.policy.api.main.exception.PolicyApiException;

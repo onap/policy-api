@@ -1,6 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
- *   Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2023 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,22 +22,19 @@
 package org.onap.policy.api.main.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import javax.ws.rs.core.Response;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -45,10 +43,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-@RunWith(MockitoJUnitRunner.class)
-public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommonToscaServiceTemplateService {
+class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommonToscaServiceTemplateService {
 
-    private static StandardYamlCoder coder = new StandardYamlCoder();
+    private static final StandardYamlCoder coder = new StandardYamlCoder();
     private static final String POLICY_TYPE_VERSION = "1.0.0";
 
     private static final String POLICY_RESOURCE_MONITORING = "policies/vCPE.policy.monitoring.input.tosca.yaml";
@@ -76,20 +73,18 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
     /**
      * Test setup.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUp();
     }
 
     @Test
-    public void testFetchPolicyTypes() throws PfModelException {
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicyTypes("dummy", null);
-        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=null) do not exist");
+    void testFetchPolicyTypes() {
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicyTypes("dummy", null))
+            .hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=null) do not exist");
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicyTypes("dummy", "dummy");
-        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=dummy) do not exist");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicyTypes("dummy", "dummy"))
+            .hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=dummy) do not exist");
 
         // FIXME
         // ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchPolicyTypes(null, null);
@@ -97,15 +92,13 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
     }
 
     @Test
-    public void testFetchLatestPolicyTypes() {
-
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchLatestPolicyTypes("dummy");
-        }).hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=LATEST) do not exist");
+    void testFetchLatestPolicyTypes() {
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchLatestPolicyTypes("dummy"))
+            .hasMessage("policy types for filter ToscaEntityFilter(name=dummy, version=LATEST) do not exist");
     }
 
     @Test
-    public void testCreatePolicyType() throws CoderException {
+    void testCreatePolicyType() throws CoderException {
         var policyTypeServiceTemplate = coder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
@@ -116,10 +109,9 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
         policyTypeServiceTemplate.getPolicyTypes().get("onap.policies.monitoring.tcagen2")
             .setDescription("Some other description");
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
-        }).hasMessageContaining("item \"entity\" value \"onap.policies.monitoring.tcagen2:1.0.0\" INVALID, "
-            + "does not equal existing entity");
+        assertThatThrownBy(() -> toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate))
+            .hasMessageContaining("item \"entity\" value \"onap.policies.monitoring.tcagen2:1.0.0\" INVALID, "
+                + "does not equal existing entity");
 
         assertThatThrownBy(() -> {
             ToscaServiceTemplate badPolicyType =
@@ -132,7 +124,7 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
     }
 
     @Test
-    public void testCreateOperationalPolicyTypes() throws CoderException {
+    void testCreateOperationalPolicyTypes() throws CoderException {
         ToscaServiceTemplate policyTypeServiceTemplate = coder.decode(
             ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
         ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
@@ -152,7 +144,7 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
     }
 
     @Test
-    public void testCreateApexOperationalPolicyTypes() throws CoderException {
+    void testCreateApexOperationalPolicyTypes() throws CoderException {
         var policyTypeServiceTemplate = coder.decode(
             ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
         var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
@@ -168,7 +160,7 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
     }
 
     @Test
-    public void testDeletePolicyType() throws CoderException {
+    void testDeletePolicyType() throws CoderException {
         var policyTypeServiceTemplate = coder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_MONITORING), ToscaServiceTemplate.class);
         var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
@@ -183,9 +175,8 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
         var exceptionMessage = "policy type onap.policies.monitoring.tcagen2:1.0.0 is in use, "
             + "it is referenced in policy onap.restart.tca:1.0.0";
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
-        }).hasMessage(exceptionMessage);
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2",
+            "1.0.0")).hasMessage(exceptionMessage);
 
         var deletePolicyResponseFragment = toscaServiceTemplateService
             .deletePolicy("onap.policies.monitoring.tcagen2", "1.0.0", "onap.restart.tca", "1.0.0");
@@ -195,9 +186,8 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
         exceptionMessage = "policy type is in use, it is referenced in PDP group dummy subgroup dummy";
         Mockito.doThrow(new PfModelRuntimeException(Response.Status.NOT_ACCEPTABLE, exceptionMessage))
             .when(pdpGroupService).assertPolicyTypeNotSupportedInPdpGroup("onap.policies.monitoring.tcagen2", "1.0.0");
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
-        }).hasMessage(exceptionMessage);
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2",
+            "1.0.0")).hasMessage(exceptionMessage);
 
         Mockito.doNothing().when(pdpGroupService)
             .assertPolicyTypeNotSupportedInPdpGroup("onap.policies.monitoring.tcagen2", "1.0.0");
@@ -206,8 +196,7 @@ public class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommon
         assertFalse(deletePolicyTypeResponseFragment.getPolicyTypes().isEmpty());
 
         mockDbServiceTemplate(serviceTemplate, deletePolicyTypeResponseFragment, Operation.DELETE_POLICY_TYPE);
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2", "1.0.0");
-        }).hasMessage("policy type onap.policies.monitoring.tcagen2:1.0.0 not found");
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicyType("onap.policies.monitoring.tcagen2",
+            "1.0.0")).hasMessage("policy type onap.policies.monitoring.tcagen2:1.0.0 not found");
     }
 }

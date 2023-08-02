@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2022 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.onap.policy.api.main.repository.NodeTemplateRepository;
 import org.onap.policy.api.main.repository.NodeTypeRepository;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -41,14 +41,12 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeType;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class TestNodeTemplateService {
+class TestNodeTemplateService {
 
     @Mock
     private NodeTemplateRepository nodeTemplateRepository;
@@ -63,17 +61,20 @@ public class TestNodeTemplateService {
     private static final String UPDATED_NODE_TEMPLATE_JSON = "nodetemplates/nodetemplates.metadatasets.update.json";
 
     private static ToscaServiceTemplate updatedToscaServiceTemplate;
-    private StandardCoder standardCoder;
-    private YamlJsonTranslator yamlJsonTranslator = new YamlJsonTranslator();
+    private final YamlJsonTranslator yamlJsonTranslator = new YamlJsonTranslator();
     ToscaServiceTemplate policyServiceTemplate;
+
+    AutoCloseable closeable;
 
     /**
      * Set up for tests.
+     *
      * @throws CoderException if error in json parsing
      */
-    @Before
+    @BeforeEach
     public void setUp() throws CoderException {
-        standardCoder = new StandardCoder();
+        closeable = MockitoAnnotations.openMocks(this);
+        StandardCoder standardCoder = new StandardCoder();
         policyServiceTemplate =
             yamlJsonTranslator.fromYaml(ResourceUtils.getResourceAsString(POLICY_WITH_METADATA_SET_REF),
                 ToscaServiceTemplate.class);
@@ -82,11 +83,15 @@ public class TestNodeTemplateService {
                 ToscaServiceTemplate.class);
     }
 
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
     @Test
-    public void testVerifyNodeType() {
-        assertThatThrownBy(() -> {
-            nodeTemplateService.verifyNodeTypeInDbTemplate(new JpaToscaNodeTemplate());
-        }).hasMessageMatching("^NODE_TYPE .* for toscaNodeTemplate .* does not exist$");
+    void testVerifyNodeType() {
+        assertThatThrownBy(() -> nodeTemplateService.verifyNodeTypeInDbTemplate(new JpaToscaNodeTemplate()))
+            .hasMessageMatching("^NODE_TYPE .* for toscaNodeTemplate .* does not exist$");
 
         JpaToscaNodeTemplate jpaToscaNodeTemplate = new JpaToscaNodeTemplate();
         PfConceptKey nodeType = new PfConceptKey("dummyType", "1.0.0");
@@ -97,19 +102,19 @@ public class TestNodeTemplateService {
     }
 
     @Test
-    public void testNodeTemplateUsedInPolicy() {
+    void testNodeTemplateUsedInPolicy() {
         assertDoesNotThrow(() -> nodeTemplateService.assertNodeTemplateNotUsedInPolicy("dummyName", "1.0.0",
             new JpaToscaServiceTemplate(policyServiceTemplate)));
 
-        assertThatThrownBy(() -> {
-            nodeTemplateService.assertNodeTemplateNotUsedInPolicy("apexMetadata_decisionMaker", "1.0.0",
-                new JpaToscaServiceTemplate(policyServiceTemplate));
-        }).hasMessage("Node template is in use, it is referenced in Tosca Policy operational.apex.decisionMaker "
-            + "version 1.0.0");
+        assertThatThrownBy(() -> nodeTemplateService
+            .assertNodeTemplateNotUsedInPolicy("apexMetadata_decisionMaker", "1.0.0",
+                new JpaToscaServiceTemplate(policyServiceTemplate)))
+            .hasMessage("Node template is in use, it is referenced in Tosca Policy operational.apex.decisionMaker "
+                + "version 1.0.0");
     }
 
     @Test
-    public void testNodeTemplateUpdate() throws PfModelException {
+    void testNodeTemplateUpdate() {
 
         Mockito.when(nodeTypeRepository.findById(Mockito.any())).thenReturn(Optional.of(new JpaToscaNodeType()));
         Mockito.when(nodeTemplateRepository.findById(Mockito.any())).thenReturn(Optional.of(

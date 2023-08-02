@@ -23,18 +23,17 @@
 package org.onap.policy.api.main.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.api.main.service.ToscaServiceTemplateService;
@@ -49,13 +48,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Class to perform unit test of {@link NodeTemplateController}.
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "default" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -92,7 +89,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
      * @throws IOException on I/O exceptions
      * @throws InterruptedException if interrupted
      */
-    @BeforeClass
+    @BeforeAll
     public static void setupParameters() throws IOException, InterruptedException {
         keystore = new SelfSignedKeyStore();
     }
@@ -101,7 +98,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
      * Clean up the database.
      *
      */
-    @After
+    @AfterEach
     public void clearDb() {
         for (String name : nodeTemplateKeys) {
             try {
@@ -124,7 +121,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
 
 
     @Test
-    public void testCreateToscaNodeTemplates() throws Exception {
+    void testCreateToscaNodeTemplates() throws Exception {
         Response rawResponse = createResource(NODE_TEMPLATES, TOSCA_NODE_TEMPLATE_RESOURCE, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         ToscaServiceTemplate response = rawResponse.readEntity(ToscaServiceTemplate.class);
@@ -147,7 +144,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
 
 
     @Test
-    public void testReadNodeTemplates() throws Exception {
+    void testReadNodeTemplates() throws Exception {
         Response rawResponse = readResource(NODE_TEMPLATES, APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
         List<?> nodeTemplates = rawResponse.readEntity(List.class);
@@ -172,7 +169,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
     }
 
     @Test
-    public void testUpdateNodeTemplates() throws Exception {
+    void testUpdateNodeTemplates() throws Exception {
         createResource(NODE_TEMPLATES, TOSCA_NODE_TEMPLATE_RESOURCE, apiPort);
         Response rawResponse = updateResource(NODE_TEMPLATES, TOSCA_UPDATE_NODE_TEMPLATES, APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -197,7 +194,7 @@ public class TestNodeTemplateController extends CommonTestRestController {
     }
 
     @Test
-    public void testDeleteNodeTemplates() throws Exception {
+    void testDeleteNodeTemplates() throws Exception {
         createResource(NODE_TEMPLATES, TOSCA_NODE_TEMPLATE_RESOURCE, apiPort);
         Response rawResponse = deleteResource(SPECIFIC_NODE_TEMPLATE, APP_JSON, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());

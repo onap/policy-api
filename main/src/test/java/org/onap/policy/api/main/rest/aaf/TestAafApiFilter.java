@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +23,14 @@
 
 package org.onap.policy.api.main.rest.aaf;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-public class TestAafApiFilter {
-    private AafApiFilter aafApiFilter = new AafApiFilter();
+class TestAafApiFilter {
+    private final AafApiFilter aafApiFilter = new AafApiFilter();
 
     @Test
-    public void testGetPermissionTypeRoot() {
-        assertEquals("org.onap.policy.policy-api", aafApiFilter.getPermissionTypeRoot());
+    void testGetPermissionTypeRoot() {
+        Assertions.assertEquals("org.onap.policy.policy-api", aafApiFilter.getPermissionTypeRoot());
     }
 }

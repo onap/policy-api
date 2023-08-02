@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  *  Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- *  Modifications Copyright (C) 2019-2020,2022-2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2019-2020, 2022-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2020-2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +24,20 @@
 package org.onap.policy.api.main.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
 import org.onap.policy.common.endpoints.report.HealthCheckReport;
@@ -56,18 +55,16 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Class to perform unit test of {@link ApiRestController}.
  *
  * @author Chenfei Gao (cgao@research.att.com)
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "default" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class TestApiRestServer extends CommonTestRestController {
+class TestApiRestServer extends CommonTestRestController {
 
     private static final String ALIVE = "alive";
     private static final String SELF = NetworkUtil.getHostname();
@@ -161,8 +158,8 @@ public class TestApiRestServer extends CommonTestRestController {
      * @throws IOException on I/O exceptions
      * @throws InterruptedException if interrupted
      */
-    @BeforeClass
-    public static void setupParameters() throws IOException, InterruptedException {
+    @BeforeAll
+    static void setupParameters() throws IOException, InterruptedException {
         keystore = new SelfSignedKeyStore();
     }
 
@@ -177,12 +174,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testSwagger() throws Exception {
+    void testSwagger() throws Exception {
         super.testSwagger(apiPort);
     }
 
     @Test
-    public void testCreatePolicyTypes() throws Exception {
+    void testCreatePolicyTypes() throws Exception {
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES, resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -204,7 +201,7 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testCreatePolicies() throws Exception {
+    void testCreatePolicies() throws Exception {
         for (String resrcName : TOSCA_POLICY_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICYTYPES_TCA_POLICIES, resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -229,7 +226,7 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testSimpleCreatePolicies() throws Exception {
+    void testSimpleCreatePolicies() throws Exception {
         for (String resrcName : TOSCA_POLICIES_RESOURCE_NAMES) {
             Response rawResponse = createResource(POLICIES, resrcName, apiPort);
             assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
@@ -255,7 +252,7 @@ public class TestApiRestServer extends CommonTestRestController {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testToscaCompliantOpDroolsPolicies() throws Exception {
+    void testToscaCompliantOpDroolsPolicies() throws Exception {
         Response rawResponse = createResource(POLICYTYPES, TOSCA_POLICYTYPE_OP_RESOURCE, apiPort);
         assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
 
@@ -306,29 +303,29 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testHealthCheckSuccessJson() throws Exception {
+    void testHealthCheckSuccessJson() throws Exception {
         testHealthCheckSuccess(APP_JSON);
     }
 
     @Test
-    public void testHealthCheckSuccessYaml() throws Exception {
+    void testHealthCheckSuccessYaml() throws Exception {
         testHealthCheckSuccess(APP_YAML);
     }
 
     private void testHealthCheckSuccess(String mediaType) throws Exception {
         final Invocation.Builder invocationBuilder = sendHttpsRequest(
-                CONTEXT_PATH, HEALTHCHECK_ENDPOINT, mediaType, apiPort);
+                HEALTHCHECK_ENDPOINT, mediaType, apiPort);
         final HealthCheckReport report = invocationBuilder.get(HealthCheckReport.class);
         validateHealthCheckReport(NAME, SELF, true, 200, ALIVE, report);
     }
 
     @Test
-    public void testReadPolicyTypesJson() throws Exception {
+    void testReadPolicyTypesJson() throws Exception {
         testReadPolicyTypes(APP_JSON);
     }
 
     @Test
-    public void testReadPolicyTypesYaml() throws Exception {
+    void testReadPolicyTypesYaml() throws Exception {
         testReadPolicyTypes(APP_YAML);
     }
 
@@ -379,12 +376,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testDeletePolicyTypeJson() throws Exception {
+    void testDeletePolicyTypeJson() throws Exception {
         testDeletePolicyType(APP_JSON);
     }
 
     @Test
-    public void testDeletePolicyTypeYaml() throws Exception {
+    void testDeletePolicyTypeYaml() throws Exception {
         testDeletePolicyType(APP_YAML);
     }
 
@@ -410,12 +407,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testReadPoliciesJson() throws Exception {
+    void testReadPoliciesJson() throws Exception {
         testReadPolicies(APP_JSON);
     }
 
     @Test
-    public void testReadPoliciesYaml() throws Exception {
+    void testReadPoliciesYaml() throws Exception {
         testReadPolicies(APP_YAML);
     }
 
@@ -443,7 +440,7 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testNamingPolicyGet() throws Exception {
+    void testNamingPolicyGet() throws Exception {
 
         Response rawResponse = readResource("policytypes/onap.policies.Naming/versions/1.0.0/"
                 + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0", APP_JSON, apiPort);
@@ -507,12 +504,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testDeletePoliciesJson() throws Exception {
+    void testDeletePoliciesJson() throws Exception {
         testDeletePolicies(APP_JSON);
     }
 
     @Test
-    public void testDeletePoliciesYaml() throws Exception {
+    void testDeletePoliciesYaml() throws Exception {
         testDeletePolicies(APP_YAML);
     }
 
@@ -524,12 +521,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testDeletePolicyVersionJson() throws Exception {
+    void testDeletePolicyVersionJson() throws Exception {
         testDeletePolicyVersion(APP_JSON);
     }
 
     @Test
-    public void testDeletePolicyVersionYaml() throws Exception {
+    void testDeletePolicyVersionYaml() throws Exception {
         testDeletePolicyVersion(APP_YAML);
     }
 
@@ -565,12 +562,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testGetAllVersionOfPolicyJson() throws Exception {
+    void testGetAllVersionOfPolicyJson() throws Exception {
         testGetAllVersionOfPolicy(APP_JSON);
     }
 
     @Test
-    public void testGetAllVersionOfPolicyYaml() throws Exception {
+    void testGetAllVersionOfPolicyYaml() throws Exception {
         testGetAllVersionOfPolicy(APP_YAML);
     }
 
@@ -591,12 +588,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testGetPoliciesJson() throws Exception {
+    void testGetPoliciesJson() throws Exception {
         getPolicies(APP_JSON);
     }
 
     @Test
-    public void testGetPoliciesYaml() throws Exception {
+    void testGetPoliciesYaml() throws Exception {
         getPolicies(APP_YAML);
     }
 
@@ -619,12 +616,12 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testGetSpecificPolicyJson() throws Exception {
+    void testGetSpecificPolicyJson() throws Exception {
         getSpecificPolicy(APP_JSON);
     }
 
     @Test
-    public void testGetSpecificPolicyYaml() throws Exception {
+    void testGetSpecificPolicyYaml() throws Exception {
         getSpecificPolicy(APP_YAML);
     }
 
@@ -647,7 +644,7 @@ public class TestApiRestServer extends CommonTestRestController {
     }
 
     @Test
-    public void testDeleteSpecificPolicy() throws Exception {
+    void testDeleteSpecificPolicy() throws Exception {
         Response rawResponse;
         for (String resrcName : TOSCA_POLICYTYPE_RESOURCE_NAMES) {
             rawResponse = createResource(POLICYTYPES, resrcName, apiPort);

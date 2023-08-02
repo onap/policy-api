@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2022 Bell Canada. All rights reserved.
- *  Modifications Copyright (C) 2022 Nordix Foundation.
+ *  Modifications Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@
 
 package org.onap.policy.api.main.service;
 
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -119,12 +118,9 @@ public class ToscaServiceTemplateService {
         // append the incoming fragment to the DB TOSCA service template
         var dbServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();
         JpaToscaServiceTemplate serviceTemplateToWrite;
-        if (dbServiceTemplateOpt.isEmpty()) {
-            serviceTemplateToWrite = incomingServiceTemplate;
-        } else {
-            serviceTemplateToWrite =
-                ToscaServiceTemplateUtils.addFragment(dbServiceTemplateOpt.get(), incomingServiceTemplate);
-        }
+        serviceTemplateToWrite = dbServiceTemplateOpt.map(
+            jpaToscaServiceTemplate -> ToscaServiceTemplateUtils.addFragment(jpaToscaServiceTemplate,
+                incomingServiceTemplate)).orElse(incomingServiceTemplate);
 
         final var result = serviceTemplateToWrite.validate("service template");
         if (!result.isValid()) {
@@ -265,12 +261,9 @@ public class ToscaServiceTemplateService {
         // append the incoming fragment to the DB TOSCA service template
         var dbServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();
         JpaToscaServiceTemplate serviceTemplateToWrite;
-        if (dbServiceTemplateOpt.isEmpty()) {
-            serviceTemplateToWrite = incomingServiceTemplate;
-        } else {
-            serviceTemplateToWrite =
-                ToscaServiceTemplateUtils.addFragment(dbServiceTemplateOpt.get(), incomingServiceTemplate);
-        }
+        serviceTemplateToWrite = dbServiceTemplateOpt.map(
+            jpaToscaServiceTemplate -> ToscaServiceTemplateUtils.addFragment(jpaToscaServiceTemplate,
+                incomingServiceTemplate)).orElse(incomingServiceTemplate);
 
         final var result = serviceTemplateToWrite.validate("Policies CRUD service template.");
         if (!result.isValid()) {
@@ -501,7 +494,7 @@ public class ToscaServiceTemplateService {
      * @return the TOSCA service template containing the node template that were deleted
      * @throws PfModelException on errors deleting node templates
      */
-    public ToscaServiceTemplate deleteToscaNodeTemplate(@NonNull final String name, @Nonnull final String version)
+    public ToscaServiceTemplate deleteToscaNodeTemplate(@NonNull final String name, @NonNull final String version)
         throws PfModelException {
         LOGGER.debug("->deleteToscaNodeTemplate: name={}, version={}", name, version);
 
