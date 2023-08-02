@@ -3,6 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +23,14 @@
 
 package org.onap.policy.api.main.exception;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ExceptionsTester;
 
-public class TestPolicyApiRuntimeException {
+class TestPolicyApiRuntimeException {
 
     @Test
-    public void test() {
-        assertEquals(2, new ExceptionsTester().test(PolicyApiRuntimeException.class));
+    void test() {
+        Assertions.assertEquals(2, new ExceptionsTester().test(PolicyApiRuntimeException.class));
     }
 }

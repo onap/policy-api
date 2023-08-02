@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
  * Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2020-2022 Nordix Foundation.
+ * Modifications Copyright (C) 2020-2023 Nordix Foundation.
  * Modifications Copyright (C) 2020-2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +25,9 @@
 
 package org.onap.policy.api.main.rest;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.api.main.rest.genapi.PolicyDesignApi;
@@ -41,8 +41,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,12 +53,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Profile("default")
 public class ApiRestController extends CommonRestController implements PolicyDesignApi {
-
-    private enum Target {
-        POLICY,
-        POLICY_TYPE,
-        OTHER
-    }
 
     private final ToscaServiceTemplateService toscaServiceTemplateService;
     private final HealthCheckProvider healthCheckProvider;
@@ -96,13 +88,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Retrieves all versions of a particular policy type.
      *
      * @param policyTypeId the ID of specified policy type
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getAllVersionsOfPolicyType(
-            String policyTypeId,
-            UUID requestId) {
+        String policyTypeId,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchPolicyTypes(policyTypeId, null);
             return makeOkResponse(requestId, serviceTemplate);
@@ -116,15 +107,14 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Retrieves specified version of a particular policy type.
      *
      * @param policyTypeId the ID of specified policy type
-     * @param versionId the version of specified policy type
-     *
+     * @param versionId    the version of specified policy type
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getSpecificVersionOfPolicyType(
-            String policyTypeId,
-            String versionId,
-            UUID requestId) {
+        String policyTypeId,
+        String versionId,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchPolicyTypes(policyTypeId, versionId);
@@ -139,13 +129,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Retrieves latest version of a particular policy type.
      *
      * @param policyTypeId the ID of specified policy type
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getLatestVersionOfPolicyType(
-            String policyTypeId,
-            UUID requestId) {
+        String policyTypeId,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.fetchLatestPolicyTypes(policyTypeId);
             return makeOkResponse(requestId, serviceTemplate);
@@ -159,13 +148,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Creates a new policy type.
      *
      * @param body the body of policy type following TOSCA definition
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicyType(
-            ToscaServiceTemplate body,
-            UUID requestId) {
+        ToscaServiceTemplate body,
+        UUID requestId) {
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
         }
@@ -182,15 +170,14 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Deletes specified version of a particular policy type.
      *
      * @param policyTypeId the ID of specified policy type
-     * @param versionId the version of specified policy type
-     *
+     * @param versionId    the version of specified policy type
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> deleteSpecificVersionOfPolicyType(
-            String policyTypeId,
-            String versionId,
-            UUID requestId) {
+        String policyTypeId,
+        String versionId,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.deletePolicyType(policyTypeId, versionId);
@@ -204,17 +191,16 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Retrieves all versions of a particular policy.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getAllPolicies(
-            String policyTypeId,
-            String policyTypeVersion,
-            PolicyFetchMode mode,
-            UUID requestId) {
+        String policyTypeId,
+        String policyTypeVersion,
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchPolicies(policyTypeId, policyTypeVersion, null, null, mode);
@@ -228,19 +214,18 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Retrieves all versions of a particular policy.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     * @param policyId the ID of specified policy
-     *
+     * @param policyId          the ID of specified policy
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getAllVersionsOfPolicy(
-            String policyId,
-            String policyTypeId,
-            String policyTypeVersion,
-            PolicyFetchMode mode,
-            UUID requestId) {
+        String policyId,
+        String policyTypeId,
+        String policyTypeVersion,
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchPolicies(policyTypeId, policyTypeVersion, policyId, null, mode);
@@ -255,21 +240,20 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Retrieves the specified version of a particular policy.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     * @param policyId the ID of specified policy
-     * @param policyVersion the version of specified policy
-     *
+     * @param policyId          the ID of specified policy
+     * @param policyVersion     the version of specified policy
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getSpecificVersionOfPolicy(
-            String policyId,
-            String policyTypeId,
-            String policyTypeVersion,
-            String policyVersion,
-            PolicyFetchMode mode,
-            UUID requestId) {
+        String policyId,
+        String policyTypeId,
+        String policyTypeVersion,
+        String policyVersion,
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService
                 .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
@@ -284,19 +268,18 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Retrieves the latest version of a particular policy.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     * @param policyId the ID of specified policy
-     *
+     * @param policyId          the ID of specified policy
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getLatestVersionOfPolicy(
-            String policyId,
-            String policyTypeId,
-            String policyTypeVersion,
-            PolicyFetchMode mode,
-            UUID requestId) {
+        String policyId,
+        String policyTypeId,
+        String policyTypeVersion,
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchLatestPolicies(policyTypeId, policyTypeVersion, policyId, mode);
@@ -311,18 +294,17 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Creates a new policy for a particular policy type and version.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     * @param body the body of policy following TOSCA definition
-     *
+     * @param body              the body of policy following TOSCA definition
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicy(
-            String policyTypeId,
-            String policyTypeVersion,
-            ToscaServiceTemplate body,
-            UUID requestId) {
+        String policyTypeId,
+        String policyTypeVersion,
+        ToscaServiceTemplate body,
+        UUID requestId) {
         if (NetLoggerUtil.getNetworkLogger().isInfoEnabled()) {
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST,
                 "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies", toJson(body));
@@ -340,11 +322,10 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Deletes the specified version of a particular policy.
      *
-     * @param policyTypeId the ID of specified policy type
+     * @param policyTypeId      the ID of specified policy type
      * @param policyTypeVersion the version of specified policy type
-     * @param policyId the ID of specified policy
-     * @param policyVersion the version of specified policy
-     *
+     * @param policyId          the ID of specified policy
+     * @param policyVersion     the version of specified policy
      * @return the Response object containing the results of the API operation
      */
     @Override
@@ -372,8 +353,8 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getPolicies(
-            PolicyFetchMode mode,
-            UUID requestId) {
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchPolicies(null, null, null, null, mode);
@@ -391,17 +372,16 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Retrieves the specified version of a particular policy.
      *
-     * @param policyId the Name of specified policy
+     * @param policyId      the Name of specified policy
      * @param policyVersion the version of specified policy
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
     public ResponseEntity<ToscaServiceTemplate> getSpecificPolicy(
-            String policyId,
-            String policyVersion,
-            PolicyFetchMode mode,
-            UUID requestId) {
+        String policyId,
+        String policyVersion,
+        PolicyFetchMode mode,
+        UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode);
@@ -416,7 +396,6 @@ public class ApiRestController extends CommonRestController implements PolicyDes
      * Creates one or more new policies in one call.
      *
      * @param body the body of policy following TOSCA definition
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override
@@ -438,9 +417,8 @@ public class ApiRestController extends CommonRestController implements PolicyDes
     /**
      * Deletes the specified version of a particular policy.
      *
-     * @param policyId the ID of specified policy
+     * @param policyId      the ID of specified policy
      * @param policyVersion the version of specified policy
-     *
      * @return the Response object containing the results of the API operation
      */
     @Override

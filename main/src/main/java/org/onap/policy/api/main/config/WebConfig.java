@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ * Copyright (C) 2022 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +21,6 @@
 
 package org.onap.policy.api.main.config;
 
-import java.util.Arrays;
 import java.util.List;
 import org.onap.policy.api.main.config.converter.StringToEnumConverter;
 import org.onap.policy.common.spring.utils.YamlHttpMessageConverter;
@@ -43,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         var yamlConverter = new YamlHttpMessageConverter();
-        yamlConverter.setSupportedMediaTypes(Arrays.asList(MediaType.parseMediaType("application/yaml")));
+        yamlConverter.setSupportedMediaTypes(List.of(MediaType.parseMediaType("application/yaml")));
         converters.add(yamlConverter);
     }
 }

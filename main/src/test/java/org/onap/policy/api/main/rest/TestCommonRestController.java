@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023 Nordix Foundation.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,31 +24,29 @@
 
 package org.onap.policy.api.main.rest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
 /**
  * Class to perform unit testing of CommonRestController.
  */
-public class TestCommonRestController {
-    private CommonRestController crc = new CommonRestController();
+class TestCommonRestController {
+    private final CommonRestController crc = new CommonRestController();
 
     @Test
-    public void testAddLoggingHeaders() {
+    void testAddLoggingHeaders() {
         UUID requestId = UUID.randomUUID();
         ResponseEntity<Void> rb = crc.makeOkResponse(requestId, null);
-        assertEquals(requestId.toString(), rb.getHeaders().getFirst("X-ONAP-RequestID"));
+        Assertions.assertEquals(requestId.toString(), rb.getHeaders().getFirst("X-ONAP-RequestID"));
     }
 
     /*
      * Tests null response for null object
      */
     @Test
-    public void testToJsonNull() {
-        assertNull(crc.toJson(null));
+    void testToJsonNull() {
+        Assertions.assertNull(crc.toJson(null));
     }
 }
