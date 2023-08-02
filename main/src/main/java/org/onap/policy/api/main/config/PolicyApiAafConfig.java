@@ -20,7 +20,7 @@
 
 package org.onap.policy.api.main.config;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import org.onap.policy.api.main.rest.aaf.AafApiFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

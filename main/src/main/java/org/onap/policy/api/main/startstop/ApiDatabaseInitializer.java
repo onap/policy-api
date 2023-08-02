@@ -25,13 +25,13 @@
 package org.onap.policy.api.main.startstop;
 
 import com.google.common.collect.Sets;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.config.PolicyPreloadConfig;
 import org.onap.policy.api.main.exception.PolicyApiException;

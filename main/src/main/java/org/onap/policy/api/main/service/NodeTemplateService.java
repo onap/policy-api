@@ -20,8 +20,8 @@
 
 package org.onap.policy.api.main.service;
 
+import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.repository.NodeTemplateRepository;

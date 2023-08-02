@@ -21,6 +21,7 @@
 
 package org.onap.policy.api.main.exception;
 
+import java.io.Serial;
 import java.util.UUID;
 import lombok.Getter;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
@@ -28,13 +29,13 @@ import org.onap.policy.models.errors.concepts.ErrorResponse;
 /**
  * This runtime exception will be called if a runtime error occurs when using policy api.
  */
+@Getter
 public class PolicyApiRuntimeException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -8507246953751956974L;
 
-    @Getter
     private final UUID requestId;
-    @Getter
     private final ErrorResponse errorResponse;
 
     /**

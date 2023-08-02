@@ -21,8 +21,8 @@
 
 package org.onap.policy.api.main.rest.stub;
 
+import jakarta.validation.Valid;
 import java.util.UUID;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.CommonRestController;
 import org.onap.policy.api.main.rest.PolicyFetchMode;

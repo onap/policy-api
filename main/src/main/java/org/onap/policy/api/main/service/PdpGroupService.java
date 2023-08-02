@@ -20,9 +20,9 @@
 
 package org.onap.policy.api.main.service;
 
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.repository.PdpGroupRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;

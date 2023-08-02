@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Policy Framework Lifecycle API
-  description: The Policy Fraemwork API allows the lifecycle of policy types and policyes to be managed
+  description: The Policy Framework API allows the lifecycle of policy types and policies to be managed
   contact:
     name: ONAP Support
     url: https://lists.onap.org/g/onap-discuss

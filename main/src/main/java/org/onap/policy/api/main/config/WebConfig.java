@@ -43,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         var yamlConverter = new YamlHttpMessageConverter();
-        yamlConverter.setSupportedMediaTypes(Arrays.asList(MediaType.parseMediaType("application/yaml")));
+        yamlConverter.setSupportedMediaTypes(List.of(MediaType.parseMediaType("application/yaml")));
         converters.add(yamlConverter);
     }
 }

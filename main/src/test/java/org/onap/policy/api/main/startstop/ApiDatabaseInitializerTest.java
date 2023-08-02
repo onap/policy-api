@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,7 @@ package org.onap.policy.api.main.startstop;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.api.main.config.PolicyPreloadConfig;
@@ -37,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = PolicyApiApplication.class)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class ApiDatabaseInitializerTest {
+class ApiDatabaseInitializerTest {
 
     @Autowired
     private PolicyPreloadConfig params;
@@ -46,7 +47,7 @@ public class ApiDatabaseInitializerTest {
     private ApiDatabaseInitializer adi;
 
     @Test
-    public void testInitializeApiDatabase() {
+    void testInitializeApiDatabase() {
         assertThatCode(() -> adi.initializeApiDatabase(params.getPolicyTypes(),
                 params.getPolicies())).doesNotThrowAnyException();
 

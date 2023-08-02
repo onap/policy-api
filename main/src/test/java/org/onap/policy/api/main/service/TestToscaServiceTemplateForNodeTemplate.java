@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2022 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -43,19 +43,18 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServiceTemplateService {
+class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServiceTemplateService {
 
     private static final String NODE_TEMPLATES_JSON = "nodetemplates/nodetemplates.metadatasets.input.tosca.json";
     private static final String UPDATED_NODE_TEMPLATE_JSON = "nodetemplates/nodetemplates.metadatasets.update.json";
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static ToscaServiceTemplate updatedToscaServiceTemplate;
-    private StandardCoder standardCoder;
 
     @InjectMocks
     private ToscaServiceTemplateService toscaServiceTemplateService;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUp();
     }
@@ -65,9 +64,9 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
      *
      * @throws CoderException when error parsing the json
      */
-    @Before
-    public void fetchToscaNodeTemplateJson() throws CoderException {
-        standardCoder = new StandardCoder();
+    @BeforeEach
+    void fetchToscaNodeTemplateJson() throws CoderException {
+        StandardCoder standardCoder = new StandardCoder();
         toscaServiceTemplate =
             standardCoder.decode(ResourceUtils.getResourceAsString(NODE_TEMPLATES_JSON), ToscaServiceTemplate.class);
         updatedToscaServiceTemplate =
@@ -76,7 +75,7 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
     }
 
     @Test
-    public void testToscaNodeTemplatesGet() throws Exception {
+    void testToscaNodeTemplatesGet() throws Exception {
 
         assertNotNull(toscaServiceTemplate);
         var createdTemplate = toscaServiceTemplateService.createToscaNodeTemplates(toscaServiceTemplate);
@@ -99,7 +98,7 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
     }
 
     @Test
-    public void testToscaNodeTemplatesCreate() throws Exception {
+    void testToscaNodeTemplatesCreate() throws Exception {
 
         assertThatThrownBy(() -> {
             toscaServiceTemplateService.createToscaNodeTemplates(null);
@@ -113,7 +112,7 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
     }
 
     @Test
-    public void testToscaNodeTemplateUpdate() throws Exception {
+    void testToscaNodeTemplateUpdate() throws Exception {
 
         assertThatThrownBy(() -> {
             toscaServiceTemplateService.updateToscaNodeTemplates(null);
@@ -131,7 +130,7 @@ public class TestToscaServiceTemplateForNodeTemplate extends TestCommonToscaServ
     }
 
     @Test
-    public void testToscaNodeTemplateDelete() throws Exception {
+    void testToscaNodeTemplateDelete() throws Exception {
 
         assertThatThrownBy(() -> {
             toscaServiceTemplateService.deleteToscaNodeTemplate(null, null);

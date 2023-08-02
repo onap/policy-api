@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -47,7 +47,7 @@ public class TestCommonRestController {
     /*
      * Tests null response for null object
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void testToJsonNull() {
         assertNull(crc.toJson(null));
     }

@@ -24,7 +24,7 @@ package org.onap.policy.api.main.exception;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ExceptionsTester;
 
 public class TestPolicyApiRuntimeException {

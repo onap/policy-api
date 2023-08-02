@@ -20,7 +20,7 @@
 
 package org.onap.policy.api.main.exception;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;

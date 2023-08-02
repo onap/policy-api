@@ -23,10 +23,11 @@ package org.onap.policy.api.contract;
 
 import static org.junit.Assert.assertEquals;
 
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
-import javax.ws.rs.core.Response;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.api.main.PolicyApiApplication;
 import org.onap.policy.api.main.rest.utils.CommonTestRestController;
@@ -44,7 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "stub" })
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class ApiContractTest extends CommonTestRestController {
+class ApiContractTest extends CommonTestRestController {
     protected static final String APP_JSON = "application/json";
     protected static final String APP_YAML = "application/yaml";
     private static final String TOSCA_NODE_TEMPLATE_RESOURCE =
@@ -56,7 +57,7 @@ public class ApiContractTest extends CommonTestRestController {
     private static SelfSignedKeyStore keystore;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setupParameters() throws IOException, InterruptedException {
         keystore = new SelfSignedKeyStore();
     }
@@ -72,13 +73,13 @@ public class ApiContractTest extends CommonTestRestController {
     }
 
     @Test
-    public void testStubPolicyDesign() throws Exception {
+    void testStubPolicyDesign() throws Exception {
         checkStubJsonGet("policies");
         checkStubJsonGet("policies/policyname/versions/1.0.2");
         checkStubJsonGet("policytypes");
         checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16");
         checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/latest");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/");
+        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
         checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies");
         checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
             + "9c65fa1f-2833-4076-a64d-5b62e35cd09b");
@@ -99,7 +100,7 @@ public class ApiContractTest extends CommonTestRestController {
     }
 
     @Test
-    public void testStubNodeTemplateDesign() throws Exception {
+    void testStubNodeTemplateDesign() throws Exception {
         checkStubJsonGet("nodetemplates");
         checkStubJsonGet("nodetemplates/k8stemplate/versions/1.0.0");
 
@@ -111,7 +112,7 @@ public class ApiContractTest extends CommonTestRestController {
     }
 
     @Test
-    public void testErrors() throws Exception {
+    void testErrors() throws Exception {
         var responseYaml = super.readResource("policies", APP_YAML, apiPort);
         assertEquals(Response.Status.NOT_IMPLEMENTED.getStatusCode(), responseYaml.getStatus());
 

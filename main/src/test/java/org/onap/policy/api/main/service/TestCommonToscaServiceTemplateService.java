@@ -1,6 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
- *   Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2023 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,9 +22,11 @@
 package org.onap.policy.api.main.service;
 
 import java.util.Optional;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.onap.policy.api.main.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -50,8 +53,10 @@ public class TestCommonToscaServiceTemplateService {
     @Mock
     protected NodeTemplateService nodeTemplateService;
 
+    AutoCloseable autoCloseable;
+
     /**
-     * Setup the DB TOSCA service template object post create, and delete request.
+     * Set up the DB TOSCA service template object post create, and delete request.
      * @param dbSvcTemplate ToscaServiceTemplate object to update
      * @param svcTemplateFragment the CRUD operation response ToscaServiceTemplate object
      * @param operation the CRUD operation performed
@@ -60,7 +65,7 @@ public class TestCommonToscaServiceTemplateService {
         TestToscaServiceTemplateServiceForPolicyCrud.Operation operation) {
         if (operation != null) {
             switch (operation) {
-                case CREATE_POLICY_TYPE:
+                case CREATE_POLICY_TYPE -> {
                     dbSvcTemplate.getPolicyTypes().putAll(svcTemplateFragment.getPolicyTypes());
                     if (svcTemplateFragment.getDataTypes() != null) {
                         if (dbSvcTemplate.getDataTypes() == null) {
@@ -69,18 +74,14 @@ public class TestCommonToscaServiceTemplateService {
                             dbSvcTemplate.getDataTypes().putAll(svcTemplateFragment.getDataTypes());
                         }
                     }
-                    break;
-                case DELETE_POLICY_TYPE:
+                }
+                case DELETE_POLICY_TYPE ->
                     dbSvcTemplate.getPolicyTypes().keySet().removeAll(svcTemplateFragment.getPolicyTypes().keySet());
-                    break;
-                case CREATE_POLICY:
+                case CREATE_POLICY ->
                     dbSvcTemplate.setToscaTopologyTemplate(svcTemplateFragment.getToscaTopologyTemplate());
-                    break;
-                case DELETE_POLICY:
-                    dbSvcTemplate.getToscaTopologyTemplate().setPolicies(null);
-                    break;
-                default:
-                    break;
+                case DELETE_POLICY -> dbSvcTemplate.getToscaTopologyTemplate().setPolicies(null);
+                default -> {
+                }
             }
         }
         Mockito.when(toscaServiceTemplateRepository.findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
@@ -91,9 +92,15 @@ public class TestCommonToscaServiceTemplateService {
     /**
      * Setup to return empty DB service template.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
+        autoCloseable = MockitoAnnotations.openMocks(this);
         Mockito.when(toscaServiceTemplateRepository.findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
             JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(Optional.of(new JpaToscaServiceTemplate()));
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        autoCloseable.close();
     }
 }

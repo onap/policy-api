@@ -1,6 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
- *   Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2023 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,17 +23,20 @@ package org.onap.policy.api.main.service;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.api.main.repository.PolicyTypeRepository;
 import org.onap.policy.models.base.PfConceptKey;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestPolicyTypeService {
+class TestPolicyTypeService {
 
     @Mock
     private PolicyTypeRepository policyTypeRepository;
@@ -40,8 +44,20 @@ public class TestPolicyTypeService {
     @InjectMocks
     private PolicyTypeService policyTypeService;
 
+    AutoCloseable closeable;
+
+    @BeforeEach
+    public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
     @Test
-    public void testDeletePolicy() {
+    void testDeletePolicy() {
         PfConceptKey id = new PfConceptKey("dummy", "1.0.0");
         Mockito.doNothing().when(policyTypeRepository).deleteById(id);
         assertThatCode(() -> policyTypeService.deletePolicyType(id)).doesNotThrowAnyException();

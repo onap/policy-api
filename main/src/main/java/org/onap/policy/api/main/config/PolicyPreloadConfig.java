@@ -26,15 +26,14 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 @ConfigurationProperties("policy-preload")
 public class PolicyPreloadConfig {
 
-    @Getter
     @Setter
     List<String> policyTypes;
 
-    @Getter
     @Setter
     List<String> policies;
 }

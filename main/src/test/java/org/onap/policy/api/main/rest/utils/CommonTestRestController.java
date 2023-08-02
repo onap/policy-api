@@ -24,15 +24,15 @@ package org.onap.policy.api.main.rest.utils;
 
 import static org.junit.Assert.assertTrue;
 
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Response;
 import java.security.SecureRandom;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.onap.policy.common.endpoints.http.server.YamlMessageBodyHandler;
@@ -60,7 +60,7 @@ public class CommonTestRestController {
     protected static final String CONTEXT_PATH = "/policy/api/v1/";
 
     protected void testSwagger(final int apiPort) throws Exception {
-        final Invocation.Builder invocationBuilder = sendHttpsRequest(CONTEXT_PATH, "v3/api-docs", APP_JSON, apiPort);
+        final Invocation.Builder invocationBuilder = sendHttpsRequest("v3/api-docs", APP_JSON, apiPort);
         final String resp = invocationBuilder.get(String.class);
         assertTrue((resp).contains("{\"openapi\":\"3.0.1\",\"info\":{\"title\":\"Policy Framework Lifecycle API\""));
     }
@@ -73,7 +73,7 @@ public class CommonTestRestController {
         mediaType = mediaType == null ?  APP_JSON : mediaType;
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
         return invocationBuilder.post(entity);
     }
@@ -81,14 +81,14 @@ public class CommonTestRestController {
     protected Response readResource(String endpoint, String mediaType, int apiPort) throws Exception {
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
         return invocationBuilder.get();
     }
 
     protected Response deleteResource(String endpoint, String mediaType, int apiPort) throws Exception {
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
         return invocationBuilder.delete();
     }
 
@@ -98,7 +98,7 @@ public class CommonTestRestController {
         ToscaServiceTemplate rawServiceTemplate = getRawServiceTemplate(resourceName);
 
         final Invocation.Builder invocationBuilder;
-        invocationBuilder = sendHttpsRequest(CONTEXT_PATH, endpoint, mediaType, apiPort);
+        invocationBuilder = sendHttpsRequest(endpoint, mediaType, apiPort);
         Entity<ToscaServiceTemplate> entity = Entity.entity(rawServiceTemplate, mediaType);
         return invocationBuilder.put(entity);
     }
@@ -112,7 +112,7 @@ public class CommonTestRestController {
     }
 
     protected Invocation.Builder sendHttpsRequest(
-            final String context, final String endpoint, String mediaType, int apiPort) throws Exception {
+            final String endpoint, String mediaType, int apiPort) throws Exception {
 
         final TrustManager[] noopTrustManager = NetworkUtil.getAlwaysTrustingManager();
 
@@ -131,7 +131,7 @@ public class CommonTestRestController {
             client.register(YamlMessageBodyHandler.class);
         }
 
-        final WebTarget webTarget = client.target(HTTPS_PREFIX + apiPort + context + endpoint);
+        final WebTarget webTarget = client.target(HTTPS_PREFIX + apiPort + CONTEXT_PATH + endpoint);
 
         final Invocation.Builder invocationBuilder = webTarget.request(mediaType);
 
