@@ -21,11 +21,10 @@
 package org.onap.policy.api.main.rest.stub;
 
 import com.google.gson.Gson;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ class StubUtils {
             final var resource = new ClassPathResource(TOSCA_NODE_TEMPLATE_RESOURCE);
             try (var inputStream = resource.getInputStream()) {
                 final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                var targetObject = Arrays.asList(JSON_TRANSLATOR.fromJson(string, clazz));
+                var targetObject = List.of(JSON_TRANSLATOR.fromJson(string, clazz));
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);

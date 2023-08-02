@@ -1,6 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
- *   Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Copyright (C) 2022 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2023 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,11 +27,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.onap.policy.api.main.repository.PdpGroupRepository;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -40,7 +43,7 @@ import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.onap.policy.models.pdp.persistence.concepts.JpaPdpGroup;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestPdpGroupService {
+class TestPdpGroupService {
 
     @Mock
     private PdpGroupRepository pdpGroupRepository;
@@ -48,12 +51,16 @@ public class TestPdpGroupService {
     @InjectMocks
     private PdpGroupService pdpGroupService;
 
+    AutoCloseable closeable;
+
     /**
      * Test setup.
+     *
      * @throws CoderException decode errors
      */
-    @Before
+    @BeforeEach
     public void setUp() throws CoderException {
+        closeable = MockitoAnnotations.openMocks(this);
         var pdpGroups = new StandardCoder().decode(ResourceUtils.getResourceAsString("pdpgroups/PdpGroups.json"),
             PdpGroups.class).getGroups();
         List<JpaPdpGroup> jpaPdpGroupList = new ArrayList<>();
@@ -62,8 +69,13 @@ public class TestPdpGroupService {
         when(pdpGroupRepository.findAll()).thenReturn(jpaPdpGroupList);
     }
 
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
     @Test
-    public void testAssertPolicyTypeNotSupportedInPdpGroup() {
+    void testAssertPolicyTypeNotSupportedInPdpGroup() {
         assertThatCode(() -> pdpGroupService.assertPolicyTypeNotSupportedInPdpGroup("policy_type_not_supported",
             "1.0.0")).doesNotThrowAnyException();
 
@@ -73,7 +85,7 @@ public class TestPdpGroupService {
     }
 
     @Test
-    public void testAssertPolicyNotDeployedInPdpGroup() {
+    void testAssertPolicyNotDeployedInPdpGroup() {
         assertThatCode(() -> pdpGroupService.assertPolicyNotDeployedInPdpGroup("policy_not_deployed", "1.0.0"))
             .doesNotThrowAnyException();
 

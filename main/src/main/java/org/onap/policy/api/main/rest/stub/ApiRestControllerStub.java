@@ -21,8 +21,8 @@
 
 package org.onap.policy.api.main.rest.stub;
 
+import jakarta.validation.Valid;
 import java.util.UUID;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.CommonRestController;
 import org.onap.policy.api.main.rest.PolicyFetchMode;
@@ -42,7 +42,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicies(
-            @Valid ToscaServiceTemplate body, UUID requestID) {
+        @Valid ToscaServiceTemplate body, UUID requestID) {
         return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
     }
 
@@ -57,15 +57,15 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicyType(
-            @Valid ToscaServiceTemplate body, UUID requestID) {
+        @Valid ToscaServiceTemplate body, UUID requestID) {
         return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> deleteSpecificPolicy(
-            String policyId,
-            String policyVersion,
-            UUID requestID) {
+        String policyId,
+        String policyVersion,
+        UUID requestID) {
         return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
     }
 

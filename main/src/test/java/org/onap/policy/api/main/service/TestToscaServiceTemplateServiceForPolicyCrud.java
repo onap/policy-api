@@ -3,8 +3,8 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021 Nordix Foundation.
- * Modifications Copyright (C) 2020,2022 Bell Canada.
+ * Modifications Copyright (C) 2019-2021, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2020, 2022 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import javax.ws.rs.core.Response;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,7 +44,6 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -55,10 +54,10 @@ import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
  * @author Chenfei Gao (cgao@research.att.com)
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServiceTemplateService {
+class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServiceTemplateService {
 
-    private static StandardCoder standardCoder = new StandardCoder();
-    private static StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
+    private static final StandardCoder standardCoder = new StandardCoder();
+    private static final StandardYamlCoder standardYamlCoder = new StandardYamlCoder();
 
     private static final String POLICY_RESOURCE = "policies/vCPE.policy.monitoring.input.tosca.json";
     private static final String POLICY_TYPE_RESOURCE = "policytypes/onap.policies.monitoring.tcagen2.yaml";
@@ -83,48 +82,43 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     @InjectMocks
     private ToscaServiceTemplateService toscaServiceTemplateService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUp();
     }
 
     @Test
-    public void testFetchPolicies() {
+    void testFetchPolicies() {
         Mockito.when(toscaServiceTemplateRepository.findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
             JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", null, null, null);
-        }).hasMessage("service template not found in database");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", null, null, null))
+            .hasMessage("service template not found in database");
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", "dummy", null, null);
-        }).hasMessage("service template not found in database");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", "dummy", null, null))
+            .hasMessage("service template not found in database");
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0", null);
-        }).hasMessage("service template not found in database");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies("dummy", "1.0.0", "dummy", "1.0.0", null))
+            .hasMessage("service template not found in database");
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchPolicies(null, null, "dummy", "1.0.0", null);
-        }).hasMessage("service template not found in database");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies(null, null, "dummy", "1.0.0", null))
+            .hasMessage("service template not found in database");
     }
 
     @Test
-    public void testFetchLatestPolicies() {
+    void testFetchLatestPolicies() {
         Mockito.when(toscaServiceTemplateRepository.findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
             JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.fetchLatestPolicies("dummy", "dummy", "dummy", null);
-        }).hasMessage("service template not found in database");
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchLatestPolicies("dummy", "dummy", "dummy", null))
+            .hasMessage("service template not found in database");
     }
 
     @Test
-    public void testCreatePolicy() throws Exception {
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.createPolicy("dummy", "1.0.0", new ToscaServiceTemplate());
-        }).hasMessage("topology template not specified on service template");
+    void testCreatePolicy() throws Exception {
+        assertThatThrownBy(() -> toscaServiceTemplateService
+            .createPolicy("dummy", "1.0.0", new ToscaServiceTemplate()))
+            .hasMessage("topology template not specified on service template");
 
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
@@ -179,7 +173,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testCreateOperationalDroolsPolicy() throws CoderException {
+    void testCreateOperationalDroolsPolicy() throws CoderException {
         var policyTypeServiceTemplate = standardYamlCoder.decode(
             ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE_OPERATIONAL_COMMON), ToscaServiceTemplate.class);
 
@@ -199,7 +193,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testSimpleCreatePolicy() throws Exception {
+    void testSimpleCreatePolicy() throws Exception {
 
         assertThatThrownBy(() -> {
             String multiPoliciesString = ResourceUtils.getResourceAsString(MULTIPLE_POLICIES_RESOURCE);
@@ -291,11 +285,10 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testDeletePolicy() throws CoderException, PfModelException {
+    void testDeletePolicy() throws CoderException {
 
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicy("dummy", "1.0.0", "dummy", "1.0.0");
-        }).hasMessage("no policies found");
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy("dummy", "1.0.0", "dummy", "1.0.0"))
+            .hasMessage("no policies found");
 
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
@@ -312,10 +305,10 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
         var exceptionMessage = "policy is in use, it is deployed in PDP group dummy subgroup dummy";
         Mockito.doThrow(new PfModelRuntimeException(Response.Status.NOT_ACCEPTABLE, exceptionMessage))
             .when(pdpGroupService).assertPolicyNotDeployedInPdpGroup("onap.restart.tca", "1.0.0");
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
-                "onap.restart.tca", "1.0.0");
-        }).hasMessage(exceptionMessage);
+        assertThatThrownBy(() -> toscaServiceTemplateService
+            .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0"))
+            .hasMessage(exceptionMessage);
+
         Mockito.doNothing().when(pdpGroupService).assertPolicyNotDeployedInPdpGroup("onap.restart.tca", "1.0.0");
 
         var deletePolicyResponseFragment = toscaServiceTemplateService
@@ -323,14 +316,13 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
         assertFalse(deletePolicyResponseFragment.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
         mockDbServiceTemplate(serviceTemplate, deletePolicyResponseFragment, Operation.DELETE_POLICY);
-        assertThatThrownBy(() -> {
-            toscaServiceTemplateService.deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
-                "onap.restart.tca", "1.0.0");
-        }).hasMessageContaining("no policies found");
+        assertThatThrownBy(() -> toscaServiceTemplateService
+            .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0"))
+            .hasMessageContaining("no policies found");
     }
 
     @Test
-    public void testFetchAllPolicies() throws Exception {
+    void testFetchAllPolicies() throws Exception {
         // Create Policy Type
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
@@ -353,7 +345,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testFetchSpecificPolicy_availablePolicy() throws Exception {
+    void testFetchSpecificPolicy_availablePolicy() throws Exception {
         // Create Policy Type
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
@@ -375,7 +367,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testFetchSpecificPolicy_unavailablePolicy() throws Exception {
+    void testFetchSpecificPolicy_unavailablePolicy() throws Exception {
         // Create Policy Type
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
@@ -397,7 +389,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testDeleteSpecificPolicy_availablePolicy() throws Exception {
+    void testDeleteSpecificPolicy_availablePolicy() throws Exception {
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
@@ -415,7 +407,7 @@ public class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonTosc
     }
 
     @Test
-    public void testDeleteSpecificPolicy_unavailablePolicy() throws Exception {
+    void testDeleteSpecificPolicy_unavailablePolicy() throws Exception {
         var policyTypeServiceTemplate = standardYamlCoder
             .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
         var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
