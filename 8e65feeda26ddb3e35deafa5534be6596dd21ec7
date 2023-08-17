@@ -16,6 +16,23 @@
       "message": "We need to get the Jenkins verify and merge jobs working on this branch.",
       "revId": "8e65feeda26ddb3e35deafa5534be6596dd21ec7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "beeaf289_e9531fb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-08-17T08:24:12Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "8e65feeda26ddb3e35deafa5534be6596dd21ec7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
