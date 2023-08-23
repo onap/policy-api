@@ -30,7 +30,7 @@
     <parent>
         <groupId>org.onap.policy.api</groupId>
         <artifactId>policy-api</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>api-main</artifactId>
     <name>${project.artifactId}</name>
