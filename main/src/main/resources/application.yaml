@@ -27,7 +27,6 @@ server:
 
 policy-api:
   name: ApiGroup
-  aaf: false
 
 policy-preload:
   policyTypes:
