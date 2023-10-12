@@ -1,0 +1,10 @@
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Thu, 12 Oct 2023 08:31:24 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/api/+/136145
+Project: policy/api
+Branch: refs/heads/master
