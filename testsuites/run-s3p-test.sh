@@ -35,10 +35,10 @@ then
 
   if [ $2 == "performance" ]
   then
-    bash start-s3p-tests.sh run $API_PERF_TEST_FILE;
+    bash start-s3p-tests.sh run $API_PERF_TEST_FILE api;
   elif [ $2 == "stability" ]
   then
-    bash start-s3p-tests.sh run $API_STAB_TEST_FILE;
+    bash start-s3p-tests.sh run $API_STAB_TEST_FILE api;
   else
     echo "echo Invalid arguments provided. Usage: $0 [option..] {performance | stability}"
   fi
