@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.2">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy API Performance" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -26,7 +26,7 @@
       <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
         <collectionProp name="AuthManager.auth_list">
           <elementProp name="" elementType="Authorization">
-            <stringProp name="Authorization.url">https://${API_HOST}:${API_PORT}/</stringProp>
+            <stringProp name="Authorization.url">http://${API_HOST}:${API_PORT}/</stringProp>
             <stringProp name="Authorization.username">policyadmin</stringProp>
             <stringProp name="Authorization.password">zb!XztG34</stringProp>
             <stringProp name="Authorization.domain"></stringProp>
@@ -70,7 +70,7 @@
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/healthcheck</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -114,60 +114,13 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </JSR223Assertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Statistics" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
-          <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/policy/api/v1/statistics</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">1</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
-            <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import groovy.json.JsonSlurper;
-
-def res = [];
-if (prev.getResponseCode() == &apos;200&apos;) {
-    def jsonSlurper = new JsonSlurper();
-    res = jsonSlurper.parseText(prev.getResponseDataAsString());
-
-    assert res instanceof Map;
-    assert res.code == 200;
-}</stringProp>
-          </JSR223Assertion>
-          <hashTree/>
-        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Preloaded Policy Types" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -204,7 +157,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
 
     assert res instanceof Map;
     assert res.policy_types instanceof Map;
-    assert res.policy_types.size() == 38;
+    assert res.policy_types.size() == 37;
     assert res.node_types instanceof Map;
     assert res.data_types instanceof Map;
 }</stringProp>
@@ -450,7 +403,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -718,7 +671,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -826,7 +779,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -903,7 +856,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -1223,7 +1176,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -1432,7 +1385,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -1515,7 +1468,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -1565,7 +1518,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1618,7 +1571,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1671,7 +1624,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1722,7 +1675,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.optimization.resource.AffinityPolicy/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1773,7 +1726,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.controlloop.guard.common.Blacklist/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1824,7 +1777,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Apex/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1875,7 +1828,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.drools.Controller/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1926,7 +1879,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Xacml/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -1977,7 +1930,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/latest</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -4299,7 +4252,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/nodetemplates</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4406,7 +4359,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4512,7 +4465,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4597,7 +4550,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.optimization.resource.AffinityPolicy/versions/2.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4678,7 +4631,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.controlloop.guard.common.Blacklist/versions/1.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4916,7 +4869,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -4999,7 +4952,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -5105,7 +5058,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/2.0.0/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -5323,7 +5276,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policies</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -5372,7 +5325,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/nodetemplates/apex.metadata.pnf/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5421,7 +5374,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5474,7 +5427,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5527,7 +5480,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies/onap.restart.tca/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5578,7 +5531,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.optimization.resource.AffinityPolicy/versions/6.0.${__threadNum}/policies/OSDF_CASABLANCA.Affinity_Default/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5629,7 +5582,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.controlloop.guard.common.Blacklist/versions/6.0.${__threadNum}/policies/guard.blacklist.scaleout/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5680,7 +5633,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Apex/versions/6.0.${__threadNum}/policies/operational.apex.vCPE/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5731,7 +5684,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.drools.Artifact/versions/6.0.${__threadNum}/policies/usecases.artifacts/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5782,7 +5735,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Xacml/versions/6.0.${__threadNum}/policies/onap.policies.native.xacml.NativeXacmlPolicy/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5833,7 +5786,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies/onap.restart.tca/versions/latest</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -5884,7 +5837,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies/onap.restart.tca/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -5934,7 +5887,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}/policies/onap.restart.tca/versions/7.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -5984,7 +5937,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.optimization.resource.AffinityPolicy/versions/6.0.${__threadNum}/policies/OSDF_CASABLANCA.Affinity_Default/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6034,7 +5987,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.controlloop.guard.common.Blacklist/versions/6.0.${__threadNum}/policies/guard.blacklist.scaleout/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6084,7 +6037,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Apex/versions/6.0.${__threadNum}/policies/operational.apex.vCPE/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6134,7 +6087,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policies/onap.policies.apex.pnf.Example/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6184,7 +6137,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.drools.Artifact/versions/6.0.${__threadNum}/policies/usecases.artifacts/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6234,7 +6187,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Xacml/versions/6.0.${__threadNum}/policies/onap.policies.native.xacml.NativeXacmlPolicy/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6284,7 +6237,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6334,7 +6287,7 @@ if (prev.getResponseCode() == &apos;409&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app/versions/7.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6384,7 +6337,7 @@ if (prev.getResponseCode() == &apos;409&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.optimization.resource.AffinityPolicy/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6434,7 +6387,7 @@ if (prev.getResponseCode() == &apos;409&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.controlloop.guard.common.Blacklist/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6482,7 +6435,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Apex/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6530,7 +6483,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.drools.Controller/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6578,7 +6531,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.drools.Artifact/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6626,7 +6579,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes/onap.policies.native.Xacml/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6674,7 +6627,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/nodetemplates/apex.metadata.pnf/versions/6.0.${__threadNum}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -6723,9 +6676,9 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/metrics</stringProp>
+          <stringProp name="HTTPSampler.path">/policy/api/v1/metrics</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -6816,7 +6769,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/healthcheck</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -6866,7 +6819,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
           </elementProp>
           <stringProp name="HTTPSampler.domain">${API_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${API_PORT}</stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/policy/api/v1/policytypes</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
