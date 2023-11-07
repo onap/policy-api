@@ -26,6 +26,7 @@ package org.onap.policy.api.main.rest;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -41,6 +42,8 @@ import org.springframework.web.context.request.WebRequest;
  * Super class from which REST controllers are derived.
  */
 public class CommonRestController {
+
+    protected static Semaphore mutex = new Semaphore(1);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonRestController.class);
 
