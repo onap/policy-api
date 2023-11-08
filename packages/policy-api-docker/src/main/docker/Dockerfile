@@ -26,7 +26,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/policy-api.tar.gz /packages/
 RUN tar xvzf /packages/policy-api.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:3.0.2-SNAPSHOT
+FROM onap/policy-jre-alpine:3.0.1
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy API"
