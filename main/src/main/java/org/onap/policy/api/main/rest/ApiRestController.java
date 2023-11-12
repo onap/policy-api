@@ -158,11 +158,17 @@ public class ApiRestController extends CommonRestController implements PolicyDes
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policytypes", toJson(body));
         }
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.createPolicyType(body);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelRuntimeException pfme) {
             final var msg = "POST /policytypes";
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 
@@ -179,12 +185,18 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String versionId,
         UUID requestId) {
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.deletePolicyType(policyTypeId, versionId);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelRuntimeException pfme) {
             var msg = String.format("DELETE /policytypes/%s/versions/%s", policyTypeId, versionId);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 
@@ -310,12 +322,18 @@ public class ApiRestController extends CommonRestController implements PolicyDes
                 "/policytypes/" + policyTypeId + "/versions/" + policyTypeVersion + "/policies", toJson(body));
         }
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.createPolicy(policyTypeId, policyTypeVersion, body);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelRuntimeException pfme) {
             var msg = String.format("POST /policytypes/%s/versions/%s/policies", policyTypeId, policyTypeVersion);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 
@@ -336,6 +354,7 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyVersion,
         UUID requestId) {
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.deletePolicy(policyTypeId, policyTypeVersion, policyId, policyVersion);
             return makeOkResponse(requestId, serviceTemplate);
@@ -343,6 +362,11 @@ public class ApiRestController extends CommonRestController implements PolicyDes
             var msg = String.format("DELETE /policytypes/%s/versions/%s/policies/%s/versions/%s",
                 policyTypeId, policyTypeVersion, policyId, policyVersion);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 
@@ -406,11 +430,17 @@ public class ApiRestController extends CommonRestController implements PolicyDes
             NetLoggerUtil.log(EventType.IN, CommInfrastructure.REST, "/policies", toJson(body));
         }
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService.createPolicies(body);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelRuntimeException pfme) {
             final var msg = "POST /policies";
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 
@@ -427,12 +457,18 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyVersion,
         UUID requestId) {
         try {
+            mutex.acquire();
             ToscaServiceTemplate serviceTemplate =
                 toscaServiceTemplateService.deletePolicy(null, null, policyId, policyVersion);
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelRuntimeException pfme) {
             var msg = String.format("DELETE /policies/%s/versions/%s", policyId, policyVersion);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
+        } finally {
+            mutex.release();
         }
     }
 }
