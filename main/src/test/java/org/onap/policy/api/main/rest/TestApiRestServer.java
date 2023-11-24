@@ -107,7 +107,10 @@ class TestApiRestServer extends CommonTestRestController {
 
     private static final String POLICIES = "policies";
 
+    private static final String TOSCA_POLICY_VER_RESOURCE =
+        "policytypes/onap.restart.tca.snapshot.yaml";
     // @formatter:off
+
     private static final String[] TOSCA_POLICY_RESOURCE_NAMES = {"policies/vCPE.policy.monitoring.input.tosca.json",
         "policies/vCPE.policy.monitoring.input.tosca.yaml", "policies/vDNS.policy.monitoring.input.tosca.json",
         "policies/vDNS.policy.monitoring.input.tosca.v2.yaml"};
@@ -117,6 +120,9 @@ class TestApiRestServer extends CommonTestRestController {
 
     private static final String TOSCA_POLICYTYPE_OP_RESOURCE =
         "policytypes/onap.policies.controlloop.operational.Common.yaml";
+
+    private static final String TOSCA_POLICYTYPE_VER_RESOURCE =
+        "policytypes/onap.policies.monitoring.cdap.tca.hi.lo.app.snapshot.yaml";
 
     private static final String[] TOSCA_POLICYTYPE_RESOURCE_NAMES = {
         "policytypes/onap.policies.monitoring.tcagen2.yaml",
@@ -248,6 +254,15 @@ class TestApiRestServer extends CommonTestRestController {
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), rawResponse2.getStatus());
         assertThat(errorResponse.getErrorMessage())
                 .contains("item \"policy type\" value \"IDontExist:1.0.0\" INVALID, not found");
+    }
+
+    @Test
+    void testPoliciesVersioning() throws Exception {
+        var rawResponse = createResource(POLICYTYPES, TOSCA_POLICYTYPE_VER_RESOURCE, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
+
+        rawResponse = createResource(POLICIES, TOSCA_POLICY_VER_RESOURCE, apiPort);
+        assertEquals(Response.Status.OK.getStatusCode(), rawResponse.getStatus());
     }
 
     @SuppressWarnings("unchecked")
