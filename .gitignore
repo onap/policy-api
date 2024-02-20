@@ -14,3 +14,4 @@ debug-logs/
 *.iml
 *.ipr
 *.iws
+**/*.log
