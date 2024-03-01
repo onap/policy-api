@@ -4761,7 +4761,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                   &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                   &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                   &quot;parameters&quot;: {&#xd;
-                    &quot;url&quot;: &quot;http://message-router:3904/events/unauthenticated.DCAE_CL_OUTPUT/APEX/1?timeout=60000&quot;&#xd;
+                    &quot;url&quot;: &quot;http://kafka:9092/events/unauthenticated.dcae_cl_output/APEX/1?timeout=60000&quot;&#xd;
                   }&#xd;
                 },&#xd;
                 &quot;eventProtocolParameters&quot;: {&#xd;
@@ -4780,7 +4780,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                   &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                   &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                   &quot;parameters&quot;: {&#xd;
-                    &quot;url&quot;: &quot;http://message-router:3904/events/APPC-LCM-WRITE/APEX/1?timeout=60000&quot;&#xd;
+                    &quot;url&quot;: &quot;http://kafka:9092/events/appc-lcm-write/APEX/1?timeout=60000&quot;&#xd;
                   }&#xd;
                 },&#xd;
                 &quot;eventProtocolParameters&quot;: {&#xd;
@@ -4824,7 +4824,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                   &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                   &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                   &quot;parameters&quot;: {&#xd;
-                    &quot;url&quot;: &quot;http://message-router:3904/events/APPC-LCM-READ&quot;&#xd;
+                    &quot;url&quot;: &quot;http://kafka:9092/events/appc-lcm-read&quot;&#xd;
                   }&#xd;
                 },&#xd;
                 &quot;eventProtocolParameters&quot;: {&#xd;
@@ -4842,7 +4842,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                   &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                   &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                   &quot;parameters&quot;: {&#xd;
-                    &quot;url&quot;: &quot;http://message-router:3904/events/POLICY-CL-MGT&quot;&#xd;
+                    &quot;url&quot;: &quot;http://kafka:9092/events/policy-cl-mgt&quot;&#xd;
                   }&#xd;
                 },&#xd;
                 &quot;eventProtocolParameters&quot;: {&#xd;
@@ -5144,7 +5144,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                                 &quot;taskParameters&quot;: [&#xd;
                                     {&#xd;
                                         &quot;key&quot;: &quot;logUrl&quot;,&#xd;
-                                        &quot;value&quot;: &quot;http://message-router:3904/events/APEX-CL-MGT&quot;&#xd;
+                                        &quot;value&quot;: &quot;http://kafka:9092/events/apex-cl-mgt&quot;&#xd;
                                     }&#xd;
                                 ]&#xd;
                             }&#xd;
@@ -5155,7 +5155,7 @@ if (prev.getResponseCode() == &apos;200&apos;) {
                                     &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                                     &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                                     &quot;parameters&quot;: {&#xd;
-                                        &quot;url&quot;: &quot;http://message-router:3904/events/apex-pnf-input/cl/apex?timeout=30000&quot;&#xd;
+                                        &quot;url&quot;: &quot;http://kafka:9092/events/apex-pnf-input/cl/apex?timeout=30000&quot;&#xd;
                                     }&#xd;
                                 },&#xd;
                                 &quot;eventProtocolParameters&quot;: {&#xd;
