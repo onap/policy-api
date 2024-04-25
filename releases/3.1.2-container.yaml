@@ -1,0 +1,8 @@
+distribution_type: 'container'
+container_release_tag: '3.1.2'
+project: 'policy-api'
+log_dir: 'policy-api-maven-docker-stage-master/1300'
+ref: 429047e4093e09649424b6cb3e41bc46d0658122
+containers:
+    - name: 'policy-api'
+      version: '3.1.2-20240425T1238'
