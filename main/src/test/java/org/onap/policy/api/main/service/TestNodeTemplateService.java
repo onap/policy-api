@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2022-2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2022-2024 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ package org.onap.policy.api.main.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
@@ -41,6 +42,7 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeType;
@@ -115,11 +117,21 @@ class TestNodeTemplateService {
 
     @Test
     void testNodeTemplateUpdate() {
-
         Mockito.when(nodeTypeRepository.findById(Mockito.any())).thenReturn(Optional.of(new JpaToscaNodeType()));
         Mockito.when(nodeTemplateRepository.findById(Mockito.any())).thenReturn(Optional.of(
             new JpaToscaNodeTemplate()));
         assertDoesNotThrow(() -> nodeTemplateService.updateToscaNodeTemplates(
             new JpaToscaServiceTemplate(updatedToscaServiceTemplate)));
+    }
+
+    @Test
+    void testNodeTemplateUpdate_Exception() {
+        Mockito.when(nodeTypeRepository.findById(Mockito.any())).thenReturn(Optional.of(new JpaToscaNodeType()));
+        Mockito.when(nodeTemplateRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+        var updatedObj = new JpaToscaServiceTemplate(updatedToscaServiceTemplate);
+        assertThrows(PfModelRuntimeException.class,
+            () -> nodeTemplateService.updateToscaNodeTemplates(updatedObj));
+
+        assertThrows(NullPointerException.class, () -> nodeTemplateService.updateToscaNodeTemplates(null));
     }
 }

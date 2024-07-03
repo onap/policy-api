@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicies(
         @Valid ToscaServiceTemplate body, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getCreateStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         @Valid ToscaServiceTemplate body,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getCreateStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> createPolicyType(
         @Valid ToscaServiceTemplate body, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getCreateStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyId,
         String policyVersion,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyId,
         String policyVersion,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeId,
         String versionId,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -93,13 +93,13 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         @Valid PolicyFetchMode mode,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> getAllPolicyTypes(
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -109,19 +109,19 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         @Valid PolicyFetchMode mode,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> getAllVersionsOfPolicyType(
         String policyTypeId, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<HealthCheckReport> getHealthCheck(
         UUID requestID) {
-        return stubUtils.getStubbedResponse(HealthCheckReport.class);
+        return stubUtils.getOkStubbedResponse(HealthCheckReport.class);
     }
 
     @Override
@@ -131,19 +131,19 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         @Valid PolicyFetchMode mode,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> getLatestVersionOfPolicyType(
         String policyTypeId, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> getPolicies(
         @Valid PolicyFetchMode mode, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyVersion,
         @Valid PolicyFetchMode mode,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyVersion,
         @Valid PolicyFetchMode mode,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeId,
         String versionId,
         UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
 }

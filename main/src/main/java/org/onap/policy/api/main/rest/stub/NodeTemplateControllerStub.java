@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,13 @@ public class NodeTemplateControllerStub extends CommonRestController
     @Override
     public ResponseEntity<ToscaServiceTemplate> createToscaNodeTemplates(
         @Valid ToscaServiceTemplate body, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getCreateStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
     public ResponseEntity<ToscaServiceTemplate> deleteToscaNodeTemplates(
         String name, String version, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 
     @Override
@@ -67,6 +67,6 @@ public class NodeTemplateControllerStub extends CommonRestController
     @Override
     public ResponseEntity<ToscaServiceTemplate> updateToscaNodeTemplates(
         @Valid ToscaServiceTemplate body, UUID requestID) {
-        return stubUtils.getStubbedResponse(ToscaServiceTemplate.class);
+        return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
 }

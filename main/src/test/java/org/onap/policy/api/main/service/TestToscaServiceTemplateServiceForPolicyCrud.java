@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021, 2024 Nordix Foundation.
  * Modifications Copyright (C) 2020, 2022 Bell Canada.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -71,18 +70,12 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
     private static final String POLICY_TYPE_RESOURCE_OPERATIONAL_DROOLS =
         "policytypes/onap.policies.controlloop.operational.common.Drools.yaml";
     private static final String POLICY_RESOURCE_OPERATIONAL = "policies/vCPE.policy.operational.input.tosca.json";
-    private static final String POLICY_TYPE_OPERATIONAL_DROOLS = "onap.policies.controlloop.operational.common.Drools";
 
     @Mock
     private PdpGroupService pdpGroupService;
 
     @InjectMocks
     private ToscaServiceTemplateService toscaServiceTemplateService;
-
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-    }
 
     @Test
     void testFetchPolicies() {
@@ -114,7 +107,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
     @Test
     void testCreatePolicy() throws Exception {
         assertThatThrownBy(() -> toscaServiceTemplateService
-            .createPolicy("dummy", "1.0.0", new ToscaServiceTemplate()))
+            .createPolicy(new ToscaServiceTemplate()))
             .hasMessage("topology template not specified on service template");
 
         var policyTypeServiceTemplate = standardYamlCoder
@@ -129,7 +122,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
             var badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_ID);
             var badPolicyServiceTemplate =
                 standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            toscaServiceTemplateService.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+            toscaServiceTemplateService.createPolicy(
                 badPolicyServiceTemplate);
         }).hasMessage(
             "Version not specified, the version of this TOSCA entity must be specified in "
@@ -139,7 +132,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
             var badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_BAD_POLICYTYPE_VERSION);
             var badPolicyServiceTemplate =
                 standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            toscaServiceTemplateService.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+            toscaServiceTemplateService.createPolicy(
                 badPolicyServiceTemplate);
         }).hasMessageContaining(
             "item \"policy type\" value \"onap.policies.monitoring.cdap.tca.hi.lo.app:2.0.0\" INVALID, not found");
@@ -148,14 +141,14 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
             var badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_NO_POLICY_VERSION);
             var badPolicyServiceTemplate =
                 standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            toscaServiceTemplateService.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+            toscaServiceTemplateService.createPolicy(
                 badPolicyServiceTemplate);
         }).hasMessageContaining("item \"version\" value \"0.0.0\" INVALID, is null");
 
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         assertFalse(createPolicyResponseFragment.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
@@ -163,7 +156,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
             var badPolicyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_WITH_DIFFERENT_FIELDS);
             var badPolicyServiceTemplate =
                 standardCoder.decode(badPolicyString, ToscaServiceTemplate.class);
-            toscaServiceTemplateService.createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0",
+            toscaServiceTemplateService.createPolicy(
                 badPolicyServiceTemplate);
         }).hasMessageContaining(
             "item \"entity\" value \"onap.restart.tca:1.0.0\" INVALID, " + "does not equal existing entity");
@@ -185,7 +178,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE_OPERATIONAL);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         serviceTemplate =
-            toscaServiceTemplateService.createPolicy(POLICY_TYPE_OPERATIONAL_DROOLS, "1.0.0", policyServiceTemplate);
+            toscaServiceTemplateService.createPolicy(policyServiceTemplate);
         assertFalse(serviceTemplate.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
     }
 
@@ -284,7 +277,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
     @Test
     void testDeletePolicy() throws CoderException {
 
-        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy("dummy", "1.0.0", "dummy", "1.0.0"))
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy("dummy", "1.0.0"))
             .hasMessage("no policies found");
 
         var policyTypeServiceTemplate = standardYamlCoder
@@ -295,7 +288,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         assertFalse(createPolicyResponseFragment.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
@@ -303,18 +296,18 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         Mockito.doThrow(new PfModelRuntimeException(Response.Status.NOT_ACCEPTABLE, exceptionMessage))
             .when(pdpGroupService).assertPolicyNotDeployedInPdpGroup("onap.restart.tca", "1.0.0");
         assertThatThrownBy(() -> toscaServiceTemplateService
-            .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0"))
+            .deletePolicy("onap.restart.tca", "1.0.0"))
             .hasMessage(exceptionMessage);
 
         Mockito.doNothing().when(pdpGroupService).assertPolicyNotDeployedInPdpGroup("onap.restart.tca", "1.0.0");
 
         var deletePolicyResponseFragment = toscaServiceTemplateService
-            .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0");
+            .deletePolicy("onap.restart.tca", "1.0.0");
         assertFalse(deletePolicyResponseFragment.getToscaTopologyTemplate().getPolicies().get(0).isEmpty());
 
         mockDbServiceTemplate(serviceTemplate, deletePolicyResponseFragment, Operation.DELETE_POLICY);
         assertThatThrownBy(() -> toscaServiceTemplateService
-            .deletePolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", "onap.restart.tca", "1.0.0"))
+            .deletePolicy("onap.restart.tca", "1.0.0"))
             .hasMessageContaining("no policies found");
     }
 
@@ -330,7 +323,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
         assertThat(serviceTemplate.getToscaTopologyTemplate().getPolicies()).hasSize(1);
@@ -353,7 +346,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
         assertThat(serviceTemplate.getToscaTopologyTemplate().getPolicies()).hasSize(1);
@@ -375,7 +368,7 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
         assertNotNull(serviceTemplate.getToscaTopologyTemplate().getPolicies());
         assertThat(serviceTemplate.getToscaTopologyTemplate().getPolicies()).hasSize(1);
@@ -395,11 +388,11 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         assertThat(createPolicyResponseFragment.getToscaTopologyTemplate().getPolicies()).hasSize(1);
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
-        serviceTemplate = toscaServiceTemplateService.deletePolicy(null, null, "onap.restart.tca", "1.0.0");
+        serviceTemplate = toscaServiceTemplateService.deletePolicy("onap.restart.tca", "1.0.0");
         assertThat(serviceTemplate.getToscaTopologyTemplate().getPolicies()).hasSize(1);
     }
 
@@ -413,14 +406,14 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
         var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
         var createPolicyResponseFragment = toscaServiceTemplateService
-            .createPolicy("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0", policyServiceTemplate);
+            .createPolicy(policyServiceTemplate);
         assertThat(createPolicyResponseFragment.getToscaTopologyTemplate().getPolicies()).hasSize(1);
         mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
 
-        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy(null, null, "onap.restart.tca", "2.0.0"))
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy("onap.restart.tca", "2.0.0"))
             .hasMessageContaining("not found");
 
-        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy(null, null,
+        assertThatThrownBy(() -> toscaServiceTemplateService.deletePolicy(
             "onap.restart.tca.unavailable", "1.0.0")).hasMessageContaining("not found");
     }
 }

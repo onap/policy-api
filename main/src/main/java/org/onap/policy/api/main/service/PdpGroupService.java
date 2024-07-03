@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2022 Bell Canada. All rights reserved.
- *  Modifications Copyright (C) 2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2023-2024 Nordix Foundation.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package org.onap.policy.api.main.service;
 
 import jakarta.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.repository.PdpGroupRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -43,16 +42,17 @@ public class PdpGroupService {
 
     /**
      * Fetch all the PDP groups from the DB.
+     *
      * @return a list of {@link PdpGroup}
      */
     private List<PdpGroup> getAllPdpGroups() {
-        return pdpGroupRepository.findAll().stream().map(JpaPdpGroup::toAuthorative).collect(Collectors.toList());
+        return pdpGroupRepository.findAll().stream().map(JpaPdpGroup::toAuthorative).toList();
     }
 
     /**
      * Assert that the policy type is not supported in any PDP group.
      *
-     * @param policyTypeName the policy type name
+     * @param policyTypeName    the policy type name
      * @param policyTypeVersion the policy type version
      * @throws PfModelRuntimeException if the policy type is supported in a PDP group
      */
@@ -73,7 +73,7 @@ public class PdpGroupService {
     /**
      * Assert that the policy is not deployed in a PDP group.
      *
-     * @param policyName the policy name
+     * @param policyName    the policy name
      * @param policyVersion the policy version
      * @throws PfModelRuntimeException thrown if the policy is deployed in a PDP group
      */

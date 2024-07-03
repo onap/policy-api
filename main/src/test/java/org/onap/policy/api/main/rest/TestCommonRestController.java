@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2020 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019, 2023-2024 Nordix Foundation.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +24,17 @@
 
 package org.onap.policy.api.main.rest;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.onap.policy.api.main.exception.PolicyApiRuntimeException;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Class to perform unit testing of CommonRestController.
@@ -46,7 +53,27 @@ class TestCommonRestController {
      * Tests null response for null object
      */
     @Test
-    void testToJsonNull() {
+    void testToJsonNull() throws CoderException {
         Assertions.assertNull(crc.toJson(null));
+
+        var mockCoder = Mockito.mock(StandardCoder.class);
+        Mockito.when(mockCoder.encode("fail")).thenThrow(new CoderException("fail"));
+        ReflectionTestUtils.setField(crc, "coder", mockCoder);
+        Assertions.assertNull(crc.toJson("fail"));
+    }
+
+    @Test
+    void testLock() throws Exception {
+        Class<?> mockControllerClass = Class.forName("org.onap.policy.api.main.rest.CommonRestController");
+        CommonRestController mockController =
+            (CommonRestController) mockControllerClass.getDeclaredConstructor().newInstance();
+        var mockSemaphore = Mockito.mock(Semaphore.class);
+        Mockito.doThrow(new InterruptedException("runtime error")).when(mockSemaphore).acquire();
+        Field field = mockControllerClass.getDeclaredField("mutex");
+        field.setAccessible(true);
+        field.set(mockController, mockSemaphore);
+
+        Assertions.assertThrows(PolicyApiRuntimeException.class, mockController::lock);
+        ReflectionTestUtils.setField(crc, "mutex", new Semaphore(1));
     }
 }
