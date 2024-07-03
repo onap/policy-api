@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2020 Nordix Foundation.
+ * Copyright (C) 2020, 2024 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,15 +23,5 @@ package org.onap.policy.api.main.rest;
 
 public enum PolicyFetchMode {
     BARE,
-    REFERENCED;
-
-    /**
-     * Convert a string to this ENUM.
-     *
-     * @param modeString the incoming string value
-     * @return the enum value of the string
-     */
-    public static PolicyFetchMode fromString(final String modeString) {
-        return valueOf(modeString.toUpperCase());
-    }
+    REFERENCED
 }

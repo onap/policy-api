@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,119 +21,112 @@
 
 package org.onap.policy.api.contract;
 
-import static org.junit.Assert.assertEquals;
-
-import jakarta.ws.rs.core.Response;
-import java.io.IOException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.api.main.PolicyApiApplication;
-import org.onap.policy.api.main.rest.utils.CommonTestRestController;
-import org.onap.policy.common.utils.security.SelfSignedKeyStore;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 
 @SpringBootTest(classes = PolicyApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "stub"})
+@AutoConfigureWebTestClient
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-class ApiContractTest extends CommonTestRestController {
-    protected static final String APP_JSON = "application/json";
-    protected static final String APP_YAML = "application/yaml";
+class ApiContractTest {
+
+    @Autowired
+    WebTestClient webClient;
+
+    protected static final MediaType APPLICATION_YAML = new MediaType("application", "yaml");
+    protected static final MediaType APPLICATION_JSON = new MediaType("application", "json");
+
     private static final String TOSCA_NODE_TEMPLATE_RESOURCE =
         "nodetemplates/nodetemplates.metadatasets.input.tosca.json";
 
-    @LocalServerPort
-    private int apiPort;
-
-    private static SelfSignedKeyStore keystore;
-
-    @BeforeAll
-    public static void setupParameters() throws IOException, InterruptedException {
-        keystore = new SelfSignedKeyStore();
-    }
-
-    @DynamicPropertySource
-    static void registerPgProperties(DynamicPropertyRegistry registry) {
-        registry.add("server.ssl.enabled", () -> "true");
-        registry.add("server.ssl.key-store", () -> keystore.getKeystoreName());
-        registry.add("server.ssl.key-store-password", () -> SelfSignedKeyStore.KEYSTORE_PASSWORD);
-        registry.add("server.ssl.key-store-type", () -> "PKCS12");
-        registry.add("server.ssl.key-alias", () -> "policy@policy.onap.org");
-        registry.add("server.ssl.key-password", () -> SelfSignedKeyStore.PRIVATE_KEY_PASSWORD);
+    @BeforeEach
+    void beforeEach() {
+        var filter = ExchangeFilterFunctions.basicAuthentication("policyadmin", "zb!XztG34");
+        webClient = webClient.mutate().filter(filter).build();
     }
 
     @Test
-    void testStubPolicyDesign() throws Exception {
-        checkStubJsonGet("policies");
-        checkStubJsonGet("policies/policyname/versions/1.0.2");
-        checkStubJsonGet("policytypes");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/latest");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+    void testStubPolicyDesign() {
+        checkStubJsonGet("/policies");
+        checkStubJsonGet("/policies/policyname/versions/1.0.2");
+        checkStubJsonGet("/policytypes");
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16");
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/latest");
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies");
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
             + "9c65fa1f-2833-4076-a64d-5b62e35cd09b");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
             + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/latest");
-        checkStubJsonGet("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+        checkStubJsonGet("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
             + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/1.2.3");
-        checkStubJsonGet("healthcheck");
+        checkStubJsonGet("/healthcheck");
 
-        checkStubJsonPost("policies");
-        checkStubJsonPost("policytypes");
-        checkStubJsonPost("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.2.3/policies");
+        checkStubJsonPost("/policies");
+        checkStubJsonPost("/policytypes");
+        checkStubJsonPost("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.2.3/policies");
 
-        checkStubJsonDelete("policies/policyname/versions/1.0.2");
-        checkStubJsonDelete("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
-        checkStubJsonDelete("policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
+        checkStubJsonDelete("/policies/policyname/versions/1.0.2");
+        checkStubJsonDelete("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0");
+        checkStubJsonDelete("/policytypes/380d5cb1-e43d-45b7-b10b-ebd15dfabd16/versions/1.0.0/policies/"
             + "9c65fa1f-2833-4076-a64d-5b62e35cd09b/versions/1.2.3");
     }
 
     @Test
-    void testStubNodeTemplateDesign() throws Exception {
-        checkStubJsonGet("nodetemplates");
-        checkStubJsonGet("nodetemplates/k8stemplate/versions/1.0.0");
-
-        checkStubJsonPost("nodetemplates");
-
-        checkStubJsonPut("nodetemplates");
-
-        checkStubJsonDelete("nodetemplates/k8stemplate/versions/1.0.0");
+    void testStubNodeTemplateDesign() {
+        checkStubJsonGet("/nodetemplates");
+        checkStubJsonGet("/nodetemplates/k8stemplate/versions/1.0.0");
+        checkStubJsonPost("/nodetemplates");
+        checkStubJsonPut();
+        checkStubJsonDelete("/nodetemplates/k8stemplate/versions/1.0.0");
     }
 
     @Test
-    void testErrors() throws Exception {
-        var responseYaml = super.readResource("policies", APP_YAML, apiPort);
-        assertEquals(Response.Status.NOT_IMPLEMENTED.getStatusCode(), responseYaml.getStatus());
+    void testErrors() {
+        webClient.get().uri("/policies").accept(APPLICATION_YAML)
+            .exchange().expectStatus().isEqualTo(HttpStatus.NOT_IMPLEMENTED);
 
-        var responseListYaml = super.readResource("nodetemplates", APP_YAML, apiPort);
-        assertEquals(Response.Status.NOT_IMPLEMENTED.getStatusCode(), responseListYaml.getStatus());
+        webClient.get().uri("/nodetemplates").accept(APPLICATION_YAML)
+            .exchange().expectStatus().isEqualTo(HttpStatus.NOT_IMPLEMENTED);
 
     }
 
-    private void checkStubJsonGet(String url) throws Exception {
-        var response = super.readResource(url, APP_JSON, apiPort);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    private void checkStubJsonGet(String url) {
+        webClient.get().uri(url).accept(APPLICATION_JSON)
+            .exchange().expectStatus().isOk();
     }
 
-    private void checkStubJsonPost(String url) throws Exception {
-        var response = super.createResource(url, TOSCA_NODE_TEMPLATE_RESOURCE, apiPort);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    private void checkStubJsonPost(String url) {
+        var body = ResourceUtils.getResourceAsString(TOSCA_NODE_TEMPLATE_RESOURCE);
+        webClient.post().uri(url)
+            .contentType(MediaType.APPLICATION_JSON).bodyValue(body)
+            .accept(APPLICATION_JSON)
+            .exchange().expectStatus().isCreated();
     }
 
-    private void checkStubJsonPut(String url) throws Exception {
-        var response = super.updateResource(url, TOSCA_NODE_TEMPLATE_RESOURCE, APP_JSON, apiPort);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    private void checkStubJsonPut() {
+        var body = ResourceUtils.getResourceAsString(TOSCA_NODE_TEMPLATE_RESOURCE);
+        webClient.put().uri("/nodetemplates")
+            .contentType(APPLICATION_JSON).bodyValue(body)
+            .accept(APPLICATION_JSON)
+            .exchange().expectStatus().isOk();
     }
 
-    private void checkStubJsonDelete(String url) throws Exception {
-        var response = super.deleteResource(url, APP_JSON, apiPort);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    private void checkStubJsonDelete(String url) {
+        webClient.delete().uri(url).accept(APPLICATION_JSON)
+            .exchange().expectStatus().isOk();
     }
 
 }

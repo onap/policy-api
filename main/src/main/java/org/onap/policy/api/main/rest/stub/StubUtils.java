@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,22 +39,41 @@ import org.springframework.stereotype.Service;
 @Profile("stub")
 class StubUtils {
     private static final Logger log = LoggerFactory.getLogger(StubUtils.class);
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String COULDNT_SERIALIZE_RESPONSE_ERROR =
+        "Couldn't serialize response for content type application/json";
     private final HttpServletRequest request;
     private static final String ACCEPT = "Accept";
     private static final String TOSCA_NODE_TEMPLATE_RESOURCE =
             "nodetemplates/nodetemplates.metadatasets.input.tosca.json";
     private static final Gson JSON_TRANSLATOR = new Gson();
 
-    <T> ResponseEntity<T> getStubbedResponse(Class<T> clazz) {
+    <T> ResponseEntity<T> getCreateStubbedResponse(Class<T> clazz) {
         var accept = request.getHeader(ACCEPT);
-        if (accept != null && accept.contains("application/json")) {
+        if (accept != null && accept.contains(APPLICATION_JSON)) {
+            final var resource = new ClassPathResource(TOSCA_NODE_TEMPLATE_RESOURCE);
+            try (var inputStream = resource.getInputStream()) {
+                final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                var targetObject = JSON_TRANSLATOR.fromJson(string, clazz);
+                return new ResponseEntity<>(targetObject, HttpStatus.CREATED);
+            } catch (IOException e) {
+                log.error(COULDNT_SERIALIZE_RESPONSE_ERROR, e);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    <T> ResponseEntity<T> getOkStubbedResponse(Class<T> clazz) {
+        var accept = request.getHeader(ACCEPT);
+        if (accept != null && accept.contains(APPLICATION_JSON)) {
             final var resource = new ClassPathResource(TOSCA_NODE_TEMPLATE_RESOURCE);
             try (var inputStream = resource.getInputStream()) {
                 final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 var targetObject = JSON_TRANSLATOR.fromJson(string, clazz);
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+                log.error(COULDNT_SERIALIZE_RESPONSE_ERROR, e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -63,14 +82,14 @@ class StubUtils {
 
     <T> ResponseEntity<List<T>> getStubbedResponseList(Class<T> clazz) {
         var accept = request.getHeader(ACCEPT);
-        if (accept != null && accept.contains("application/json")) {
+        if (accept != null && accept.contains(APPLICATION_JSON)) {
             final var resource = new ClassPathResource(TOSCA_NODE_TEMPLATE_RESOURCE);
             try (var inputStream = resource.getInputStream()) {
                 final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 var targetObject = List.of(JSON_TRANSLATOR.fromJson(string, clazz));
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+                log.error(COULDNT_SERIALIZE_RESPONSE_ERROR, e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }

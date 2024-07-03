@@ -1,7 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2022 Bell Canada. All rights reserved.
- *  Modifications Copyright (C) 2022-2023 Nordix Foundation.
+ *  Modifications Copyright (C) 2022-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class ToscaServiceTemplateService {
     /**
      * Retrieves a list of policy types matching specified policy type name and version.
      *
-     * @param policyTypeName the name of policy type
+     * @param policyTypeName    the name of policy type
      * @param policyTypeVersion the version of policy type
      * @return the ToscaServiceTemplate object
      */
@@ -123,11 +123,11 @@ public class ToscaServiceTemplateService {
                 incomingServiceTemplate)).orElse(incomingServiceTemplate);
 
         final var result = serviceTemplateToWrite.validate("service template");
-        if (!result.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.NOT_ACCEPTABLE, result.getResult());
-        } else {
+        if (result.isValid()) {
             toscaServiceTemplateRepository.save(serviceTemplateToWrite);
             LOGGER.debug("<-createPolicyType: writtenServiceTemplate={}", serviceTemplateToWrite);
+        } else {
+            throw new PfModelRuntimeException(Response.Status.NOT_ACCEPTABLE, result.getResult());
         }
         return body;
     }
@@ -135,7 +135,7 @@ public class ToscaServiceTemplateService {
     /**
      * Delete the policy type matching specified policy type name and version.
      *
-     * @param policyTypeName the name of policy type
+     * @param policyTypeName    the name of policy type
      * @param policyTypeVersion the version of policy type, if the version of the key is null,
      *                          all versions of the policy type are deleted.
      * @return the TOSCA service template containing the policy types that were deleted
@@ -202,31 +202,33 @@ public class ToscaServiceTemplateService {
     /**
      * Retrieves a list of policies matching specified name and version of both policy type and policy.
      *
-     * @param policyTypeName the name of policy type
+     * @param policyTypeName    the name of policy type
      * @param policyTypeVersion the version of policy type
-     * @param policyName the name of policy
-     * @param policyVersion the version of policy
-     * @param mode the fetch mode for policies
+     * @param policyName        the name of policy
+     * @param policyVersion     the version of policy
+     * @param mode              the fetch mode for policies
      * @return the ToscaServiceTemplate object with the policies found
      * @throws PfModelException on errors getting the policy
      */
     public ToscaServiceTemplate fetchPolicies(final String policyTypeName, final String policyTypeVersion,
-        final String policyName, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
+                                              final String policyName, final String policyVersion,
+                                              final PolicyFetchMode mode) throws PfModelException {
         return getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, policyVersion, mode);
     }
 
     /**
      * Retrieves a list of policies with the latest versions that match specified policy type id and version.
      *
-     * @param policyTypeName the name of policy type
+     * @param policyTypeName    the name of policy type
      * @param policyTypeVersion the version of policy type
-     * @param policyName the name of the policy
-     * @param mode the fetch mode for policies
+     * @param policyName        the name of the policy
+     * @param mode              the fetch mode for policies
      * @return the ToscaServiceTemplate object with the policies found
      * @throws PfModelException on errors getting the policy
      */
     public ToscaServiceTemplate fetchLatestPolicies(final String policyTypeName, final String policyTypeVersion,
-        final String policyName, final PolicyFetchMode mode) throws PfModelException {
+                                                    final String policyName, final PolicyFetchMode mode)
+        throws PfModelException {
         return getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, ToscaTypedEntityFilter.LATEST_VERSION,
             mode);
     }
@@ -234,14 +236,11 @@ public class ToscaServiceTemplateService {
     /**
      * Creates one or more new policies for the same policy type name and version.
      *
-     * @param policyTypeName the name of policy type
-     * @param policyTypeVersion the version of policy type
      * @param body the entity body of polic(ies)
      * @return the ToscaServiceTemplate object containing the policy types that were created
      * @throws PfModelRuntimeException on errors creating the policy
      */
-    public ToscaServiceTemplate createPolicy(final String policyTypeName, final String policyTypeVersion,
-        final ToscaServiceTemplate body) throws PfModelRuntimeException {
+    public ToscaServiceTemplate createPolicy(final ToscaServiceTemplate body) throws PfModelRuntimeException {
         return createPolicies(body);
     }
 
@@ -279,15 +278,13 @@ public class ToscaServiceTemplateService {
     /**
      * Deletes the policy matching specified name and version of both policy type and policy.
      *
-     * @param policyTypeName the name of policy type
-     * @param policyTypeVersion the version of policy type
-     * @param policyName the name of policy
+     * @param policyName    the name of policy
      * @param policyVersion the version of policy
      * @return the ToscaServiceTemplate object containing the policies that were deleted
      * @throws PfModelRuntimeException on errors deleting the policy
      */
-    public ToscaServiceTemplate deletePolicy(final String policyTypeName, final String policyTypeVersion,
-        final String policyName, final String policyVersion) throws PfModelRuntimeException {
+    public ToscaServiceTemplate deletePolicy(final String policyName, final String policyVersion)
+        throws PfModelRuntimeException {
         final var policyKey = new PfConceptKey(policyName, policyVersion);
         LOGGER.debug("->deletePolicy: name={}, version={}", policyName, policyVersion);
 
@@ -375,14 +372,15 @@ public class ToscaServiceTemplateService {
     /**
      * Retrieves TOSCA service template with the specified version of the policy.
      *
-     * @param policyName the name of the policy
+     * @param policyName    the name of the policy
      * @param policyVersion the version of the policy
-     * @param mode the fetch mode for policies
+     * @param mode          the fetch mode for policies
      * @return the TOSCA service template containing the specified version of the policy
      * @throws PfModelException on errors getting the policy
      */
     private ToscaServiceTemplate getFilteredPolicies(final String policyTypeName, final String policyTypeVersion,
-        final String policyName, final String policyVersion, final PolicyFetchMode mode) throws PfModelException {
+                                                     final String policyName, final String policyVersion,
+                                                     final PolicyFetchMode mode) throws PfModelException {
         final var policyFilter = ToscaTypedEntityFilter.<ToscaPolicy>builder()
             .name(policyName).version(policyVersion).type(policyTypeName).typeVersion(policyTypeVersion).build();
         final var dbServiceTemplate = getDefaultJpaToscaServiceTemplate();
@@ -448,7 +446,7 @@ public class ToscaServiceTemplateService {
         for (JpaToscaNodeTemplate nodeTemplate : incomingServiceTemplate.getTopologyTemplate().getNodeTemplates()
             .getAll(null)) {
             // verify node types in the db if mismatch/empty entities in the template
-            if (! (nodeTypes.isPresent() && nodeTypes.get().getKeys().contains(nodeTemplate.getType()))) {
+            if (!(nodeTypes.isPresent() && nodeTypes.get().getKeys().contains(nodeTemplate.getType()))) {
                 nodeTemplateService.verifyNodeTypeInDbTemplate(nodeTemplate);
             }
         }
@@ -489,7 +487,7 @@ public class ToscaServiceTemplateService {
     /**
      * Delete a tosca node template.
      *
-     * @param name the name of node template
+     * @param name    the name of node template
      * @param version the version of node template
      * @return the TOSCA service template containing the node template that were deleted
      * @throws PfModelException on errors deleting node templates
@@ -534,7 +532,7 @@ public class ToscaServiceTemplateService {
     /**
      * Get tosca node templates.
      *
-     * @param name the name of the node template to get, set to null to get all node templates
+     * @param name    the name of the node template to get, set to null to get all node templates
      * @param version the version of the node template to get, set to null to get all versions
      * @return the node templates with the specified key
      * @throws PfModelException on errors getting node templates
@@ -568,7 +566,7 @@ public class ToscaServiceTemplateService {
      * Get Service Template.
      *
      * @return the Service Template read from the database
-     * @throws PfModelRuntimeException if service template if not found in database.
+     * @throws PfModelRuntimeException if service template not found in database.
      */
     public JpaToscaServiceTemplate getDefaultJpaToscaServiceTemplate() throws PfModelRuntimeException {
         final var defaultServiceTemplateOpt = getDefaultJpaToscaServiceTemplateOpt();

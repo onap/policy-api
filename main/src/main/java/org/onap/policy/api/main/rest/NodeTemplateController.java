@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,17 +63,12 @@ public class NodeTemplateController extends CommonRestController implements Tosc
                 toJson(body));
         }
         try {
-            mutex.acquire();
+            lock();
             ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.createToscaNodeTemplates(body);
-            return makeOkResponse(requestId, nodeTemplates);
+            return makeCreatedResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = "POST /nodetemplates";
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
-        } finally {
-            mutex.release();
         }
     }
 
@@ -92,17 +87,12 @@ public class NodeTemplateController extends CommonRestController implements Tosc
                 toJson(body));
         }
         try {
-            mutex.acquire();
+            lock();
             ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.updateToscaNodeTemplates(body);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = "PUT /nodetemplates";
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
-        } finally {
-            mutex.release();
         }
     }
 
@@ -116,17 +106,12 @@ public class NodeTemplateController extends CommonRestController implements Tosc
     @Override
     public ResponseEntity<ToscaServiceTemplate> deleteToscaNodeTemplates(String name, String version, UUID requestId) {
         try {
-            mutex.acquire();
+            lock();
             ToscaServiceTemplate nodeTemplates = toscaServiceTemplateService.deleteToscaNodeTemplate(name, version);
             return makeOkResponse(requestId, nodeTemplates);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             final var msg = String.format("DELETE /nodetemplates/%s/versions/%s", name, version);
             throw new PolicyApiRuntimeException(msg, pfme.getCause(), pfme.getErrorResponse(), requestId);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new PolicyApiRuntimeException(e.getMessage(), null, null, requestId);
-        } finally {
-            mutex.release();
         }
     }
 
