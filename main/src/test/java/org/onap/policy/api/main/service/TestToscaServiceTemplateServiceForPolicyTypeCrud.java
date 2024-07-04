@@ -70,14 +70,6 @@ class TestToscaServiceTemplateServiceForPolicyTypeCrud extends TestCommonToscaSe
     @InjectMocks
     private ToscaServiceTemplateService toscaServiceTemplateService;
 
-    /**
-     * Test setup.
-     */
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-    }
-
     @Test
     void testFetchPolicyTypes() {
         assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicyTypes("dummy", null))
