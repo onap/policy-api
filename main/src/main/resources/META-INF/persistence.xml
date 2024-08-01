@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2019-2020, 2022-2023 Nordix Foundation.
+   Copyright (C) 2019-2020, 2022-2024 Nordix Foundation.
    Modifications Copyright (C) 2021 AT&T Intellectual Property.
    Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
   ================================================================================
@@ -21,12 +21,10 @@
   ============LICENSE_END=========================================================
 -->
 
-<persistence
-    xmlns="http://java.sun.com/xml/ns/persistence"
-    version="2.0">
-    <persistence-unit
-        name="PolicyDb"
-        transaction-type="RESOURCE_LOCAL">
+<persistence version="3.1" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd">
+    <persistence-unit name="PolicyDb" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>org.onap.policy.models.base.PfConceptKey</class>
@@ -61,9 +59,9 @@
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTrigger</class>
 
         <properties>
-            <property name="jakarta.persistence.schema-generation.database.action" value="none" />
-            <property name="hibernate.hbm2ddl.auto" value="validate" />
-            <property name="eclipselink.logging.level" value="WARNING" />
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="eclipselink.logging.level" value="WARNING"/>
         </properties>
     </persistence-unit>
 </persistence>
