@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.onap.policy.api.main.rest.provider.healthcheck.HealthCheckProvider;
 import org.onap.policy.api.main.service.ToscaServiceTemplateService;
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.utils.report.HealthCheckReport;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;

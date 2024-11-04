@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.api.main.rest.CommonRestController;
 import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.api.main.rest.genapi.PolicyDesignApi;
-import org.onap.policy.common.endpoints.report.HealthCheckReport;
+import org.onap.policy.common.utils.report.HealthCheckReport;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
