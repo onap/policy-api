@@ -58,11 +58,17 @@ jobs:
 
       - name: Run S3P script
         working-directory: ${{ github.workspace }}/testsuites
-        run: sudo bash ./run-s3p-test.sh run performance
+        run: sudo bash ./run-s3p-test.sh run stability
 
       - name: Archive result jtl
         uses: actions/upload-artifact@v4
         with:
           name: policy-api-s3p-results
           path: ${{ github.workspace }}/testsuites/automate-performance/s3pTestResults.jtl
+
+      - name: Archive JMeter logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-api-s3p-jmeter-log
+          path: ${{ github.workspace }}/testsuites/automate-performance/jmeter.log
 
