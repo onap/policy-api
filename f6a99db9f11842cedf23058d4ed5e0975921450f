@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dfec9a5_7d56b426",
+        "filename": ".github/workflows/gerrit-policy-api-performance.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-11-05T15:43:24Z",
+      "side": 1,
+      "message": "We don\u0027t require to run performance suite ?",
+      "range": {
+        "startLine": 61,
+        "startChar": 45,
+        "endLine": 61,
+        "endChar": 54
+      },
+      "revId": "f6a99db9f11842cedf23058d4ed5e0975921450f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
