@@ -64,11 +64,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: policy-api-s3p-results
-          path: ${{ github.workspace }}/testsuites/automate-performance/s3pTestResults.jtl
+          path: ${{ github.workspace }}/testsuites/automate-s3p-test/s3pTestResults.jtl
 
       - name: Archive JMeter logs
         uses: actions/upload-artifact@v4
         with:
           name: policy-api-s3p-jmeter-log
-          path: ${{ github.workspace }}/testsuites/automate-performance/jmeter.log
+          path: ${{ github.workspace }}/testsuites/automate-s3p-test/jmeter.log
 
