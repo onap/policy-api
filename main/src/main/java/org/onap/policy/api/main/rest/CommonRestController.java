@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
- * Modifications Copyright (C) 2022-2024 Nordix Foundation.
+ * Modifications Copyright (C) 2022-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ public class CommonRestController {
 
     @ExceptionHandler(value = {PolicyApiRuntimeException.class})
     protected ResponseEntity<Object> handleException(PolicyApiRuntimeException ex, WebRequest req) {
-        LOGGER.warn(ex.getMessage(), ex.getCause());
+        LOGGER.warn(ex.getErrorResponse().getErrorMessage(), ex.getCause());
         final var requestId = req.getHeader(CommonRestController.REQUEST_ID_NAME);
         final var status = ex.getErrorResponse().getResponseCode().getStatusCode();
         return CommonRestController.addLoggingHeaders(
