@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca717a81_b887b605",
+        "filename": "main/src/main/java/org/onap/policy/api/main/rest/CommonRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-01-14T23:09:45Z",
+      "side": 1,
+      "message": "Sorry, What are we updating in this file 😊",
+      "range": {
+        "startLine": 46,
+        "startChar": 13,
+        "endLine": 46,
+        "endChar": 34
+      },
+      "revId": "3340b7959749c8eca436e0bee5f09cbfb6fcabcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
