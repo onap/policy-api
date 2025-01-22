@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2477e42c_99ff1816",
+        "filename": "testsuites/run-s3p-test.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-01-22T14:43:44Z",
+      "side": 1,
+      "message": "this variable doesn\u0027t seem to be used",
+      "range": {
+        "startLine": 31,
+        "startChar": 10,
+        "endLine": 31,
+        "endChar": 19
+      },
+      "revId": "1dee28ace204d3d93f59f6b73a13a793b39124bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
