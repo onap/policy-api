@@ -63,6 +63,7 @@ policy-preload:
     - policytypes/onap.policies.native.opa.yaml
   policies:
     - policies/sdnc.policy.naming.input.tosca.yaml
+    - policies/opa.policy.slice.capacity.check.tosca.yaml
 
 management:
   endpoints:
