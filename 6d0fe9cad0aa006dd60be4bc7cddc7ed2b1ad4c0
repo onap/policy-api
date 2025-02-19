@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b934e189_8bc15b76",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-02-19T13:18:10Z",
+      "side": 1,
+      "message": "this seems to be a duplicate. if it was to be a patch, use \"git commit --amend\" when submitting a patch to an already raised review.",
+      "revId": "6d0fe9cad0aa006dd60be4bc7cddc7ed2b1ad4c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
