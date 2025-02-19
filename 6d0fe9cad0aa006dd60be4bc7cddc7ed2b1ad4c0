@@ -16,6 +16,24 @@
       "message": "this seems to be a duplicate. if it was to be a patch, use \"git commit --amend\" when submitting a patch to an already raised review.",
       "revId": "6d0fe9cad0aa006dd60be4bc7cddc7ed2b1ad4c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58b55b17_a91da219",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8217
+      },
+      "writtenOn": "2025-02-19T14:17:17Z",
+      "side": 1,
+      "message": "two files have to be modified https://gerrit.onap.org/r/c/policy/api/+/140252  has one file this has second file. on same code base I did following commands.\n1) git add\n\n2) git commit -m \"\"\n\n3) git commit -s --amend\nIssue-ID: POLICY-5289\nChange-Id: I38d158446084f2822cefb6499b5b710f47e27e84\nSigned-off-by: gururajarao79 \u003cgb00566633@techmahindra.com\u003e\n\n4) git push origin HEAD:refs/for/master\n\ndo i need to use git review command?",
+      "parentUuid": "b934e189_8bc15b76",
+      "revId": "6d0fe9cad0aa006dd60be4bc7cddc7ed2b1ad4c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
