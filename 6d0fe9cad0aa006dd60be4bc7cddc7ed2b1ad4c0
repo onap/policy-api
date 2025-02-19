@@ -34,6 +34,24 @@
       "parentUuid": "b934e189_8bc15b76",
       "revId": "6d0fe9cad0aa006dd60be4bc7cddc7ed2b1ad4c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14dd3dc3_fc0d9b8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-02-19T14:46:28Z",
+      "side": 1,
+      "message": "yeah, git review is preferred. But I see now that is a different file. would still be better if they were modified in the same review. for these changes, api doesn\u0027t depend on the change in models.",
+      "parentUuid": "58b55b17_a91da219",
+      "revId": "6d0fe9cad0aa006dd60be4bc7cddc7ed2b1ad4c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
