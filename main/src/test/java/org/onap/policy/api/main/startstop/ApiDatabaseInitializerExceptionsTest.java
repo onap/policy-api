@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2024-2025 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package org.onap.policy.api.main.startstop;
 
 import static org.mockito.ArgumentMatchers.any;
 
-import io.netty.handler.codec.CodecException;
 import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +53,7 @@ class ApiDatabaseInitializerExceptionsTest {
 
         var mockYamlCoder = Mockito.mock(StandardYamlCoder.class);
         Mockito.when(mockYamlCoder.decode((String) any(), any()))
-            .thenThrow(new CodecException("fail"));
+            .thenThrow(new CoderException("fail"));
 
         var databaseService = new ApiDatabaseInitializer(mockServiceTemplate, mockPolicyPreload);
         Assertions.assertThrows(PolicyApiException.class, databaseService::loadData);

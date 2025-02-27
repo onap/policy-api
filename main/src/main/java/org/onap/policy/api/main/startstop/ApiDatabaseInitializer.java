@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021, 2023 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2021, 2023, 2025 Nordix Foundation.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -143,10 +143,7 @@ public class ApiDatabaseInitializer {
             // Consolidate policies
             var topologyTemplate = singleEntity.getToscaTopologyTemplate();
             if (topologyTemplate != null && topologyTemplate.getPolicies() != null) {
-                serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
-                serviceTemplate.getToscaTopologyTemplate().setPolicies(new LinkedList<>());
-                serviceTemplate.getToscaTopologyTemplate().getPolicies()
-                        .addAll(singleEntity.getToscaTopologyTemplate().getPolicies());
+                consolidatePolicies(serviceTemplate, topologyTemplate);
             }
         }
         // Preload the specified entities
@@ -163,6 +160,24 @@ public class ApiDatabaseInitializer {
                 }
             });
         return createdServiceTemplate;
+    }
+
+    /**
+     * Validates the topology template to have policies and add them to the final service template.
+     * @param serviceTemplate the service template to be sent to database
+     * @param topologyTemplate the topology template containing the policies
+     */
+    private static void consolidatePolicies(ToscaServiceTemplate serviceTemplate,
+                                  ToscaTopologyTemplate topologyTemplate) {
+        if (serviceTemplate.getToscaTopologyTemplate() == null) {
+            serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
+        }
+
+        if (serviceTemplate.getToscaTopologyTemplate().getPolicies() == null) {
+            serviceTemplate.getToscaTopologyTemplate().setPolicies(new LinkedList<>());
+        }
+        serviceTemplate.getToscaTopologyTemplate().getPolicies()
+                .addAll(topologyTemplate.getPolicies());
     }
 
     private ToscaServiceTemplate deserializeServiceTemplate(String entity) throws PolicyApiException, CoderException {
