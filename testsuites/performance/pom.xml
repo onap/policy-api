@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.api</groupId>
         <artifactId>api-testsuites</artifactId>
-        <version>4.2.0-SNAPSHOT</version>
+        <version>4.2.1-SNAPSHOT</version>
     </parent>
     <artifactId>api-performance</artifactId>
     <build>
