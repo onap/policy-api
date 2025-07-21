@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy API
  * ================================================================================
- * Copyright (C) 2022-2024 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2022-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ class TestNodeTemplateService {
      * @throws CoderException if error in json parsing
      */
     @BeforeEach
-    public void setUp() throws CoderException {
+    void setUp() throws CoderException {
         closeable = MockitoAnnotations.openMocks(this);
         StandardCoder standardCoder = new StandardCoder();
         policyServiceTemplate =

@@ -1,7 +1,7 @@
 /*
  *  ============LICENSE_START=======================================================
  *  Copyright (C) 2022 Bell Canada. All rights reserved.
- *  Modifications Copyright (C) 2023-2024 Nordix Foundation.
+ *  Modifications Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  *  ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 /**
  * This class offers common mock utility methods for uni testing {@link ToscaServiceTemplateService}.
  */
-public class TestCommonToscaServiceTemplateService {
+class TestCommonToscaServiceTemplateService {
 
     protected enum Operation {
         CREATE_POLICY_TYPE,
@@ -93,14 +93,14 @@ public class TestCommonToscaServiceTemplateService {
      * Setup to return empty DB service template.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         Mockito.when(toscaServiceTemplateRepository.findById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
             JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(Optional.of(new JpaToscaServiceTemplate()));
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         autoCloseable.close();
     }
 }
