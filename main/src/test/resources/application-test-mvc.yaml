@@ -12,3 +12,7 @@ spring:
 server:
   servlet:
     application-display-name: test-mvc
+
+management:
+  tracing:
+    enabled: false
