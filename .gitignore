@@ -15,3 +15,4 @@ debug-logs/
 *.ipr
 *.iws
 **/*.log
+.vscode/
