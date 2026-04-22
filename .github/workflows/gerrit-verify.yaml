@@ -1,0 +1,19 @@
+name: Gerrit Verify
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Maven Build and Test
+        uses: lfreleng-actions/maven-build-action@main
+        with:
+          jdk-version: "21"
+          mvn-goals: "clean install"
+          mvn-params: "-B -DskipDocker"

@@ -1,0 +1,29 @@
+name: Gerrit Merge
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Nexus Docker Login
+        uses: lfreleng-actions/nexus-docker-login-action@v1
+        with:
+          nexus-docker-repo: ${{ vars.NEXUS_DOCKER_REPO }}
+          nexus-username: ${{ secrets.LFIT_NEXUS_USERNAME }}
+          nexus-password: ${{ secrets.LFIT_NEXUS_PASSWORD }}
+
+      - name: Maven Deploy and Docker Push
+        uses: lfreleng-actions/maven-build-action@main
+        with:
+          jdk-version: "21"
+          mvn-goals: "clean deploy"
+          mvn-params: "-B -P docker -Dmaven.test.skip=true"
+        env:
+          MAVEN_USERNAME: ${{ secrets.LFIT_NEXUS_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.LFIT_NEXUS_PASSWORD }}

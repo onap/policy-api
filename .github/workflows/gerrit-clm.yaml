@@ -1,0 +1,19 @@
+name: Component Lifecycle Management
+
+on:
+  schedule:
+    - cron: '0 12 * * 1' # Every Monday at noon
+  push:
+    branches: [master]
+
+jobs:
+  clm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run CLM Scan
+        uses: lfreleng-actions/clm-action@main
+        with:
+          nexus-iq-url: ${{ vars.NEXUS_IQ_URL }}
+          nexus-iq-token: ${{ secrets.NEXUS_IQ_TOKEN }}
+          project-path: "."

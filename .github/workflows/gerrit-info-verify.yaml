@@ -1,0 +1,14 @@
+name: Info Verify
+
+on:
+  pull_request:
+    paths:
+      - 'INFO.yaml'
+
+jobs:
+  verify-info:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate INFO.yaml
+        uses: lfreleng-actions/info-yaml-verify-action@main

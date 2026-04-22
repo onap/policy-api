@@ -1,0 +1,19 @@
+name: SonarCloud Scan
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Maven Sonar Scan
+        uses: lfreleng-actions/maven-build-action@main
+        with:
+          jdk-version: "21"
+          mvn-goals: "clean verify sonar:sonar"
+          mvn-params: "-Dsonar.projectKey=onap_policy-api"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
