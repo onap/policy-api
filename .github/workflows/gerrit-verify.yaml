@@ -1,0 +1,50 @@
+name: Gerrit Verify
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: 'Extract project name from .gitreview'
+        id: extract-project
+        if: steps.check-pom-xml.outputs.exists == 'true'
+        run: |
+          if [ -f .gitreview ]; then
+            PROJECT_NAME=$(grep '^project=' .gitreview | cut -d'=' -f2 | sed 's/\.git$//' | tr '/' '-')
+            echo "project-name=${PROJECT_NAME}" >> $GITHUB_OUTPUT
+            echo "Detected project: ${PROJECT_NAME}"
+          else
+            echo "Error: .gitreview file not found"
+            exit 1
+          fi
+
+      - name: Load secret from 1Password
+        if: steps.check-pom-xml.outputs.exists == 'true'
+        uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          NEXUS_PASSWORD: "op://elnqtgip7eqavqvgodjbiiaqd4/${{ steps.extract-project.outputs.project-name }}/password"
+
+      - name: 'Output SHA1 sum of password'
+        if: steps.check-pom-xml.outputs.exists == 'true'
+        env:
+          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
+        run: |
+          # Output SHA1 sum of password
+          VALUE_SHA1=$(printf '%s' "$NEXUS_PASSWORD" | shasum -a 1 | awk '{print $1}')
+          echo "SHA1 sum of NEXUS_PASSWORD is: $VALUE_SHA1"
+
+      - name: Maven Build and Test
+        uses: lfreleng-actions/maven-build-action@main
+        with:
+          jdk-version: "21"
+          mvn-goals: "clean install"
+          mvn-params: "-B -DskipDocker"
