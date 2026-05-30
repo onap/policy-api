@@ -54,11 +54,5 @@
         <module>testsuites</module>
     </modules>
 
-    <distributionManagement>
-        <site>
-            <id>ecomp-site</id>
-            <url>dav:${nexusproxy}${sitePath}</url>
-        </site>
-    </distributionManagement>
 
 </project>
