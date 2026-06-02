@@ -3,7 +3,7 @@
  * ONAP Policy API
  * ================================================================================
  * Copyright (C) 2019-2022 AT&T Intellectual Property. All rights reserved.
- * Modifications Copyright (C) 2019-2021, 2023, 2025 Nordix Foundation.
+ * Modifications Copyright (C) 2019-2026 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2022 Bell Canada. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,6 @@
 
 package org.onap.policy.api.main.startstop;
 
-import com.google.common.collect.Sets;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -206,8 +205,8 @@ public class ApiDatabaseInitializer {
         // entity name but different version.
 
         return
-            Sets.intersection(aggEntity.keySet(), singleEntity.keySet())
-                .stream()
+            aggEntity.keySet().stream()
+                .filter(singleEntity.keySet()::contains)
                 .anyMatch(e -> !Objects.equals(aggEntity.get(e).getVersion(), singleEntity.get(e).getVersion()));
     }
 
