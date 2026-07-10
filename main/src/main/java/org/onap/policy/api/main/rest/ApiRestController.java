@@ -6,6 +6,7 @@
  * Modifications Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2020-2024 Nordix Foundation.
  * Modifications Copyright (C) 2020-2023 Bell Canada. All rights reserved.
+ * Modifications Copyright (C) 2026 Deutsche Telekom AG. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -255,10 +256,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyTypeVersion,
         String policyVersion,
         PolicyFetchMode mode,
+        Boolean skipMetadata,
         UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService
-                .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
+                .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode,
+                    Boolean.TRUE.equals(skipMetadata));
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = String.format("GET /policytypes/%s/versions/%s/policies/%s/versions/%s",
@@ -384,10 +387,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyId,
         String policyVersion,
         PolicyFetchMode mode,
+        Boolean skipMetadata,
         UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode);
+                toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode,
+                    Boolean.TRUE.equals(skipMetadata));
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = String.format("GET /policies/%s/versions/%s", policyId, policyVersion);
