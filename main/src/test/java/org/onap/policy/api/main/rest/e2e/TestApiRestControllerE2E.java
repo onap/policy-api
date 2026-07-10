@@ -352,6 +352,37 @@ class TestApiRestControllerE2E {
     }
 
     @Test
+    void getSpecificPolicyWithSkipMetadata_EqualsDefault() {
+        // The opt-in fast path (skipMetadata=true) must return the same policy content as the default path for both
+        // the type-scoped and the plain specific-policy endpoints, in both BARE and REFERENCED modes.
+        var typeScoped = "/policytypes/onap.policies.Naming/versions/1.0.0/"
+            + "policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0";
+
+        // BARE (default mode): bare policy, no types / data types, identical with and without skipMetadata.
+        var expected = performGetRequestAndCollectResponse(typeScoped);
+        var skipped = performGetRequestAndCollectResponse(typeScoped + "?skipMetadata=true");
+        assertEquals(expected.getToscaTopologyTemplate().getPoliciesAsMap().keySet(),
+            skipped.getToscaTopologyTemplate().getPoliciesAsMap().keySet());
+        assertNull(skipped.getPolicyTypes());
+        assertNull(skipped.getDataTypes());
+
+        // REFERENCED: the policy plus its policy-type chain and referenced data types.
+        expected = performGetRequestAndCollectResponse(typeScoped + "?mode=referenced");
+        skipped = performGetRequestAndCollectResponse(typeScoped + "?mode=referenced&skipMetadata=true");
+        assertEquals(expected.getToscaTopologyTemplate().getPoliciesAsMap().keySet(),
+            skipped.getToscaTopologyTemplate().getPoliciesAsMap().keySet());
+        assertEquals(expected.getPolicyTypesAsMap().keySet(), skipped.getPolicyTypesAsMap().keySet());
+        assertEquals(expected.getDataTypesAsMap().keySet(), skipped.getDataTypesAsMap().keySet());
+
+        // The plain /policies/{id}/versions/{v} endpoint honours skipMetadata too.
+        var plain = "/policies/SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP/versions/1.0.0";
+        skipped = performGetRequestAndCollectResponse(plain + "?mode=referenced&skipMetadata=true");
+        assertEquals(1, skipped.getToscaTopologyTemplate().getPoliciesAsMap().size());
+        assertEquals(expected.getPolicyTypesAsMap().keySet(), skipped.getPolicyTypesAsMap().keySet());
+        assertEquals(expected.getDataTypesAsMap().keySet(), skipped.getDataTypesAsMap().keySet());
+    }
+
+    @Test
     void deleteSpecificVersionOfPolicy() {
         var policyTypeFile = "policytypes/onap.policies.monitoring.tcagen2.yaml";
         performPostRequestIsCreated(policyTypeFile, "/policytypes");

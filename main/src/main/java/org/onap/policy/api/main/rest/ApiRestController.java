@@ -255,10 +255,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyTypeVersion,
         String policyVersion,
         PolicyFetchMode mode,
+        Boolean skipMetadata,
         UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate = toscaServiceTemplateService
-                .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode);
+                .fetchPolicies(policyTypeId, policyTypeVersion, policyId, policyVersion, mode,
+                    Boolean.TRUE.equals(skipMetadata));
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = String.format("GET /policytypes/%s/versions/%s/policies/%s/versions/%s",
@@ -384,10 +386,12 @@ public class ApiRestController extends CommonRestController implements PolicyDes
         String policyId,
         String policyVersion,
         PolicyFetchMode mode,
+        Boolean skipMetadata,
         UUID requestId) {
         try {
             ToscaServiceTemplate serviceTemplate =
-                toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode);
+                toscaServiceTemplateService.fetchPolicies(null, null, policyId, policyVersion, mode,
+                    Boolean.TRUE.equals(skipMetadata));
             return makeOkResponse(requestId, serviceTemplate);
         } catch (PfModelException | PfModelRuntimeException pfme) {
             var msg = String.format("GET /policies/%s/versions/%s", policyId, policyVersion);

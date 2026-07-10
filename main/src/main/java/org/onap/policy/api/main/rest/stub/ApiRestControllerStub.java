@@ -151,6 +151,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyId,
         String policyVersion,
         @Valid PolicyFetchMode mode,
+        @Valid Boolean skipMetadata,
         UUID requestID) {
         return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
@@ -162,6 +163,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         String policyVersion,
         @Valid PolicyFetchMode mode,
+        @Valid Boolean skipMetadata,
         UUID requestID) {
         return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }

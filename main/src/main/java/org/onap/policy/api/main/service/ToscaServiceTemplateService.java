@@ -28,6 +28,11 @@ import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.onap.policy.api.main.repository.DataTypeRepository;
+import org.onap.policy.api.main.repository.NodeTemplateRepository;
+import org.onap.policy.api.main.repository.NodeTypeRepository;
+import org.onap.policy.api.main.repository.PolicyRepository;
+import org.onap.policy.api.main.repository.PolicyTypeRepository;
 import org.onap.policy.api.main.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -40,6 +45,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaDataTypes;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplates;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTypes;
@@ -69,6 +75,11 @@ public class ToscaServiceTemplateService {
     public static final String DO_NOT_EXIST_MSG = " do not exist";
 
     private final ToscaServiceTemplateRepository toscaServiceTemplateRepository;
+    private final PolicyRepository policyRepository;
+    private final PolicyTypeRepository policyTypeRepository;
+    private final DataTypeRepository dataTypeRepository;
+    private final NodeTypeRepository nodeTypeRepository;
+    private final NodeTemplateRepository nodeTemplateRepository;
     private final NodeTemplateService nodeTemplateService;
     private final PdpGroupService pdpGroupService;
     private final PolicyTypeService policyTypeService;
@@ -213,7 +224,28 @@ public class ToscaServiceTemplateService {
     public ToscaServiceTemplate fetchPolicies(final String policyTypeName, final String policyTypeVersion,
                                               final String policyName, final String policyVersion,
                                               final PolicyFetchMode mode) throws PfModelException {
-        return getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, policyVersion, mode);
+        return fetchPolicies(policyTypeName, policyTypeVersion, policyName, policyVersion, mode, false);
+    }
+
+    /**
+     * Retrieves a list of policies matching specified name and version of both policy type and policy.
+     *
+     * @param policyTypeName    the name of policy type
+     * @param policyTypeVersion the version of policy type
+     * @param policyName        the name of policy
+     * @param policyVersion     the version of policy
+     * @param mode              the fetch mode for policies
+     * @param skipMetadata      when true and a single policy is addressed by an exact name and version, fetch it
+     *                          directly by key instead of reconstructing it from the full service template; this
+     *                          may omit topology-template-level metadata that is not needed to describe the policy
+     * @return the ToscaServiceTemplate object with the policies found
+     * @throws PfModelException on errors getting the policy
+     */
+    public ToscaServiceTemplate fetchPolicies(final String policyTypeName, final String policyTypeVersion,
+                                              final String policyName, final String policyVersion,
+                                              final PolicyFetchMode mode, final boolean skipMetadata)
+        throws PfModelException {
+        return getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, policyVersion, mode, skipMetadata);
     }
 
     /**
@@ -230,7 +262,7 @@ public class ToscaServiceTemplateService {
                                                     final String policyName, final PolicyFetchMode mode)
         throws PfModelException {
         return getFilteredPolicies(policyTypeName, policyTypeVersion, policyName, ToscaTypedEntityFilter.LATEST_VERSION,
-            mode);
+            mode, false);
     }
 
     /**
@@ -372,18 +404,33 @@ public class ToscaServiceTemplateService {
     /**
      * Retrieves TOSCA service template with the specified version of the policy.
      *
-     * @param policyName    the name of the policy
-     * @param policyVersion the version of the policy
-     * @param mode          the fetch mode for policies
+     * @param policyTypeName    the name of the policy type
+     * @param policyTypeVersion the version of the policy type
+     * @param policyName        the name of the policy
+     * @param policyVersion     the version of the policy
+     * @param mode              the fetch mode for policies
+     * @param skipMetadata      when true and a single policy is addressed by an exact name and version, the policy is
+     *                          fetched directly by key instead of from the full service template (see
+     *                          {@link #getServiceTemplateForSinglePolicy(PfConceptKey)})
      * @return the TOSCA service template containing the specified version of the policy
      * @throws PfModelException on errors getting the policy
      */
     private ToscaServiceTemplate getFilteredPolicies(final String policyTypeName, final String policyTypeVersion,
                                                      final String policyName, final String policyVersion,
-                                                     final PolicyFetchMode mode) throws PfModelException {
+                                                     final PolicyFetchMode mode, final boolean skipMetadata)
+        throws PfModelException {
         final var policyFilter = ToscaTypedEntityFilter.<ToscaPolicy>builder()
             .name(policyName).version(policyVersion).type(policyTypeName).typeVersion(policyTypeVersion).build();
-        final var dbServiceTemplate = getDefaultJpaToscaServiceTemplate();
+
+        // Fast path (opt-in via skipMetadata): a single policy identified by an exact name and version can be
+        // fetched by key from the flat policy table instead of loading and deep-copying the entire (single) service
+        // template aggregate, which holds every policy type, data type and policy in the database. This keeps the
+        // cost of a specific-policy read independent of the total number of stored policies. As the reduced template
+        // is rebuilt from the flat tables, topology-template-level metadata (description, inputs) that is not needed
+        // to describe the policy may be omitted, so this path is only taken when the caller opts in.
+        final var dbServiceTemplate = skipMetadata && isExactPolicyKey(policyName, policyVersion)
+            ? getServiceTemplateForSinglePolicy(new PfConceptKey(policyName, policyVersion))
+            : getDefaultJpaToscaServiceTemplate();
         LOGGER.debug("<-getFilteredPolicies: filter={}, serviceTemplate={}", policyFilter, dbServiceTemplate);
 
         // validate that policies exist in db
@@ -425,6 +472,71 @@ public class ToscaServiceTemplateService {
         }
         LOGGER.debug("<-getFilteredPolicies: filter={}, , serviceTemplate={}", policyFilter, returnServiceTemplate);
         return returnServiceTemplate.toAuthorative();
+    }
+
+    /**
+     * A policy can be looked up directly by key only when both its name and an exact (non-latest) version are given.
+     *
+     * @param policyName    the requested policy name
+     * @param policyVersion the requested policy version
+     * @return true if the pair identifies exactly one policy that can be fetched by key
+     */
+    private boolean isExactPolicyKey(final String policyName, final String policyVersion) {
+        return policyName != null && policyVersion != null
+            && !ToscaTypedEntityFilter.LATEST_VERSION.equals(policyVersion);
+    }
+
+    /**
+     * Assembles a service template that is equivalent to the default database template for the purpose of fetching a
+     * single policy, but that contains only the requested policy in its topology template rather than every stored
+     * policy. All the bounded entities that a cascaded policy fetch may reference (policy types, data types, node
+     * types and node templates) are included so the downstream cascade produces exactly the same result as it would
+     * against the full template. When the policy does not exist the topology template is left with an empty policy
+     * map, so the existing downstream validation reports the same "not found" error as the full-template path.
+     *
+     * @param policyKey the key (name and version) of the policy to fetch
+     * @return the reduced service template
+     */
+    private JpaToscaServiceTemplate getServiceTemplateForSinglePolicy(final PfConceptKey policyKey) {
+
+        if (!toscaServiceTemplateRepository.existsById(
+            new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME, JpaToscaServiceTemplate.DEFAULT_VERSION))) {
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, SERVICE_TEMPLATE_NOT_FOUND_MSG);
+        }
+
+        final var serviceTemplate = new JpaToscaServiceTemplate();
+
+        final var policyTypes = policyTypeRepository.findAll();
+        if (!policyTypes.isEmpty()) {
+            serviceTemplate.setPolicyTypes(new JpaToscaPolicyTypes());
+            policyTypes.forEach(pt -> serviceTemplate.getPolicyTypes().getConceptMap().put(pt.getKey(), pt));
+        }
+
+        final var dataTypes = dataTypeRepository.findAll();
+        if (!dataTypes.isEmpty()) {
+            serviceTemplate.setDataTypes(new JpaToscaDataTypes());
+            dataTypes.forEach(dt -> serviceTemplate.getDataTypes().getConceptMap().put(dt.getKey(), dt));
+        }
+
+        final var nodeTypes = nodeTypeRepository.findAll();
+        if (!nodeTypes.isEmpty()) {
+            serviceTemplate.setNodeTypes(new JpaToscaNodeTypes());
+            nodeTypes.forEach(nt -> serviceTemplate.getNodeTypes().getConceptMap().put(nt.getKey(), nt));
+        }
+
+        final var topologyTemplate = new JpaToscaTopologyTemplate();
+        topologyTemplate.setPolicies(new JpaToscaPolicies());
+        policyRepository.findById(policyKey)
+            .ifPresent(policy -> topologyTemplate.getPolicies().getConceptMap().put(policy.getKey(), policy));
+
+        final var nodeTemplates = nodeTemplateRepository.findAll();
+        if (!nodeTemplates.isEmpty()) {
+            topologyTemplate.setNodeTemplates(new JpaToscaNodeTemplates());
+            nodeTemplates.forEach(nt -> topologyTemplate.getNodeTemplates().getConceptMap().put(nt.getKey(), nt));
+        }
+
+        serviceTemplate.setTopologyTemplate(topologyTemplate);
+        return serviceTemplate;
     }
 
     /**
