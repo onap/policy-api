@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2024-2026 OpenInfra Foundation Europe. All rights reserved.
+ * Modifications Copyright (C) 2026 Deutsche Telekom AG. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,7 +237,8 @@ class TestApiRestController {
     @Test
     void getSpecificVersionOfPolicy() throws Exception {
         when(toscaServiceTemplateService.fetchPolicies(
-            SOME_POLICY_TYPE, SOME_POLICY_TYPE_VERSION, SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE))
+            SOME_POLICY_TYPE, SOME_POLICY_TYPE_VERSION, SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE,
+            false))
             .thenReturn(new ToscaServiceTemplate());
         var fetchPoliciesReq =
             get(URI_VALID_POLICY_TYPE_AND_VERSION_FOR_POLICIES
@@ -245,10 +247,22 @@ class TestApiRestController {
 
         given(toscaServiceTemplateService.fetchPolicies(
             WRONG_POLICY_EVERYTHING, WRONG_POLICY_EVERYTHING, WRONG_POLICY_EVERYTHING,
-            WRONG_POLICY_EVERYTHING, PolicyFetchMode.REFERENCED)).willThrow(pfException);
+            WRONG_POLICY_EVERYTHING, PolicyFetchMode.REFERENCED, false)).willThrow(pfException);
         var fetchPoliciesExcReq = get("/policytypes/wrong/versions/wrong/policies/wrong/versions/wrong"
             + "?mode=REFERENCED").accept(MediaType.APPLICATION_JSON);
         this.mvc.perform(fetchPoliciesExcReq).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getSpecificVersionOfPolicy_skipMetadata() throws Exception {
+        when(toscaServiceTemplateService.fetchPolicies(
+            SOME_POLICY_TYPE, SOME_POLICY_TYPE_VERSION, SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE,
+            true))
+            .thenReturn(new ToscaServiceTemplate());
+        var fetchPoliciesReq =
+            get(URI_VALID_POLICY_TYPE_AND_VERSION_FOR_POLICIES
+                + "/somePolicyName/versions/somePolicyVersion?skipMetadata=true").accept(MediaType.APPLICATION_JSON);
+        this.mvc.perform(fetchPoliciesReq).andExpect(status().isOk());
     }
 
     @Test
@@ -337,18 +351,28 @@ class TestApiRestController {
     @Test
     void getSpecificPolicy() throws Exception {
         when(toscaServiceTemplateService.fetchPolicies(null, null,
-            SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE))
+            SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE, false))
             .thenReturn(new ToscaServiceTemplate());
         var fetchPoliciesReq = get("/policies/somePolicyName/versions/somePolicyVersion")
             .accept(MediaType.APPLICATION_JSON);
         this.mvc.perform(fetchPoliciesReq).andExpect(status().isOk());
 
         given(toscaServiceTemplateService.fetchPolicies(null, null,
-            WRONG_POLICY_EVERYTHING, WRONG_POLICY_EVERYTHING, PolicyFetchMode.REFERENCED))
+            WRONG_POLICY_EVERYTHING, WRONG_POLICY_EVERYTHING, PolicyFetchMode.REFERENCED, false))
             .willThrow(new PfModelRuntimeException(Response.Status.NOT_FOUND, "Random error message"));
         var fetchPoliciesExcReq = get("/policies/wrong/versions/wrong?mode=REFERENCED")
             .accept(MediaType.APPLICATION_JSON);
         this.mvc.perform(fetchPoliciesExcReq).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getSpecificPolicy_skipMetadata() throws Exception {
+        when(toscaServiceTemplateService.fetchPolicies(null, null,
+            SOME_POLICY_NAME, SOME_POLICY_VERSION, PolicyFetchMode.BARE, true))
+            .thenReturn(new ToscaServiceTemplate());
+        var fetchPoliciesReq = get("/policies/somePolicyName/versions/somePolicyVersion?skipMetadata=true")
+            .accept(MediaType.APPLICATION_JSON);
+        this.mvc.perform(fetchPoliciesReq).andExpect(status().isOk());
     }
 
     @Test
