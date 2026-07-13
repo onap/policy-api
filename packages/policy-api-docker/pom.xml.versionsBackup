@@ -28,7 +28,7 @@
     <parent>
         <groupId>org.onap.policy.api</groupId>
         <artifactId>api-packages</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.0.2-SNAPSHOT</version>
     </parent>
 
     <packaging>pom</packaging>
