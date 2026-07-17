@@ -2,6 +2,7 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2023-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2023 Bell Canada. All rights reserved.
+ *  Modifications Copyright (C) 2026 Deutsche Telekom AG. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,6 +152,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyId,
         String policyVersion,
         @Valid PolicyFetchMode mode,
+        @Valid Boolean skipMetadata,
         UUID requestID) {
         return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }
@@ -162,6 +164,7 @@ public class ApiRestControllerStub extends CommonRestController implements Polic
         String policyTypeVersion,
         String policyVersion,
         @Valid PolicyFetchMode mode,
+        @Valid Boolean skipMetadata,
         UUID requestID) {
         return stubUtils.getOkStubbedResponse(ToscaServiceTemplate.class);
     }

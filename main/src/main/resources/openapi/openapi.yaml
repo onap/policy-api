@@ -1238,6 +1238,17 @@ paths:
           for fully referenced policies
         schema:
           $ref: '#/components/schemas/PolicyFetchMode'
+      - name: skipMetadata
+        in: query
+        description: When true, the requested policy is fetched directly by its key
+          instead of being reconstructed from the full service template, which keeps
+          the response time independent of the total number of stored policies. As a
+          trade-off, any topology-template-level metadata (description, inputs) that is
+          not required to describe the policy may be omitted from the response.
+          Defaults to false, which preserves the original response.
+        schema:
+          type: boolean
+          default: false
       - name: policyId
         in: path
         description: Name of policy
@@ -2656,6 +2667,17 @@ paths:
           for fully referenced policies
         schema:
           $ref: '#/components/schemas/PolicyFetchMode'
+      - name: skipMetadata
+        in: query
+        description: When true, the requested policy is fetched directly by its key
+          instead of being reconstructed from the full service template, which keeps
+          the response time independent of the total number of stored policies. As a
+          trade-off, any topology-template-level metadata (description, inputs) that is
+          not required to describe the policy may be omitted from the response.
+          Defaults to false, which preserves the original response.
+        schema:
+          type: boolean
+          default: false
       - name: policyId
         in: path
         description: ID of policy

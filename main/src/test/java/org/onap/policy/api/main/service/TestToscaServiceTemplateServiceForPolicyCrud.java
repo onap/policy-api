@@ -5,6 +5,7 @@
  * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights reserved.
  * Modifications Copyright (C) 2019-2021, 2024 Nordix Foundation.
  * Modifications Copyright (C) 2020, 2022 Bell Canada.
+ * Modifications Copyright (C) 2026 Deutsche Telekom AG. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +30,20 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.onap.policy.api.main.rest.PolicyFetchMode;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
@@ -43,6 +51,8 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeType;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 /**
@@ -354,6 +364,167 @@ class TestToscaServiceTemplateServiceForPolicyCrud extends TestCommonToscaServic
         // Test fetch specific policy
         assertThat(toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0", null)
             .getToscaTopologyTemplate().getPolicies()).hasSize(1);
+    }
+
+    @Test
+    void testFetchSpecificPolicy_doesNotLoadEntireServiceTemplate() throws Exception {
+        // Arrange the flat tables directly (bypassing create), so we can assert the fast path
+        // fetches the single policy by key instead of loading the whole aggregate.
+        var policyTypeServiceTemplate = new JpaToscaServiceTemplate(standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class));
+        var policyServiceTemplate = new JpaToscaServiceTemplate(standardCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE), ToscaServiceTemplate.class));
+        final var policyKey = new PfConceptKey("onap.restart.tca", "1.0.0");
+
+        // Full DB aggregate (policy types + data types + the policy) - what the slow path would load.
+        var dbTemplate = new JpaToscaServiceTemplate(policyTypeServiceTemplate);
+        dbTemplate.setTopologyTemplate(policyServiceTemplate.getTopologyTemplate());
+
+        Mockito.when(toscaServiceTemplateRepository.existsById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
+            JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(true);
+        // Slow path would call this; the fast path must not.
+        Mockito.lenient().when(toscaServiceTemplateRepository.findById(new PfConceptKey(
+            JpaToscaServiceTemplate.DEFAULT_NAME, JpaToscaServiceTemplate.DEFAULT_VERSION)))
+            .thenReturn(Optional.of(dbTemplate));
+        Mockito.when(policyRepository.findById(policyKey))
+            .thenReturn(Optional.of(policyServiceTemplate.getTopologyTemplate().getPolicies().get(policyKey)));
+        Mockito.when(policyTypeRepository.findAll())
+            .thenReturn(new ArrayList<>(policyTypeServiceTemplate.getPolicyTypes().getConceptMap().values()));
+        Mockito.when(dataTypeRepository.findAll())
+            .thenReturn(new ArrayList<>(policyTypeServiceTemplate.getDataTypes().getConceptMap().values()));
+
+        // Act - opt in to the fast path via skipMetadata
+        var result = toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0",
+            PolicyFetchMode.BARE, true);
+
+        // Assert: exactly the one policy, bare (no policy types / data types), and NO full-template load
+        assertThat(result.getToscaTopologyTemplate().getPolicies()).hasSize(1);
+        assertNull(result.getPolicyTypes());
+        assertNull(result.getDataTypes());
+        verify(toscaServiceTemplateRepository, never()).findById(any());
+    }
+
+    @Test
+    void testFetchSpecificPolicy_referencedModeReturnsCascadedEntitiesWithoutLoadingEntireTemplate() throws Exception {
+        // Build the full database aggregate (policy type + data types + the policy) and wire the flat repositories
+        // directly, so the verification targets only the fetch (not any create-flow template loads).
+        var policyTypeServiceTemplate = new JpaToscaServiceTemplate(standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class));
+        var policyServiceTemplate = new JpaToscaServiceTemplate(standardCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE), ToscaServiceTemplate.class));
+
+        var dbTemplate = new JpaToscaServiceTemplate(policyTypeServiceTemplate);
+        dbTemplate.setTopologyTemplate(policyServiceTemplate.getTopologyTemplate());
+        mockFlatRepositoriesFor(dbTemplate);
+
+        // Fetch the specific policy in REFERENCED mode, opting in to the fast path via skipMetadata.
+        var result = toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0",
+            PolicyFetchMode.REFERENCED, true);
+
+        // The policy plus its full policy-type chain (2 types) and referenced data types (3) are returned...
+        assertThat(result.getToscaTopologyTemplate().getPolicies()).hasSize(1);
+        assertThat(result.getPolicyTypesAsMap()).hasSize(2);
+        assertThat(result.getDataTypesAsMap()).hasSize(3);
+        // ...without loading the entire service template aggregate.
+        verify(toscaServiceTemplateRepository, never()).findById(any());
+    }
+
+    @Test
+    void testFetchSpecificPolicy_skipMetadata_carriesNodeTypesAndNodeTemplates() throws Exception {
+        // Build the DB aggregate (policy type + data types + the policy) and add node types / node templates, so the
+        // fast path's node-type and node-template branches are exercised and carried into the reduced template.
+        var policyTypeServiceTemplate = new JpaToscaServiceTemplate(standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class));
+        var policyServiceTemplate = new JpaToscaServiceTemplate(standardCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_RESOURCE), ToscaServiceTemplate.class));
+
+        var dbTemplate = new JpaToscaServiceTemplate(policyTypeServiceTemplate);
+        dbTemplate.setTopologyTemplate(policyServiceTemplate.getTopologyTemplate());
+        mockFlatRepositoriesFor(dbTemplate);
+
+        var nodeTypeKey = new PfConceptKey("org.onap.nodetypes.Naming", "1.0.0");
+        var nodeType = new JpaToscaNodeType(nodeTypeKey);
+        var nodeTemplate = new JpaToscaNodeTemplate(new PfConceptKey("naming.template", "1.0.0"), null);
+        nodeTemplate.setType(new PfConceptKey(nodeTypeKey));
+        Mockito.when(nodeTypeRepository.findAll()).thenReturn(List.of(nodeType));
+        Mockito.when(nodeTemplateRepository.findAll()).thenReturn(List.of(nodeTemplate));
+
+        // REFERENCED mode so the response retains the non-policy entities.
+        var result = toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0",
+            PolicyFetchMode.REFERENCED, true);
+
+        assertThat(result.getToscaTopologyTemplate().getPolicies()).hasSize(1);
+        assertThat(result.getToscaTopologyTemplate().getNodeTemplates()).containsKey("naming.template");
+        assertThat(result.getNodeTypes()).containsKey("org.onap.nodetypes.Naming");
+        verify(toscaServiceTemplateRepository, never()).findById(any());
+    }
+
+    @Test
+    void testFetchPolicies_skipMetadataIgnoredWhenNotAnExactKey() throws Exception {
+        // skipMetadata only enables the fast path for an exact name+version. With a null name (fetch-all shape) or a
+        // LATEST version it must fall back to the full-template path, so the fast-path repositories are never used.
+        var policyTypeServiceTemplate = standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class);
+        var serviceTemplate = toscaServiceTemplateService.createPolicyType(policyTypeServiceTemplate);
+        mockDbServiceTemplate(serviceTemplate, null, null);
+
+        var policyString = ResourceUtils.getResourceAsString(POLICY_RESOURCE);
+        var policyServiceTemplate = standardCoder.decode(policyString, ToscaServiceTemplate.class);
+        var createPolicyResponseFragment = toscaServiceTemplateService.createPolicy(policyServiceTemplate);
+        mockDbServiceTemplate(serviceTemplate, createPolicyResponseFragment, Operation.CREATE_POLICY);
+
+        // null policy name -> not an exact key -> slow path even with skipMetadata=true
+        assertThat(toscaServiceTemplateService.fetchPolicies(null, null, null, null, PolicyFetchMode.BARE, true)
+            .getToscaTopologyTemplate().getPolicies()).hasSize(1);
+        // LATEST version -> not an exact key -> slow path even with skipMetadata=true
+        assertThat(toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "LATEST",
+            PolicyFetchMode.BARE, true).getToscaTopologyTemplate().getPolicies()).hasSize(1);
+
+        Mockito.verifyNoInteractions(policyRepository);
+    }
+
+    @Test
+    void testFetchSpecificPolicy_skipMetadata_noPolicyTypes() {
+        // Service template exists but the flat policy-type and data-type tables are empty: the reduced template
+        // leaves those containers null, so the existing "policies do not exist" guard fires - same as the full path.
+        Mockito.when(toscaServiceTemplateRepository.existsById(new PfConceptKey(JpaToscaServiceTemplate.DEFAULT_NAME,
+            JpaToscaServiceTemplate.DEFAULT_VERSION))).thenReturn(true);
+        Mockito.when(policyTypeRepository.findAll()).thenReturn(List.of());
+        Mockito.when(dataTypeRepository.findAll()).thenReturn(List.of());
+        Mockito.when(nodeTypeRepository.findAll()).thenReturn(List.of());
+        Mockito.when(nodeTemplateRepository.findAll()).thenReturn(List.of());
+
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0",
+            PolicyFetchMode.BARE, true))
+            .hasMessageContaining("do not exist");
+        verify(toscaServiceTemplateRepository, never()).findById(any());
+    }
+
+    @Test
+    void testFetchSpecificPolicy_skipMetadata_serviceTemplateNotFound() {
+        // No service template in the database: existsById returns false (Mockito default), so the fast path must
+        // report the same "service template not found" error as the full-template path, without any policy lookup.
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "1.0.0",
+            PolicyFetchMode.BARE, true))
+            .hasMessage("service template not found in database");
+
+        verify(toscaServiceTemplateRepository, never()).findById(any());
+        Mockito.verifyNoInteractions(policyRepository);
+    }
+
+    @Test
+    void testFetchSpecificPolicy_skipMetadata_unavailablePolicy() throws Exception {
+        // Service template exists and has policy types, but the requested policy key is absent from the flat table.
+        var policyTypeServiceTemplate = new JpaToscaServiceTemplate(standardYamlCoder
+            .decode(ResourceUtils.getResourceAsString(POLICY_TYPE_RESOURCE), ToscaServiceTemplate.class));
+        mockFlatRepositoriesFor(policyTypeServiceTemplate);
+
+        // The fast path leaves the topology policy map empty, so the downstream validation reports the same
+        // "not found" message as the full-template path.
+        assertThatThrownBy(() -> toscaServiceTemplateService.fetchPolicies(null, null, "onap.restart.tca", "2.0.0",
+            PolicyFetchMode.BARE, true))
+            .hasMessageContaining("policies for onap.restart.tca:2.0.0 do not exist");
+        verify(toscaServiceTemplateRepository, never()).findById(any());
     }
 
     @Test
