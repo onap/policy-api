@@ -23,9 +23,21 @@ package org.onap.policy.api.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 
-@SpringBootApplication
+/**
+ * Policy API Spring Boot application.
+ *
+ * <p>The TOSCA model classes are bound with Gson {@code @SerializedName} annotations that map
+ * camelCase Java fields to the snake_case JSON keys the Policy API contract uses (for example
+ * {@code topologyTemplate} &rarr; {@code topology_template}), so Gson must be the JSON message
+ * converter. {@link JacksonAutoConfiguration} is excluded so that no {@code JsonMapper} bean
+ * exists; the Boot-provided Jackson message converter is {@code @ConditionalOnBean} on that mapper
+ * and therefore drops out, leaving the auto-configured Gson converter as the JSON converter
+ * regardless of the {@code spring.http.converters.preferred-json-mapper} property.
+ */
+@SpringBootApplication(exclude = {JacksonAutoConfiguration.class})
 @EntityScan(
     basePackages =  {"org.onap.policy.models.pdp.persistence.concepts", "org.onap.policy.models.tosca.simple.concepts"})
 public class PolicyApiApplication {
