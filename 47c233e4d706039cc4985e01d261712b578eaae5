@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7e8909e_fbabb3d4",
+        "filename": "main/src/main/java/org/onap/policy/api/main/config/WebConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 6742
+      },
+      "writtenOn": "2026-07-22T08:03:00Z",
+      "side": 1,
+      "message": "I\u0027ve noticed Pap excludes Jackson auto-configuration in main application and specifies Gson bean, see https://github.com/onap/policy-pap/blob/master/main/src/main/java/org/onap/policy/pap/main/PolicyPapApplication.java\n\nAlso, here is fix for parameter name change in OOM:\n146459: [POLICY] Change api parameters for Spring Boot 4 | https://gerrit.onap.org/r/c/oom/+/146459",
+      "revId": "47c233e4d706039cc4985e01d261712b578eaae5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
