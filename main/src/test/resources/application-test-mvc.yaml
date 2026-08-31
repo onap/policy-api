@@ -15,4 +15,5 @@ server:
 
 management:
   tracing:
-    enabled: false
+    export:
+      enabled: false
